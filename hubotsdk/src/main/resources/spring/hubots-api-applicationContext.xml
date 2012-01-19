@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--/*
+ * Copyright (c) Novedia Group 2012.
+ *
+ *     This file is part of Hubiquitus.
+ *
+ *     Hubiquitus is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     Hubiquitus is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
+ */ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/util 
+		   http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+ 	<bean id="exceptionCollector" class="org.hubiquitus.hubotsdk.service.impl.ExceptionCollectorImpl"/>
+  
+  	<bean id="jSonParser" class="org.hubiquitus.hapi.utils.impl.CommonJSonParserImpl"/>
+  
+  	<bean id="xmppBotConf" class="org.hubiquitus.hubotsdk.service.impl.XmppBotConfiguration">
+	  	<property name="xmppConfigMap" ref="xmppConfigMap" />
+	</bean>
+	
+	<bean id="xmppComponentConf" class="org.hubiquitus.hubotsdk.service.impl.XmppComponentConfiguration">
+	  	<property name="hServerConfigMap" ref="hServerConfigMap" />
+	</bean>
+  
+  	<bean id="smackApiController" class="org.hubiquitus.hubotsdk.application.push.impl.SmackApiControllerImpl" autowire="default">
+  		<property name="jSonParser" ref="jSonParser"/>
+  		<property name="xmppComponentConf" ref="xmppComponentConf"/>
+  		<!-- The hubot bean must be defined in the hubot-applicationContext.xml of each bot -->
+  		<property name="botInterface" ref="hubot"/>
+  		<property name="xmppBotConfiguration" ref="xmppBotConf"/>
+  	</bean>
+  	
+  	<bean id="xmppEntryPublisher" class="org.hubiquitus.hubotsdk.application.push.impl.XmppEntryPublisherImpl">
+		<property name="smackApiController" ref="smackApiController"/>
+	</bean>
+	
+	<util:map id="hServerConfigMap" map-class="java.util.HashMap">
+        <entry key="subDomain" value="hserver"/>
+        <entry key="requestTimeout" value="50000"/>
+    </util:map>
+    
+	
+</beans>

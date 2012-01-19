@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--/*
+ * Copyright (c) Novedia Group 2012.
+ *
+ *     This file is part of Hubiquitus.
+ *
+ *     Hubiquitus is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     Hubiquitus is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
+ */ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       	   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       	   http://www.springframework.org/schema/util 
+		   http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+    <util:map id="hubotConfigMap" map-class="java.util.HashMap">
+        <!-- Default node for communication between HServer and this Bot -->
+        <entry key="default.node.name" value="Node"/>
+        <entry key="default.node.title" value="Node Title"/>
+        <entry key="default.node.allowedrostergroups"><ref bean="allowedrostergroups"/></entry>
+        
+        <!-- The node for listening Event messages  -->
+        <entry key="subscribed.node.event.name" value="itEvent" />
+    	<!-- The node for listening Indicator messages  -->
+        <entry key="subscribed.node.indicator.name" value="itIndicator" />
+        
+        <!-- Published Node for publishing messages from this Bot to the client browser listener -->
+        <entry key="published.node.name" value="NodeP" />
+        <entry key="published.node.title" value="Node Published Title" />
+        <entry key="published.node.allowedrostergroups"><ref bean="allowedrostergroups" /></entry>
+        <!-- Subscribed Node for listening messages from the client browser to this Bot  -->
+        <entry key="subscribed.node.name" value="NodeS" />
+        <entry key="subscribed.node.title" value="Node Subscribed Title" />
+        <entry key="subscribed.node.affiliation.user" value="stropheintent" />
+        <entry key="subscribed.node.affiliation.type" value="publisher" />
+        <entry key="subscribed.node.allowedrostergroups"><ref bean="allowedrostergroups" /></entry>
+        
+    </util:map>
+	
+	<util:list id="allowedrostergroups">
+        <value>access.model.authorize</value>
+    </util:list>
+    
+</beans>
