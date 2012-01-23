@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/util 
+       	   http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+    <util:map id="xmppConfigMap" map-class="java.util.HashMap">
+        <entry key="configuration.type" value="common_init_configuration"/>
+        <entry key="configuration.id" value="Novedia"/>
+        <entry key="configuration.localhostaddress" value="Here" />
+        <entry key="publisher.xmpphostaddress" value="nsltdpn0094" />
+        <entry key="publisher.xmppservice" value=" xmppservice " />
+<!--        
+        <entry key="publisher.xmpphostaddress" value="aspire-1830tz" />
+-->        
+        <entry key="publisher.xmpphostport" value="5222" />
+        
+<!-- 
+        <entry key="publisher.xmppusername" value="admin" />
+        <entry key="publisher.xmppuserpassword" value="admin" />
+ -->        
+        <entry key="publisher.xmppusername" value="myfirstbot" />
+        <entry key="publisher.xmppuserpassword" value="myfirstbot" />
+        
+        <entry key="publisher.admingroups"><ref bean="adminGroupsList"/></entry>
+        <entry key="fetcher.useproxy" value="true" />
+        <entry key="fetcher.proxyaddress" value="ngrpsin-proxy.smart-up.net" />
+        <entry key="fetcher.proxyport" value="3128" />
+        
+        <entry key="xmpp.debug.enable" value="true" />
+        
+    </util:map>
+	  
+	<util:list id="adminGroupsList">
+        <value>GS-NSLT-Projet-AlertmamaAdmin</value>
+    </util:list>
+</beans>
