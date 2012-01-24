@@ -1,4 +1,6 @@
-# Required elements
+# INSTALLATION
+
+Required elements
+-----------------
 
 
-# Installation
