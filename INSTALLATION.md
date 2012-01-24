@@ -68,8 +68,8 @@ MangoDB
 You can find help to install the database here : http://www.mongodb.org/display/DOCS/Home
 
 
-Hserver package
----------------
+Hubiquitus Server
+-----------------
 In your retrieved package, you have to change two specifics files :
 
 * database-conf-applicationContext
