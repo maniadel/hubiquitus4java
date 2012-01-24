@@ -1,7 +1,7 @@
 MyFirstBot - How to
 -------------------
 
-In your new java project "myfirstbot" you have to create a main method that will start your bots
+In your new java project "myfirstbot", you have to create a main method that will start your bots
 
 ``` java
   public class BotSpringMain extends HubotMain {	
@@ -12,7 +12,7 @@ In your new java project "myfirstbot" you have to create a main method that will
   }	
 ```
 
-Then create the class `myfirstbot.java`
+Then create the class : `myfirstbot.java`
 
 In this class, you should instantiate the method: `startDataRetriever()`
 
