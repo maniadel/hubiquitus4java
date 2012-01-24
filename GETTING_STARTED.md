@@ -38,3 +38,15 @@ To retrieve data from an external source and publish it to a node, use this foll
     }
   }
 ```
+
+`MyRetiever.java` is a class where you can retrieve data from any sources, each interval, and do the publication 
+on the created node
+
+``` java
+  public class MyRetriever extends BotDataFetcherBase {
+  //variable declaration
+  /**Run methods**/
+  public void retrieve(){
+		bot.publishToNode(MyFirstBotUtilsImpl.wordToMessagePublishEntry(data), bot.getNodeName());		
+	}
+```
