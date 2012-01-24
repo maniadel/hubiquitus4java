@@ -92,4 +92,6 @@ In this file, you have to change :
 5. The value of the "secretKey" entry by the password you choose when you were configure the opened port
 
 
-Now you are ready to run your first bot ! Please click on the GettingStarted.md file
+Now you are ready to run your first bot ! 
+
+Please read the following file : GETTING_STARTED.md 
