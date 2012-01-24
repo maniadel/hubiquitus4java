@@ -84,7 +84,7 @@ Before publish something you have to fill at least those properties :
 
 NB: All messages published (publishToNode) have to be converted in Json format.
 
-Now, if you add correctly all required ressources describe below, your bot is able to run !
+Now, if you add correctly all required ressources describe in the section below, your bot is able to run !
 
 ___
 Or, another configuration allow you to subscribe to a node and a listener will retrieve data from it.
@@ -122,7 +122,7 @@ You can publish the retrieved data with this line:
      }
 ```
 
-Now, if you add correctly all required ressources describe below, your bot is able to run !
+Now, if you add correctly all required ressources describe in the section below, your bot is able to run !
 
 ___
 Or, another configuration send request to the server and retrieve the answer composed by requested elements
@@ -167,13 +167,36 @@ The following code extracts data from the result :
   }
 ```
 
-To start your bot, you have to create a main class with this method: 
+You can organize your package as your desire. Myfirstbot.java has been organized like this: SCREEN
+
+
+### Required resources
+
+We are using spring framework, so you have to have an applicationContext.xml that import other applicationContext 
+present into your java project.
 
 ``` java
-  public class BotSpringMain extends HubotMain {	
-
-	public static void main(String[] args) {
-		start(args);
-	}
-  }	
+	<import resource="classpath:/spring/hubot-applicationContext.xml"/>
+	<import resource="classpath:/spring/hubot-conf-applicationContext.xml"/>
+	<import resource="classpath:/spring/xmpp-conf-applicationContext.xml"/>
 ```
+
+Your hubot-applicationContext.xml should have several beans and may be injected into another one.
+
+Your hubot-conf-applicationContext.xml and xmpp-conf-applicationContext.xml should reference all keys used into the class. Reference them with the right spring collection. 
+
+### How to check the result
+
+To start your mango database, you have to open a consol and write: “mongod”. Then, let it opened.
+
+If you want to explore your database, open another consol then write: “mongo”
+
+To see all persistent bases tape: “show dbs”
+
+Then, to select a database, tape: “use [NameOfTheDataBase]”
+
+NB: If the database does not exist, it will be created automatically
+
+To see all collections, tape: “show collections”
+
+Here is an example attached to the execution of myfirstbot project: SCREEN
