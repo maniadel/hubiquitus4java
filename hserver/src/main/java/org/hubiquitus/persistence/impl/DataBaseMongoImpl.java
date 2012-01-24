@@ -53,6 +53,8 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.MongoException;
+import com.mongodb.MongoOptions;
+import com.mongodb.ServerAddress;
 
 /**
  * 
@@ -156,10 +158,8 @@ public class DataBaseMongoImpl implements DataBase {
 					logger.error("Insert error: " + e.getMessage(), e);
 					throw new DBException(e.getMessage()); 
 				}
-				 finally {
-					 mongo.close();
-				 }
-				logger.info("document created: " + document);
+				 
+				logger.info("Document created in: " + messageDbName + " - Collection: " + messageCollection);
 				
 				
 			}
@@ -180,7 +180,6 @@ public class DataBaseMongoImpl implements DataBase {
 		DB db = null;
 		DBCollection dbCollection = null;
 		PayloadResultEntry results = new PayloadResultEntry();
-		try {
 			
 			// Find the db by name
 			if (isDbExist(dataRequestEntry.getDbName())) {
@@ -267,11 +266,7 @@ public class DataBaseMongoImpl implements DataBase {
 					}
 				}
 
-			//logger.info("résultat brut : " + result.toString());
-
-		} finally {
-			 mongo.close();
-		 }
+		
 		return results;
 	}
 
@@ -281,7 +276,6 @@ public class DataBaseMongoImpl implements DataBase {
 		DB db = null;
 		DBCollection dbCollection = null;
 		PayloadResultEntry results = new PayloadResultEntry();
-		try {
 			
 			// Find the db by name
 			if (isDbExist(dataRequestEntry.getDbName())) {
@@ -351,10 +345,6 @@ public class DataBaseMongoImpl implements DataBase {
 				}
 	
 				return results;
-
-		} finally {
-			mongo.close();
-		}
 	}
 	
 	@Override
@@ -363,7 +353,6 @@ public class DataBaseMongoImpl implements DataBase {
 		DB db = null;
 		DBCollection dbCollection = null;
 		PayloadResultEntry results = new PayloadResultEntry();
-		try {
 			
 			// Find the db by name
 			if (isDbExist(dataRequestEntry.getDbName())) {
@@ -429,13 +418,7 @@ public class DataBaseMongoImpl implements DataBase {
 	
 				return results;
 
-		} finally {
-			mongo.close();
-		}
 	}
-	
-		
-
 	
 		
 	/**
@@ -445,15 +428,12 @@ public class DataBaseMongoImpl implements DataBase {
 	 */
 	public boolean isDbExist(String dbName) throws DBException {
 		boolean result = false;
-		try {
-			List<String> dbList = getMongo().getDatabaseNames();
-			if (dbList!=null) {
-				if (dbList.contains(dbName)) {
-					result = true;
-				}
+
+		List<String> dbList = getMongo().getDatabaseNames();
+		if (dbList!=null) {
+			if (dbList.contains(dbName)) {
+				result = true;
 			}
-		} finally {
-			mongo.close();
 		}
 		
 		return result;
@@ -475,19 +455,22 @@ public class DataBaseMongoImpl implements DataBase {
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Get MongoDb 
+	 * @return MongoDb
 	 */
 	private Mongo getMongo() throws DBException {
-		//if (mongo==null) {
+		if (mongo==null) {
 			try {
-				mongo = new Mongo(dataBaseConfigMap.getMongoDbHost(), dataBaseConfigMap.geMongoDbPort());
+				 MongoOptions  mongoOptions = new  MongoOptions();
+				 mongoOptions.connectionsPerHost = dataBaseConfigMap.getMongoDbPoolSize();
+				 ServerAddress serverAddress = new ServerAddress(dataBaseConfigMap.getMongoDbHost(), dataBaseConfigMap.geMongoDbPort());
+				 mongo = new Mongo(serverAddress, mongoOptions);
 			}  catch (UnknownHostException unknownHostE) {
 				throw new DBException("Unknow Host " + dataBaseConfigMap.getMongoDbHost() + unknownHostE.getMessage());
 			} catch (MongoException mongoE) {
 				throw new DBException("Mongo connection trouble: " + mongoE.getMessage());
 			}
-		//}
+		}
 		return mongo;
 	}
 

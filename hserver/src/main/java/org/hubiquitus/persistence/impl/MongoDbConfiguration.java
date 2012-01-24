@@ -62,6 +62,16 @@ public class MongoDbConfiguration {
 	}
 	
 	/**
+	 * Get the MongoDb poll size
+	 * @return the poll size
+	 */
+	public int getMongoDbPoolSize() {
+		String pollSize = (String)mongoDbConfigMap.get("mongoDbPollSize");
+		return Integer.valueOf(pollSize);
+	}
+
+	
+	/**
 	 * Get the MongoDb default db name
 	 * @return the default collection
 	 */
