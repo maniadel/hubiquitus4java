@@ -12,7 +12,7 @@ In this method you have to ask the server to create a node where you will publis
     //variable declaration
     /** Methods **/
     public void startDataRetriever() throws BotException {
-      /**...**/
+      /.../
       this.createNodeFromHServer(getNodeName(), getTitle(), getAllowedRosterGroups());
     }
   }
@@ -27,8 +27,7 @@ To retrieve data from an external source and publish it to a node, use this foll
     //variable declaration
     /** Methods **/
     public void startDataRetriever() throws BotException {
-      /**...**/
-      //Create node method
+      /.../
       MyRetriever myRetriever = new MyRetriever(this.hubotConfig.getInterval(), this);
       myRetriever.start();
       try {
@@ -71,12 +70,33 @@ Before publish something you have to fill at least those properties :
 	    	wordPublishEntry.setAuthor("Moi");
 	    	wordPublishEntry.setPublished(new Date());
 	    	wordPublishEntry.setPublisher("MyBot");
-	    	wordPublishEntry.setType("HelloType");
-	        wordPublishEntry.setPayload(mypayload);
-	        wordPublishEntry.setPersistence(true);
+	    	wordPublishEntry.setType("HelloType"); //This type will allow you to re-find the published message.
+	        
+	        wordPublishEntry.setPayload(mypayload); //Payload is the attribute that contain the message description.
+
+	        wordPublishEntry.setPersistence(true); //To save the published data
 	        wordPublishEntry.setDbName("MyDB");
 	        
 	        return wordPublishEntry;
 	}
     }
 ```
+
+NB: All messages published (publishToNode) have to be converted in Json format.
+
+Now, if you add correctly all required ressources describe below, your bot is able to run !
+
+Or, another configuration allow you to subscribe to a node and a listener will retrieve data from it.
+To do it, you have to add this line :
+
+``` java
+  public class MyFirstBot extends Bot {
+    //variable declaration
+    /** Methods **/
+    public void startDataRetriever() throws BotException {
+      /	... /
+      this.subscribeNode(node, new MyItemEventListener());
+    }
+  }
+```
+
