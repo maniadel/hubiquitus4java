@@ -90,3 +90,6 @@ In this file, you have to change :
 4. The value of the "xmppuserpassword" entry by the password you choose for the hserver user in ejabberd
 
 5. The value of the "secretKey" entry by the password you choose when you were configure the opened port
+
+
+Now you are ready to run your first bot ! Please click on the GettingStarted.md file
