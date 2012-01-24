@@ -37,5 +37,28 @@ Github console - Helps you to execute easily several actions like commit, cleanâ
 * Link : http://help.github.com/win-set-up-git/
 
 
+
 # Required configuration
 --------------------------
+
+XMPP server
+-----------
+You have to define one host (eg. myHost), one domain (eg. myDomain) and one user admin for your server.
+Then, create at least two users that will be able to communicate with it :
+
+* One for the hserver - Define the name and the password (eg. nameOfThisUser@mydomain and any password)
+* One for each bot you want to run - Define the name and the password (eg. nameOfThisUser@mydomain and any password)
+
+After that, you have to configure the hserver component into the xmpp server.
+For the main node, configure the opened ports with :
+
+* The port number
+* The protocle type
+* The name of the module
+* And options like this : 
+[{access, all}, {shaper_rule, fast},
+ {host,
+  "hserver.socialtv-livebattle.fr",
+  [{password,
+    "secret du hserver hubiquitus"}]}]
+
