@@ -88,7 +88,7 @@ Now, if you add correctly all required ressources describe below, your bot is ab
 
 ___
 Or, another configuration allow you to subscribe to a node and a listener will retrieve data from it.
-To do it, you have to add this line :
+To do it, you have to a specific line in your MyfirstBot class :
 
 ``` java
   public class MyFirstBot extends Bot {
@@ -125,4 +125,55 @@ You can publish the retrieved data with this line:
 Now, if you add correctly all required ressources describe below, your bot is able to run !
 
 ___
-Or, another configuration
+Or, another configuration send request to the server and retrieve the answer composed by requested elements
+To do it, you have to a specific bloc in your MyfirstBot class :
+
+``` java
+  public class MyFirstBot extends Bot {
+    //variable declaration
+    /** Methods **/
+    public void startDataRetriever() throws BotException {
+      /	... /
+      	DataRequestEntry dataRequestEntry = new DataRequestEntry();
+      	dataRequestEntry.setRequestType(DataRequestEntry.TYPE_FIND);
+    	dataRequestEntry.setDbName("MyDB");
+    	dataRequestEntry.setCollectionName("HelloType");
+	    	
+    	List<ParamRequest> params = new ArrayList<ParamRequest>();
+   	ParamRequest param = new ParamRequest();
+   	KeyRequest kr1 = new KeyRequest(MessagePublishEntry.AUTHOR, DbOperator.EQUAL, "Moi");
+   	param.addKeyRequest(kr1);
+   	params.add(param);
+      	
+    }
+  }
+```
+
+NB: The database has collections defined by the name of the message type 
+
+The following code extracts data from the result : 
+
+``` java
+  public class MyFirstBot extends Bot {
+    //variable declaration
+    /** Methods **/
+    public void startDataRetriever() throws BotException {
+      	/ ... /
+	for (int i=0; i< results.size(); i++) {
+	   DataResultEntry r = results.get(i);
+	   String myBrutData = r.getPayload();
+	}	
+    }
+  }
+```
+
+To start your bot, you have to create a main class with this method: 
+
+``` java
+  public class BotSpringMain extends HubotMain {	
+
+	public static void main(String[] args) {
+		start(args);
+	}
+  }	
+```
