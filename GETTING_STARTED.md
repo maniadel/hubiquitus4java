@@ -86,6 +86,7 @@ NB: All messages published (publishToNode) have to be converted in Json format.
 
 Now, if you add correctly all required ressources describe below, your bot is able to run !
 
+___
 Or, another configuration allow you to subscribe to a node and a listener will retrieve data from it.
 To do it, you have to add this line :
 
@@ -123,4 +124,5 @@ You can publish the retrieved data with this line:
 
 Now, if you add correctly all required ressources describe below, your bot is able to run !
 
+___
 Or, another configuration
