@@ -62,22 +62,22 @@ Before publish something you have to fill at least those properties :
    public class MyFirstBotUtilsImpl {
    //variable declaration
 	public static MessagePublishEntry  wordToMessagePublishEntry(String word) {
-	    	MessagePublishEntry wordPublishEntry = new MessagePublishEntry();
-	    	mypayload = new MyPublishEntry(word);
+	    MessagePublishEntry wordPublishEntry = new MessagePublishEntry();
+	    mypayload = new MyPublishEntry(word);
 	    	
-	    	//List of properties
-	    	wordPublishEntry.generateMsgid();
-	    	wordPublishEntry.setAuthor("Moi");
-	    	wordPublishEntry.setPublished(new Date());
-	    	wordPublishEntry.setPublisher("MyBot");
-	    	wordPublishEntry.setType("HelloType"); //This type will allow you to re-find the published message.
+	    //List of properties
+	    wordPublishEntry.generateMsgid();
+	    wordPublishEntry.setAuthor("Moi");
+	    wordPublishEntry.setPublished(new Date());
+	    wordPublishEntry.setPublisher("MyBot");
+	    wordPublishEntry.setType("HelloType"); //This type will allow you to re-find the published message.
 	        
-	        wordPublishEntry.setPayload(mypayload); //Payload is the attribute that contain the message description.
+	    wordPublishEntry.setPayload(mypayload); //Payload is the attribute that contain the message description.
 
-	        wordPublishEntry.setPersistence(true); //To save the published data
-	        wordPublishEntry.setDbName("MyDB");
+	    wordPublishEntry.setPersistence(true); //To save the published data
+	    wordPublishEntry.setDbName("MyDB");
 	        
-	        return wordPublishEntry;
+	    return wordPublishEntry;
 	}
     }
 ```
@@ -100,3 +100,27 @@ To do it, you have to add this line :
   }
 ```
 
+This method allows you to subscribe to a specific node and instantiate a listener to receive any data passing through it.
+If you want to publish the data retrieved by the listener, you have to ask it to the server as seen above.
+
+`MyItemEventListener.java` class will have only one specific method `handlePublishedItems(ItemPublishEvent<Item> items)`
+This method allows you to configure the behavior of your listener when it receives something.
+
+You can publish the retrieved data with this line:
+
+``` java
+    public class MyItemEventListener implements ItemEventListener<Item> {
+	//variable declaration
+	/**Methods**/
+	public void handlePublishedItems(ItemPublishEvent<Item> items) {
+	  /.../
+	  //This line
+	  bot.getXmppEntryPublisher().publishToNode(MyFirstBotUtilsImpl.subscribedDataToMessagePublishEntry(entry), bot.getNodeName());
+	  /.../
+	}
+     }
+```
+
+Now, if you add correctly all required ressources describe below, your bot is able to run !
+
+Or, another configuration
