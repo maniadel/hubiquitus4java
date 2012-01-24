@@ -204,12 +204,12 @@ To start your mango database, you have to open a consol and write: “mongod”.
 
 If you want to explore your database, open another consol then write: “mongo”
 
-To see all persistent bases tape: “show dbs”
+To see all persistent bases tape : “show dbs”
 
-Then, to select a database, tape: “use [NameOfTheDataBase]”
+Then, to select a database, tape : “use [NameOfTheDataBase]”
 
 NB: If the database does not exist, it will be created automatically
 
-To see all collections, tape: “show collections”
+To see all collections, tape : “show collections”
 
-Here is an example attached to the execution of myfirstbot project: SCREEN
+Here is an example attached to the execution of myfirstbot project : SCREEN
