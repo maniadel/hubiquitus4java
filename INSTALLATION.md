@@ -11,8 +11,8 @@ Eclipse (or any other IDE)
 * Version : Depending on your computer configuration.
 
 Maven
+Maven is a general repository where all needed and used .jar are stored.
 
-* Maven is a general repository where all needed and used .jar are stored.
 * Link : http://maven.apache.org/
 * Version : The last released
 
@@ -22,7 +22,7 @@ Github
 * Link : https://github.com/hubiquitus
 
 Github console (not mandatory)
+Github console will help you to execute easily several actions like commit, clean…
 
-* Github console will help you to execute easily several actions like commit, clean…
 * Link : http://help.github.com/win-set-up-git/
 
