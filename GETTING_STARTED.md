@@ -1,7 +1,18 @@
 MyFirstBot - How to
 -------------------
 
-In your new java project "myfirstbot", create your first class : `myfirstbot.java`
+In your new java project "myfirstbot" you have to create a main method that will start your bots
+
+``` java
+  public class BotSpringMain extends HubotMain {	
+
+	public static void main(String[] args) {
+		start(args);
+	}
+  }	
+```
+
+Then create the class `myfirstbot.java`
 
 In this class, you should instantiate the method: `startDataRetriever()`
 
@@ -166,6 +177,8 @@ The following code extracts data from the result :
     }
   }
 ```
+
+Now, if you add correctly all required ressources describe in the section below, your bot is able to run !
 
 You can organize your package as your desire. Myfirstbot.java has been organized like this: SCREEN
 
