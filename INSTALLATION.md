@@ -4,7 +4,7 @@
 Required elements
 -----------------
 
-Eclipse (or any other IDE):
+Eclipse (or any other IDE) :
 * Link: http://www.eclipse.org/downloads/
 * IDE: Eclipse IDE for Java Developers or Eclipse IDE for Java EE Developers
 * Version: Depending on your computer configuration.
