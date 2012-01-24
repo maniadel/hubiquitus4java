@@ -48,5 +48,35 @@ on the created node
   /**Run methods**/
   public void retrieve(){
 		bot.publishToNode(MyFirstBotUtilsImpl.wordToMessagePublishEntry(data), bot.getNodeName());		
+  }
+```
+
+`MyFirstBotUtilsImpl.java` is a class used in order to transform the retrieved data into the right type to be understood 
+by the node. This class can also be used to manipulate, overload a message before being send.
+
+The right type for a message is "MessagePublishEntry". 
+There is also the "ComplexPublishEntry" type which is a list of MessagePublishEntry.
+
+Before publish something you have to fill at least those properties :
+
+``` java
+   public class MyFirstBotUtilsImpl {
+   //variable declaration
+	public static MessagePublishEntry  wordToMessagePublishEntry(String word) {
+	    	MessagePublishEntry wordPublishEntry = new MessagePublishEntry();
+	    	mypayload = new MyPublishEntry(word);
+	    	
+	    	//List of properties
+	    	wordPublishEntry.generateMsgid();
+	    	wordPublishEntry.setAuthor("Moi");
+	    	wordPublishEntry.setPublished(new Date());
+	    	wordPublishEntry.setPublisher("MyBot");
+	    	wordPublishEntry.setType("HelloType");
+	        wordPublishEntry.setPayload(mypayload);
+	        wordPublishEntry.setPersistence(true);
+	        wordPublishEntry.setDbName("MyDB");
+	        
+	        return wordPublishEntry;
 	}
+    }
 ```
