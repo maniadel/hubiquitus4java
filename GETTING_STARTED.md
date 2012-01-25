@@ -14,7 +14,7 @@ In your new java project "myfirstbot", you have to create a main method that wil
 
 Now, create the class : `myfirstbot.java` where you will instantiate the method: `startDataRetriever()`
 
-In this method you have to ask the server to create a node where you will publish your retrieved data :
+In this method, you have to ask the server to create a node where you will publish your retrieved data :
 
 ``` java
   public class MyFirstBot extends Bot {
@@ -29,7 +29,7 @@ In this method you have to ask the server to create a node where you will publis
 
 Then, depending on the configuration you want to use, you have different specific methods.
 
-To retrieve data from an external source and publish it to a node, use this following code :
+1 - To retrieve data from an external source and publish it to a node, use this following code :
 
 ``` java
   public class MyFirstBot extends Bot {
@@ -65,7 +65,7 @@ by the node. This class can also be used to manipulate, overload a message befor
 The right type for a message is "MessagePublishEntry". 
 There is also the "ComplexPublishEntry" type which is a list of MessagePublishEntry.
 
-Before publish something you have to fill at least those properties :
+To publish something you have to fill at least those properties :
 
 ``` java
    public class MyFirstBotUtilsImpl {
@@ -96,8 +96,7 @@ NB: All messages published (publishToNode) have to be converted in Json format.
 Now, if you add correctly all required ressources describe in the section below, your bot is able to run !
 
 ___
-Or, another configuration allow you to subscribe to a node and a listener will retrieve data from it.
-To do it, you have to a specific line in your MyfirstBot class :
+2 - To subscribe to a node and retrieve data from a listener, you have to add those lines in your "MyfirstBot" class :
 
 ``` java
   public class MyFirstBot extends Bot {
@@ -116,7 +115,7 @@ If you want to publish the data retrieved by the listener, you have to ask it to
 `MyItemEventListener.java` class will have only one specific method `handlePublishedItems(ItemPublishEvent<Item> items)`
 This method allows you to configure the behavior of your listener when it receives something.
 
-You can publish the retrieved data with this line:
+You can publish the retrieved data with this line :
 
 ``` java
     public class MyItemEventListener implements ItemEventListener<Item> {
@@ -134,8 +133,8 @@ You can publish the retrieved data with this line:
 Now, if you add correctly all required ressources describe in the section below, your bot is able to run !
 
 ___
-Or, another configuration send request to the server and retrieve the answer composed by requested elements
-To do it, you have to a specific bloc in your MyfirstBot class :
+3 - To send request to the server and retrieve the answer composed by requested elements, you have to 
+add this bloc in your "MyfirstBot" class :
 
 ``` java
   public class MyFirstBot extends Bot {
@@ -149,11 +148,10 @@ To do it, you have to a specific bloc in your MyfirstBot class :
     	dataRequestEntry.setCollectionName("HelloType");
 	    	
     	List<ParamRequest> params = new ArrayList<ParamRequest>();
-   	ParamRequest param = new ParamRequest();
-   	KeyRequest kr1 = new KeyRequest(MessagePublishEntry.AUTHOR, DbOperator.EQUAL, "Moi");
-   	param.addKeyRequest(kr1);
-   	params.add(param);
-      	
+   		ParamRequest param = new ParamRequest();
+   		KeyRequest kr1 = new KeyRequest(MessagePublishEntry.AUTHOR, DbOperator.EQUAL, "Moi");
+   		param.addKeyRequest(kr1);
+   		params.add(param);
     }
   }
 ```
