@@ -12,7 +12,7 @@ In your new java project "myfirstbot", you have to create a main method that wil
   }	
 ```
 
-Then create the class : `myfirstbot.java`
+Now, create the class : `myfirstbot.java`
 
 In this class, you should instantiate the method: `startDataRetriever()`
 
