@@ -1,5 +1,5 @@
 # Required elements
-----------------------
+-------------------
 
 Mandatory
 ---------
@@ -39,7 +39,7 @@ Github console - Helps you to execute easily several actions like commit, cleanâ
 
 
 # Required configuration
---------------------------
+------------------------
 
 XMPP server (We are using ejabberd)
 -----------------------------------
