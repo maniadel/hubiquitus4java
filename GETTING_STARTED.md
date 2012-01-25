@@ -12,9 +12,7 @@ In your new java project "myfirstbot", you have to create a main method that wil
   }	
 ```
 
-Now, create the class : `myfirstbot.java`
-
-In this class, you should instantiate the method: `startDataRetriever()`
+Now, create the class : `myfirstbot.java` where you will instantiate the method: `startDataRetriever()`
 
 In this method you have to ask the server to create a node where you will publish your retrieved data :
 
