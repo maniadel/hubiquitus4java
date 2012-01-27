@@ -26,8 +26,7 @@
     <parent>
         <groupId>org.hubiquitus.hubiquitus4j</groupId>
         <artifactId>hubotpack</artifactId>
-        <version>1.0</version>
-		<!--version>1.1-SNAPSHOT</version-->
+		<version>1.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>feedhubot</artifactId>
@@ -38,8 +37,7 @@
          <dependency>
             <groupId>org.hubiquitus.hubiquitus4j</groupId>
             <artifactId>hubotsdk</artifactId>
-            <version>1.0</version>
-			<!--version>1.1-SNAPSHOT</version-->
+            <version>1.1-SNAPSHOT</version>
         </dependency>   
         <!-- ==================== compile ==================== -->
         <dependency>
