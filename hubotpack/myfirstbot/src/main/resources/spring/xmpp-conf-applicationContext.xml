@@ -12,16 +12,8 @@
         <entry key="configuration.id" value="Novedia"/>
         <entry key="configuration.localhostaddress" value="Here" />
         <entry key="publisher.xmpphostaddress" value="nsltdpn0094" />
-        <entry key="publisher.xmppservice" value=" xmppservice " />
-<!--        
-        <entry key="publisher.xmpphostaddress" value="aspire-1830tz" />
--->        
-        <entry key="publisher.xmpphostport" value="5222" />
-        
-<!-- 
-        <entry key="publisher.xmppusername" value="admin" />
-        <entry key="publisher.xmppuserpassword" value="admin" />
- -->        
+        <entry key="publisher.xmppservice" value=" xmppservice " /> 
+        <entry key="publisher.xmpphostport" value="5222" />     
         <entry key="publisher.xmppusername" value="myfirstbot" />
         <entry key="publisher.xmppuserpassword" value="myfirstbot" />
         

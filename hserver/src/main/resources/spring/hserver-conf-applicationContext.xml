@@ -27,9 +27,6 @@
 
 	<bean id="xmppServerHost" class="java.lang.String">
            <constructor-arg>
-<!--                
-	<value>hub.novediagroup.com</value>
- -->        
  		   <value>nsltdpn0094</value>
  		</constructor-arg>
     </bean>

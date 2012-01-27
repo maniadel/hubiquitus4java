@@ -12,6 +12,4 @@ public class BotSpringMain extends HubotMain {
 	public static void main(String[] args) {
 		start(args);
 	}
-	
-	
 }
