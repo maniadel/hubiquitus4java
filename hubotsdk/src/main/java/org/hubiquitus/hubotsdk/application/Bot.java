@@ -183,6 +183,16 @@ public abstract class Bot implements BotInterface {
         publisherState = BotState.STOPPED;
     }
 
+    @Override
+    public List<Item> getItemsFromNode(String nodeName, int maxItems) {
+           try {
+                      return getXmppEntryPublisher().getItemsFromNode(nodeName, maxItems);
+               } catch (XMPPException e) {
+                      logger.error(e.getMessage(), e);
+               } 
+           return null;
+    }
+
 
    
    /*

@@ -38,6 +38,7 @@ import org.hubiquitus.hapi.model.PublishEntry;
 import org.hubiquitus.hapi.model.impl.DataRequestEntry;
 import org.hubiquitus.hapi.model.impl.UpdateDataRequestEntry;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smackx.pubsub.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -218,6 +219,10 @@ public class XmppEntryPublisherImpl extends Thread implements XmppEntryPublisher
     }
     
     
+    @Override
+    public List<Item> getItemsFromNode(String nodeName, int maxItems) throws XMPPException {
+          return smackApiController.getItemsFromNode(nodeName, maxItems);
+    }
         
 
     /*

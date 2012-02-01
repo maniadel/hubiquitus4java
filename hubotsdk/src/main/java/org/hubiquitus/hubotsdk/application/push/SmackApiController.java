@@ -76,6 +76,15 @@ public interface SmackApiController {
 	 */
 	public boolean tryToReconnect() throws InterruptedException, XMPPException;
 	
+	/**
+     * Retrieve items from a node 
+      * @param nodeName the node name
+     * @param maxItems number of items to retrieve
+     * @return the list of items
+     * @throws XMPPException xmpp exception
+     */
+     public List<Item> getItemsFromNode(String nodeName, int maxItems) throws XMPPException;
+
 	
 	/**
      * Disconnect from XMPP Server

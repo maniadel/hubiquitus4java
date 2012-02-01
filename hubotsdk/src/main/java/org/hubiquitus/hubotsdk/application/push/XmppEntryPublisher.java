@@ -25,6 +25,7 @@ import org.hubiquitus.hapi.model.PublishEntry;
 import org.hubiquitus.hapi.model.impl.DataRequestEntry;
 import org.hubiquitus.hapi.model.impl.UpdateDataRequestEntry;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smackx.pubsub.Item;
 
 
 public interface XmppEntryPublisher {
@@ -94,6 +95,16 @@ public interface XmppEntryPublisher {
 	 * @param updateDataRequestEntry the {@link UpdateDataRequestEntry} to send
 	 */
 	public void sendUpdateDbRequest(UpdateDataRequestEntry updateDataRequestEntry);
+	
+	/**
+     * Retrieve items from a node 
+      * @param nodeName the node name
+     * @param maxItems number of items to retrieve
+     * @return the list of items
+     * @throws XMPPException xmpp exception
+     */
+     public List<Item> getItemsFromNode(String nodeName, int maxItems) throws XMPPException;
+
 	
 	/**
 	 * Disconnect from XMPP Server

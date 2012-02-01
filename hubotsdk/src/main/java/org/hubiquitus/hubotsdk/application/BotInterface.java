@@ -80,6 +80,15 @@ public interface BotInterface {
     */
    public DataRequestEntry sendDbRequest(DataRequestEntry dataRequestEntry);
 
+   /**
+    * Retrieve items from a node 
+     * @param nodeName the node name
+    * @param maxItems number of items to retrieve
+    * @return the list of items
+    */
+    public List<Item> getItemsFromNode(String nodeName, int maxItems);
+ 
+   
     public void stopXmppPublisher();
 
     public void stopDataRetriever();

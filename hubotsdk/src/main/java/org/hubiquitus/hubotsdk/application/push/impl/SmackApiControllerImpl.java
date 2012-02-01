@@ -386,9 +386,27 @@ public class SmackApiControllerImpl implements SmackApiController, ChatManagerLi
 	     this.connection.sendPacket(message);
 	 }
 
-	
-	 
-	
+	 @Override
+     public List<Item> getItemsFromNode(String nodeName, int maxItems) throws XMPPException {
+         try {
+                if (!connection.isConnected()) {
+                       tryToReconnect();
+                } 
+                if (!connection.isAuthenticated() ) {
+                       tryToReconnect();
+                }
+         } catch (InterruptedException e) {
+                throw new XMPPException("Unsubscription error to node: " + nodeName +  " - " + e.getMessage(), e);
+         }
+         
+         // Node
+         discoverPubSubNodes();
+         LeafNode leafNode =  (LeafNode)  psMgr.getNode(nodeName);
+         List<Item> items = leafNode.getItems(maxItems);
+         
+         return items;
+
+	 }
 
 	/*
 	 * Disconnect from XMPP Server
