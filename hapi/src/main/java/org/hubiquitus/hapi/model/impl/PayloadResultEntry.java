@@ -35,6 +35,7 @@ public class PayloadResultEntry  implements PrivateData {
 
 	public static final String NAMESPACE="hubiquitus:payloadresultentry";
 	public static final String ELEMENTNAME="results";
+	public static final String ATTRIBUTE_COUNT_NAME="count";
 	
 	public static final String ENTRY_TYPE = "hDataResult";
 	public static final String TYPE = "type";
@@ -42,6 +43,13 @@ public class PayloadResultEntry  implements PrivateData {
 	public static final String PUBLISHER = "publisher";
 	public static final String PUBLISHEDDATE = "published";
 	public static final String PAYLOAD = "payload";
+	
+	/**
+	 * The count result of the query.
+	 * The count is not the size of the result list.
+	 * This is the the number of objects matching the query and it does not take limit/skip into consideration.
+     */
+	private Integer count;
 	
 	/**
 	 * The type of the message payload 
@@ -82,10 +90,24 @@ public class PayloadResultEntry  implements PrivateData {
 		return PayloadResultEntry.NAMESPACE;
 	}
 
+	/**
+	 * @return the count
+	 */
+	public Integer getCount() {
+		return count;
+	}
+
+	/**
+	 * @param count the count to set
+	 */
+	public void setCount(Integer count) {
+		this.count = count;
+	}
+
 	@Override
 	public String toXML() {
 		StringBuffer buf = new StringBuffer();
-        	buf.append("<" + ELEMENTNAME + " xlmns=\"" + getNamespace() + "\" >");
+        	buf.append("<" + ELEMENTNAME + " xlmns=\"" + getNamespace() + "\" count=\"" + count + "\">");
         	for(int i=0; i<results.size(); i++){
         		DataResultEntry dataResultEntry = results.get(i);
         		buf.append(dataResultEntry.toXML());

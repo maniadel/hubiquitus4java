@@ -19,6 +19,7 @@
 package org.hubiquitus.hubotsdk.iq.provider;
 
 import org.hubiquitus.hapi.model.impl.DataRequestEntry;
+import org.hubiquitus.hapi.model.impl.PayloadResultEntry;
 import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smack.provider.IQProvider;
 import org.jivesoftware.smackx.PrivateDataManager;
@@ -37,7 +38,7 @@ public class DataRequestIQProvider implements IQProvider {
 	/**
 	 * An IQ packet to hold PrivateData GET results.
 	 */
-	private static class PrivateDataResult extends IQ {
+	public static class PrivateDataResult extends IQ {
 
 	    private PrivateData privateData;
 
@@ -59,6 +60,12 @@ public class DataRequestIQProvider implements IQProvider {
 	        buf.append("</query>");
 	        return buf.toString();
 	    }
+	    
+	    public Integer getCount() {
+	    	Integer result =  ((PayloadResultEntry) privateData).getCount();
+	    	
+	    	return result;
+	    }
 	}
 	
     public IQ parseIQ(XmlPullParser parser) throws Exception {
@@ -69,6 +76,13 @@ public class DataRequestIQProvider implements IQProvider {
             if (eventType == XmlPullParser.START_TAG) {
                 String elementName = parser.getName();
                 String namespace = parser.getNamespace();
+                String countStr = parser.getAttributeValue(null, "count");
+                Integer count = null;
+                try {
+                	count = Integer.parseInt(countStr);
+                } catch(Exception e) {
+                	// Do nothing
+                }
                 
                 // See if any objects are registered to handle this private data type.
                 PrivateDataProvider provider = PrivateDataManager.getPrivateDataProvider(elementName, namespace); 
@@ -76,6 +90,7 @@ public class DataRequestIQProvider implements IQProvider {
                 // If there is a registered provider, use it.
                 if (provider != null) {
                     privateData = provider.parsePrivateData(parser);
+                    ((PayloadResultEntry) privateData).setCount(count);
                 }
                 // Otherwise, use a DefaultPrivateData instance to store the private data.
                 else {

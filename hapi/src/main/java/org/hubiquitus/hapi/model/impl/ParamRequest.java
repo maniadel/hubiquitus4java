@@ -42,7 +42,14 @@ public class ParamRequest {
 	 */
 	private List<GroupRequest> groups;
 	
-	private Limit limit; 
+	private Limit limit;
+	
+	/**
+	 * Do we have to get the count of the result ?
+	 * The count is not the size of the result list.
+	 * This is the the number of objects matching the query and it does not take limit/skip into consideration.
+	 */
+	private boolean count;
 	
 	/**
 	 * Constructor
@@ -73,6 +80,7 @@ public class ParamRequest {
 			}
 		}
 		xml.append(limit.toXML());
+		xml.append("<count>" + count + "</count>");
 		xml.append("</param>");
 		
 		return xml.toString();
@@ -142,6 +150,20 @@ public class ParamRequest {
 	}
 	
 	
+	/**
+	 * @return the count
+	 */
+	public boolean isCount() {
+		return count;
+	}
+
+	/**
+	 * @param count the count to set
+	 */
+	public void setCount(boolean count) {
+		this.count = count;
+	}
+
 	@Override
 	public String toString(){
 		String objet = "\tKeys :\n";

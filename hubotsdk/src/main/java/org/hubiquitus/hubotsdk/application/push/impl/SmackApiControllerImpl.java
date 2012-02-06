@@ -861,6 +861,9 @@ public class SmackApiControllerImpl implements SmackApiController, ChatManagerLi
         //logger.debug("response.toXML():" + response.toXML()) ;
         DataRequestEntry answer = dataRequestEntry.createCopy();
         
+        DataRequestIQProvider.PrivateDataResult privateData = (DataRequestIQProvider.PrivateDataResult) response;
+        answer.setCount(privateData.getCount());
+        
         answer.addDataResultsEntry(response.toXML());
         
         return  answer;

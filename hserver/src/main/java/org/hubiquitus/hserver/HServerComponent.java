@@ -302,6 +302,7 @@ public class HServerComponent extends AbstractComponent {
 			        iqResults.setChildElement("query", DataRequestEntry.NAMESPACE);
 			        Element queryE = iqResults.getChildElement();
 			        Element resultsE = queryE.addElement(PayloadResultEntry.ELEMENTNAME, PayloadResultEntry.NAMESPACE);
+			        resultsE.addAttribute(PayloadResultEntry.ATTRIBUTE_COUNT_NAME, results.getCount() + "");
 			        for(int i=0; i<results.getResults().size(); i++){
 			        	Element resultE = resultsE.addElement(DataResultEntry.ELEMENTNAME, DataResultEntry.NAMESPACE);
 			        	Element typeE = resultE.addElement(DataResultEntry.TYPE);
@@ -483,7 +484,9 @@ public class HServerComponent extends AbstractComponent {
 						if(attributeValue != null && !"".equals(attributeValue)){
     						paramRequest.setLimit(new Limit(attributeValue, param.get(k).getText()));
     					}
-
+						if (PayloadResultEntry.ATTRIBUTE_COUNT_NAME.equals(param.get(k).getName())) {
+							paramRequest.setCount("true".equalsIgnoreCase(param.get(k).getText()));
+						}
     				}
     				// Une fois le paramètre rempli, on l'ajoute à la liste de paramètre du DataRequestEntry
     				dataRequestEntry.addParamsRequest(paramRequest);

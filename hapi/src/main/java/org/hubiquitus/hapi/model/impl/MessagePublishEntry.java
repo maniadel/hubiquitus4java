@@ -59,6 +59,8 @@ public class MessagePublishEntry implements PublishEntry {
 	public static final String PUBLISHED = "published";
 	public static final String PAYLOAD = "payload";
 	public static final String ISPERSISTENCE = "persistence";
+	public static final String CRITICITY = "criticity";
+	public static final String RELEVANCE = "relevance";
 	
 	 protected static Logger logger = LoggerFactory.getLogger(MessagePublishEntry.class);
 

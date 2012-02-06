@@ -19,11 +19,38 @@
 
 package org.hubiquitus.hapi.model.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum DbOperator {
-	EQUAL,
-	SUP,
-	INF,
-	SUP_EQUAL,
-	INF_EQUAL
+	
+	EQUAL("") {
+		public void appendQuery(Map<String, Object> filtersContainer, String filter, Object value) {
+			filtersContainer.put(filter, value);
+		}
+	},
+	SUP("$gt"),
+	INF("$lt"),
+	SUP_EQUAL("$gte"),
+	INF_EQUAL("$lte");
+
+	private String code;
+
+	private DbOperator(String code) {
+		this.code = code;
+	}
+	
+	public void appendQuery(Map<String, Object> filtersContainer, String filter, Object value) {
+		Map<String, Object> subFilter = new HashMap<String, Object>();
+		subFilter.put(code, value);
+		filtersContainer.put(filter, subFilter);
+	}
+
+	/**
+	 * @return the code
+	 */
+	public String getCode() {
+		return code;
+	}
 }
 

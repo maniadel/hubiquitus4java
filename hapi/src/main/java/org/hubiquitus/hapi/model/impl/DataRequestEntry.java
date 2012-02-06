@@ -119,7 +119,13 @@ public class DataRequestEntry extends IQ implements PublishEntry  {
 	 */
     private List<DataResultEntry> resultsList;
 
-	/**
+    /**
+	 * The count is not the size of the result list.
+	 * This is the the number of objects matching the query and it does not take limit/skip into consideration.
+     */
+    private Integer count;
+
+    /**
      * getter requestId
      * @return the requestId
      */
@@ -328,6 +334,20 @@ public class DataRequestEntry extends IQ implements PublishEntry  {
 	 */
 	public void setInitialValue(int initialValue) {
 		this.initialValue = initialValue;
+	}
+
+	/**
+	 * @return the count
+	 */
+	public Integer getCount() {
+		return count;
+	}
+
+	/**
+	 * @param count the count to set
+	 */
+	public void setCount(Integer count) {
+		this.count = count;
 	}
 
 	/**

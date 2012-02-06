@@ -119,13 +119,13 @@ public class SortRequest {
 		return objet;
 	}
 	
-	static public String getMongoSort(DbSort operator){
-		String mongoOperator = "";
+	static public Integer getMongoSort(DbSort operator){
+		Integer mongoOperator = 0;
 		
 		switch(operator){
-			case ASC : mongoOperator = "1";
+			case ASC : mongoOperator = 1;
 				break;
-			case DESC : mongoOperator = "-1";
+			case DESC : mongoOperator = -1;
 				break;
 			default:
 				mongoOperator = null;

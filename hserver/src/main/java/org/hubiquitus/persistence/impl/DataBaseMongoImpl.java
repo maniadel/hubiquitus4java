@@ -136,6 +136,8 @@ public class DataBaseMongoImpl implements DataBase {
 				document.put(MessagePublishEntry.PUBLISHER, (String) jSONObject.get(MessagePublishEntry.PUBLISHER));
 				document.put(MessagePublishEntry.HEADERS, jSONObject.get(MessagePublishEntry.HEADERS));
 				document.put(MessagePublishEntry.LOCATION, jSONObject.get(MessagePublishEntry.LOCATION));
+				document.put(MessagePublishEntry.CRITICITY, jSONObject.get(MessagePublishEntry.CRITICITY));
+				document.put(MessagePublishEntry.RELEVANCE, jSONObject.get(MessagePublishEntry.RELEVANCE));
 			
 				// Try with simple payload
 				try {
@@ -255,6 +257,13 @@ public class DataBaseMongoImpl implements DataBase {
 						Limit limit = paramRequest.get(i).getLimit();
 						if("true".equals(limit.isActive())){
 							cursor = cursor.limit(new Integer(limit.getValue()));
+						}
+						
+						int count = 0;
+						if (paramRequest.get(i).isCount()) {
+							count = cursor.count();
+							// Add count to the message
+							results.setCount(count);
 						}
 						
 						while(cursor.hasNext()){
@@ -542,7 +551,8 @@ public class DataBaseMongoImpl implements DataBase {
 				List<DBFilterMap> sameFilter = dbFilterMapList.GetDBMapObjects(filter);
 	 
 				if(sameFilter.size() == 1){
-					searchQuery.put(sameFilter.get(0).getKey().getFilter(), sameFilter.get(0).getKey().getValue());
+					//searchQuery.put(sameFilter.get(0).getKey().getFilter(), sameFilter.get(0).getKey().getValue());
+					sameFilter.get(0).getKey().getOperator().appendQuery(searchQuery, sameFilter.get(0).getKey().getFilter(), sameFilter.get(0).getKey().getValue());
 				}
 				// On suppose que les opérateurs seront toujours corrects car la requete ne serait pas correctement exécutée
 				else if(sameFilter.size() == 2){
