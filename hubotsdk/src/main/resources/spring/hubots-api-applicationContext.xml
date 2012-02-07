@@ -33,7 +33,7 @@
 	  	<property name="xmppConfigMap" ref="xmppConfigMap" />
 	</bean>
 	
-	<bean id="xmppComponentConf" class="org.hubiquitus.hubotsdk.service.impl.XmppComponentConfiguration">
+	<bean id="xmppComponentConf" class="org.hubiquitus.hapi.service.impl.XmppComponentConfiguration">
 	  	<property name="hServerConfigMap" ref="hServerConfigMap" />
 	</bean>
   
