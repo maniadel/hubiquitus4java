@@ -27,12 +27,12 @@
 
 	<bean id="xmppServerHost" class="java.lang.String">
            <constructor-arg>
- 		   <value>nsltdpn0094</value>
+ 		   <value>hub.novediagroup.com</value>
  		</constructor-arg>
     </bean>
 	<bean id="hServerSubDomain" class="java.lang.String">
            <constructor-arg>
-                <value>hserver</value>
+                <value>oserver</value>
            </constructor-arg>
     </bean>
 
@@ -65,7 +65,7 @@
         <entry key="xmppusername" value="nslt_hubalert_bots" />
 		<entry key="xmppuserpassword" value="hubalert$1357$" />
         <entry key="subDomain" value-ref="hServerSubDomain"/>
-        <entry key="secretKey" value="secret du hserver hubiquitus"/>
+        <entry key="secretKey" value="secret de marseille"/>
         
         <entry key="subDomainDescription" value="Hubiquitus hServer"/>
         

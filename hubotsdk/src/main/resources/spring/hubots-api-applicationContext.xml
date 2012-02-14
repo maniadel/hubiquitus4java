@@ -50,7 +50,7 @@
 	</bean>
 	
 	<util:map id="hServerConfigMap" map-class="java.util.HashMap">
-        <entry key="subDomain" value="hserver"/>
+        <entry key="subDomain" value="oserver"/>
         <entry key="requestTimeout" value="50000"/>
     </util:map>
     

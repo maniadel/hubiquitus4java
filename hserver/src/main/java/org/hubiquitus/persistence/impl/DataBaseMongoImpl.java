@@ -209,7 +209,9 @@ public class DataBaseMongoImpl implements DataBase {
 					BasicDBObject searchQuery = new BasicDBObject();
 					searchQuery.put(filter, value);
 					// Get results
+					logger.debug("==> Mongo find start : " +  System.currentTimeMillis());
 					DBCursor cursor = dbCollection.find(searchQuery);
+					logger.debug("==> Mongo find end : " +  System.currentTimeMillis());
 					while(cursor.hasNext()){
 						DBObject dBObject = cursor.next();
 						results.addResult(dBObjectToDataResultEntry(dBObject));
@@ -250,7 +252,10 @@ public class DataBaseMongoImpl implements DataBase {
 						}
 						
 						// Get results
+						logger.debug("==> Mongo find start : " +  System.currentTimeMillis());
 						DBCursor cursor = dbCollection.find(toMongoRequest(keyList));
+						logger.debug("==> Mongo find end : " +  System.currentTimeMillis());
+						
 						if(sortList.countDBMapObject() > 0){
 							cursor = cursor.sort(toMongoRequest(sortList));
 						}

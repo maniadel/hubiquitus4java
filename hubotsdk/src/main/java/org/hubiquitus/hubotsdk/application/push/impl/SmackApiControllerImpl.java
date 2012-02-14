@@ -202,7 +202,7 @@ public class SmackApiControllerImpl implements SmackApiController, ChatManagerLi
 			Connection.DEBUG_ENABLED = false;
 		}
 		ConnectionConfiguration config = new  ConnectionConfiguration(xmppBotConfiguration.getXmppHostAddress(), xmppBotConfiguration.getXmppHostPort(), xmppBotConfiguration.getXmppService());
-		config.setSASLAuthenticationEnabled(true);
+		config.setSASLAuthenticationEnabled(xmppBotConfiguration.isSASLAuthenticationEnabled());
 		config.setSecurityMode(SecurityMode.required);
 		config.setCompressionEnabled(true);
 		
@@ -842,10 +842,12 @@ public class SmackApiControllerImpl implements SmackApiController, ChatManagerLi
         PacketCollector collector = connection.createPacketCollector(new PacketIDFilter(dataRequestEntry.getPacketID()));
         
         // Send the private data.
+        logger.debug("====> sendDbRequest start:"+  System.currentTimeMillis());
         connection.sendPacket(dataRequestEntry);
 
         // Wait up to five seconds for a response from the server.
         IQ response = (IQ) collector.nextResult(xmppComponentConf.getRequestTimeOut());
+        logger.debug("====> sendDbRequest end:"+  System.currentTimeMillis());
         
         // No response from the server
         if (response == null) {

@@ -210,7 +210,8 @@ public abstract class Bot implements BotInterface {
   
   @Override
   public DataRequestEntry sendDbRequest(DataRequestEntry dataRequestEntry) {
-	  return getXmppEntryPublisher().sendDbRequest(dataRequestEntry);
+	  DataRequestEntry result = getXmppEntryPublisher().sendDbRequest(dataRequestEntry);
+	  return result;
   }
 
   @Override

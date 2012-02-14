@@ -121,6 +121,7 @@ public class HServerComponent extends AbstractComponent {
 	 */
 	public HServerComponent() {
 	    super(17, 1000, false);
+		
 	}
 	
 	/**
@@ -274,7 +275,8 @@ public class HServerComponent extends AbstractComponent {
 
     		if(dataRequestEntry != null){
 		    	
-    			logger.debug("request type: " + dataRequestEntry.getRequestType());
+    			logger.debug("==> Request type: " + dataRequestEntry.getRequestType() + " start : " +  System.currentTimeMillis());
+    			
     			PayloadResultEntry results = null;
     			
     			// Requete de type FIND()
@@ -325,6 +327,8 @@ public class HServerComponent extends AbstractComponent {
 			        	locationE.setText(location);
 			        }
     			}
+    			
+    			logger.debug("==> Request type: " + dataRequestEntry.getRequestType() + " end : " +  System.currentTimeMillis());
     			
     		}
     		else {

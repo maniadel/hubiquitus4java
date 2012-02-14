@@ -84,6 +84,23 @@ public class XmppBotConfiguration {
     	return (String)xmppConfigMap.get("publisher.xmppuserpassword");
     }
     
+    
+    
+    /**
+     * getter if xmpp debug console is enabled or not
+     * @return debug console enabled
+     */
+    public boolean isSASLAuthenticationEnabled() {
+    	String result = (String)xmppConfigMap.get("xmpp.sasl.authentication.enable");
+    	if ("true".equals(result)) {
+    		return true;
+    	} else {
+    		return false;
+    	}
+    	
+    }
+    
+    
     /**
      * getter type of configuration
      * @return the type of configuration

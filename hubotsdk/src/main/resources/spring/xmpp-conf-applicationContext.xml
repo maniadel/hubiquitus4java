@@ -35,6 +35,9 @@
         <entry key="publisher.xmppusername" value="xmppusername" />
         <entry key="publisher.xmppuserpassword" value="xmppuserpassword" />
         
+        <entry key="xmpp.sasl.authentication.enable" value="true" />
+        
+        
         <entry key="publisher.admingroups"><ref bean="adminGroupsList"/></entry>
         <entry key="fetcher.useproxy" value="false" />
         <entry key="fetcher.proxyaddress" value="localhost" />

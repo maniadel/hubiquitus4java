@@ -21,6 +21,8 @@ package org.hubiquitus.persistence.impl;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 
 /**
@@ -30,6 +32,8 @@ import org.springframework.beans.factory.annotation.Required;
  */
 
 public class MongoDbConfiguration {
+	
+	Logger logger = LoggerFactory.getLogger(MongoDbConfiguration.class);
 	
 	/**
 	 * hServer configuration
@@ -66,7 +70,8 @@ public class MongoDbConfiguration {
 	 * @return the poll size
 	 */
 	public int getMongoDbPoolSize() {
-		String pollSize = (String)mongoDbConfigMap.get("mongoDbPollSize");
+		String pollSize = (String)mongoDbConfigMap.get("mongoDbPoolSize");
+		logger.debug("mongoDbPollSize:" + pollSize);
 		return Integer.valueOf(pollSize);
 	}
 

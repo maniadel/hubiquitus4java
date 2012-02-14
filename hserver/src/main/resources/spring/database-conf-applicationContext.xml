@@ -36,7 +36,7 @@
 	<util:map id="mongoDbConfigMap" map-class="java.util.HashMap">
         <entry key="mongoDbHost" value="localhost"/>
         <entry key="mongoDbPort" value="27017"/>
-        <entry key="mongoDbPollSize" value="10"/>
+        <entry key="mongoDbPoolSize" value="10"/>
         <entry key="mongoDbDefaultCollection" value="defaultCollection"/>
         <entry key="mongoDbDefaultDbName" value="dbDefaultDbName"/>
     </util:map>
