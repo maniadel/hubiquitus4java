@@ -35,7 +35,7 @@
         <entry key="publisher.xmppusername" value="xmppusername" />
         <entry key="publisher.xmppuserpassword" value="xmppuserpassword" />
         
-        <entry key="xmpp.sasl.authentication.enable" value="true" />
+        <entry key="xmpp.tls.enabled" value="true" />
         
         
         <entry key="publisher.admingroups"><ref bean="adminGroupsList"/></entry>

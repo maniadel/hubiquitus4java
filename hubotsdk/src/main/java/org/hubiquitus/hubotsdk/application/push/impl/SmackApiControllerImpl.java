@@ -202,8 +202,12 @@ public class SmackApiControllerImpl implements SmackApiController, ChatManagerLi
 			Connection.DEBUG_ENABLED = false;
 		}
 		ConnectionConfiguration config = new  ConnectionConfiguration(xmppBotConfiguration.getXmppHostAddress(), xmppBotConfiguration.getXmppHostPort(), xmppBotConfiguration.getXmppService());
-		config.setSASLAuthenticationEnabled(xmppBotConfiguration.isSASLAuthenticationEnabled());
-		config.setSecurityMode(SecurityMode.required);
+		config.setSASLAuthenticationEnabled(true);
+		if (xmppBotConfiguration.isTlsEnabled()) {
+			config.setSecurityMode(SecurityMode.required);
+		} else {
+			config.setSecurityMode(SecurityMode.disabled);
+		}
 		config.setCompressionEnabled(true);
 		
 		connection = new XMPPConnection(config);

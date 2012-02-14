@@ -85,13 +85,12 @@ public class XmppBotConfiguration {
     }
     
     
-    
     /**
-     * getter if xmpp debug console is enabled or not
-     * @return debug console enabled
+     * getter if xmpp tls is enabled
+     * @return tls enabled
      */
-    public boolean isSASLAuthenticationEnabled() {
-    	String result = (String)xmppConfigMap.get("xmpp.sasl.authentication.enable");
+    public boolean isTlsEnabled() {
+    	String result = (String)xmppConfigMap.get("xmpp.tls.enabled");
     	if ("true".equals(result)) {
     		return true;
     	} else {
@@ -99,7 +98,6 @@ public class XmppBotConfiguration {
     	}
     	
     }
-    
     
     /**
      * getter type of configuration
