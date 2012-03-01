@@ -38,6 +38,7 @@
         <module>myfirstbot</module>
 		<module>feedhubot</module>
 		<module>twithubot</module>
+		<module>countTweetsBot</module>
     </modules>
 
     <scm>
