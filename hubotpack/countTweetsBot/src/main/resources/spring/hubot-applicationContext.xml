@@ -4,15 +4,16 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	
-	<bean id="tweetRiverBotConf" class="org.hubiquitus.hubots.tweetriverbot.service.impl.TweetRiverBotConfigurationSpring">
+	<!--<bean id="tweetRiverBotConf" class="org.hubiquitus.hubots.tweetriverbot.service.impl.TweetRiverBotConfigurationSpring">-->
+	<bean id="countTweetsBotConf" class="org.hubiquitus.hubiquitus4j.hubotpack.countTweets.service.impl.CountTweetsBotConfigurationSpring">	
 		<property name="hubotConfigMap" ref="hubotConfigMap" />
 	</bean>
-	
-	
-	<bean id="hubot" class="org.hubiquitus.hubots.tweetriverbot.application.TweetRiverBot">
+		
+	<!--<bean id="hubot" class="org.hubiquitus.hubots.tweetriverbot.application.TweetRiverBot">-->
+	<bean id="hubot" class="org.hubiquitus.hubiquitus4j.hubotpack.countTweets.application.CountTweetsBot">
 	  	<property name="exceptionCollector" ref="exceptionCollector" />
 	  	<property name="xmppEntryPublisher" ref="xmppEntryPublisher"/>
-	  	<property name="hubotConfig" ref="tweetRiverBotConf" />
+	  	<property name="hubotConfig" ref="countTweetsBotConf" />
+		<property name="jSonParser" ref="jSonParser"/>
 	</bean>
-
 </beans>

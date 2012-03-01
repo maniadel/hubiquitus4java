@@ -11,10 +11,18 @@
         <entry key="configuration.type" value="common_init_configuration"/>
         <entry key="configuration.id" value="Novedia"/>
         <entry key="configuration.localhostaddress" value="Here" />
-        <entry key="publisher.xmpphostaddress" value="hub.novediagroup.com" />
+		
+       <!-- <entry key="publisher.xmpphostaddress" value="hub.novediagroup.com" />
         <entry key="publisher.xmpphostport" value="5223" />
         <entry key="publisher.xmppusername" value="nslt_hubalert_bots" />
-        <entry key="publisher.xmppuserpassword" value="hubalert$1357$" />
+        <entry key="publisher.xmppuserpassword" value="hubalert$1357$" />-->
+			
+		<entry key="publisher.xmpphostaddress" value="nsltdpn0088"/>
+        <entry key="publisher.xmppservice" value="nsltdpn0088"/>	
+		<entry key="publisher.xmpphostport" value="5222" />
+		<entry key="publisher.xmppusername" value="countTweetsBot" />
+        <entry key="publisher.xmppuserpassword" value="countTweetsBot" />			
+		
         <entry key="publisher.admingroups"><ref bean="adminGroupsList"/></entry>
         <entry key="fetcher.useproxy" value="true" />
         <entry key="fetcher.proxyaddress" value="ngrpsin-proxy.smart-up.net" />
