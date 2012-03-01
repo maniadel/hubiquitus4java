@@ -10,6 +10,7 @@ The "HubotPack" folder content three bots sample:
 
 * feedhubot allows to retrive data from RSS feed
 * twithubot allows to retrive data from twitter
+* myfirstbot allows to retrive a string and publish it on a node
 * countTweetsBot allows to count messages from the hserver 
 
 To **run** your first bot, please read the following file : INSTALLATION.md
