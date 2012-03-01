@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       	   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       	   http://www.springframework.org/schema/util 
+		   http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+    <util:map id="hubotConfigMap" map-class="java.util.HashMap">
+        <entry key="nodename" value="tweetriverbot2"/>
+        <entry key="title" value="Tweetriverbot"/>
+        <entry key="publisher.allowedrostergroups"><ref bean="allowedrostergroups"/></entry>
+    	
+    	<!-- entry key="tweetriver.json.url" value="http://tweetriver.com/bdainton/kindle.json"/-->
+    	<!-- entry key="tweetriver.json.url" value="http://tweetriver.com/bdainton/happy-birthday.json"/-->
+    	<!-- entry key="tweetriver.json.url" value="http://tweetriver.com/thibcelier/test/meta.json"/--> 
+    	
+    	<!-- Stream tweet river (Mass Relevance) to read -->
+    	<entry key="tweetriver.url" value="http://tweetriver.com"/> 
+    	<entry key="tweetriver.limit" value="10"/>
+    	<entry key="tweetriver.user" value="thibcelier"/>
+    	<entry key="tweetriver.stream" value="test"/>
+    	<entry key="tweetriver.stream.format" value="json"/>
+    	
+		<entry key="tweetriver.config.url" value="http://xvm-8-129.ghst.net/tweetriverconfig/config_json2.txt"/>
+    	<!-- Boolean to use meta data -->
+    	<entry key="tweetriver.stream.is.meta.data" value="false"/>
+    	<!-- empty list <=> set to 0 -->
+    	<entry key="resetcounter.interval" value="2"/>
+    	<entry key="resetcounter.unit" value="MINUTE"/>
+
+ 		<!-- Key list for counter mode -->   	
+    	<entry key="tweetriver.use.keywords.list" value="true"/>
+    	<entry key="tweetriver.keywords.list"><ref bean="keywordsList" /></entry>
+    	
+    	<!-- Tweet river fetch frequency -->
+    	<entry key="tweetriver.interval" value="15000"/>
+    	
+    	<entry key="tweetriver.stream.type" value="MR_BUZZ_FILMS" />
+    	
+    	<!-- Message persistence -->
+    	<entry key="message.persistence" value="false"/>
+    	<entry key="persistence.dbname" value="cesar2012"/>
+    	
+    	<!-- Proxy -->
+    	<entry key="tweetriver.useproxy" value="true" />
+        <entry key="tweetriver.proxyaddress" value="ngrpsin-proxy.smart-up.net" />
+        <entry key="tweetriver.proxyport" value="3128" />
+    	
+    </util:map>
+	
+	<!-- Filter keywords -->
+	<!--mots clés : socialTV, social, TV, connectedTV -->
+    	<util:list id="keywordsList">   
+            <value>1e#Miss France#missfrance</value>
+     		<value>arte#Alsace#alsace</value>
+     		<value>arte#Wespiser#wespiser</value>
+     	</util:list>
+	
+	<util:list id="allowedrostergroups">
+        <value>all</value>
+        <!-- value>GD-NSLT-Effectifs</value>
+        <value>GS-NSLT-AlertmamaAdmin</value-->
+    </util:list>
+    
+</beans>
