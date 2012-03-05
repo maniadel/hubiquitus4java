@@ -1,4 +1,5 @@
-/*
+<?xml version="1.0" encoding="UTF-8"?>
+<!--/*
  * Copyright (c) Novedia Group 2012.
  *
  *     This file is part of Hubiquitus.
@@ -15,33 +16,16 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
-package org.hubiquitus.persistence.exeption;
-
-public class DBException extends Exception {
-
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 2170744422369447584L;
-
+ */ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/util 
+		   http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+ 
+ 	<import resource="classpath:/spring/hserver-conf-applicationContext.xml"/>
+ 	<import resource="classpath:/spring/database-conf-applicationContext.xml"/>
 	
-    public DBException() {
-        super();
-    }
-
-    public DBException(String message) {
-        super(message);
-    }
-
-    public DBException(Throwable cause) {
-        super(cause);
-    }
-
-    public DBException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-}
+</beans>

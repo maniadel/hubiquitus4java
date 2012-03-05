@@ -21,7 +21,7 @@ package org.hubiquitus.persistence.impl;
 
 import static org.junit.Assert.*;
 
-import org.hubiquitus.persistence.impl.DataBaseMongoImpl;
+import org.hubiquitus.hapi.persistence.impl.DataBaseMongoImpl;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;

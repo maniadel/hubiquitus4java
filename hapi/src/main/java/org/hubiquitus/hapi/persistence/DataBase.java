@@ -17,11 +17,11 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.hubiquitus.persistence;
+package org.hubiquitus.hapi.persistence;
 
 import org.hubiquitus.hapi.model.impl.DataRequestEntry;
 import org.hubiquitus.hapi.model.impl.PayloadResultEntry;
-import org.hubiquitus.persistence.exeption.DBException;
+import org.hubiquitus.hapi.persistence.exeption.DBException;
 import org.json.simple.JSONObject;
 
 

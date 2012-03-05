@@ -389,6 +389,33 @@ public class SmackApiControllerImpl implements SmackApiController, ChatManagerLi
 	   
 	     this.connection.sendPacket(message);
 	 }
+	 
+	 @Override
+	 public void sendMessage(String jsonSequence, String to) throws XMPPException  {
+         try {
+                 if (!connection.isConnected()) {
+                        tryToReconnect();
+                 }
+                 
+                 if (!connection.isAuthenticated() ) {
+                        tryToReconnect();
+                 }
+                 
+          } catch (InterruptedException e) {
+                 throw new XMPPException("Send Message to " + to + " error: " + e.getMessage(), e);
+          }
+   
+         String xmppUserName = getXmppBotConfiguration().getXmppUserName();
+	     String xmppService = getXmppBotConfiguration().getXmppService();
+	     
+	     Message message = new Message();
+	     message.setTo(to);
+	     message.setFrom(xmppUserName+"@"+xmppService);
+	     message.setType(org.jivesoftware.smack.packet.Message.Type.chat);
+	     message.setBody(jsonSequence);
+	   
+	     this.connection.sendPacket(message);
+	 }
 
 	 @Override
      public List<Item> getItemsFromNode(String nodeName, int maxItems) throws XMPPException {

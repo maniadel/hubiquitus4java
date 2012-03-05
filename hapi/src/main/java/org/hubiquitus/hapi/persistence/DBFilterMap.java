@@ -17,67 +17,67 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jivesoftware.whack.util;
+package org.hubiquitus.hapi.persistence;
 
-import org.hubiquitus.hapi.model.impl.SortRequest;
+import org.hubiquitus.hapi.model.impl.KeyRequest;
 
 /**
  * @author l.chong-wing
  *
  */
-public class DBSorterMap {
+public class DBFilterMap {
 	
 	/**
-	 * Data filter field of {@link SortRequest}
+	 * Data filter field of {@link KeyRequest}
 	 */
-	private String sorter;
+	private String filter;
 	
 	/**
-	 * SortRequest object
+	 * KeyRequest object
 	 */
-	private SortRequest sort;
+	private KeyRequest key;
 	
 	/**
 	 * Constructor
-	 * @param sorter
-	 * @param sort
+	 * @param filter
+	 * @param key
 	 */
-	public DBSorterMap(String sorter, SortRequest sort) {
+	public DBFilterMap(String filter, KeyRequest key) {
 		super();
-		this.sorter = sorter;
-		this.sort = sort;
+		this.filter = filter;
+		this.key = key;
 	}
 
 	/**
-	 * Getter sorter
-	 * @return sorter the sorter
+	 * Getter filter
+	 * @return filter the filter
 	 */
-	public String getSorter() {
-		return sorter;
+	public String getFilter() {
+		return filter;
 	}
 
 	/**
 	 * Setter filter
-	 * @param sorter the filter to set
+	 * @param filter the filter to set
 	 */
-	public void setSorter(String sorter) {
-		this.sorter = sorter;
+	public void setFilter(String filter) {
+		this.filter = filter;
 	}
 
 	/**
-	 * Getter sort
-	 * @return sort the sort
+	 * Getter key
+	 * @return key the key
 	 */
-	public SortRequest getSort() {
-		return sort;
+	public KeyRequest getKey() {
+		return key;
 	}
 
 	/**
-	 * Setter sort
-	 * @param sort the sort to set
+	 * Setter key
+	 * @param key the key to set
 	 */
-	public void setSort(SortRequest sort) {
-		this.sort = sort;
+	public void setKey(KeyRequest key) {
+		this.key = key;
 	}
 
 	/* (non-Javadoc)
@@ -85,7 +85,7 @@ public class DBSorterMap {
 	 */
 	@Override
 	public String toString() {
-		return "DBMap [Sorter=" + sorter + ", sort=" + sort.toString() + "]";
+		return "DBMap [filter=" + filter + ", key=" + key.toString() + "]";
 	}
 
 	

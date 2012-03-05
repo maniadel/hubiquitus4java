@@ -64,6 +64,13 @@ public class DataResultIQProvider implements PrivateDataProvider{
             if(eventType == XmlPullParser.TEXT) {
             	String text = parser.getText();
 
+            	if (DataResultEntry.MSGID.equals(name)) {
+                	dataResultEntry.setMsgId(text);
+                }
+            	
+            	if (DataResultEntry.CRITICITY.equals(name)) {
+                	dataResultEntry.setCriticity(Integer.valueOf(text));
+                }
             	
                 if (DataResultEntry.TYPE.equals(name)) {
                 	dataResultEntry.setType(text);

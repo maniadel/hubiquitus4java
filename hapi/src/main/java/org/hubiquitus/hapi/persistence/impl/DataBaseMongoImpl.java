@@ -17,7 +17,7 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.hubiquitus.persistence.impl;
+package org.hubiquitus.hapi.persistence.impl;
 
 import java.net.UnknownHostException;
 import java.util.Date;
@@ -32,13 +32,15 @@ import org.hubiquitus.hapi.model.impl.MessagePublishEntry;
 import org.hubiquitus.hapi.model.impl.ParamRequest;
 import org.hubiquitus.hapi.model.impl.PayloadResultEntry;
 import org.hubiquitus.hapi.model.impl.SortRequest;
+import org.hubiquitus.hapi.persistence.DataBase;
+import org.hubiquitus.hapi.persistence.exeption.DBException;
 import org.hubiquitus.hapi.utils.impl.CommonJSonParserImpl;
-import org.hubiquitus.persistence.DataBase;
-import org.hubiquitus.persistence.exeption.DBException;
-import org.jivesoftware.whack.util.DBFilterMap;
-import org.jivesoftware.whack.util.DBFilterMapList;
-import org.jivesoftware.whack.util.DBSorterMap;
-import org.jivesoftware.whack.util.DBSorterMapList;
+import org.hubiquitus.hapi.persistence.impl.DataBaseMongoImpl;
+import org.hubiquitus.hapi.persistence.impl.MongoDbConfiguration;
+import org.hubiquitus.hapi.persistence.DBFilterMap;
+import org.hubiquitus.hapi.persistence.DBFilterMapList;
+import org.hubiquitus.hapi.persistence.DBSorterMap;
+import org.hubiquitus.hapi.persistence.DBSorterMapList;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -129,6 +131,7 @@ public class DataBaseMongoImpl implements DataBase {
 							    
 				//add data in the collection
 				BasicDBObject document = new BasicDBObject();
+				document.put(MessagePublishEntry.MSGID, (String) jSONObject.get(MessagePublishEntry.MSGID));
 				document.put(MessagePublishEntry.TYPE, (String) jSONObject.get(MessagePublishEntry.TYPE));
 				document.put(MessagePublishEntry.AUTHOR, (String) jSONObject.get(MessagePublishEntry.AUTHOR));
 //				document.put(MessagePublishEntry.PUBLISHEDDATE, (String) jSONObject.get(MessagePublishEntry.PUBLISHEDDATE));
@@ -503,6 +506,9 @@ public class DataBaseMongoImpl implements DataBase {
 	 */
 		public DataResultEntry dBObjectToDataResultEntry(DBObject dBObject){
 		
+		String msgId = (String) dBObject.get(MessagePublishEntry.MSGID);
+		Long longCriticity = (Long) dBObject.get(MessagePublishEntry.CRITICITY);
+		int criticity = longCriticity.intValue();
 		String type = (String) dBObject.get(MessagePublishEntry.TYPE);
 		String author = (String) dBObject.get(MessagePublishEntry.AUTHOR);
 //		String publishDateSt = (String) dBObject.get(MessagePublishEntry.PUBLISHEDDATE);
@@ -524,6 +530,8 @@ public class DataBaseMongoImpl implements DataBase {
 		Object location = dBObject.get(MessagePublishEntry.LOCATION);
 		
 		DataResultEntry dataResultEntry = new DataResultEntry();
+		dataResultEntry.setMsgId(msgId);
+		dataResultEntry.setCriticity(criticity);
 		dataResultEntry.setType(type);
 		dataResultEntry.setAuthor(author);
 		dataResultEntry.setPublishedDate(publishedDate);
@@ -636,6 +644,8 @@ public class DataBaseMongoImpl implements DataBase {
 		DBObject filters = new BasicDBObject(params);
 		BasicDBObject dataToBeFiltered = new BasicDBObject((JSONObject) updateDataQuery.get("data"));
 		DBObject dataToBeUpdated = new BasicDBObject();
+		dataToBeUpdated.put(MessagePublishEntry.MSGID, dataToBeFiltered.get(MessagePublishEntry.MSGID));
+		dataToBeUpdated.put(MessagePublishEntry.CRITICITY, dataToBeFiltered.get(MessagePublishEntry.CRITICITY));
 		dataToBeUpdated.put(MessagePublishEntry.TYPE, dataToBeFiltered.get(MessagePublishEntry.TYPE));
 		dataToBeUpdated.put(MessagePublishEntry.AUTHOR, dataToBeFiltered.get(MessagePublishEntry.AUTHOR));
 		dataToBeUpdated.put(MessagePublishEntry.PUBLISHER, dataToBeFiltered.get(MessagePublishEntry.PUBLISHER));

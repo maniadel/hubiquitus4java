@@ -46,14 +46,14 @@ import org.hubiquitus.hapi.model.impl.ParamRequest;
 import org.hubiquitus.hapi.model.impl.PayloadResultEntry;
 import org.hubiquitus.hapi.model.impl.SortRequest;
 import org.hubiquitus.hapi.model.impl.UpdateDataRequestEntry;
+import org.hubiquitus.hapi.persistence.DataBase;
+import org.hubiquitus.hapi.persistence.exeption.DBException;
+import org.hubiquitus.hapi.persistence.impl.DataBaseMongoImpl;
 import org.hubiquitus.hapi.utils.IStringUtils;
 import org.hubiquitus.hapi.utils.impl.CommonJSonParserImpl;
 import org.hubiquitus.hapi.utils.impl.DateUtils;
 import org.hubiquitus.hapi.utils.impl.StringUtils;
 import org.hubiquitus.hserver.pubsub.impl.PubSubRequester;
-import org.hubiquitus.persistence.DataBase;
-import org.hubiquitus.persistence.exeption.DBException;
-import org.hubiquitus.persistence.impl.DataBaseMongoImpl;
 import org.jivesoftware.smackx.pubsub.PublishModel;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -98,7 +98,7 @@ public class HServerComponent extends AbstractComponent {
 	/**
 	 * hServer data base configuration
 	 */
-	DataBase hServerDataBase;
+	private DataBase hServerDataBase;
 	
 	/**
 	 * PubSub Helper to convert PubSub Smack Object to Whack Object.
@@ -307,6 +307,10 @@ public class HServerComponent extends AbstractComponent {
 			        resultsE.addAttribute(PayloadResultEntry.ATTRIBUTE_COUNT_NAME, results.getCount() + "");
 			        for(int i=0; i<results.getResults().size(); i++){
 			        	Element resultE = resultsE.addElement(DataResultEntry.ELEMENTNAME, DataResultEntry.NAMESPACE);
+			        	Element msgidE = resultE.addElement(DataResultEntry.MSGID);
+			        	msgidE.setText(results.getResults().get(i).getMsgId());
+			        	Element criticityE = resultE.addElement(DataResultEntry.CRITICITY);
+			        	criticityE.setText(String.valueOf(results.getResults().get(i).getCriticity()));
 			        	Element typeE = resultE.addElement(DataResultEntry.TYPE);
 			        	typeE.setText(results.getResults().get(i).getType());
 			        	Element authorE = resultE.addElement(DataResultEntry.AUTHOR);

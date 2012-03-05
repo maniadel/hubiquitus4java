@@ -218,6 +218,20 @@ public class XmppEntryPublisherImpl extends Thread implements XmppEntryPublisher
         }
     }
     
+    @Override
+    public void sendMessage(PublishEntry entry, String to) {
+    	String jsonBegin = "{ \"alert\":";
+    	String jsonEnd = "}";
+    	String answer = entry.entryToJsonFormat();
+    	String jsonSequence = jsonBegin + answer + jsonEnd;
+        try {
+        	smackApiController.sendMessage(jsonSequence, to);
+        } catch (XMPPException xmppE) {
+        	logger.error(xmppE.getMessage());
+            smackApiController.getBotInterface().addException(xmppE, ExceptionType.PUBLISHER_PUBLISHING_ERROR);
+        }
+    }
+    
     
     @Override
     public List<Item> getItemsFromNode(String nodeName, int maxItems) throws XMPPException {

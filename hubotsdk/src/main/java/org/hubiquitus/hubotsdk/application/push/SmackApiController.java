@@ -139,6 +139,13 @@ public interface SmackApiController {
 	 */
 	 public void sendMessage(String jsonSequence) throws XMPPException;
 	 
+	 /**
+	 * Send jsonSequence in a message to other xmpp user
+	 * @param jsonSequence
+	 * @to the xmpp JID
+	 * @throws XMPPException
+	 */
+	 public void sendMessage(String jsonSequence, String to) throws XMPPException;
 	 
 	
 	

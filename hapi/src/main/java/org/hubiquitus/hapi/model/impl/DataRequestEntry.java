@@ -391,7 +391,6 @@ public class DataRequestEntry extends IQ implements PublishEntry  {
 	}
 
 	
-	
 	@Override
 	public String getChildElementXML() {
 		
@@ -443,6 +442,8 @@ public class DataRequestEntry extends IQ implements PublishEntry  {
         	for(int i=0; i<resultsList.size(); i++){
         		DataResultEntry dataResultEntry = resultsList.get(i);
 	        	buf.append("<" + DataResultEntry.ELEMENTNAME + ">");
+	        	buf.append("<" + DataResultEntry.MSGID + ">").append(dataResultEntry.getMsgId()).append("</" + DataResultEntry.MSGID + ">");
+	        	buf.append("<" + DataResultEntry.CRITICITY + ">").append(dataResultEntry.getCriticity()).append("</" + DataResultEntry.CRITICITY + ">");
 	        	buf.append("<" + DataResultEntry.TYPE + ">").append(dataResultEntry.getType()).append("</" + DataResultEntry.TYPE + ">");
 	        	buf.append("<" + DataResultEntry.AUTHOR + ">").append(dataResultEntry.getAuthor()).append("</" + DataResultEntry.AUTHOR + ">");
 	        	buf.append("<" + DataResultEntry.PUBLISHER + ">").append(dataResultEntry.getPublisher()).append("</" + DataResultEntry.PUBLISHER + ">");
@@ -496,6 +497,10 @@ public class DataRequestEntry extends IQ implements PublishEntry  {
 						dataResultEntry.setHeader(value);
 					}  else if (DataResultEntry.LOCATION.equals(name)) {
 						dataResultEntry.setLocation(value);
+					} else if (DataResultEntry.MSGID.equals(name)) {
+						dataResultEntry.setMsgId(value);
+					} else if (DataResultEntry.CRITICITY.equals(name)) {
+						dataResultEntry.setCriticity(Integer.valueOf(value));
 					}
 				}
 				this.addResults(dataResultEntry);

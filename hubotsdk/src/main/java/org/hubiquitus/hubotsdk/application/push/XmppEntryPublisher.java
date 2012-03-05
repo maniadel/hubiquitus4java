@@ -79,6 +79,13 @@ public interface XmppEntryPublisher {
 	 */
 	public void sendMessage(PublishEntry entry);
 	
+	 /**
+	  * Send jsonSequence in a message to other xmpp user
+	 * @param jsonSequence
+	 * @to the xmpp JID
+	 * @throws XMPPException
+	 */
+	public void sendMessage(PublishEntry entry, String to);
 	
 	/**
 	 * Send DB request to the hServer

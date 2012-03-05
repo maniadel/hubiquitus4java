@@ -17,10 +17,11 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.hubiquitus.persistence.impl;
+package org.hubiquitus.hapi.persistence.impl;
 
 import java.util.Map;
 
+import org.hubiquitus.hapi.persistence.impl.MongoDbConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;

@@ -20,7 +20,7 @@
 /**
  * 
  */
-package org.jivesoftware.whack.util;
+package org.hubiquitus.hapi.persistence;
 
 import java.util.ArrayList;
 import java.util.List;

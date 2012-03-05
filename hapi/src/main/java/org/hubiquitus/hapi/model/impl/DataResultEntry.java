@@ -43,6 +43,8 @@ public class DataResultEntry implements PrivateData {
 	public static final String ELEMENTNAME="result";
 	
 	public static final String ENTRY_TYPE = "hDataResult";
+	public static final String MSGID = "msgid";
+	public static final String CRITICITY = "criticity";
 	public static final String TYPE = "type";
 	public static final String AUTHOR = "author";
 	public static final String PUBLISHER = "publisher";
@@ -55,6 +57,16 @@ public class DataResultEntry implements PrivateData {
 	 * The type of the message payload 
 	 */
 	private String type;
+	
+	/**
+	 * The message Id 
+	 */
+	private String msgId;
+	
+	/**
+	 * The criticity of the message 
+	 */
+	private int criticity;
 	
 	/**
 	 * The JID of the author 
@@ -93,6 +105,48 @@ public class DataResultEntry implements PrivateData {
 	public DataResultEntry() {
 		super();
 	}
+
+	
+	
+	/**
+	 * Getter msgId
+	 * @return the msgId
+	 */
+	public String getMsgId() {
+		return msgId;
+	}
+
+
+
+	/**
+	 * Setter msgId
+	 * @param msgId the msgId to set
+	 */
+	public void setMsgId(String msgId) {
+		this.msgId = msgId;
+	}
+
+
+
+	/**
+	 * Getter criticity
+	 * @return the criticity
+	 */
+	public int getCriticity() {
+		return criticity;
+	}
+
+
+
+	/**
+	 * Setter criticity
+	 * @param criticity the criticity to set
+	 */
+	public void setCriticity(int criticity) {
+		this.criticity = criticity;
+	}
+
+
 
 	/**
 	 * getter type
@@ -217,6 +271,8 @@ public class DataResultEntry implements PrivateData {
 	@Override
 	public String toString(){
 		String object = "\ntype : " + type;
+		object = object + "\nmsgid : " + msgId;
+		object = object + "\ncriticity : " + criticity;
 		object = object + "\nauthor : " + author;
 		object = object + "\npublisher : " + publisher;
 		object = object + "\npublished date : " + publishedDate.toString();
@@ -265,6 +321,8 @@ public class DataResultEntry implements PrivateData {
 	public String toXML() {
 		StringBuffer buf = new StringBuffer();
 		buf.append("<" + ELEMENTNAME + " xlmns=\"" + getNamespace() + "\" >");
+			buf.append("<" + MSGID + ">").append(getMsgId()).append("</" + MSGID + ">");
+			buf.append("<" + CRITICITY + ">").append(getCriticity()).append("</" + CRITICITY + ">");
 			buf.append("<" + TYPE + ">").append(getType()).append("</" + TYPE + ">");
 	    	buf.append("<" + AUTHOR + ">").append(getAuthor()).append("</" + AUTHOR + ">");
 	    	buf.append("<" + PUBLISHER + ">").append(getPublisher()).append("</" + PUBLISHER + ">");
