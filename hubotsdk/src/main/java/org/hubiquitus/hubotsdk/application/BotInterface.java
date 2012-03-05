@@ -99,9 +99,7 @@ public interface BotInterface {
     public void addException(Exception e, ExceptionType publishingError);
 
     public String getNodeName();
-    
-    
-    
+        
     public String getTitle();
     
     public List<String> getAllowedRosterGroups();
