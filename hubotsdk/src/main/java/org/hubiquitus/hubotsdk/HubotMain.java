@@ -53,12 +53,11 @@ public class HubotMain {
 							"file:"+xmlConfPath+"/hubot-applicationContext.xml",
 							"file:"+xmlConfPath+"/hubot-conf-applicationContext.xml",
 							"file:"+xmlConfPath+"/xmpp-conf-applicationContext.xml",
-							//"file:"+xmlConfPath+"/hubots-api-applicationContext.xml" });
-							"file:"+xmlConfPath+"/hubotsdk-applicationContext.xml" });
+							"file:"+xmlConfPath+"/hubots-api-applicationContext.xml" });
+							
 		} else {
 	    	context = new ClassPathXmlApplicationContext(new String[] {
-	    			//"classpath:/spring/hubots-api-applicationContext.xml",
-	    			"classpath:/spring/hubotsdk-applicationContext.xml",
+	    			"classpath:/spring/hubots-api-applicationContext.xml",
 	    			"classpath:/spring/applicationContext.xml"
 	    	});
 		}

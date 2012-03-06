@@ -40,6 +40,7 @@ import org.hubiquitus.hapi.utils.impl.DateUtils;
  * hAPI complex type
  * @author o.chauvie
  */
+
 public class ComplexPublishEntry implements PublishEntry {
 
 	
@@ -430,4 +431,7 @@ public class ComplexPublishEntry implements PublishEntry {
     	}
     	return complexPublishEntry;
     }
+
+    
+    	
 }
