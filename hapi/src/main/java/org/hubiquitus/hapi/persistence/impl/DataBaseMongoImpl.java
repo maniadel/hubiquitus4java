@@ -509,10 +509,12 @@ public class DataBaseMongoImpl implements DataBase {
 		String msgId = (String) dBObject.get(MessagePublishEntry.MSGID);
 		Object o_criticity =  dBObject.get(MessagePublishEntry.CRITICITY);
 		int criticity = 1;
-		if (o_criticity.getClass()==Long.class)  {
-			criticity = ((Long) o_criticity).intValue();
-		} else if (o_criticity.getClass()==Integer.class)  {
-			criticity = (Integer) o_criticity;
+		if (o_criticity!=null) {
+			if (o_criticity.getClass()==Long.class)  {
+				criticity = ((Long) o_criticity).intValue();
+			} else if (o_criticity.getClass()==Integer.class)  {
+				criticity = (Integer) o_criticity;
+			}
 		}
 		
 		String type = (String) dBObject.get(MessagePublishEntry.TYPE);
