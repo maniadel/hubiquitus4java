@@ -240,4 +240,6 @@ public class LocationPublishEntry implements PublishEntry {
 		return result;
 	}
 
+    
+    
 }
