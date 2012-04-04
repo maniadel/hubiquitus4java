@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--/*
+ * Copyright (c) Novedia Group 2012.
+ *
+ *     This file is part of Hubiquitus.
+ *
+ *     Hubiquitus is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     Hubiquitus is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
+ */ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	
+	<bean id="feedBotConf" class="org.hubiquitus.hubots.feedbot.service.impl.FeedBotConfigurationSpring">
+		<property name="hubotConfigMap" ref="hubotConfigMap" />
+	</bean>
+	
+	<bean id="feedXmppEntryPublisher" class="org.hubiquitus.hubots.feedbot.application.push.FeedXmppEntryPublisher">
+		<property name="smackApiController" ref="smackApiController"/>
+		<property name="bot" ref="hubot"/>
+	</bean>
+	
+	<bean id="hubot" class="org.hubiquitus.hubots.feedbot.application.FeedBot">
+	  	<property name="exceptionCollector" ref="exceptionCollector" />
+	  	<property name="xmppEntryPublisher" ref="feedXmppEntryPublisher"/>
+	  	<property name="hubotConfig" ref="feedBotConf" />
+	</bean>
+
+</beans>
