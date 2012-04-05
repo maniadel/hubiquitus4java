@@ -22,6 +22,8 @@ package org.hubiquitus.hapi.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hubiquitus.hapi.model.JabberID;
+
 
 /**
  * @author j.desousag
@@ -38,7 +40,7 @@ public class HOption implements Cloneable {
 	 * JId of the client.
 	 */
 
-	private String publisher;
+	private JabberID jid;
 	
 	/**
 	 * Password of the client. Don't appear in the log.
@@ -47,9 +49,14 @@ public class HOption implements Cloneable {
 	private String password;
 	
 	/**
-	 * Precise the XMPP port and Domain to be used instead of the default values
+	 * Precise the host of the server
 	 */
-	private String route;
+	private String serverHost;
+	
+	/**
+	 * Precise the server port
+	 */
+	private int serverPort = 5222;
 	
 	/**
 	 * Transport use to connect to hNode
@@ -59,21 +66,43 @@ public class HOption implements Cloneable {
 	/**
 	 * List of endpoints to connect to the server
 	 */
-	private List<String> endpoints;
+	private List<String> endpoints = new ArrayList<String>();
 	
 	/**
 	 * Number of message request by the getLastMessage method
 	 */
 	private int nbLastMessage;
 	
-	/* Function */
+	/**
+	 * Constructor by default
+	 */
+	public HOption() {
+		this(null, 0, null, null, 0);
+	}
+	
+	/**
+	 * Constructor with param
+	 * @param serverHost
+	 * @param serverPort
+	 * @param transport
+	 * @param endPoints
+	 * @param nbLastMessage
+	 */
+	
+	public HOption(String serverHost ,int serverPort ,String transport, List<String> endPoints ,int nbLastMessage){
+		this.serverHost = serverHost;
+		setTransport(transport);
+		setServerPort(serverPort);
+		setEndpoints(endpoints);
+		setNbLastMessage(nbLastMessage);
+	}
 	
 	@Override
 	public String toString() {
-		return "HOption [route=" + route + ", transport=" + transport
-				+ ", endpoints=" + endpoints.toArray() + ", nbLastMessage="
-				+ nbLastMessage + ", publisher=" + publisher + ", password="
-				+ "********" + "]";
+		return "HOption [jid=" + jid + ", password=" + password
+				+ ", serverHost=" + serverHost + ", serverPort=" + serverPort
+				+ ", transport=" + transport + ", endpoints=" + endpoints
+				+ ", nbLastMessage=" + nbLastMessage + "]";
 	}
 
 	@Override
@@ -82,14 +111,15 @@ public class HOption implements Cloneable {
 		int result = 1;
 		result = prime * result
 				+ ((endpoints == null) ? 0 : endpoints.hashCode());
+		result = prime * result + ((jid == null) ? 0 : jid.hashCode());
 		result = prime * result + nbLastMessage;
 		result = prime * result
 				+ ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((route == null) ? 0 : route.hashCode());
+		result = prime * result
+				+ ((serverHost == null) ? 0 : serverHost.hashCode());
+		result = prime * result + serverPort;
 		result = prime * result
 				+ ((transport == null) ? 0 : transport.hashCode());
-		result = prime * result
-				+ ((publisher == null) ? 0 : publisher.hashCode());
 		return result;
 	}
 
@@ -107,6 +137,11 @@ public class HOption implements Cloneable {
 				return false;
 		} else if (!endpoints.equals(other.endpoints))
 			return false;
+		if (jid == null) {
+			if (other.jid != null)
+				return false;
+		} else if (!jid.equals(other.jid))
+			return false;
 		if (nbLastMessage != other.nbLastMessage)
 			return false;
 		if (password == null) {
@@ -114,20 +149,17 @@ public class HOption implements Cloneable {
 				return false;
 		} else if (!password.equals(other.password))
 			return false;
-		if (route == null) {
-			if (other.route != null)
+		if (serverHost == null) {
+			if (other.serverHost != null)
 				return false;
-		} else if (!route.equals(other.route))
+		} else if (!serverHost.equals(other.serverHost))
+			return false;
+		if (serverPort != other.serverPort)
 			return false;
 		if (transport == null) {
 			if (other.transport != null)
 				return false;
 		} else if (!transport.equals(other.transport))
-			return false;
-		if (publisher == null) {
-			if (other.publisher != null)
-				return false;
-		} else if (!publisher.equals(other.publisher))
 			return false;
 		return true;
 	}
@@ -149,12 +181,12 @@ public class HOption implements Cloneable {
 	
 	/* Getters & Setters */
 	
-	public String getPublisher() {
-		return publisher;
+	public JabberID getJabberID() {
+		return jid;
 	}
 
-	public void setPublisher(String publisher) {
-		this.publisher = publisher;
+	public void setJabberID(String login) {
+		this.jid = new JabberID(login);
 	}
 
 	public String getPassword() {
@@ -165,20 +197,35 @@ public class HOption implements Cloneable {
 		this.password = password;
 	}
 	
-	public String getRoute() {
-		return route;
+	public String getServerHost() {
+		return serverHost;
 	}
 
-	public void setRoute(String route) {
-		this.route = route;
+	public void setServerHost(String serverHost) {
+		this.serverHost = serverHost;
 	}
 
+	public int getServerPort() {
+		return serverPort;
+	}
+
+	public void setServerPort(int serverPort) {
+		if(serverPort == 0)
+			this.serverPort = 5222;
+		else
+			this.serverPort = serverPort;
+	}
+	
+	public void setServerPort(String serverPort) {
+		this.serverPort = Integer.getInteger(serverPort);
+	}
+	
 	public String getTransport() {
 		return transport;
-	}
+	}	
 
 	public void setTransport(String transport) {
-		if(transport.compareTo("xmpp")==0)
+		if(transport != null)
 			this.transport = transport;
 		else
 			this.transport = "xmpp";
@@ -189,10 +236,12 @@ public class HOption implements Cloneable {
 	}
 
 	public void setEndpoints(List<String> endpoints) {
-		if(endpoints != null)
+		if(endpoints != null && endpoints.size() != 0)
 			this.endpoints = endpoints;
-		else
-			this.endpoints = new ArrayList<String>();
+		else {
+			this.endpoints.clear();
+			this.endpoints.add("http://localhost:5280/xmpp-bind/");
+		}	
 	}
 
 	public int getNbLastMessage() {

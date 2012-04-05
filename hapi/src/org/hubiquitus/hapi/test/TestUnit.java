@@ -1,4 +1,3 @@
-package org.hubiquitus.hapi.test;
 /*
  * Copyright (c) Novedia Group 2012.
  *
@@ -18,15 +17,18 @@ package org.hubiquitus.hapi.test;
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package org.hubiquitus.hapi.test;
 
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.hubiquitus.hapi.util.HUtil;
 import org.hubiquitus.hapi.client.HOption;
+import org.hubiquitus.hapi.client.impl.HClient;
+import org.hubiquitus.hapi.util.HUtil;
 import org.junit.Test;
+
 
 /**
  * @author j.desousag
@@ -42,10 +44,8 @@ public class TestUnit {
 	 */
 	@Test
 	public void getDomain_ValidDomain_OK() {
-		List<String> var_test = Arrays.asList("XMPP://domain:port/namespace");
 		HOption option = new HOption();
-		option.setPublisher("logintest");
-		option.setEndpoints(var_test);
+		option.setJabberID("login@domain");
 		String res_test = HUtil.getDomain(option);
 		System.out.println(res_test);
 		assertNotNull(res_test);
@@ -53,22 +53,44 @@ public class TestUnit {
 	
 	@Test
 	public void getDomain_InvalidDomain_OK() {
-		List<String> var_test = Arrays.asList("domain:port");
 		HOption option = new HOption();
-		option.setPublisher("logintest");
-		option.setEndpoints(var_test);
+		option.setJabberID("logindomain");
 		String res_test = HUtil.getDomain(option);
+		System.out.println(res_test);
+		assertNull(res_test);
+	}
+	
+	/**
+	 * Unitary test for getHost
+	 */
+	
+	@Test
+	public void getHost_ValidHost_OK() {
+		List<String> var_test = Arrays.asList("XMPP://host:2023/namespace");
+		HOption option = new HOption();
+		option.setEndpoints(var_test);
+		String res_test = HUtil.getHost(option);
 		System.out.println(res_test);
 		assertNotNull(res_test);
 	}
-
+	
+	@Test
+	public void getHost_InvalidHost_OK() {
+		List<String> var_test = Arrays.asList("host:2023");
+		HOption option = new HOption();
+		option.setEndpoints(var_test);
+		String res_test = HUtil.getHost(option);
+		System.out.println(res_test);
+		assertNotNull(res_test);
+	}
+	
 	/**
 	 * Unitary test for getPort
 	 */
 	
 	@Test
 	public void getPort_ValidPort_OK() {
-		List<String> var_test = Arrays.asList("XMPP://domain:2023/namespace");
+		List<String> var_test = Arrays.asList("XMPP://host:2023/namespace");
 		HOption option = new HOption();
 		option.setEndpoints(var_test);
 		String res_test = HUtil.getPort(option);
@@ -77,12 +99,25 @@ public class TestUnit {
 	}
 	
 	@Test
-	public void getPort_INValidPort_OK() {
+	public void getPort_InvalidPort_OK() {
 		List<String> var_test = Arrays.asList("XMPP://domain");
 		HOption option = new HOption();
 		option.setEndpoints(var_test);
 		String res_test = HUtil.getPort(option);
 		System.out.println(res_test);
 		assertNotNull(res_test);
+	}
+	
+	/**
+	 * Unitary test for Connect_disconnect
+	 */
+	
+	@Test
+	public void Connect_Disconnect_Valid_OK() {
+		HClient client = new HClient();
+		client.connect("j.desousa@hub.novediagroup.com", "Vaan79000.", null, null);
+		client.disconnect();
+		assertNotNull("Deconnection réussi");
+		
 	}
 }

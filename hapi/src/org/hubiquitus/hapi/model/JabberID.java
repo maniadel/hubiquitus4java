@@ -17,13 +17,14 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.hubiquitus.hapi.Model;
+package org.hubiquitus.hapi.model;
 
 /**
  * @author j.desousag
  * @version 0.3
  *  JabberID contain the different part of the jid and some method to use it 
  */
+
 public class JabberID {
 	
 	private String username;

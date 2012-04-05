@@ -17,17 +17,19 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.hubiquitus.hapi.client;
+
+package org.hubiquitus.hapi.model;
 
 /**
- * 
  * @author j.desousag
  * @version 0.3
- * Interface HCallback
+ * Enumeration of different status of connection take by the client
  */
 
-public interface HCallback {
-	
-	public void hCallback();
-
+public enum ConnectionStatus {
+	CONNECTED,
+	CONNECTING,
+	DISCONNECTING,
+	DISCONNECTED,
+	ERROR,
 }

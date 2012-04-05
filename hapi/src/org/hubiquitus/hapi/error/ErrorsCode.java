@@ -28,6 +28,7 @@ package org.hubiquitus.hapi.error;
 
 public enum ErrorsCode {
 	
+	NO_ERROR(-1),
 	UNKNOWN(0),
 	JID_MALFORMAT(1),
 	CONN_TIMEOUT(2),

@@ -17,19 +17,20 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package org.hubiquitus.hapi.client;
 
-package org.hubiquitus.hapi.Model;
+import org.hubiquitus.hapi.client.impl.HClient;
 
 /**
+ * 
  * @author j.desousag
  * @version 0.3
- * Enumeration of different status of connection take by the client
+ * Interface for the different type of transport
  */
 
-public enum ConnectionStatus {
-	CONNECTED,
-	CONNECTING,
-	DISCONNECTING,
-	DISCONNECTED,
-	ERROR,
+public interface HTransport {
+
+	public void connect(HClient callback ,HOption options);
+	
+	public void disconnect(HClient callback ,HOption options);
 }

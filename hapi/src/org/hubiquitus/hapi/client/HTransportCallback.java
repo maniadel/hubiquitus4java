@@ -19,31 +19,15 @@
 
 package org.hubiquitus.hapi.client;
 
-
 /**
+ * 
  * @author j.desousag
  * @version 0.3
- * Class HClient
+ * Interface of HTransportCallback
  */
-public class HClient {
 
-	private HOption options;
+public interface HTransportCallback {
 	
-	private HCallback callback;
-		
-	public HClient(String publisher,String password ,HCallback callback ,HOption options) {
-		
-		
-		if(options == null) {
-			this.options = new HOption();
-		} else {
-			this.options = options;
-		}
-		this.options.setPublisher(publisher);
-		this.options.setPassword(password);
-		this.callback = callback;
-		
-	}
-	
-	
+
+	public void callbackConnection(HStatus hstatus);
 }

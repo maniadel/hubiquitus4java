@@ -20,8 +20,8 @@
 
 package org.hubiquitus.hapi.client;
 
-import org.hubiquitus.hapi.Model.ConnectionStatus;
 import org.hubiquitus.hapi.error.ErrorsCode;
+import org.hubiquitus.hapi.model.ConnectionStatus;
 
 /**
  * @author j.desousag
@@ -47,6 +47,26 @@ public class HStatus {
 	private String errorMsg;
 	
 	/* Function */
+	
+	/**
+	 * Constructor by default;
+	 */
+	
+	public HStatus() {};
+	
+	/**
+	 * Constructor with param
+	 * @param status
+	 * @param errorCode
+	 * @param errorMsg
+	 */
+	public HStatus(ConnectionStatus status ,ErrorsCode errorCode ,String errorMsg) {
+		this.status = status;
+		setErrorCode(errorCode);
+		this.errorMsg = errorMsg;		
+	};
+	
+	
 
 	@Override
 	public String toString() {
@@ -101,7 +121,8 @@ public class HStatus {
 	}
 	
 	public void setErrorCode(ErrorsCode errorCode) {
-		this.errorCode = errorCode.getValue();
+		if(errorCode != null)
+			this.errorCode = errorCode.getValue();		
 	}
 	
 	public String getErrorMsg() {

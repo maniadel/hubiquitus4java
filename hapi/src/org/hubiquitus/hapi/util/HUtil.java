@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) Novedia Group 2012.
+ *
+ *     This file is part of Hubiquitus.
+ *
+ *     Hubiquitus is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     Hubiquitus is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.hubiquitus.hapi.util;
 
 
@@ -13,6 +32,7 @@ import org.hubiquitus.hapi.client.HOption;
  * @version 0.3
  * Contain some util function
  */
+
 public class HUtil {
 
 	/**
@@ -35,7 +55,7 @@ public class HUtil {
 	 * @return String (the domain)
 	 */
 	public static String getDomain(HOption option){
-		String domain = getDomain(option.getPublisher());
+		String domain = option.getJabberID().getDomain();
 		
 		return domain;
 	}
@@ -48,8 +68,8 @@ public class HUtil {
 	public static String getDomain(String login) {
 		String ressource = null;
 				
-		if (login.contains("/"))
-			ressource = login.split("/")[1];
+		if (login.contains("@"))
+			ressource = login.split("@")[1];
 				
 		return ressource;
 	}
@@ -61,7 +81,7 @@ public class HUtil {
 	 */
 	public static String getRessource(HOption option) {
 		String ressource = null;
-		getRessource(option.getPublisher());
+		ressource = option.getJabberID().getRessources();
 				
 		return ressource;
 	}
@@ -75,8 +95,8 @@ public class HUtil {
 	public static String getRessource(String login) {
 		String ressource = null;
 				
-		if (login.contains("@"))
-			ressource = login.split("@")[1];
+		if (login.contains("/"))
+			ressource = login.split("/")[1];
 				
 		return ressource;
 	}
@@ -142,13 +162,16 @@ public class HUtil {
 			if(!endpoint.contains("://"))
 				endpoint = "temp://" + endpoint;
 			URI uri = new URI(endpoint);
-			port = String.valueOf(uri.getPort());
+			int value = uri.getPort();
+			if(value == -1)
+				value = 5222;
+			port = String.valueOf(value);	
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
 
 		if(port == null)
-			port = String.valueOf(5222);
+				port = String.valueOf(5222);
 			
 		return port;
 	}
