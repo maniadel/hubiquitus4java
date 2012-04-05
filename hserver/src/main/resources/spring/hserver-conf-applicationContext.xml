@@ -27,7 +27,8 @@
 
 	<bean id="xmppServerHost" class="java.lang.String">
            <constructor-arg>
- 		   <value>hub.novediagroup.com</value>
+ 		   <!-- <value>hub.novediagroup.com</value> -->
+ 		   <value>nsltdpn0088</value>
  		</constructor-arg>
     </bean>
 	<bean id="hServerSubDomain" class="java.lang.String">
@@ -71,11 +72,18 @@
 	
 	<util:map id="hServerConfigMap" map-class="java.util.HashMap">
         <entry key="xmppServerHost" value-ref="xmppServerHost" />
-        <entry key="xmppServerPort" value="5275"/>
-        <entry key="xmppusername" value="nslt_hubalert_bots" />
-		<entry key="xmppuserpassword" value="hubalert$1357$" />
+       <entry key="xmppServerPort" value="5275"/> 
+        <!-- <entry key="xmppusername" value="nslt_hubalert_bots" />
+		<entry key="xmppuserpassword" value="hubalert$1357$" /> -->
         <entry key="subDomain" value-ref="hServerSubDomain"/>
         <entry key="secretKey" value="secret de marseille"/>
+        
+        <entry key="publisher.xmpphostaddress" value="nsltdpn0088"/>
+        <entry key="publisher.xmppservice" value="nsltdpn0088"/>	
+		<!-- <entry key="publisher.xmpphostport" value="5280" /> -->
+		<entry key="publisher.xmpphostport" value="5222" />
+		<entry key="publisher.xmppusername" value="hserver" />
+        <entry key="publisher.xmppuserpassword" value="hserver" />		
         
         <entry key="subDomainDescription" value="Hubiquitus hServer"/>
         
@@ -83,7 +91,7 @@
     
     <util:map id="jaxServerConfigMap" map-class="java.util.HashMap">
         <entry key="jaxServerHost" value="localhost" />
-        <entry key="jaxServerPort" value="9000"/>
+        <entry key="jaxServerPort" value="9232"/>
     </util:map>
 
     
