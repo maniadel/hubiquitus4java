@@ -38,7 +38,10 @@
         <module>myfirstbot</module>
 		<module>feedhubot</module>
 		<module>twithubot</module>
-		<module>countTweetsBot</module>
+		<module>countHubot</module>
+		<module>votingBot</module>
+		<module>voting2</module>
+		<module>twitVotinghubot</module>
     </modules>
 
     <scm>

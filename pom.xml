@@ -52,10 +52,21 @@
         <jackson.version>1.8.5</jackson.version>
         <viadeo4j.version>1.1</viadeo4j.version>
         <mongodb.version>2.5.2</mongodb.version>
+		<twitter4j.version>2.2.5</twitter4j.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+		<dependency>
+                <groupId>org.twitter4j</groupId>
+                <artifactId>twitter4j-core</artifactId>
+                <version>${twitter4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.twitter4j</groupId>
+                <artifactId>twitter4j-stream</artifactId>
+                <version>${twitter4j.version}</version>
+            </dependency>
             <!-- ==================== compile ==================== -->
             <dependency>
                 <groupId>org.slf4j</groupId>
