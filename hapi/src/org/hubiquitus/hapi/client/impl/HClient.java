@@ -40,20 +40,47 @@ import de.javawi.jstun.attribute.ErrorCode;
 
 public class HClient implements HTransportCallback{
 	
+	/* Parameters */
+	
+	/**
+	 * Connection status of HClient
+	 */
 	private HStatus status;
 	
+	/**
+	 * Connection option
+	 */
 	private HOption options;
 	
+	/**
+	 * CallBack
+	 */
 	private HCallback callback;
 	
+	/**
+	 * Transport used 
+	 */
 	private HTransport transport;
 
 	public HClient() {
 		this.status = new HStatus(ConnectionStatus.DISCONNECTED, null, null);
 	}
 
+	/**
+	 * Method connect which set the option and launch the connection
+	 * @param publisher
+	 * @param password
+	 * @param callback
+	 * @param options
+	 */
 	
 	public void connect(String publisher, String password, HCallback callback,HOption options){
+		System.out.println("abfauklbef");
+		if(!publisher.contains("@")) {
+			callbackConnection(new HStatus(ConnectionStatus.ERROR, ErrorsCode.JID_MALFORMAT, "JID malformat"));
+			return;
+		}
+			
 		if(status.getStatus() != ConnectionStatus.CONNECTED)
 		{
 			if(options == null) {
@@ -73,18 +100,32 @@ public class HClient implements HTransportCallback{
 		}
 	}
 	
+	/**
+	 * Method disconnect
+	 */
 	
 	public void disconnect() {
-		transport.disconnect(this, this.options);
+		if(status.getStatus() == ConnectionStatus.CONNECTED) {
+			transport.disconnect(this, this.options);
+			System.out.println("Disconnect");
+		} else {
+			System.out.println("Must be connected for deconnection");
+		}
 	}
 	
+	/**
+	 * Method callback used during a connection 
+	 */
 	@Override
 	public void callbackConnection(HStatus hstatus){
 		this.status = hstatus;
-		if(status.getErrorCode() != -1)
+		if(status.getErrorCode() != ErrorsCode.NO_ERROR)
 			System.out.println(status.getErrorMsg());
 	}
 	
+	/**
+	 * Affiche le status de l'utilisateur dans la console
+	 */
 	public void printStatusConnection() {
 		System.out.println(status.getStatus());
 	}

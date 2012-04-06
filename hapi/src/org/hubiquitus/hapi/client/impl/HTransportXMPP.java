@@ -65,6 +65,12 @@ public class HTransportXMPP implements HTransport {
 	public HTransportXMPP() {
 		
 	};	
+	
+	/**
+	 * Method connect : connection with the server and return an HStatus
+	 * @param callback
+	 * @param options
+	 */
 	@Override
 	public void connect(HClient callback,HOption options){
 			
@@ -76,6 +82,7 @@ public class HTransportXMPP implements HTransport {
 			connection.connect();
 			connection.login(options.getJabberID().getBareJID(), options.getPassword());
 			status = ConnectionStatus.CONNECTED;
+			System.out.println("Connected");
 			callback.callbackConnection(new HStatus(status,ErrorsCode.NO_ERROR, null));
 		} catch(XMPPException e) {
 			status = ConnectionStatus.ERROR;
@@ -84,6 +91,11 @@ public class HTransportXMPP implements HTransport {
 		
 	}
 
+	/**
+	 * Method disconnect : disconnection with the server and return an HStatus
+	 * @param callback
+	 * @param options
+	 */
 	@Override
 	public void disconnect(HClient callback,HOption options){
 		status = ConnectionStatus.DISCONNECTING;

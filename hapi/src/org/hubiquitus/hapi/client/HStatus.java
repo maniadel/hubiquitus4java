@@ -37,10 +37,10 @@ public class HStatus {
 	private ConnectionStatus status;
 	
 	/**
-	 * Number of the error( cf : Hibiquitus ref)
+	 * Contain the error
 	 */
-	private int errorCode;
-
+	private ErrorsCode errorCode;
+	
 	/**
 	 * Contain a message error
 	 */
@@ -62,7 +62,7 @@ public class HStatus {
 	 */
 	public HStatus(ConnectionStatus status ,ErrorsCode errorCode ,String errorMsg) {
 		this.status = status;
-		setErrorCode(errorCode);
+		this.errorCode = errorCode;
 		this.errorMsg = errorMsg;		
 	};
 	
@@ -77,7 +77,10 @@ public class HStatus {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + errorCode;
+		result = prime * result
+				+ ((errorCode == null) ? 0 : errorCode.hashCode());
+		result = prime * result
+				+ ((errorMsg == null) ? 0 : errorMsg.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		return result;
 	}
@@ -93,10 +96,12 @@ public class HStatus {
 		HStatus other = (HStatus) obj;
 		if (errorCode != other.errorCode)
 			return false;
-		if (status == null) { 
-			if (other.status != null)
+		if (errorMsg == null) {
+			if (other.errorMsg != null)
 				return false;
-		} else if (!status.equals(other.status))
+		} else if (!errorMsg.equals(other.errorMsg))
+			return false;
+		if (status != other.status)
 			return false;
 		return true;
 	}
@@ -112,17 +117,13 @@ public class HStatus {
 	}
 
 	
-	public int getErrorCode() {
+	public ErrorsCode getErrorCode() {
 		return errorCode;
 	}
 
-	public void setErrorCode(int errorCode) {
-		this.errorCode = errorCode;
-	}
 	
 	public void setErrorCode(ErrorsCode errorCode) {
-		if(errorCode != null)
-			this.errorCode = errorCode.getValue();		
+		this.errorCode = errorCode;	
 	}
 	
 	public String getErrorMsg() {

@@ -18,20 +18,35 @@
  */
 
 
-package org.hubiquitus.hapi.model;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
-/**
- * @author j.desousag
+import org.hubiquitus.hapi.client.impl.HClient;
+
+/***
+ * 
+ * @author speed
  * @version 0.3
- * Enumeration of different status of connection take by the client
+ * Example of a basic connection/disconnection application
  */
 
-public enum ConnectionStatus {
-	CONNECTED,
-	CONNECTING,
-	DISCONNECTING,
-	DISCONNECTED,
-	REATTACHING,
-	REATTACHED,
-	ERROR,
+public class SimpleExample {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		HClient client = new HClient();
+		
+		JFrame window = new JFrame("test");
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setSize(450, 150);
+
+		Panel panel = new Panel();
+		panel.setClient(client);
+		
+		window.setContentPane(panel);
+		window.setVisible(true);
+	}
+
 }

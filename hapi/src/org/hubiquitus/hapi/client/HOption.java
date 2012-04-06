@@ -217,7 +217,7 @@ public class HOption implements Cloneable {
 	}
 	
 	public void setServerPort(String serverPort) {
-		this.serverPort = Integer.getInteger(serverPort);
+		this.serverPort = Integer.valueOf(serverPort).intValue();
 	}
 	
 	public String getTransport() {

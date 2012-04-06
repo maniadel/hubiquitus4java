@@ -47,7 +47,6 @@ public class TestUnit {
 		HOption option = new HOption();
 		option.setJabberID("login@domain");
 		String res_test = HUtil.getDomain(option);
-		System.out.println(res_test);
 		assertNotNull(res_test);
 	}
 	
@@ -56,7 +55,6 @@ public class TestUnit {
 		HOption option = new HOption();
 		option.setJabberID("logindomain");
 		String res_test = HUtil.getDomain(option);
-		System.out.println(res_test);
 		assertNull(res_test);
 	}
 	
@@ -70,7 +68,6 @@ public class TestUnit {
 		HOption option = new HOption();
 		option.setEndpoints(var_test);
 		String res_test = HUtil.getHost(option);
-		System.out.println(res_test);
 		assertNotNull(res_test);
 	}
 	
@@ -80,7 +77,6 @@ public class TestUnit {
 		HOption option = new HOption();
 		option.setEndpoints(var_test);
 		String res_test = HUtil.getHost(option);
-		System.out.println(res_test);
 		assertNotNull(res_test);
 	}
 	
@@ -94,7 +90,6 @@ public class TestUnit {
 		HOption option = new HOption();
 		option.setEndpoints(var_test);
 		String res_test = HUtil.getPort(option);
-		System.out.println(res_test);
 		assertNotNull(res_test);
 	}
 	
@@ -104,7 +99,6 @@ public class TestUnit {
 		HOption option = new HOption();
 		option.setEndpoints(var_test);
 		String res_test = HUtil.getPort(option);
-		System.out.println(res_test);
 		assertNotNull(res_test);
 	}
 	

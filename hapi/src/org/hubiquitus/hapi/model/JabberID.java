@@ -27,12 +27,23 @@ package org.hubiquitus.hapi.model;
 
 public class JabberID {
 	
+	/**
+	 * Contain the username
+	 */
 	private String username;
 	
+	/**
+	 * Contain the domain
+	 */
 	private String domain;
 	
+	/**
+	 * Contain ressources
+	 */
 	private String ressources;
-	
+	/**
+	 * Contain the bareJID
+	 */
 	private String bareJID;
 
 	/* Function */
