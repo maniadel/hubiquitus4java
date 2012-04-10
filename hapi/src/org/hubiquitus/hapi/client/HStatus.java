@@ -70,7 +70,8 @@ public class HStatus {
 
 	@Override
 	public String toString() {
-		return "HStatus [status=" + status + ", errorCode=" + errorCode + "]";
+		return "HStatus [status=" + status + ", errorCode=" + errorCode
+				+ ", errorMsg=" + errorMsg + "]";
 	}
 
 	@Override

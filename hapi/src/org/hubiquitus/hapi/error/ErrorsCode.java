@@ -28,12 +28,13 @@ package org.hubiquitus.hapi.error;
 
 public enum ErrorsCode {
 	
-	NO_ERROR(-1),
-	UNKNOWN(0),
+	NO_ERROR(0),
 	JID_MALFORMAT(1),
 	CONN_TIMEOUT(2),
 	AUTH_FAILED(3),
-	ATTACH_FAILED(4);
+	ATTACH_FAILED(4),
+	ALREADY_CONNECTED(5),
+	TECH_ERROR(6);
 	
 	private int value;
 	

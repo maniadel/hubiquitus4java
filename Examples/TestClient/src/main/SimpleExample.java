@@ -17,9 +17,9 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package main;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import org.hubiquitus.hapi.client.impl.HClient;
 
@@ -32,20 +32,18 @@ import org.hubiquitus.hapi.client.impl.HClient;
 
 public class SimpleExample {
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		HClient client = new HClient();
 		
 		JFrame window = new JFrame("test");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setSize(450, 150);
+		window.setSize(600, 300);
 
-		Panel panel = new Panel();
+		MainPanel panel = new MainPanel();
 		panel.setClient(client);
 		
 		window.setContentPane(panel);
+		window.setResizable(false);
 		window.setVisible(true);
 	}
 

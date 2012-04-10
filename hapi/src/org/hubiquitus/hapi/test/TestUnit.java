@@ -109,7 +109,7 @@ public class TestUnit {
 	@Test
 	public void Connect_Disconnect_Valid_OK() {
 		HClient client = new HClient();
-		client.connect("j.desousa@hub.novediagroup.com", "Vaan79000.", null, null);
+		client.connect("", "", null, null);
 		client.disconnect();
 		assertNotNull("Deconnection réussi");
 		

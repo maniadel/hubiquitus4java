@@ -28,6 +28,6 @@ package org.hubiquitus.hapi.client;
 
 public interface HTransportCallback {
 	
-
 	public void callbackConnection(HStatus hstatus);
+	
 }

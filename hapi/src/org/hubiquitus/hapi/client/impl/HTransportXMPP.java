@@ -72,22 +72,34 @@ public class HTransportXMPP implements HTransport {
 	 * @param options
 	 */
 	@Override
-	public void connect(HClient callback,HOption options){
+	public void connect(final HClient callback,final HOption options){
 			
 		config = new ConnectionConfiguration(options.getJabberID().getDomain(), options.getServerPort());
 		connection = new XMPPConnection(config);
-		status = ConnectionStatus.CONNECTING;
-		callback.callbackConnection(new HStatus(status,ErrorsCode.NO_ERROR, null));
-		try {
-			connection.connect();
-			connection.login(options.getJabberID().getBareJID(), options.getPassword());
-			status = ConnectionStatus.CONNECTED;
-			System.out.println("Connected");
-			callback.callbackConnection(new HStatus(status,ErrorsCode.NO_ERROR, null));
-		} catch(XMPPException e) {
-			status = ConnectionStatus.ERROR;
-			callback.callbackConnection(new HStatus(status, ErrorsCode.UNKNOWN, e.getMessage()));
-		}
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					connection.connect();
+					try {
+						connection.login(options.getJabberID().getBareJID(), options.getPassword());
+						status = ConnectionStatus.CONNECTED;
+						callback.callbackConnection(new HStatus(status,ErrorsCode.NO_ERROR, ""));
+					}catch(XMPPException e) {
+						connection.disconnect();
+						status = ConnectionStatus.ERROR;
+						callback.callbackConnection(new HStatus(status, ErrorsCode.TECH_ERROR, "login/mdp incorrect"));
+					}	
+				} catch(XMPPException e) {
+					status = ConnectionStatus.ERROR;
+					callback.callbackConnection(new HStatus(status, ErrorsCode.TECH_ERROR, "erreur lors de la création de la connexion"));
+				}	
+				
+				
+			}
+		}).start();
+		
 		
 	}
 
@@ -99,15 +111,15 @@ public class HTransportXMPP implements HTransport {
 	@Override
 	public void disconnect(HClient callback,HOption options){
 		status = ConnectionStatus.DISCONNECTING;
-		callback.callbackConnection(new HStatus(status,ErrorsCode.NO_ERROR, null));
+		callback.callbackConnection(new HStatus(status,ErrorsCode.NO_ERROR, ""));
 		try {
 			connection.disconnect();
 			if( !connection.isConnected())
 				status = ConnectionStatus.DISCONNECTED;
-			callback.callbackConnection(new HStatus(status,ErrorsCode.NO_ERROR, null));
+			callback.callbackConnection(new HStatus(status,ErrorsCode.NO_ERROR, ""));
 		} catch(Exception a) {
 			status = ConnectionStatus.ERROR;
-			callback.callbackConnection(new HStatus(status, ErrorsCode.UNKNOWN, a.getMessage()));			
+			callback.callbackConnection(new HStatus(status, ErrorsCode.TECH_ERROR, a.getMessage()));			
 		}
 	}
 
