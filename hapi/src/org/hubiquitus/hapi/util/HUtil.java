@@ -42,78 +42,13 @@ public class HUtil {
 	 */
 	
 	public static <T> int pickIndex(List<T> list) {
-		int numb = 0;
+		int index = 0;
 		
 		int size = list.size();
-		numb = (int) (Math.random() * size);
-		return numb;
+		index = (int) (Math.random() * size);
+		return index;
 	}
 	
-	/**
-	 * Method to obtain the Domain with an HOption
-	 * @param HOption
-	 * @return String (the domain)
-	 */
-	public static String getDomain(HOption option){
-		String domain = option.getJabberID().getDomain();
-		
-		return domain;
-	}
-	
-	/**
-	 * Method to obtain the Domain with a String
-	 * @param String
-	 * @return String (the Domain)
-	 */
-	public static String getDomain(String login) {
-		String ressource = null;
-				
-		if (login.contains("@"))
-			ressource = login.split("@")[1];
-				
-		return ressource;
-	}
-	
-	/**
-	 * Method to obtain the Ressource with an HOption
-	 * @param HOption
-	 * @return String (the Ressource)
-	 */
-	public static String getRessource(HOption option) {
-		String ressource = null;
-		ressource = option.getJabberID().getRessources();
-				
-		return ressource;
-	}
-	
-	
-	/**
-	 * Method to obtain the Ressource with a String
-	 * @param String
-	 * @returnString (the Ressource)
-	 */
-	public static String getRessource(String login) {
-		String ressource = null;
-				
-		if (login.contains("/"))
-			ressource = login.split("/")[1];
-				
-		return ressource;
-	}
-	
-	/**
-	 * Method to obtain the Host with an HOption
-	 * @param HOption
-	 * @return String (the Ressource)
-	 */
-	public static String getHost(HOption option) {
-		String host = null;
-		
-		int randIndex = pickIndex(option.getEndpoints());
-		host = getHost(option.getEndpoints().get(randIndex));
-		
-		return host;
-	}
 	
 	/**
 	 * Method to obtain the Host with the String

@@ -22,7 +22,7 @@ package org.hubiquitus.hapi.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hubiquitus.hapi.model.JabberID;
+import org.hubiquitus.hapi.transport.JabberID;
 
 
 /**
@@ -32,20 +32,16 @@ import org.hubiquitus.hapi.model.JabberID;
  */
 
 public class HOption implements Cloneable {
-
-	
 	/* Parameters */
 	
 	/**
 	 * JId of the client.
 	 */
-
 	private JabberID jid;
 	
 	/**
 	 * Password of the client. Don't appear in the log.
 	 */
-
 	private String password;
 	
 	/**
@@ -71,7 +67,7 @@ public class HOption implements Cloneable {
 	/**
 	 * Number of message request by the getLastMessage method
 	 */
-	private int nbLastMessage;
+	private int nbLastMessage = 10;
 	
 	/**
 	 * Constructor by default
@@ -88,7 +84,6 @@ public class HOption implements Cloneable {
 	 * @param endPoints
 	 * @param nbLastMessage
 	 */
-	
 	public HOption(String serverHost ,int serverPort ,String transport, List<String> endPoints ,int nbLastMessage){
 		this.serverHost = serverHost;
 		setTransport(transport);
@@ -186,7 +181,10 @@ public class HOption implements Cloneable {
 	}
 
 	public void setJabberID(String login) {
-		this.jid = new JabberID(login);
+		try {
+			this.jid = new JabberID(login);
+		} catch (Exception e) {
+		}
 	}
 
 	public String getPassword() {
@@ -217,7 +215,12 @@ public class HOption implements Cloneable {
 	}
 	
 	public void setServerPort(String serverPort) {
-		this.serverPort = Integer.valueOf(serverPort).intValue();
+		try {
+			this.serverPort = Integer.valueOf(serverPort).intValue();
+		} catch (Exception e) {
+			this.serverPort = 5222;
+		}
+		
 	}
 	
 	public String getTransport() {
@@ -236,11 +239,11 @@ public class HOption implements Cloneable {
 	}
 
 	public void setEndpoints(List<String> endpoints) {
-		if(endpoints != null && endpoints.size() != 0)
+		if(endpoints != null && endpoints.size() != 0) {
 			this.endpoints = endpoints;
-		else {
+		} else {
 			this.endpoints.clear();
-			this.endpoints.add("http://localhost:5280/xmpp-bind/");
+			this.endpoints.add("http://localhost:8080/");
 		}	
 	}
 

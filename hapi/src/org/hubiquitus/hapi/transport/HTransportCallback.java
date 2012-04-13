@@ -17,20 +17,18 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.hubiquitus.hapi.client;
+package org.hubiquitus.hapi.transport;
 
-import org.hubiquitus.hapi.client.impl.HClient;
+import org.hubiquitus.hapi.structure.HStatus;
 
 /**
  * 
  * @author j.desousag
  * @version 0.3
- * Interface for the different type of transport
+ * Interface of HTransportCallback
  */
-
-public interface HTransport {
-
-	public void connect(HClient callback ,HOption options);
+public interface HTransportCallback {
 	
-	public void disconnect(HClient callback ,HOption options);
+	public void callbackConnection(HStatus hstatus);
+	
 }

@@ -17,7 +17,7 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.hubiquitus.hapi.model;
+package org.hubiquitus.hapi.transport;
 
 /**
  * @author j.desousag
@@ -41,6 +41,7 @@ public class JabberID {
 	 * Contain ressources
 	 */
 	private String ressources;
+	
 	/**
 	 * Contain the bareJID
 	 */
@@ -79,7 +80,6 @@ public class JabberID {
 				+ ", ressources=" + ressources + ", bareJID=" + bareJID + "]";
 	}
 	
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -125,8 +125,7 @@ public class JabberID {
 		return true;
 	}
 	
-	/* Getter & setter */
-	
+	/* Getter & setter */	
 
 	public String getUsername() {
 		return username;

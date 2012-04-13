@@ -18,10 +18,11 @@
  */
 
 
-package org.hubiquitus.hapi.client;
+package org.hubiquitus.hapi.structure;
 
-import org.hubiquitus.hapi.error.ErrorsCode;
-import org.hubiquitus.hapi.model.ConnectionStatus;
+import org.hubiquitus.hapi.structure.connection.ConnectionError;
+import org.hubiquitus.hapi.structure.connection.ConnectionStatus;
+
 
 /**
  * @author j.desousag
@@ -39,7 +40,7 @@ public class HStatus {
 	/**
 	 * Contain the error
 	 */
-	private ErrorsCode errorCode;
+	private ConnectionError errorCode;
 	
 	/**
 	 * Contain a message error
@@ -51,7 +52,6 @@ public class HStatus {
 	/**
 	 * Constructor by default;
 	 */
-	
 	public HStatus() {};
 	
 	/**
@@ -60,7 +60,7 @@ public class HStatus {
 	 * @param errorCode
 	 * @param errorMsg
 	 */
-	public HStatus(ConnectionStatus status ,ErrorsCode errorCode ,String errorMsg) {
+	public HStatus(ConnectionStatus status ,ConnectionError errorCode ,String errorMsg) {
 		this.status = status;
 		this.errorCode = errorCode;
 		this.errorMsg = errorMsg;		
@@ -116,14 +116,12 @@ public class HStatus {
 	public void setStatus(ConnectionStatus status) {
 		this.status = status;
 	}
-
 	
-	public ErrorsCode getErrorCode() {
+	public ConnectionError getErrorCode() {
 		return errorCode;
 	}
-
 	
-	public void setErrorCode(ErrorsCode errorCode) {
+	public void setErrorCode(ConnectionError errorCode) {
 		this.errorCode = errorCode;	
 	}
 	
@@ -134,6 +132,4 @@ public class HStatus {
 	public void setErrorMsg(String errorMsg) {
 		this.errorMsg = errorMsg;
 	}
-	
-	
 }

@@ -21,16 +21,13 @@ package org.hubiquitus.hapi.client.impl;
 
 import org.hubiquitus.hapi.client.HCallback;
 import org.hubiquitus.hapi.client.HOption;
-import org.hubiquitus.hapi.client.HTransport;
-import org.hubiquitus.hapi.client.HTransportCallback;
-import org.hubiquitus.hapi.client.HStatus;
-import org.hubiquitus.hapi.error.ErrorsCode;
-import org.hubiquitus.hapi.model.ConnectionStatus;
-
-import de.javawi.jstun.attribute.ErrorCode;
-
-
-
+import org.hubiquitus.hapi.structure.HStatus;
+import org.hubiquitus.hapi.structure.connection.ConnectionError;
+import org.hubiquitus.hapi.structure.connection.ConnectionStatus;
+import org.hubiquitus.hapi.transport.HTransport;
+import org.hubiquitus.hapi.transport.HTransportCallback;
+import org.hubiquitus.hapi.transport.JabberID;
+import org.hubiquitus.hapi.transport.xmpp.HTransportXMPP;
 
 /**
  * @author j.desousag
@@ -46,8 +43,7 @@ public class HClient implements HTransportCallback{
 	 * Connection status
 	 */	
 	private ConnectionStatus status;
-	
-	
+		
 	/**
 	 * Connection option
 	 */
@@ -62,13 +58,15 @@ public class HClient implements HTransportCallback{
 	 * Transport used 
 	 */
 	private HTransport transport;
-
+	
+	/**
+	 * Constructor
+	 */
 	public HClient() {
 		this.status = ConnectionStatus.DISCONNECTED;
 	}
 
 	public void init(String publisher, String password,HOption options) {
-
 		
 		if(options == null) {
 			this.options = new HOption();
@@ -80,6 +78,7 @@ public class HClient implements HTransportCallback{
 		
 		this.transport = new HTransportXMPP();
 	}
+	
 	/**
 	 * Method connect which set the option and launch the connection
 	 * @param publisher
@@ -87,28 +86,25 @@ public class HClient implements HTransportCallback{
 	 * @param callback
 	 * @param options
 	 */
-	
-	public void connect(String publisher, String password, HCallback callback,HOption options){
-		
+	public void connect(String publisher, String password, HCallback callback,HOption options) {
 		synchronized(this) { 
 			if(this.status != ConnectionStatus.CONNECTED && this.status != ConnectionStatus.CONNECTING )
 			{
 				this.callback = callback;
-				this.status =  ConnectionStatus.CONNECTING;
-				callbackConnection(new HStatus(ConnectionStatus.CONNECTING, ErrorsCode.NO_ERROR, ""));
+				callbackConnection(new HStatus(ConnectionStatus.CONNECTING, ConnectionError.NO_ERROR, ""));
 				// Check the JID is well formed 
-				if(!publisher.contains("@")) {
-					this.status = ConnectionStatus.ERROR;
-					callbackConnection(new HStatus(ConnectionStatus.ERROR, ErrorsCode.JID_MALFORMAT, "JID malformat"));
+				try {
+					new JabberID(publisher);
+					init(publisher,password,options);
+					transport.connect(this ,this.options);	
+				} catch (Exception e) {
+					callbackConnection(new HStatus(ConnectionStatus.ERROR, ConnectionError.JID_MALFORMAT, "JID malformat"));
 					return;
-				}
-				
-				init(publisher,password,options);
-				transport.connect(this ,this.options);	
+				}				
 			} else {
 				if(status == ConnectionStatus.CONNECTED) {
 					callbackConnection(new HStatus(ConnectionStatus.CONNECTED, 
-							ErrorsCode.ALREADY_CONNECTED, "Already connected"));
+							ConnectionError.ALREADY_CONNECTED, "Already connected"));
 				}
 				
 			}
@@ -118,13 +114,13 @@ public class HClient implements HTransportCallback{
 	/**
 	 * Method disconnect
 	 */
-	
 	public void disconnect() {
 		if(status == ConnectionStatus.CONNECTED) {
-			transport.disconnect(this, this.options);
+			transport.disconnect(this);
 		} else {
 			callbackConnection(new HStatus(ConnectionStatus.DISCONNECTED, 
-					ErrorsCode.TECH_ERROR, "Must be connect before disconnecting"));;
+					ConnectionError.NOT_CONNECTED,
+					"Must be connect before disconnecting"));;
 		}
 	}
 	
@@ -132,12 +128,11 @@ public class HClient implements HTransportCallback{
 	 * Method callback used during a connection 
 	 */
 	@Override
-	public void callbackConnection(HStatus hstatus){
-		
+	public void callbackConnection(HStatus hstatus) {
 		this.status = hstatus.getStatus();
 		if(callback != null) {
 			HStatus temp = hstatus;
-			this.callback.hCallback(temp);
+			this.callback.hCallback("HStatus",temp);
 		}
 	}
 	

@@ -34,9 +34,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import org.hubiquitus.hapi.client.HCallback;
 import org.hubiquitus.hapi.client.HOption;
 import org.hubiquitus.hapi.client.impl.HClient;
+import org.hubiquitus.hapi.util.HUtil;
 
 /**
  * 
@@ -45,6 +45,7 @@ import org.hubiquitus.hapi.client.impl.HClient;
  * The panel for this example
  */
 
+@SuppressWarnings("serial")
 public class MainPanel extends JPanel {
 	private HClient client;
 	
@@ -53,15 +54,18 @@ public class MainPanel extends JPanel {
 
 	private JTextField usernameField = new JTextField("");
 	private JTextField passwordField = new JTextField("");
-	private JTextField portField = new JTextField("5222");
+	private JTextField endPointField = new JTextField("");
 
 	private JButton connectButton = new JButton("Connection");
 	private JButton disconnectButton = new JButton("Disconnection");
+	private JButton cleanButton = new JButton("Clean");
 	
 	private JRadioButton xmppRadioButton = new JRadioButton("XMPP");
 	private JRadioButton socketRadioButton = new JRadioButton("Socket IO");
 	private ButtonGroup buttonGroup = new ButtonGroup();
-	private JTextArea logArea = new JTextArea(10,50);
+	
+	private JTextArea logArea = new JTextArea(10,70);
+	private JTextArea statusArea = new JTextArea(1,70);
 
 	public MainPanel() {
 		super();
@@ -83,24 +87,29 @@ public class MainPanel extends JPanel {
 
 		//Initialization of Labels,TextFields and RadioButtons
 		JPanel paramsPanel = new JPanel();
-		GridLayout paramsLayout = new GridLayout(4, 2);
+		GridLayout paramsLayout = new GridLayout(5, 2);
 		paramsPanel.setLayout(paramsLayout);
 		paramsPanel.add(new JLabel("username"));
 		paramsPanel.add(usernameField);
 		paramsPanel.add(new JLabel("password"));
 		paramsPanel.add(passwordField);
-		paramsPanel.add(new JLabel("host"));
-		paramsPanel.add(portField);
+		paramsPanel.add(new JLabel("endPoint"));
+		paramsPanel.add(endPointField);
 		paramsPanel.add(xmppRadioButton);
-		paramsPanel.add(socketRadioButton);
+		//paramsPanel.add(socketRadioButton);
+		paramsPanel.add(new JLabel(""));
 		
+		statusArea.setEditable(false);
+		paramsPanel.add(statusArea);
 		
 		//Initialization of Buttons
 		JPanel controlsPanel = new JPanel();
-		GridLayout controlsLayout = new GridLayout(1, 2);
+		GridLayout controlsLayout = new GridLayout(1, 3);
 		controlsPanel.setLayout(controlsLayout);
 		controlsPanel.add(connectButton);
 		controlsPanel.add(disconnectButton);
+		controlsPanel.add(cleanButton);
+		
 		
 		//Initialization of the TextArea
 		JPanel consolePanel = new JPanel();
@@ -108,6 +117,7 @@ public class MainPanel extends JPanel {
 		consolePanel.add(logArea);
 		JScrollPane txtScrol=new JScrollPane(logArea);
 		txtScrol.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		txtScrol.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		consolePanel.add(txtScrol);
 
 		//Add all in the layout
@@ -122,33 +132,50 @@ public class MainPanel extends JPanel {
 	public void initListeners() {
 		connectButton.addMouseListener(new ConnectionButtonListener());
 		disconnectButton.addMouseListener(new DisconnectionButtonListener());
+		cleanButton.addMouseListener(new CleanButtonListener());
 	}
 	
 	/**
 	 * Add a text to the TextArea
 	 * @param text
 	 */
-	public void addTextArea(String text){
+	public void addTextArea(String text) {
 		String tempTxt = this.logArea.getText() + "\n" + text;
 		this.logArea.setText(tempTxt);
+	}
+	
+	/**
+	 * Clean the TextArea
+	 */
+	public void cleanTextArea() {
+		this.logArea.setText("clean");
+	}
+	
+	/**
+	 * Change the status 
+	 * @param text
+	 */
+	public void setStatusArea(String text) {
+		this.statusArea.setText(text);
 	}
 	
 	// Listener of button connection
 	class ConnectionButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
 			
-			String txt = portField.getText();
-			if (txt == null || txt.equalsIgnoreCase(""))
-				option.setServerPort("5222");
-			else
-				option.setServerPort(portField.getText());
-			
-			if(xmppRadioButton.isSelected())
-				option.setTransport("XMPP");
-			else {
-				System.out.println("Pas encore pris en charge");
-				addTextArea("Pas encore pris en charge");
+			String endpoint = endPointField.getText();
+			option.getEndpoints().clear();
+			if (endpoint == null || endpoint.equalsIgnoreCase("")) {
+				option.setEndpoints(null);
+				option.setServerHost(null);
+				option.setServerPort(0);
+			} else {
+				option.getEndpoints().add(endpoint);
+				option.setServerHost(HUtil.getHost(endpoint));
+				option.setServerPort(HUtil.getPort(endpoint));
 			}
+
+			
 			client.connect(usernameField.getText(), passwordField.getText(), callback, option);
 		}
 	}
@@ -157,6 +184,13 @@ public class MainPanel extends JPanel {
 	class DisconnectionButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
 			client.disconnect();
+		}
+	}
+
+	// Listener of button clean
+	class CleanButtonListener extends MouseAdapter {
+		public void mouseClicked(MouseEvent event) {
+			cleanTextArea();
 		}
 	}
 	
@@ -172,6 +206,8 @@ public class MainPanel extends JPanel {
 	public void setTextArea(String text){
 		this.logArea.setText(text);
 	}
+
+	
 	
 	
 }

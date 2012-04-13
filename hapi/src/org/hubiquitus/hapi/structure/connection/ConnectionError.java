@@ -17,17 +17,36 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.hubiquitus.hapi.client;
+package org.hubiquitus.hapi.structure.connection;
 
 /**
- * 
  * @author j.desousag
  * @version 0.3
- * Interface of HTransportCallback
+ * ConnectionError contain the error name return during a connection
  */
 
-public interface HTransportCallback {
+
+public enum ConnectionError {
+	NO_ERROR(0),
+	JID_MALFORMAT(1),
+	CONN_TIMEOUT(2),
+	//AUTH_FAILED(3),
+	ATTACH_FAILED(4),
+	ALREADY_CONNECTED(5),
+	TECH_ERROR(6),
+	NOT_CONNECTED(7);
 	
-	public void callbackConnection(HStatus hstatus);
+	private int value;
 	
+	private ConnectionError(int value) {
+		this.value = value;
+	}
+	
+	/**
+	 * Method to get the value of ErrorCode
+	 * @return ErrorCode's value
+	 */	
+	public int getValue() {
+		return value;
+	}
 }

@@ -38,52 +38,9 @@ import org.junit.Test;
 
 public class TestUnit {
 
-	
 	/**
-	 * Unit test for getDomain
+	 * Test for getPort
 	 */
-	@Test
-	public void getDomain_ValidDomain_OK() {
-		HOption option = new HOption();
-		option.setJabberID("login@domain");
-		String res_test = HUtil.getDomain(option);
-		assertNotNull(res_test);
-	}
-	
-	@Test
-	public void getDomain_InvalidDomain_OK() {
-		HOption option = new HOption();
-		option.setJabberID("logindomain");
-		String res_test = HUtil.getDomain(option);
-		assertNull(res_test);
-	}
-	
-	/**
-	 * Unitary test for getHost
-	 */
-	
-	@Test
-	public void getHost_ValidHost_OK() {
-		List<String> var_test = Arrays.asList("XMPP://host:2023/namespace");
-		HOption option = new HOption();
-		option.setEndpoints(var_test);
-		String res_test = HUtil.getHost(option);
-		assertNotNull(res_test);
-	}
-	
-	@Test
-	public void getHost_InvalidHost_OK() {
-		List<String> var_test = Arrays.asList("host:2023");
-		HOption option = new HOption();
-		option.setEndpoints(var_test);
-		String res_test = HUtil.getHost(option);
-		assertNotNull(res_test);
-	}
-	
-	/**
-	 * Unitary test for getPort
-	 */
-	
 	@Test
 	public void getPort_ValidPort_OK() {
 		List<String> var_test = Arrays.asList("XMPP://host:2023/namespace");
@@ -103,7 +60,7 @@ public class TestUnit {
 	}
 	
 	/**
-	 * Unitary test for Connect_disconnect
+	 * Test for Connect_disconnect
 	 */
 	
 	@Test

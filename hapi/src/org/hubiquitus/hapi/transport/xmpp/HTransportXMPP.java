@@ -17,15 +17,17 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.hubiquitus.hapi.client.impl;
+package org.hubiquitus.hapi.transport.xmpp;
 
 import org.hubiquitus.hapi.client.HOption;
-import org.hubiquitus.hapi.client.HStatus;
-import org.hubiquitus.hapi.client.HTransport;
-import org.hubiquitus.hapi.error.ErrorsCode;
-import org.hubiquitus.hapi.model.ConnectionStatus;
+import org.hubiquitus.hapi.client.impl.HClient;
+import org.hubiquitus.hapi.structure.HStatus;
+import org.hubiquitus.hapi.structure.connection.ConnectionError;
+import org.hubiquitus.hapi.structure.connection.ConnectionStatus;
+import org.hubiquitus.hapi.transport.HTransport;
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
@@ -54,17 +56,9 @@ public class HTransportXMPP implements HTransport {
 	 */
 	private ConnectionStatus status;
 	
+	private HClient callback;
 	
-	/**
-	 * Builder
-	 * @param publisher
-	 * @param password
-	 * @param callback
-	 * @param options
-	 */
-	public HTransportXMPP() {
-		
-	};	
+	public HTransportXMPP() {};	
 	
 	/**
 	 * Method connect : connection with the server and return an HStatus
@@ -73,9 +67,21 @@ public class HTransportXMPP implements HTransport {
 	 */
 	@Override
 	public void connect(final HClient callback,final HOption options){
-			
-		config = new ConnectionConfiguration(options.getJabberID().getDomain(), options.getServerPort());
+		this.callback = callback;
+		
+		if(options.getServerHost() != null ) {
+			config = new ConnectionConfiguration(options.getServerHost(), options.getServerPort());
+		} else if(options.getJabberID().getDomain() != null ) {
+			config = new ConnectionConfiguration(options.getJabberID().getDomain(), options.getServerPort());
+		} else {
+			sendErrorCallBack(ConnectionError.TECH_ERROR, "hostname can't be null");
+			return;
+		}
+		
+		
+		config.setSecurityMode(SecurityMode.required);
 		connection = new XMPPConnection(config);
+				
 		new Thread(new Runnable() {
 			
 			@Override
@@ -83,20 +89,17 @@ public class HTransportXMPP implements HTransport {
 				try {
 					connection.connect();
 					try {
-						connection.login(options.getJabberID().getBareJID(), options.getPassword());
-						status = ConnectionStatus.CONNECTED;
-						callback.callbackConnection(new HStatus(status,ErrorsCode.NO_ERROR, ""));
+						connection.login(options.getJabberID().getUsername(), options.getPassword());
+						sendOkCallBack(ConnectionStatus.CONNECTED);
 					}catch(XMPPException e) {
+						//TODO : Utilise la console log4j
 						connection.disconnect();
-						status = ConnectionStatus.ERROR;
-						callback.callbackConnection(new HStatus(status, ErrorsCode.TECH_ERROR, "login/mdp incorrect"));
-					}	
+						sendErrorCallBack(ConnectionError.TECH_ERROR,  "login/password error : " + e.getMessage());
+					}
+				
 				} catch(XMPPException e) {
-					status = ConnectionStatus.ERROR;
-					callback.callbackConnection(new HStatus(status, ErrorsCode.TECH_ERROR, "erreur lors de la création de la connexion"));
-				}	
-				
-				
+					sendErrorCallBack(ConnectionError.CONN_TIMEOUT, e.getMessage());
+				} 				
 			}
 		}).start();
 		
@@ -109,18 +112,26 @@ public class HTransportXMPP implements HTransport {
 	 * @param options
 	 */
 	@Override
-	public void disconnect(HClient callback,HOption options){
-		status = ConnectionStatus.DISCONNECTING;
-		callback.callbackConnection(new HStatus(status,ErrorsCode.NO_ERROR, ""));
+	public void disconnect(HClient callback){
+		sendOkCallBack(ConnectionStatus.DISCONNECTING);
 		try {
 			connection.disconnect();
-			if( !connection.isConnected())
-				status = ConnectionStatus.DISCONNECTED;
-			callback.callbackConnection(new HStatus(status,ErrorsCode.NO_ERROR, ""));
-		} catch(Exception a) {
-			status = ConnectionStatus.ERROR;
-			callback.callbackConnection(new HStatus(status, ErrorsCode.TECH_ERROR, a.getMessage()));			
+			sendOkCallBack(ConnectionStatus.DISCONNECTED);
+		} catch(Exception e) {
+			sendErrorCallBack(ConnectionError.TECH_ERROR, e.getMessage());			
 		}
 	}
+
+	public void sendOkCallBack(ConnectionStatus status) {
+		this.status = status;
+		this.callback.callbackConnection(new HStatus(status,ConnectionError.NO_ERROR, ""));
+	}
+	
+	public void sendErrorCallBack(ConnectionError error, String msg) {
+		this.status = ConnectionStatus.ERROR;
+		this.callback.callbackConnection(new HStatus(status,error,msg));
+	}
+	
+	
 
 }

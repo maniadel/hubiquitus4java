@@ -17,38 +17,35 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.hubiquitus.hapi.error;
+
+package org.hubiquitus.hapi.structure.connection;
 
 /**
  * @author j.desousag
  * @version 0.3
- * ErrorCode contain the error name return during a connection
+ * Enumeration of different status of connection take by the client
  */
 
-
-public enum ErrorsCode {
-	
-	NO_ERROR(0),
-	JID_MALFORMAT(1),
-	CONN_TIMEOUT(2),
-	AUTH_FAILED(3),
-	ATTACH_FAILED(4),
-	ALREADY_CONNECTED(5),
-	TECH_ERROR(6);
+public enum ConnectionStatus {
+	CONNECTED(1),
+	CONNECTING(2),
+	DISCONNECTING(3),
+	DISCONNECTED(4),
+	REATTACHING(5),
+	REATTACHED(6),
+	ERROR(7);
 	
 	private int value;
 	
-	private ErrorsCode(int value) {
+	private ConnectionStatus(int value) {
 		this.value = value;
 	}
 	
 	/**
 	 * Method to get the value of ErrorCode
 	 * @return ErrorCode's value
-	 */
-	
+	 */	
 	public int getValue() {
 		return value;
 	}
-	
 }

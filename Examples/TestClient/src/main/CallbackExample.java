@@ -21,7 +21,9 @@ package main;
 
 
 import org.hubiquitus.hapi.client.HCallback;
-import org.hubiquitus.hapi.client.HStatus;
+import org.hubiquitus.hapi.structure.HStatus;
+import org.hubiquitus.hapi.structure.connection.ConnectionError;
+import org.hubiquitus.hapi.structure.connection.ConnectionStatus;
 
 /**
  * 
@@ -38,14 +40,16 @@ public class CallbackExample implements HCallback {
 	}
 	
 	@Override
-	public void hCallback(HStatus status) {
-		panel.addTextArea(status.toString());
-	}
-
-	@Override
-	public void hCallback() {
+	public void hCallback(String type, Object objet) {
 		// TODO Auto-generated method stub
-		
+		if(type.equals("HStatus")) {
+			HStatus status = (HStatus) objet;
+			panel.addTextArea(status.toString());
+			if(status.getStatus() != ConnectionStatus.ERROR)
+				panel.setStatusArea(status.getStatus().toString());
+			else
+				panel.setStatusArea(status.getStatus().toString() + " : " + status.getErrorMsg() );
+		}
 	}
 
 }

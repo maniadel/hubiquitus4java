@@ -28,8 +28,7 @@ package org.hubiquitus.hapi.client;
 
 public interface HCallback {
 	
-	public void hCallback();
+	public void hCallback(String type, Object objet);
 	
-	public void hCallback(HStatus status);
 
 }
