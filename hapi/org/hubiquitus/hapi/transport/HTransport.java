@@ -19,6 +19,8 @@
 
 package org.hubiquitus.hapi.transport;
 
+import org.json.JSONObject;
+
 
 /**
  * 
