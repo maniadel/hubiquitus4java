@@ -34,8 +34,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import org.hubiquitus.hapi.client.HOption;
-import org.hubiquitus.hapi.client.impl.HClient;
+import org.hubiquitus.hapi.client.HOptions;
+import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hapi.util.HUtil;
 
 /**
@@ -49,7 +49,7 @@ import org.hubiquitus.hapi.util.HUtil;
 public class MainPanel extends JPanel {
 	private HClient client;
 	
-	private HOption option = new HOption();
+	private HOptions option = new HOptions();
 	private CallbackExample callback = new CallbackExample(this);
 
 	private JTextField usernameField = new JTextField("");

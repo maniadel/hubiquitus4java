@@ -17,34 +17,28 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package main;
+package org.hubiquitus.hapi.transport;
 
-import javax.swing.JFrame;
 
-import org.hubiquitus.hapi.client.HClient;
-
-/***
+/**
  * 
- * @author speed
+ * @author j.desousag
  * @version 0.3
- * Example of a basic connection/disconnection application
+ * Interface abstracting transport layer
  */
 
-public class SimpleExample {
+public interface HTransport {
 
-	public static void main(String[] args) {
-		HClient client = new HClient();
-		
-		JFrame window = new JFrame("test");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setSize(800, 350);
-
-		MainPanel panel = new MainPanel();
-		panel.setClient(client);
-		
-		window.setContentPane(panel);
-		window.setResizable(false);
-		window.setVisible(true);
-	}
-
+	/**
+	 * transport layer connect
+	 * should connect asynchronously and catch all errors and return them through callback
+	 * @param callback
+	 * @param options
+	 */
+	public void connect(HTransportCallback callback, HTransportOptions options);
+	
+	/**
+	 * transport layer disconnect
+	 */
+	public void disconnect();
 }

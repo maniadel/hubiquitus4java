@@ -17,34 +17,41 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package main;
 
-import javax.swing.JFrame;
+package org.hubiquitus.hapi.hStructures;
 
-import org.hubiquitus.hapi.client.HClient;
-
-/***
- * 
- * @author speed
+/**
+ * @author j.desousag
  * @version 0.3
- * Example of a basic connection/disconnection application
+ * Enumeration of different status of connection take by the client
  */
 
-public class SimpleExample {
-
-	public static void main(String[] args) {
-		HClient client = new HClient();
-		
-		JFrame window = new JFrame("test");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setSize(800, 350);
-
-		MainPanel panel = new MainPanel();
-		panel.setClient(client);
-		
-		window.setContentPane(panel);
-		window.setResizable(false);
-		window.setVisible(true);
+public enum ConnectionStatus {
+	UNKNOWN(0),
+	CONNECTING(1),
+	CONNECTED(2),
+	REATTACHING(3),
+	REATTACHED(4),
+	DISCONNECTING(5),
+	DISCONNECTED(6);
+	
+	private int value;
+	
+	private ConnectionStatus(int value) {
+		this.value = value;
 	}
-
+	
+	public int value() {
+		return value;
+	}
+	
+	/**
+	 * Get constant for value
+	 * @param value
+	 * @return
+	 */
+	public static ConnectionStatus constant(int value) {
+		ConnectionStatus [] _values = ConnectionStatus.values();
+		return _values[value];
+	}
 }

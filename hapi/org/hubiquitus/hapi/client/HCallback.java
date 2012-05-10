@@ -1,5 +1,3 @@
-package main;
-
 /*
  * Copyright (c) Novedia Group 2012.
  *
@@ -19,38 +17,25 @@ package main;
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package org.hubiquitus.hapi.client;
 
-import org.hubiquitus.hapi.client.HCallback;
-import org.hubiquitus.hapi.hStructures.HStatus;
-import org.hubiquitus.hapi.hStructures.ConnectionError;
 import org.hubiquitus.hapi.structures.HJSONSerializable;
 
 /**
  * 
  * @author j.desousag
  * @version 0.3
- * Callback of the example
+ * Interface HCallback
  */
-public class CallbackExample implements HCallback {
-	
-	private MainPanel panel;
 
-	public CallbackExample(MainPanel panel2) {
-		this.panel = panel2;
-	}
+public interface HCallback {
 	
-	@Override
-	public void hCallback(String type, HJSONSerializable data) {
-		// TODO Auto-generated method stub
-		panel.setStatusArea(type);
-		if(type.equals("hStatus")) {
-			HStatus status = (HStatus) data;
-			panel.addTextArea(status.toString());
-			if(status.getErrorCode() != ConnectionError.NO_ERROR)
-				panel.setStatusArea(status.getStatus().toString());
-			else
-				panel.setStatusArea(status.getStatus().toString() + " : " + status.getErrorMsg() );
-		}
-	}
+	/**
+	 * hAPI callback.
+	 * called asynchronyously to notify an update
+	 * @param type - hubiquitus structure (hresult, hstatus, hmessage...)
+	 * @param data - the structure defined by the type
+	 */
+	public void hCallback(String type, HJSONSerializable data);
 
 }

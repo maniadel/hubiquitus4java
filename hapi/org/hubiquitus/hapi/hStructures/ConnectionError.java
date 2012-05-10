@@ -17,34 +17,49 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package main;
+package org.hubiquitus.hapi.hStructures;
 
-import javax.swing.JFrame;
-
-import org.hubiquitus.hapi.client.HClient;
-
-/***
- * 
- * @author speed
+/**
+ * @author j.desousag
  * @version 0.3
- * Example of a basic connection/disconnection application
+ * hStatus error codes. Returned on connection failure
+ * For more information see Hubiquitus reference
  */
 
-public class SimpleExample {
 
-	public static void main(String[] args) {
-		HClient client = new HClient();
-		
-		JFrame window = new JFrame("test");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setSize(800, 350);
-
-		MainPanel panel = new MainPanel();
-		panel.setClient(client);
-		
-		window.setContentPane(panel);
-		window.setResizable(false);
-		window.setVisible(true);
+public enum ConnectionError {
+	NO_ERROR(0),
+	JID_MALFORMAT(1),
+	CONN_TIMEOUT(2),
+	AUTH_FAILED(3),
+	ATTACH_FAILED(4),
+	ALREADY_CONNECTED(5),
+	TECH_ERROR(6),
+	NOT_CONNECTED(7),
+	CONN_PROGRESS(8);
+	
+	private int value;
+	
+	private ConnectionError(int value) {
+		this.value = value;
 	}
-
+	
+	/**
+	 * Method to get the value of ErrorCode
+	 * @return ErrorCode's value
+	 */
+	public int value() {
+		return value;
+	}
+	
+	/**
+	 * Get constant for value
+	 * @param value
+	 * @return
+	 */
+	public static ConnectionError constant(int value) {
+		ConnectionError [] _values = ConnectionError.values();
+		return _values[value];
+	}
+	
 }
