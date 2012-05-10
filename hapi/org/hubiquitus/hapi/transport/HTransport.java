@@ -43,4 +43,6 @@ public interface HTransport {
 	 * transport layer disconnect
 	 */
 	public void disconnect();
+	
+	public void sendObject(JSONObject object);
 }

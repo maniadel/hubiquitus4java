@@ -260,5 +260,10 @@ public class HTransportSocketio implements HTransport, IOCallback {
 	public void onMessage(JSONObject arg0, IOAcknowledge arg1) {
 		//Log.i("socketio", arg0.toString());
 	}
-	
+
+	@Override
+	public void sendObject(JSONObject object) {
+		// TODO Auto-generated method stub
+		
+	}
 }

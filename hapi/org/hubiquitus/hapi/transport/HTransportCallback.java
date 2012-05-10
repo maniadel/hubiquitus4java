@@ -21,6 +21,7 @@ package org.hubiquitus.hapi.transport;
 
 import org.hubiquitus.hapi.hStructures.ConnectionError;
 import org.hubiquitus.hapi.hStructures.ConnectionStatus;
+import org.json.JSONObject;
 
 /**
  * 
@@ -33,4 +34,5 @@ public interface HTransportCallback {
 	
 	public void connectionCallback(ConnectionStatus status, ConnectionError error, String errorMsg);
 	
+	public void dataCallback(JSONObject jsonData); 
 }

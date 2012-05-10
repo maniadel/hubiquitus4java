@@ -29,6 +29,7 @@ import org.hubiquitus.hapi.transport.HTransportOptions;
 import org.hubiquitus.hapi.transport.socketio.HTransportSocketio;
 import org.hubiquitus.hapi.transport.xmpp.HTransportXMPP;
 import org.hubiquitus.hapi.util.HUtil;
+import org.json.JSONObject;
 
 
 /**
@@ -228,5 +229,11 @@ public class HClient implements HTransportCallback {
 	public void connectionCallback(ConnectionStatus status,
 			ConnectionError error, String errorMsg) {
 		this.updateStatus(status, error, errorMsg);
+	}
+
+	@Override
+	public void dataCallback(JSONObject jsonData) {
+		// TODO Auto-generated method stub
+		
 	}
 }

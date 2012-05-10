@@ -17,15 +17,11 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.hubiquitus.hapi.hStructures;
 
 import org.hubiquitus.hapi.structures.HJSONSerializable;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-
-
 
 /**
  * @version 0.3

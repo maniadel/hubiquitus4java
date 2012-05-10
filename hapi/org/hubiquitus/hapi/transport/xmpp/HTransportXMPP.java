@@ -32,6 +32,7 @@ import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
+import org.json.JSONObject;
 
 
 /**
@@ -236,5 +237,11 @@ public class HTransportXMPP implements HTransport, ConnectionListener {
 
 	//as we use our reconnection system, this shouldn't be called
 	public void reconnectionSuccessful() {
+	}
+
+	@Override
+	public void sendObject(JSONObject object) {
+		// TODO Auto-generated method stub
+		
 	}
 }
