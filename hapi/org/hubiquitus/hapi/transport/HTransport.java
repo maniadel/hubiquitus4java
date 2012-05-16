@@ -21,7 +21,6 @@ package org.hubiquitus.hapi.transport;
 
 import org.json.JSONObject;
 
-
 /**
  * 
  * @author j.desousag

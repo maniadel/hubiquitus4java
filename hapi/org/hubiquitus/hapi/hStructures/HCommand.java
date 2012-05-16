@@ -21,7 +21,6 @@
 package org.hubiquitus.hapi.hStructures;
 
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import org.hubiquitus.hapi.structures.HJSONSerializable;
 import org.json.JSONException;
@@ -30,7 +29,7 @@ import org.json.JSONObject;
 /**
  * @author j.desousag
  * @version 0.3
- * 
+ * hAPI Command. For more info, see Hubiquitus reference
  */
 
 public class HCommand implements HJSONSerializable {
@@ -39,10 +38,10 @@ public class HCommand implements HJSONSerializable {
 	private String requester = null;
 	private String sender = null;
 	private String entity = null;
-	private Calendar sent = new GregorianCalendar();
+	private Calendar sent = null;
 	private String cmd = null;
 	private JSONObject params = null;
-	private String _transient = null;
+	private Boolean _transient = true;
 	
 	
 	public HCommand() {	}
@@ -66,11 +65,11 @@ public class HCommand implements HJSONSerializable {
 		JSONObject jsonObj = new JSONObject();
 		
 		try {
-			jsonObj.put("requid", this.reqid);
+			jsonObj.put("reqid", this.reqid);
 			jsonObj.put("requester", this.requester);
 			jsonObj.put("sender", this.sender);
 			jsonObj.put("entity", this.entity);
-			jsonObj.put("sent", this.sent);
+			jsonObj.put("sent", this.sent.getTime().toString());
 			jsonObj.put("cmd",this.cmd);
 			jsonObj.put("params", this.params);
 			jsonObj.put("transient", this._transient);
@@ -244,11 +243,11 @@ public class HCommand implements HJSONSerializable {
 		this.params = params;
 	}
 
-	public String get_transient() {
+	public Boolean get_transient() {
 		return _transient;
 	}
 
-	public void set_transient(String _transient) {
+	public void set_transient(Boolean _transient) {
 		this._transient = _transient;
 	}	
 }

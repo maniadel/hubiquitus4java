@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) Novedia Group 2012.
  *
@@ -24,6 +23,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -34,9 +34,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import org.hubiquitus.hapi.client.HOptions;
 import org.hubiquitus.hapi.client.HClient;
-import org.hubiquitus.hapi.util.HUtil;
+import org.hubiquitus.hapi.hStructures.HCommand;
+import org.hubiquitus.hapi.hStructures.HOptions;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * 
@@ -55,10 +57,14 @@ public class MainPanel extends JPanel {
 	private JTextField usernameField = new JTextField("");
 	private JTextField passwordField = new JTextField("");
 	private JTextField endPointField = new JTextField("");
-
+	private JTextField serverPortField = new JTextField("");
+	private JTextField serverHostField = new JTextField("");
+	private JTextField hechoField = new JTextField("");
+	
 	private JButton connectButton = new JButton("Connection");
 	private JButton disconnectButton = new JButton("Disconnection");
 	private JButton cleanButton = new JButton("Clean");
+	private JButton hcommandButton = new JButton("hEcho");
 	
 	private JRadioButton xmppRadioButton = new JRadioButton("XMPP");
 	private JRadioButton socketRadioButton = new JRadioButton("Socket IO");
@@ -87,7 +93,7 @@ public class MainPanel extends JPanel {
 
 		//Initialization of Labels,TextFields and RadioButtons
 		JPanel paramsPanel = new JPanel();
-		GridLayout paramsLayout = new GridLayout(5, 2);
+		GridLayout paramsLayout = new GridLayout(8, 2);
 		paramsPanel.setLayout(paramsLayout);
 		paramsPanel.add(new JLabel("username"));
 		paramsPanel.add(usernameField);
@@ -95,19 +101,25 @@ public class MainPanel extends JPanel {
 		paramsPanel.add(passwordField);
 		paramsPanel.add(new JLabel("endPoint"));
 		paramsPanel.add(endPointField);
+		paramsPanel.add(new JLabel("serverHost"));
+		paramsPanel.add(serverHostField);
+		paramsPanel.add(new JLabel("serverPort"));
+		paramsPanel.add(serverPortField);
+		paramsPanel.add(new JLabel("hecho Text"));
+		paramsPanel.add(hechoField);
 		paramsPanel.add(xmppRadioButton);
-		//paramsPanel.add(socketRadioButton);
-		paramsPanel.add(new JLabel(""));
+		paramsPanel.add(socketRadioButton);
 		
 		statusArea.setEditable(false);
 		paramsPanel.add(statusArea);
 		
 		//Initialization of Buttons
 		JPanel controlsPanel = new JPanel();
-		GridLayout controlsLayout = new GridLayout(1, 3);
+		GridLayout controlsLayout = new GridLayout(1, 4);
 		controlsPanel.setLayout(controlsLayout);
 		controlsPanel.add(connectButton);
 		controlsPanel.add(disconnectButton);
+		controlsPanel.add(hcommandButton);
 		controlsPanel.add(cleanButton);
 		
 		
@@ -132,6 +144,7 @@ public class MainPanel extends JPanel {
 	public void initListeners() {
 		connectButton.addMouseListener(new ConnectionButtonListener());
 		disconnectButton.addMouseListener(new DisconnectionButtonListener());
+		hcommandButton.addMouseListener(new HCommandButtonListener());
 		cleanButton.addMouseListener(new CleanButtonListener());
 	}
 	
@@ -164,18 +177,28 @@ public class MainPanel extends JPanel {
 		public void mouseClicked(MouseEvent event) {
 			
 			String endpoint = endPointField.getText();
+			System.out.println("endpoint : " + endpoint);
 			option.getEndpoints().clear();
 			if (endpoint == null || endpoint.equalsIgnoreCase("")) {
 				option.setEndpoints(null);
-				option.setServerHost(null);
-				option.setServerPort(0);
 			} else {
-				option.getEndpoints().add(endpoint);
-				option.setServerHost(HUtil.getHost(endpoint));
-				option.setServerPort(HUtil.getPort(endpoint));
+				ArrayList<String> endpoints = new ArrayList<String>();
+				endpoints.add(endpoint);
+				option.setEndpoints(endpoints);
 			}
-
+			String serverHost = serverHostField.getText();
+			if(serverHost != null) {
+				option.setServerHost(serverHost);
+			}
+			String serverPort = serverPortField.getText();
+			if(serverPort != null) {
+				option.setServerPort(serverPort);
+			}
 			
+			if(socketRadioButton.isSelected())
+				option.setTransport("socketio");
+			else
+				option.setTransport("xmpp");
 			client.connect(usernameField.getText(), passwordField.getText(), callback, option);
 		}
 	}
@@ -187,6 +210,21 @@ public class MainPanel extends JPanel {
 		}
 	}
 
+	// Listener of button hcommand
+	class HCommandButtonListener extends MouseAdapter {
+		public void mouseClicked(MouseEvent event) {
+			JSONObject jsonObj = new JSONObject();
+			try {
+				jsonObj.put("text",  hechoField.getText());
+				HCommand cmd = new HCommand("hNode.localhost","hecho",jsonObj);
+				client.command(cmd);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+	}
 	// Listener of button clean
 	class CleanButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {

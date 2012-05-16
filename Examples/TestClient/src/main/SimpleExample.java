@@ -37,11 +37,10 @@ public class SimpleExample {
 		
 		JFrame window = new JFrame("test");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setSize(800, 350);
+		window.setSize(800, 400	);
 
 		MainPanel panel = new MainPanel();
 		panel.setClient(client);
-		
 		window.setContentPane(panel);
 		window.setResizable(false);
 		window.setVisible(true);

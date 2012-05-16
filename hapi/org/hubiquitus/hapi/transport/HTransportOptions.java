@@ -1,6 +1,30 @@
+/*
+ * Copyright (c) Novedia Group 2012.
+ *
+ *     This file is part of Hubiquitus.
+ *
+ *     Hubiquitus is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     Hubiquitus is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.hubiquitus.hapi.transport;
 
 import org.hubiquitus.hapi.structures.JabberID;
+
+/** 
+ * @version 0.3
+ *
+ */
 
 public class HTransportOptions {
 	private JabberID jid = null;
@@ -10,6 +34,7 @@ public class HTransportOptions {
 	private String endpointHost = null;
 	private int endpointPort = 0;
 	private String endpointPath = null;
+	private String hNode = "hnode";
 	
 	
 	public HTransportOptions() {
@@ -44,6 +69,18 @@ public class HTransportOptions {
 		return jid.getResource();
 	}
 	
+	/**
+	 * 
+	 */
+	public String gethNodeService() {
+		String nodeService = null;
+		
+		if(this.jid != null) {
+			nodeService = this.hNode + "." + this.jid.getDomain();
+		}
+		
+		return nodeService;
+	}
 	/**
 	 * user jid (ie : my_user@domain.com/resource)
 	 * @return
@@ -138,14 +175,22 @@ public class HTransportOptions {
 		this.endpointPath = endpointPath;
 	}
 
+	public String gethNode() {
+		return hNode;
+	}
+
+	public void sethNode(String hNode) {
+		this.hNode = hNode;
+	}
 	/* overrides */
 	
 	@Override
 	public String toString() {
-		return "HTransportOptions [jid=" + jid + ", serverHost=" + serverHost
-				+ ", serverPort=" + serverPort + ", endpointHost="
-				+ endpointHost + ", endpointPort=" + endpointPort
-				+ ", endpointPath=" + endpointPath + "]";
+		return "HTransportOptions [jid=" + jid + ", password=" + password
+				+ ", serverHost=" + serverHost + ", serverPort=" + serverPort
+				+ ", endpointHost=" + endpointHost + ", endpointPort="
+				+ endpointPort + ", endpointPath=" + endpointPath + ", hNode="
+				+ hNode + "]";
 	}
 
 	@Override
@@ -157,6 +202,7 @@ public class HTransportOptions {
 		result = prime * result
 				+ ((endpointPath == null) ? 0 : endpointPath.hashCode());
 		result = prime * result + endpointPort;
+		result = prime * result + ((hNode == null) ? 0 : hNode.hashCode());
 		result = prime * result + ((jid == null) ? 0 : jid.hashCode());
 		result = prime * result
 				+ ((password == null) ? 0 : password.hashCode());
@@ -187,6 +233,11 @@ public class HTransportOptions {
 			return false;
 		if (endpointPort != other.endpointPort)
 			return false;
+		if (hNode == null) {
+			if (other.hNode != null)
+				return false;
+		} else if (!hNode.equals(other.hNode))
+			return false;
 		if (jid == null) {
 			if (other.jid != null)
 				return false;
@@ -206,5 +257,7 @@ public class HTransportOptions {
 			return false;
 		return true;
 	}
+
+	
 	
 }

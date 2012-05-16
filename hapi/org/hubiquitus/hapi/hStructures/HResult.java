@@ -27,7 +27,7 @@ import org.json.JSONObject;
 /**
  * @author j.desousag
  * @version 0.3
- * 
+ * hAPI result. For more info, see Hubiquitus reference
  */
 
 public class HResult implements HJSONSerializable {
@@ -36,7 +36,6 @@ public class HResult implements HJSONSerializable {
 	private String reqid = null;
 	private ResultStatus status = null;
 	private Object result = null;
-	
 	
 	public HResult() {	}
 	
@@ -55,6 +54,12 @@ public class HResult implements HJSONSerializable {
 		}
 	}
 	
+	@Override
+	public String toString() {
+		return "HResult [cmd=" + cmd + ", reqid=" + reqid + ", status="
+				+ status + ", result=" + result + "]";
+	}
+
 	public JSONObject toJSON() {
 		JSONObject jsonObj = new JSONObject();
 		
@@ -86,5 +91,37 @@ public class HResult implements HJSONSerializable {
 		} catch (Exception e) {
 			throw new Exception(this.getClass().toString() + " JSon object mal formated : " + e.getMessage());
 		}	
+	}
+	
+	public String getCmd() {
+		return cmd;
+	}
+
+	public void setCmd(String cmd) {
+		this.cmd = cmd;
+	}
+
+	public String getReqid() {
+		return reqid;
+	}
+
+	public void setReqid(String reqid) {
+		this.reqid = reqid;
+	}
+
+	public ResultStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(ResultStatus status) {
+		this.status = status;
+	}
+
+	public Object getResult() {
+		return result;
+	}
+
+	public void setResult(Object result) {
+		this.result = result;
 	}
 }

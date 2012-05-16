@@ -19,8 +19,14 @@
 
 package org.hubiquitus.hapi.client;
 
+import java.util.GregorianCalendar;
+import java.util.Random;
+
 import org.hubiquitus.hapi.hStructures.ConnectionError;
 import org.hubiquitus.hapi.hStructures.ConnectionStatus;
+import org.hubiquitus.hapi.hStructures.HCommand;
+import org.hubiquitus.hapi.hStructures.HOptions;
+import org.hubiquitus.hapi.hStructures.HResult;
 import org.hubiquitus.hapi.hStructures.HStatus;
 import org.hubiquitus.hapi.structures.JabberID;
 import org.hubiquitus.hapi.transport.HTransport;
@@ -29,6 +35,7 @@ import org.hubiquitus.hapi.transport.HTransportOptions;
 import org.hubiquitus.hapi.transport.socketio.HTransportSocketio;
 import org.hubiquitus.hapi.transport.xmpp.HTransportXMPP;
 import org.hubiquitus.hapi.util.HUtil;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -38,7 +45,7 @@ import org.json.JSONObject;
  * Hubiquitus client, public api
  */
 
-public class HClient implements HTransportCallback {
+public class HClient {
 	
 	private ConnectionStatus connectionStatus = ConnectionStatus.DISCONNECTED; /* only connecting, connected, diconnecting, disconnected */
 	@SuppressWarnings("unused")
@@ -46,6 +53,8 @@ public class HClient implements HTransportCallback {
 	private HTransportOptions transportOptions = null;
 	private HCallback callback = null;
 	private HTransport transport;
+	
+	private TransportCallback transportCallback = new TransportCallback();
 	
 	public HClient() {
 		transportOptions = new HTransportOptions();
@@ -102,15 +111,13 @@ public class HClient implements HTransportCallback {
 				if (this.transport == null || (this.transport.getClass() != HTransportSocketio.class)) {
 					this.transport = new HTransportSocketio();
 				}
-				
-				this.transport.connect(this, this.transportOptions);
+				this.transport.connect(transportCallback, this.transportOptions);
 			} else {
 				/*if (this.transport != null) { //check if other transport mode connect
 					this.transport.disconnect();
 				}*/
 				this.transport = new HTransportXMPP();
-				
-				this.transport.connect(this, this.transportOptions);
+				this.transport.connect(transportCallback, this.transportOptions);
 			}
 		} else {
 			if (connInProgress) {
@@ -145,7 +152,7 @@ public class HClient implements HTransportCallback {
 		}
 		
 		this.transportOptions.setServerPort(options.getServerPort());
-		
+		System.out.println("test        : " + options.getEndpoints().toString());
 		//for endpoints, pick one randomly and fill htransport options
 		if (options.getEndpoints().size() > 0) {
 			int endpointIndex = HUtil.pickIndex(options.getEndpoints()); 
@@ -177,7 +184,7 @@ public class HClient implements HTransportCallback {
 			hstatus.setErrorMsg(errorMsg);
 			
 			try {
-				callback.hCallback("hStatus", hstatus);
+				callback.hCallback("hstatus", hstatus);
 			} catch(Exception e) {
 			}
 			
@@ -220,20 +227,67 @@ public class HClient implements HTransportCallback {
 		
 	}
 
-	/* HTransportCallback functions */
+	public String command(HCommand cmd) {
+		String reqid = null;
+		if(this.connectionStatus == ConnectionStatus.CONNECTED) {
+			if(cmd == null) {
+				cmd = new HCommand();
+			}
+			reqid = cmd.getReqid();
+			if(reqid == null) {
+				Random rand = new Random();
+				reqid = "javaCmd:" + rand.nextInt();
+				cmd.setReqid(reqid);
+			}
+			if(cmd.getSender() == null) {
+				cmd.setSender(transportOptions.getJid().getFullJID());
+			}
+			if(cmd.getSent() == null) {
+				cmd.setSent(new GregorianCalendar());
+			}
+			transport.sendObject(cmd.toJSON());
+		} else if(callback != null){
+			HStatus hstatus = new HStatus(this.connectionStatus, ConnectionError.NOT_CONNECTED, "Can not send hCommand. Not connected");
+			callback.hCallback("hstatus", hstatus);
+		}
+		return reqid;
+	}
 	
+	/* HTransportCallback functions */
+
 	/**
 	 * @internal
-	 * see HTransportCallback for more informations
+	 * Class used to get callbacks from transport layer.
 	 */
-	public void connectionCallback(ConnectionStatus status,
-			ConnectionError error, String errorMsg) {
-		this.updateStatus(status, error, errorMsg);
+	private class TransportCallback implements HTransportCallback {
+
+		/**
+		 * @internal
+		 * see HTransportCallback for more informations
+		 */
+		public void connectionCallback(ConnectionStatus status,
+				ConnectionError error, String errorMsg) {
+			updateStatus(status, error, errorMsg);
+		}
+
+		@Override
+		public void dataCallback(JSONObject jsonData) {
+			try {
+				String type = jsonData.getString("type");
+				if(type.equalsIgnoreCase("hresult")) {
+					HResult data = new HResult();
+					try {
+						data.fromJSON(jsonData.getJSONObject("data"));
+						callback.hCallback(type, data);
+					} catch (Exception e) {
+						System.out.println("erreur datacallBack : data");
+					}
+				}
+			} catch (JSONException e) {
+				System.out.println("erreur datacallBack");
+			}
+		}
+
 	}
 
-	@Override
-	public void dataCallback(JSONObject jsonData) {
-		// TODO Auto-generated method stub
-		
-	}
 }

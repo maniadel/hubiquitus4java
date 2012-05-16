@@ -30,8 +30,14 @@ import org.hubiquitus.hapi.transport.HTransportOptions;
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionListener;
+import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.filter.FromContainsFilter;
+import org.jivesoftware.smack.filter.PacketFilter;
+import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Packet;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -40,10 +46,9 @@ import org.json.JSONObject;
  * HTransportXMPP is the xmpp transport layer of the hubiquitus hAPI client
  */
 
-public class HTransportXMPP implements HTransport, ConnectionListener {
+public class HTransportXMPP implements HTransport, ConnectionListener,PacketListener {
 
 	private HTransportCallback callback = null;
-	@SuppressWarnings("unused")
 	private HTransportOptions options = null;
 	private Connection connection = null;
 	private ConnectionConfiguration config = null;
@@ -53,6 +58,7 @@ public class HTransportXMPP implements HTransport, ConnectionListener {
 	public HTransportXMPP() {
 		//patch for android to add xmpp providers
 		SmackConfiguration.setPacketReplyTimeout(10000);
+		ConfigureProviderManager.configureProviderManager();
 	};	
 	
 	/**
@@ -78,9 +84,9 @@ public class HTransportXMPP implements HTransport, ConnectionListener {
 		//because smack doesn't allow setting host, or configuration on existing objects
 		//@todo check if config has changed rather than create a new one
 		this.config = new ConnectionConfiguration(serverHost, serverPort, serviceName);
-		//patch for android to support security
-		config.setTruststorePath("/system/etc/security/cacerts.bks");
-	    config.setTruststoreType("bks");
+//		//patch for android to support security
+//		config.setTruststorePath("/system/etc/security/cacerts.bks");
+//	    config.setTruststoreType("bks");
 
 	    // Sets whether the client will use SASL authentication when logging into the server.
 	    //config.setSASLAuthenticationEnabled(true);
@@ -112,6 +118,8 @@ public class HTransportXMPP implements HTransport, ConnectionListener {
 							//try to login and update status
 							connection.login(localOptions.getUsername(), localOptions.getPassword(), localOptions.getResource());
 							updateStatus(ConnectionStatus.CONNECTED, null, null);
+							PacketFilter packetFilter = new FromContainsFilter(localOptions.gethNodeService());
+							connection.addPacketListener(outerClass,packetFilter);
 						} catch(Exception e) { //login failed
 							boolean wasConnected = false;
 							if (connection.isConnected()) {
@@ -241,7 +249,33 @@ public class HTransportXMPP implements HTransport, ConnectionListener {
 
 	@Override
 	public void sendObject(JSONObject object) {
-		// TODO Auto-generated method stub
-		
+		if( connectionStatus == ConnectionStatus.CONNECTED) {
+			Message msg = new Message(options.gethNodeService());
+			HMessageXMPP packet = new HMessageXMPP("hcommand",object.toString());
+			msg.addExtension(packet);
+			connection.sendPacket(msg);
+		} else {
+			System.out.println("Not connected");
+		}		
+	}
+
+	@Override
+	public void processPacket(Packet receivePacket) {
+		JSONObject result = new JSONObject();
+		if(receivePacket.getClass().equals(Message.class)) {
+			HMessageXMPP packetExtention = (HMessageXMPP)receivePacket.getExtension("hbody","");
+			if(packetExtention != null) {
+				try {
+					JSONObject jsonObj = new JSONObject(packetExtention.getContent());
+					result.put("type",packetExtention.getType());
+					result.put("data", jsonObj);
+					callback.dataCallback(result);
+				} catch (JSONException e) {
+					System.out.println("erreur lors de la reception : JSONObjectMalformat");
+				}
+			}else {
+				System.out.println("erreur lors de la reception : PacketExtention erreur");
+			}
+		}
 	}
 }

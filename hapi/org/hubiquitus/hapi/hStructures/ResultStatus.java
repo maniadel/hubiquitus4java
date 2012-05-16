@@ -19,6 +19,13 @@
 
 package org.hubiquitus.hapi.hStructures;
 
+/**
+ * @author j.desousag
+ * @version 0.3
+ * hResult status codes. Returned on all action
+ * For more information see Hubiquitus reference
+ */
+
 public enum ResultStatus {
 	
 	NO_ERROR (0),
