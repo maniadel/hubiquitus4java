@@ -23,6 +23,7 @@ import javax.swing.JFrame;
 
 import org.hubiquitus.hapi.client.HClient;
 
+
 /***
  * 
  * @author speed

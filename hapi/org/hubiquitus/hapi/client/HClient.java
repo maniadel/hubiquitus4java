@@ -152,7 +152,6 @@ public class HClient {
 		}
 		
 		this.transportOptions.setServerPort(options.getServerPort());
-		System.out.println("test        : " + options.getEndpoints().toString());
 		//for endpoints, pick one randomly and fill htransport options
 		if (options.getEndpoints().size() > 0) {
 			int endpointIndex = HUtil.pickIndex(options.getEndpoints()); 
@@ -270,6 +269,10 @@ public class HClient {
 			updateStatus(status, error, errorMsg);
 		}
 
+		/**
+		 * @internal
+		 * see HTransportCallback for more information
+		 */
 		@Override
 		public void dataCallback(JSONObject jsonData) {
 			try {

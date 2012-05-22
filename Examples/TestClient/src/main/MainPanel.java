@@ -177,7 +177,6 @@ public class MainPanel extends JPanel {
 		public void mouseClicked(MouseEvent event) {
 			
 			String endpoint = endPointField.getText();
-			System.out.println("endpoint : " + endpoint);
 			option.getEndpoints().clear();
 			if (endpoint == null || endpoint.equalsIgnoreCase("")) {
 				option.setEndpoints(null);

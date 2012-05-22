@@ -21,6 +21,7 @@
 package org.hubiquitus.hapi.hStructures;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import org.hubiquitus.hapi.structures.HJSONSerializable;
 import org.json.JSONException;
@@ -38,7 +39,7 @@ public class HCommand implements HJSONSerializable {
 	private String requester = null;
 	private String sender = null;
 	private String entity = null;
-	private Calendar sent = null;
+	private Calendar sent = new GregorianCalendar();
 	private String cmd = null;
 	private JSONObject params = null;
 	private Boolean _transient = true;

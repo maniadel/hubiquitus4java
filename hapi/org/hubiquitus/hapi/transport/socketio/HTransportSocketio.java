@@ -108,13 +108,6 @@ public class HTransportSocketio implements HTransport, IOCallback {
 		}
 	}
 	
-	@Override
-	public String toString() {
-		return "HTransportSocketio [callback=" + callback + ", options="
-				+ options + ", socketio=" + socketio + ", connectionStatus="
-				+ connectionStatus + ", timeoutTimer=" + timeoutTimer + "]";
-	}
-
 	/**
 	 * change current status and notify delegate through callback
 	 * @param status - connection status
@@ -167,6 +160,15 @@ public class HTransportSocketio implements HTransport, IOCallback {
 		return endpointAdress;
 	}
 
+	@Override
+	public void sendObject(JSONObject object) {
+		if( connectionStatus == ConnectionStatus.CONNECTED) {
+			socketio.emit("hCommand",object);
+		} else {
+			System.out.println("Not connected");
+		}		
+	}
+	
 	/* Socket io  delegate callback*/
 	public void on(String type, IOAcknowledge arg1, Object... arg2) {
 		//switch for type
@@ -280,13 +282,11 @@ public class HTransportSocketio implements HTransport, IOCallback {
 	}
 
 	@Override
-	public void sendObject(JSONObject object) {
-		if( connectionStatus == ConnectionStatus.CONNECTED) {
-			socketio.emit("hCommand",object);
-		} else {
-			System.out.println("Not connected");
-		}		
+	public String toString() {
+		return "HTransportSocketio [callback=" + callback + ", options="
+				+ options + ", socketio=" + socketio + ", connectionStatus="
+				+ connectionStatus + ", timeoutTimer=" + timeoutTimer + "]";
 	}
-	
+
 }
 

@@ -43,5 +43,9 @@ public interface HTransport {
 	 */
 	public void disconnect();
 	
+	/**
+	 * transport the object to send it to the server
+	 * @param object
+	 */
 	public void sendObject(JSONObject object);
 }

@@ -222,31 +222,6 @@ public class HTransportXMPP implements HTransport, ConnectionListener,PacketList
 		}
 	}
 
-	/* Connection listener interface */
-	public void connectionClosed() {
-		
-	}
-
-	public void connectionClosedOnError(Exception e) {
-		this.connectionThread.interrupt();
-		this.connectionThread = null;
-		this.connection = null;
-		this.updateStatus(ConnectionStatus.DISCONNECTED, ConnectionError.TECH_ERROR, e.getMessage());
-		
-	}
-
-	//as we use our reconnection system, this shouldn't be called
-	public void reconnectingIn(int arg0) {
-	}
-
-	//as we use our reconnection system, this shouldn't be called
-	public void reconnectionFailed(Exception arg0) {
-	}
-
-	//as we use our reconnection system, this shouldn't be called
-	public void reconnectionSuccessful() {
-	}
-
 	@Override
 	public void sendObject(JSONObject object) {
 		if( connectionStatus == ConnectionStatus.CONNECTED) {
@@ -278,4 +253,36 @@ public class HTransportXMPP implements HTransport, ConnectionListener,PacketList
 			}
 		}
 	}
+	
+	/* Connection listener interface */
+	@Override
+	public void connectionClosed() {
+		
+	}
+
+	@Override
+	public void connectionClosedOnError(Exception e) {
+		this.connectionThread.interrupt();
+		this.connectionThread = null;
+		this.connection = null;
+		this.updateStatus(ConnectionStatus.DISCONNECTED, ConnectionError.TECH_ERROR, e.getMessage());
+		
+	}
+	
+	//as we use our reconnection system, this shouldn't be called
+	@Override
+	public void reconnectingIn(int arg0) {
+	}
+
+	//as we use our reconnection system, this shouldn't be called
+	@Override
+	public void reconnectionFailed(Exception arg0) {
+	}
+
+	//as we use our reconnection system, this shouldn't be called
+	@Override
+	public void reconnectionSuccessful() {
+	}
+
+	
 }
