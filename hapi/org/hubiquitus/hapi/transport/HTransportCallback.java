@@ -32,7 +32,18 @@ import org.json.JSONObject;
 
 public interface HTransportCallback {
 	
+	/**
+	 * transport layer callback to return an update of connection status
+	 * should only return status updates on connected and disconnected
+	 * @param status connection status
+	 * @param error hapi error code
+	 * @param errorMsg low level error message
+	 */
 	public void connectionCallback(ConnectionStatus status, ConnectionError error, String errorMsg);
 	
+	/**
+	 * transport layer callback to get received serialized hapi objects
+	 * @param jsonData serialized hapi object
+	 */
 	public void dataCallback(JSONObject jsonData); 
 }

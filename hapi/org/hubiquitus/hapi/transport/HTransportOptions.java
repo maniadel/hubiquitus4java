@@ -34,7 +34,7 @@ public class HTransportOptions {
 	private String endpointHost = null;
 	private int endpointPort = 0;
 	private String endpointPath = null;
-	private String hNode = "hnode";
+	private String hserver = "hnode";
 	
 	
 	public HTransportOptions() {
@@ -72,11 +72,11 @@ public class HTransportOptions {
 	/**
 	 * 
 	 */
-	public String gethNodeService() {
+	public String getHserverService() {
 		String nodeService = null;
 		
 		if(this.jid != null) {
-			nodeService = this.hNode + "." + this.jid.getDomain();
+			nodeService = this.hserver + "." + this.jid.getDomain();
 		}
 		
 		return nodeService;
@@ -175,12 +175,12 @@ public class HTransportOptions {
 		this.endpointPath = endpointPath;
 	}
 
-	public String gethNode() {
-		return hNode;
+	public String getHserver() {
+		return hserver;
 	}
 
-	public void sethNode(String hNode) {
-		this.hNode = hNode;
+	public void setHserver(String hserver) {
+		this.hserver = hserver;
 	}
 	/* overrides */
 	
@@ -190,7 +190,7 @@ public class HTransportOptions {
 				+ ", serverHost=" + serverHost + ", serverPort=" + serverPort
 				+ ", endpointHost=" + endpointHost + ", endpointPort="
 				+ endpointPort + ", endpointPath=" + endpointPath + ", hNode="
-				+ hNode + "]";
+				+ hserver + "]";
 	}
 
 	@Override
@@ -202,7 +202,7 @@ public class HTransportOptions {
 		result = prime * result
 				+ ((endpointPath == null) ? 0 : endpointPath.hashCode());
 		result = prime * result + endpointPort;
-		result = prime * result + ((hNode == null) ? 0 : hNode.hashCode());
+		result = prime * result + ((hserver == null) ? 0 : hserver.hashCode());
 		result = prime * result + ((jid == null) ? 0 : jid.hashCode());
 		result = prime * result
 				+ ((password == null) ? 0 : password.hashCode());
@@ -233,10 +233,10 @@ public class HTransportOptions {
 			return false;
 		if (endpointPort != other.endpointPort)
 			return false;
-		if (hNode == null) {
-			if (other.hNode != null)
+		if (hserver == null) {
+			if (other.hserver != null)
 				return false;
-		} else if (!hNode.equals(other.hNode))
+		} else if (!hserver.equals(other.hserver))
 			return false;
 		if (jid == null) {
 			if (other.jid != null)

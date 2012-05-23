@@ -130,9 +130,11 @@ public class HTransportSocketio implements HTransport, IOCallback {
 	 */
 	public void disconnect() {
 		this.connectionStatus = ConnectionStatus.DISCONNECTING;
-		//synchronized (this) {
+		try {
 			socketio.disconnect();
-		//}
+		} catch (Exception e) {
+		}
+		
 	}
 	
 	/* helper functions */
@@ -247,9 +249,9 @@ public class HTransportSocketio implements HTransport, IOCallback {
 		}
 		
 		if (this.connectionStatus != ConnectionStatus.DISCONNECTED) {
-			while(socketio.isConnected()) {
-				socketio.disconnect();
-			}
+//			while(socketio.isConnected()) {
+//				socketio.disconnect();
+//			}
 			updateStatus(ConnectionStatus.DISCONNECTED, ConnectionError.NO_ERROR, null);
 		}
 	}

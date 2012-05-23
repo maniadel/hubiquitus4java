@@ -118,7 +118,7 @@ public class HTransportXMPP implements HTransport, ConnectionListener,PacketList
 							//try to login and update status
 							connection.login(localOptions.getUsername(), localOptions.getPassword(), localOptions.getResource());
 							updateStatus(ConnectionStatus.CONNECTED, null, null);
-							PacketFilter packetFilter = new FromContainsFilter(localOptions.gethNodeService());
+							PacketFilter packetFilter = new FromContainsFilter(localOptions.getHserver());
 							connection.addPacketListener(outerClass,packetFilter);
 						} catch(Exception e) { //login failed
 							boolean wasConnected = false;
@@ -225,7 +225,7 @@ public class HTransportXMPP implements HTransport, ConnectionListener,PacketList
 	@Override
 	public void sendObject(JSONObject object) {
 		if( connectionStatus == ConnectionStatus.CONNECTED) {
-			Message msg = new Message(options.gethNodeService());
+			Message msg = new Message(options.getHserver());
 			HMessageXMPP packet = new HMessageXMPP("hcommand",object.toString());
 			msg.addExtension(packet);
 			connection.sendPacket(msg);
