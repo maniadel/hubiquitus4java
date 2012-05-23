@@ -205,7 +205,6 @@ public class HClient {
 		synchronized (this) {
 			if (this.connectionStatus == ConnectionStatus.CONNECTED) {
 				shouldDisconnect = true;
-				
 				//update connection status
 				connectionStatus = ConnectionStatus.DISCONNECTING;
 			} else if(this.connectionStatus == ConnectionStatus.CONNECTING) {

@@ -215,7 +215,7 @@ public class MainPanel extends JPanel {
 			JSONObject jsonObj = new JSONObject();
 			try {
 				jsonObj.put("text",  hechoField.getText());
-				HCommand cmd = new HCommand("hNode.localhost","hecho",jsonObj);
+				HCommand cmd = new HCommand("hnode.hub.novediagroup.com","hecho",jsonObj);
 				client.command(cmd);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
