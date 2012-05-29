@@ -184,6 +184,8 @@ public class HTransportSocketio implements HTransport, IOCallback {
 				}
 				updateStatus(status.getStatus(), status.getErrorCode(), status.getErrorMsg());
 			} catch (Exception e) {
+				e.printStackTrace();
+				
 				if (timeoutTimer != null) {
 					timeoutTimer.cancel();
 					timeoutTimer = null;
@@ -191,17 +193,14 @@ public class HTransportSocketio implements HTransport, IOCallback {
 				socketio.disconnect();
 				updateStatus(ConnectionStatus.DISCONNECTED, ConnectionError.TECH_ERROR, e.getMessage());
 			}
-		} else if (type.equals("hResult") ){
+		} else {
 			JSONObject data = (JSONObject)arg2[0];
 			try {
 				if (timeoutTimer != null) {
 					timeoutTimer.cancel();
 					timeoutTimer = null;
 				}
-				JSONObject jsonObj = new JSONObject();
-				jsonObj.put("type", type);
-				jsonObj.put("data", data);
-				callback.dataCallback(jsonObj);
+				callback.dataCallback(type, data);
 			} catch (Exception e) {
 				if (timeoutTimer != null) {
 					timeoutTimer.cancel();

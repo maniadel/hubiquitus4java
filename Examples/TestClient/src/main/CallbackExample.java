@@ -19,11 +19,11 @@
 package main;
 
 
-import org.hubiquitus.hapi.client.HCallback;
+import org.hubiquitus.hapi.client.HDelegate;
 import org.hubiquitus.hapi.hStructures.HResult;
 import org.hubiquitus.hapi.hStructures.HStatus;
 import org.hubiquitus.hapi.hStructures.ConnectionError;
-import org.hubiquitus.hapi.structures.HJSONSerializable;
+import org.hubiquitus.hapi.structures.HJsonObj;
 
 /**
  * 
@@ -31,7 +31,7 @@ import org.hubiquitus.hapi.structures.HJSONSerializable;
  * @version 0.3
  * Callback of the example
  */
-public class CallbackExample implements HCallback {
+public class CallbackExample implements HDelegate {
 	
 	private MainPanel panel;
 
@@ -40,12 +40,14 @@ public class CallbackExample implements HCallback {
 	}
 	
 	@Override
-	public void hCallback(String type, HJSONSerializable data) {
+	public void hDelegate(String type, HJsonObj data) {
 		if(type.equals("hstatus")) {
 			panel.setStatusArea(type);
+			System.out.println(data.toString());
 			HStatus status = (HStatus) data;
+			
 			panel.addTextArea(status.toString());
-			if(status.getErrorCode() != ConnectionError.NO_ERROR) {
+			if(status.getErrorCode() == ConnectionError.NO_ERROR || status.getErrorMsg() == null) {
 				panel.setStatusArea(status.getStatus().toString());
 			} else {
 				panel.setStatusArea(status.getStatus().toString() + " : " + status.getErrorMsg() );
@@ -54,6 +56,7 @@ public class CallbackExample implements HCallback {
 		
 		if(type.equalsIgnoreCase("hresult")) {
 			HResult result = (HResult) data;
+			System.out.println(data.toString());
 			panel.addTextArea(result.toString());
 		}
 	}

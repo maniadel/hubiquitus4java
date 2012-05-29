@@ -34,7 +34,6 @@ import org.json.JSONObject;
  */
 
 public class HOptions implements Cloneable {
-
 	
 	private String serverHost = null;
 	private int serverPort = 5222;
@@ -246,11 +245,4 @@ public class HOptions implements Cloneable {
 			return false;
 		return true;
 	}
-	
-	
-	
-	
-
-	
-
 }

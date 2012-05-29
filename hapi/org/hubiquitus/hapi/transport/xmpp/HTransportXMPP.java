@@ -226,7 +226,6 @@ public class HTransportXMPP implements HTransport, ConnectionListener,PacketList
 	public void sendObject(JSONObject object) {
 		if( connectionStatus == ConnectionStatus.CONNECTED) {
 			Message msg = new Message(options.getHserverService());
-			System.out.println(object.toString());
 			HMessageXMPP packet = new HMessageXMPP("hcommand",object.toString());
 			msg.addExtension(packet);
 			connection.sendPacket(msg);
@@ -237,15 +236,12 @@ public class HTransportXMPP implements HTransport, ConnectionListener,PacketList
 
 	@Override
 	public void processPacket(Packet receivePacket) {
-		JSONObject result = new JSONObject();
 		if(receivePacket.getClass().equals(Message.class)) {
 			HMessageXMPP packetExtention = (HMessageXMPP)receivePacket.getExtension("hbody","");
 			if(packetExtention != null) {
 				try {
 					JSONObject jsonObj = new JSONObject(packetExtention.getContent());
-					result.put("type",packetExtention.getType());
-					result.put("data", jsonObj);
-					callback.dataCallback(result);
+					callback.dataCallback(packetExtention.getType(), jsonObj);
 				} catch (JSONException e) {
 					System.out.println("erreur lors de la reception : JSONObjectMalformat");
 				}

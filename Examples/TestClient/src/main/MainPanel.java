@@ -54,9 +54,9 @@ public class MainPanel extends JPanel {
 	private HOptions option = new HOptions();
 	private CallbackExample callback = new CallbackExample(this);
 
-	private JTextField usernameField = new JTextField("");
-	private JTextField passwordField = new JTextField("");
-	private JTextField endPointField = new JTextField("");
+	private JTextField usernameField = new JTextField("u1@hub.novediagroup.com");
+	private JTextField passwordField = new JTextField("u1");
+	private JTextField endPointField = new JTextField("http://hub.novediagroup.com:8080");
 	private JTextField serverPortField = new JTextField("");
 	private JTextField serverHostField = new JTextField("");
 	private JTextField hechoField = new JTextField("");

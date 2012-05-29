@@ -26,7 +26,13 @@ import org.json.JSONObject;
  * Should be implemented by all hstructures
  *
  */
-public interface HJSONSerializable {
+public interface HJsonObj {
 	public JSONObject toJSON();
-	public void fromJSON(JSONObject jsonObj)  throws Exception;
+	public void fromJSON(JSONObject jsonObj);
+	
+	public String getHType();
+	
+	public boolean equals(Object obj);
+	public int hashCode();
+	public String toString();
 }
