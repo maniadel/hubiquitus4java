@@ -17,35 +17,47 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.hubiquitus.hapi.structures;
 
-import org.json.JSONObject;
+package org.hubiquitus.hapi.hStructures;
 
 /**
  * @version 0.3
- * JSON serializable interface for hstructures
- * Should be implemented by all hstructures
+ * Enumeration of different message acknoledgements state.
+ * For more information see Hubiquitus reference
  */
 
-public interface HJsonObj {
+public enum HAckValue {
+	UNKNOWN(""),
+	RECV("recv"),
+	READ("read");
 	
-	/**	
-	 * @return Object serialize to JSon
-	 */
-	public JSONObject toJSON();
+	private String value;
 	
-	/**
-	 * Deserialize object from Json
-	 * @param jsonObj
-	 */
-	public void fromJSON(JSONObject jsonObj);
+	private HAckValue(String value) {
+		this.value = value;
+	}
 	
 	/**
-	 * @return Type of the HJsonObj
+	 * @return string equivalent.
 	 */
-	public String getHType();
+	public String value() {
+		return value;
+	}
 	
-	public boolean equals(Object obj);
-	public int hashCode();
-	public String toString();
+	/**
+	 * Get constant for value
+	 * @param value
+	 * @return
+	 */
+	public static HAckValue constant(String value) {
+		HAckValue [] _values = HAckValue.values();
+		HAckValue _value = HAckValue.UNKNOWN;
+		for (int i = 0; i < _values.length; i++) {
+			if (_values[i].equals(value)) {
+				_value = _values[i];
+			}
+		}
+		
+		return _value;
+	}
 }

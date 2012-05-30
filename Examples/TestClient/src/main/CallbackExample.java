@@ -20,10 +20,11 @@ package main;
 
 
 import org.hubiquitus.hapi.client.HDelegate;
+import org.hubiquitus.hapi.hStructures.HJsonObj;
+import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.hStructures.HResult;
 import org.hubiquitus.hapi.hStructures.HStatus;
 import org.hubiquitus.hapi.hStructures.ConnectionError;
-import org.hubiquitus.hapi.structures.HJsonObj;
 
 /**
  * 
@@ -43,7 +44,6 @@ public class CallbackExample implements HDelegate {
 	public void hDelegate(String type, HJsonObj data) {
 		if(type.equals("hstatus")) {
 			panel.setStatusArea(type);
-			System.out.println(data.toString());
 			HStatus status = (HStatus) data;
 			
 			panel.addTextArea(status.toString());
@@ -56,7 +56,11 @@ public class CallbackExample implements HDelegate {
 		
 		if(type.equalsIgnoreCase("hresult")) {
 			HResult result = (HResult) data;
-			System.out.println(data.toString());
+			panel.addTextArea(result.toString());
+		}
+		
+		if(type.equalsIgnoreCase("hmessage")) {
+			HMessage result = (HMessage) data;
 			panel.addTextArea(result.toString());
 		}
 	}

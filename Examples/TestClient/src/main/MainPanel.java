@@ -24,6 +24,7 @@ import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -36,9 +37,9 @@ import javax.swing.JTextField;
 
 import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hapi.hStructures.HCommand;
+import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.hStructures.HOptions;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.hubiquitus.hapi.util.HJsonDictionnary;
 
 /**
  * 
@@ -54,24 +55,30 @@ public class MainPanel extends JPanel {
 	private HOptions option = new HOptions();
 	private CallbackExample callback = new CallbackExample(this);
 
-	private JTextField usernameField = new JTextField("u1@hub.novediagroup.com");
-	private JTextField passwordField = new JTextField("u1");
-	private JTextField endPointField = new JTextField("http://hub.novediagroup.com:8080");
+	private JTextField usernameField = new JTextField("");
+	private JTextField passwordField = new JTextField("");
+	private JTextField endPointField = new JTextField("");
 	private JTextField serverPortField = new JTextField("");
 	private JTextField serverHostField = new JTextField("");
-	private JTextField hechoField = new JTextField("");
+	private JTextField chidField = new JTextField("");
+	private JTextField messageField = new JTextField("");
+	
 	
 	private JButton connectButton = new JButton("Connection");
 	private JButton disconnectButton = new JButton("Disconnection");
-	private JButton cleanButton = new JButton("Clean");
 	private JButton hcommandButton = new JButton("hEcho");
+	private JButton subscribeButton = new JButton("subscribe");
+	private JButton unsubscribeButton = new JButton("unsubscribe");
+	private JButton publishButton = new JButton("publish");
+	private JButton cleanButton = new JButton("Clean");
+	
 	
 	private JRadioButton xmppRadioButton = new JRadioButton("XMPP");
 	private JRadioButton socketRadioButton = new JRadioButton("Socket IO");
 	private ButtonGroup buttonGroup = new ButtonGroup();
 	
-	private JTextArea logArea = new JTextArea(10,70);
-	private JTextArea statusArea = new JTextArea(1,70);
+	private JTextArea logArea = new JTextArea(10,80);
+	private JTextArea statusArea = new JTextArea(1,80);
 
 	public MainPanel() {
 		super();
@@ -93,7 +100,7 @@ public class MainPanel extends JPanel {
 
 		//Initialization of Labels,TextFields and RadioButtons
 		JPanel paramsPanel = new JPanel();
-		GridLayout paramsLayout = new GridLayout(8, 2);
+		GridLayout paramsLayout = new GridLayout(10, 2);
 		paramsPanel.setLayout(paramsLayout);
 		paramsPanel.add(new JLabel("username"));
 		paramsPanel.add(usernameField);
@@ -105,8 +112,10 @@ public class MainPanel extends JPanel {
 		paramsPanel.add(serverHostField);
 		paramsPanel.add(new JLabel("serverPort"));
 		paramsPanel.add(serverPortField);
-		paramsPanel.add(new JLabel("hecho Text"));
-		paramsPanel.add(hechoField);
+		paramsPanel.add(new JLabel("Channel id"));
+		paramsPanel.add(chidField);
+		paramsPanel.add(new JLabel("Message"));
+		paramsPanel.add(messageField);
 		paramsPanel.add(xmppRadioButton);
 		paramsPanel.add(socketRadioButton);
 		
@@ -115,11 +124,14 @@ public class MainPanel extends JPanel {
 		
 		//Initialization of Buttons
 		JPanel controlsPanel = new JPanel();
-		GridLayout controlsLayout = new GridLayout(1, 4);
+		GridLayout controlsLayout = new GridLayout(1, 7);
 		controlsPanel.setLayout(controlsLayout);
 		controlsPanel.add(connectButton);
 		controlsPanel.add(disconnectButton);
 		controlsPanel.add(hcommandButton);
+		controlsPanel.add(subscribeButton);
+		controlsPanel.add(unsubscribeButton);
+		controlsPanel.add(publishButton);
 		controlsPanel.add(cleanButton);
 		
 		
@@ -145,6 +157,9 @@ public class MainPanel extends JPanel {
 		connectButton.addMouseListener(new ConnectionButtonListener());
 		disconnectButton.addMouseListener(new DisconnectionButtonListener());
 		hcommandButton.addMouseListener(new HCommandButtonListener());
+		subscribeButton.addMouseListener(new SubscribeButtonListener());
+		unsubscribeButton.addMouseListener(new UnsubscribeButtonListener());
+		publishButton.addMouseListener(new PublishButtonListener());
 		cleanButton.addMouseListener(new CleanButtonListener());
 	}
 	
@@ -212,16 +227,15 @@ public class MainPanel extends JPanel {
 	// Listener of button hcommand
 	class HCommandButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
-			JSONObject jsonObj = new JSONObject();
+			HJsonDictionnary jsonObj = new HJsonDictionnary();
 			try {
-				jsonObj.put("text",  hechoField.getText());
+				jsonObj.put("text",  messageField.getText());
 				HCommand cmd = new HCommand("hnode.hub.novediagroup.com","hecho",jsonObj);
 				client.command(cmd);
-			} catch (JSONException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-			
+			}	
 		}
 	}
 	// Listener of button clean
@@ -231,6 +245,35 @@ public class MainPanel extends JPanel {
 		}
 	}
 	
+	// Listener of button subscribe
+	class SubscribeButtonListener extends MouseAdapter {
+		public void mouseClicked(MouseEvent event) {
+			client.subscribe(chidField.getText());
+		}
+	}
+	
+	// Listener of button unsubscribe
+	class UnsubscribeButtonListener extends MouseAdapter {
+		public void mouseClicked(MouseEvent event) {
+			client.unsubscribe(chidField.getText());
+		}
+	}
+	
+	// Listener of button unsubscribe
+	class PublishButtonListener extends MouseAdapter {
+		public void mouseClicked(MouseEvent event) {
+			HMessage message = new HMessage();
+			message.setPublisher(usernameField.getText());
+			message.setChid(chidField.getText());
+			message.setPublished(new GregorianCalendar());
+			message.setType("obj");
+			HJsonDictionnary payload = new HJsonDictionnary();
+			payload.put("text", messageField.getText());
+			message.setPayload(payload);
+			client.publish(message);
+		}
+	}
+		
 	/* Getters & Setters */
 	public HClient getClient() {
 		return client;

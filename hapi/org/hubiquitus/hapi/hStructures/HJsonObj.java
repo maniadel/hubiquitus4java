@@ -17,24 +17,35 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.hubiquitus.hapi.client;
+package org.hubiquitus.hapi.hStructures;
 
-import org.hubiquitus.hapi.hStructures.HJsonObj;
+import org.json.JSONObject;
 
 /**
  * @version 0.3
- * Interface used to receive data from hapi.
- * Async model is used
+ * JSON serializable interface for hstructures
+ * Should be implemented by all hstructures
  */
 
-public interface HDelegate {
+public interface HJsonObj {
+	
+	/**	
+	 * @return Object serialize to JSon
+	 */
+	public JSONObject toJSON();
 	
 	/**
-	 * hAPI "callback".
-	 * called asynchronyously to notify an update
-	 * @param type - hubiquitus structure (hresult, hstatus, hmessage...)
-	 * @param data - the structure defined by the type
+	 * Deserialize object from Json
+	 * @param jsonObj
 	 */
-	public void hDelegate(String type, HJsonObj data);
-
+	public void fromJSON(JSONObject jsonObj);
+	
+	/**
+	 * @return Type of the HJsonObj
+	 */
+	public String getHType();
+	
+	public boolean equals(Object obj);
+	public int hashCode();
+	public String toString();
 }
