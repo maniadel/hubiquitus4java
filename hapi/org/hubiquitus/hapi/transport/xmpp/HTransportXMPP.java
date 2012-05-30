@@ -58,7 +58,7 @@ public class HTransportXMPP implements HTransport, ConnectionListener,PacketList
 	public HTransportXMPP() {
 		//patch for android to add xmpp providers
 		SmackConfiguration.setPacketReplyTimeout(10000);
-		ConfigureProviderManager.configureProviderManager();
+		SmackConfigureProviderManager.configureProviderManager();
 	};	
 	
 	/**

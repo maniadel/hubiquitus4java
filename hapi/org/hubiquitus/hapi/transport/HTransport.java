@@ -22,8 +22,7 @@ package org.hubiquitus.hapi.transport;
 import org.json.JSONObject;
 
 /**
- * 
- * @author j.desousag
+ * @internal
  * @version 0.3
  * Interface abstracting transport layer
  */

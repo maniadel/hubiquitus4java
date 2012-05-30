@@ -1,23 +1,5 @@
-/*
- * Copyright (c) Novedia Group 2012.
- *
- *     This file is part of Hubiquitus.
- *
- *     Hubiquitus is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- *
- *     Hubiquitus is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package org.hubiquitus.hapi.transport.xmpp;
+
 
 import org.jivesoftware.smack.provider.PrivacyProvider;
 import org.jivesoftware.smack.provider.ProviderManager;
@@ -58,8 +40,19 @@ import org.jivesoftware.smackx.pubsub.provider.SubscriptionProvider;
 import org.jivesoftware.smackx.pubsub.provider.SubscriptionsProvider;
 import org.jivesoftware.smackx.search.UserSearch;
 
+/**
+ * Since dalvik on Android does not allow the loading of META-INF files from the
+ * filesystem, we have to register every provider manually.
+ * 
+ * The full list of providers is at:
+ * http://fisheye.igniterealtime.org/browse/smack
+ * /trunk/build/resources/META-INF/smack.providers?hb=true
+ * 
+ * @author Florian Schmaus fschmaus@gmail.com
+ * 
+ */
+public class SmackConfigureProviderManager {
 
-public class ConfigureProviderManager {
 	public static void configureProviderManager() {
 		ProviderManager pm = ProviderManager.getInstance();
 
@@ -234,7 +227,7 @@ public class ConfigureProviderManager {
 		pm.addExtensionProvider("purge",
 				"http://jabber.org/protocol/pubsub#event",
 				new SimpleNodeProvider());
-		
+
 		// Nick Exchange
 		pm.addExtensionProvider("nick", "http://jabber.org/protocol/nick",
 				new Nick.Provider());
