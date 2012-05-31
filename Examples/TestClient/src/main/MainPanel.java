@@ -55,21 +55,24 @@ public class MainPanel extends JPanel {
 	private HOptions option = new HOptions();
 	private CallbackExample callback = new CallbackExample(this);
 
-	private JTextField usernameField = new JTextField("");
-	private JTextField passwordField = new JTextField("");
-	private JTextField endPointField = new JTextField("");
+	private JTextField usernameField = new JTextField("u1@hub.novediagroup.com");
+	private JTextField passwordField = new JTextField("u1");
+	private JTextField endPointField = new JTextField("http://hub.novediagroup.com:8080");
 	private JTextField serverPortField = new JTextField("");
 	private JTextField serverHostField = new JTextField("");
-	private JTextField chidField = new JTextField("");
-	private JTextField messageField = new JTextField("");
+	private JTextField chidField = new JTextField("channel");
+	private JTextField messageField = new JTextField("test");
+	private JTextField nbLastMessagesField = new JTextField("");
 	
 	
-	private JButton connectButton = new JButton("Connection");
-	private JButton disconnectButton = new JButton("Disconnection");
+	private JButton connectButton = new JButton("Connect");
+	private JButton disconnectButton = new JButton("Disconnect");
 	private JButton hcommandButton = new JButton("hEcho");
 	private JButton subscribeButton = new JButton("subscribe");
 	private JButton unsubscribeButton = new JButton("unsubscribe");
 	private JButton publishButton = new JButton("publish");
+	private JButton getLastMessagesButton = new JButton("getLstMsg");
+	private JButton getSubscriptionsButton = new JButton("getSubs");
 	private JButton cleanButton = new JButton("Clean");
 	
 	
@@ -77,8 +80,12 @@ public class MainPanel extends JPanel {
 	private JRadioButton socketRadioButton = new JRadioButton("Socket IO");
 	private ButtonGroup buttonGroup = new ButtonGroup();
 	
-	private JTextArea logArea = new JTextArea(10,80);
-	private JTextArea statusArea = new JTextArea(1,80);
+	private JRadioButton transientRadioButton = new JRadioButton("transient");
+	private JRadioButton notTransientRadioButton = new JRadioButton("not transient");
+	private ButtonGroup transientGroup = new ButtonGroup();
+	
+	private JTextArea logArea = new JTextArea(20,90);
+	private JTextArea statusArea = new JTextArea(1,90);
 
 	public MainPanel() {
 		super();
@@ -97,10 +104,14 @@ public class MainPanel extends JPanel {
 		buttonGroup.add(xmppRadioButton);
 		buttonGroup.add(socketRadioButton);
 		xmppRadioButton.setSelected(true);
+		
+		transientGroup.add(transientRadioButton);
+		transientGroup.add(notTransientRadioButton);
+		transientRadioButton.setSelected(true);
 
 		//Initialization of Labels,TextFields and RadioButtons
 		JPanel paramsPanel = new JPanel();
-		GridLayout paramsLayout = new GridLayout(10, 2);
+		GridLayout paramsLayout = new GridLayout(11, 2);
 		paramsPanel.setLayout(paramsLayout);
 		paramsPanel.add(new JLabel("username"));
 		paramsPanel.add(usernameField);
@@ -114,8 +125,12 @@ public class MainPanel extends JPanel {
 		paramsPanel.add(serverPortField);
 		paramsPanel.add(new JLabel("Channel id"));
 		paramsPanel.add(chidField);
-		paramsPanel.add(new JLabel("Message"));
+		paramsPanel.add(new JLabel("nbLastMessages"));
+		paramsPanel.add(nbLastMessagesField);
+		paramsPanel.add(new JLabel("Messages"));
 		paramsPanel.add(messageField);
+		paramsPanel.add(transientRadioButton);
+		paramsPanel.add(notTransientRadioButton);
 		paramsPanel.add(xmppRadioButton);
 		paramsPanel.add(socketRadioButton);
 		
@@ -124,7 +139,7 @@ public class MainPanel extends JPanel {
 		
 		//Initialization of Buttons
 		JPanel controlsPanel = new JPanel();
-		GridLayout controlsLayout = new GridLayout(1, 7);
+		GridLayout controlsLayout = new GridLayout(1, 9);
 		controlsPanel.setLayout(controlsLayout);
 		controlsPanel.add(connectButton);
 		controlsPanel.add(disconnectButton);
@@ -132,6 +147,8 @@ public class MainPanel extends JPanel {
 		controlsPanel.add(subscribeButton);
 		controlsPanel.add(unsubscribeButton);
 		controlsPanel.add(publishButton);
+		controlsPanel.add(getLastMessagesButton);
+		controlsPanel.add(getSubscriptionsButton);
 		controlsPanel.add(cleanButton);
 		
 		
@@ -141,7 +158,6 @@ public class MainPanel extends JPanel {
 		consolePanel.add(logArea);
 		JScrollPane txtScrol=new JScrollPane(logArea);
 		txtScrol.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		txtScrol.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		consolePanel.add(txtScrol);
 
 		//Add all in the layout
@@ -160,6 +176,8 @@ public class MainPanel extends JPanel {
 		subscribeButton.addMouseListener(new SubscribeButtonListener());
 		unsubscribeButton.addMouseListener(new UnsubscribeButtonListener());
 		publishButton.addMouseListener(new PublishButtonListener());
+		getLastMessagesButton.addMouseListener(new GetLastMessagesButtonListener());
+		getSubscriptionsButton.addMouseListener(new GetSubscriptionButtonListener());
 		cleanButton.addMouseListener(new CleanButtonListener());
 	}
 	
@@ -259,7 +277,7 @@ public class MainPanel extends JPanel {
 		}
 	}
 	
-	// Listener of button unsubscribe
+	// Listener of button publish
 	class PublishButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
 			HMessage message = new HMessage();
@@ -267,13 +285,38 @@ public class MainPanel extends JPanel {
 			message.setChid(chidField.getText());
 			message.setPublished(new GregorianCalendar());
 			message.setType("obj");
+			
+			if(transientRadioButton.isSelected())
+				message.setTransient(true);
+			else
+				message.setTransient(false);
+			
 			HJsonDictionnary payload = new HJsonDictionnary();
 			payload.put("text", messageField.getText());
 			message.setPayload(payload);
 			client.publish(message);
 		}
 	}
-		
+	
+	// Listener of button publish
+	class GetLastMessagesButtonListener extends MouseAdapter {
+		public void mouseClicked(MouseEvent event) {
+			int nbLastMessage = Integer.parseInt(nbLastMessagesField.getText());
+			String chid = chidField.getText();
+			if(nbLastMessage > 0) {
+				client.getLastMessages(chid, nbLastMessage);
+			} else {
+				client.getLastMessages(chid);
+			}
+		}
+	}
+	
+	class GetSubscriptionButtonListener extends MouseAdapter {
+		public void mouseClicked(MouseEvent event) {
+			client.getSubscription();
+		}
+	}
+	
 	/* Getters & Setters */
 	public HClient getClient() {
 		return client;
