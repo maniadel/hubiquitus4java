@@ -311,9 +311,10 @@ public class MainPanel extends JPanel {
 		}
 	}
 	
+	//Listener of button getsubscriptions
 	class GetSubscriptionButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
-			client.getSubscription();
+			client.getSubscriptions();
 		}
 	}
 	
