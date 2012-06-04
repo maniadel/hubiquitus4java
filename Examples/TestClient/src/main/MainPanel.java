@@ -251,7 +251,6 @@ public class MainPanel extends JPanel {
 				HCommand cmd = new HCommand("hnode.hub.novediagroup.com","hecho",jsonObj);
 				client.command(cmd);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}	
 		}
