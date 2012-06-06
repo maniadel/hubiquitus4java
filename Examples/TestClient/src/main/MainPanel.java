@@ -300,11 +300,15 @@ public class MainPanel extends JPanel {
 	// Listener of button publish
 	class GetLastMessagesButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
-			int nbLastMessage = Integer.parseInt(nbLastMessagesField.getText());
 			String chid = chidField.getText();
-			if(nbLastMessage > 0) {
-				client.getLastMessages(chid, nbLastMessage);
-			} else {
+			try {
+				int nbLastMessage = Integer.parseInt(nbLastMessagesField.getText());
+				if(nbLastMessage > 0) {
+					client.getLastMessages(chid, nbLastMessage);
+				} else {
+					client.getLastMessages(chid);
+				}
+			} catch (Exception e) {
 				client.getLastMessages(chid);
 			}
 		}
