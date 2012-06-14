@@ -319,7 +319,7 @@ public class HClient {
 	public HMessage buildMessage(String chid, String type, HJsonObj payload, HMessageOptions options) {
 		HMessage hmessage = new HMessage();
 		if(this.connectionStatus == ConnectionStatus.CONNECTED) {
-			if(chid != null) {
+			if(chid != null && chid.length() > 0) {
 				hmessage.setChid(chid);
 				hmessage.setConvid(options.getConvid());
 				hmessage.setType(type);
