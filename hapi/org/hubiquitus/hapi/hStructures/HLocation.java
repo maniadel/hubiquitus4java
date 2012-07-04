@@ -19,7 +19,6 @@
 
 package org.hubiquitus.hapi.hStructures;
 
-import org.hubiquitus.hapi.util.HJsonDictionnary;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -228,30 +227,6 @@ public class HLocation implements HJsonObj{
 				hlocation.remove("country");
 			} else {
 				hlocation.put("country", country);
-			}
-		} catch (JSONException e) {
-		}
-	}
-	
-	/**
-	 * @return params throws to the hserver. NULL if undefined
-	 */
-	public HJsonObj getExtra() {
-		HJsonObj extra;
-		try {
-			extra = new HJsonDictionnary(hlocation.getJSONObject("extra"));
-		} catch (JSONException e) {
-			extra = null;
-		}
-		return extra;
-	}
-
-	public void setExtra(HJsonObj extra) {
-		try {
-			if(extra == null) {
-				hlocation.remove("extra");
-			} else {
-				hlocation.put("extra", extra.toJSON());
 			}
 		} catch (JSONException e) {
 		}

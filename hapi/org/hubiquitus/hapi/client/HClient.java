@@ -19,7 +19,7 @@
 
 package org.hubiquitus.hapi.client;
 
-import java.util.List;
+import java.util.Hashtable;
 import java.util.Random;
 
 import org.hubiquitus.hapi.hStructures.ConnectionError;
@@ -28,7 +28,7 @@ import org.hubiquitus.hapi.hStructures.HAck;
 import org.hubiquitus.hapi.hStructures.HAckValue;
 import org.hubiquitus.hapi.hStructures.HAlert;
 import org.hubiquitus.hapi.hStructures.HCommand;
-import org.hubiquitus.hapi.hStructures.HConv;
+import org.hubiquitus.hapi.hStructures.HConvState;
 import org.hubiquitus.hapi.hStructures.HJsonObj;
 import org.hubiquitus.hapi.hStructures.HMeasure;
 import org.hubiquitus.hapi.hStructures.HMessage;
@@ -39,13 +39,15 @@ import org.hubiquitus.hapi.hStructures.HStatus;
 import org.hubiquitus.hapi.hStructures.ResultStatus;
 import org.hubiquitus.hapi.structures.JabberID;
 import org.hubiquitus.hapi.transport.HTransport;
-import org.hubiquitus.hapi.transport.HTransportCallback;
+import org.hubiquitus.hapi.transport.HTransportDelegate;
 import org.hubiquitus.hapi.transport.HTransportOptions;
 import org.hubiquitus.hapi.transport.socketio.HTransportSocketio;
 import org.hubiquitus.hapi.transport.xmpp.HTransportXMPP;
 import org.hubiquitus.hapi.util.HJsonDictionnary;
 import org.hubiquitus.hapi.util.HUtil;
 import org.json.JSONObject;
+
+import exceptions.MissingAttrException;
 
 
 /**
@@ -59,10 +61,13 @@ public class HClient {
 	@SuppressWarnings("unused")
 	private HOptions options = null;
 	private HTransportOptions transportOptions = null;
-	private HDelegate callback = null;
 	private HTransport transport;
 	
-	private TransportCallback transportCallback = new TransportCallback();
+	private HStatusDelegate statusDelegate = null;
+	private HMessageDelegate messageDelegate = null;
+	private Hashtable<String, HCommandDelegate> commandsDelegates = new Hashtable<String, HCommandDelegate>();
+	
+	private TransportDelegate transportDelegate= new TransportDelegate();
 	
 	public HClient() {
 		transportOptions = new HTransportOptions();
@@ -75,7 +80,7 @@ public class HClient {
 	 * @param callback - client callback to get api notifications
 	 * @param options
 	 */
-	public void connect(String publisher, String password, HDelegate callback, HOptions options) {
+	public void connect(String publisher, String password, HOptions options) {
 		boolean shouldConnect = false;
 		boolean connInProgress = false;
 		boolean disconInProgress = false;
@@ -96,17 +101,15 @@ public class HClient {
 		
 		if (shouldConnect) { //if not connected, then connect
 			
-			this.callback = callback;
-			
 			//notify connection
-			this.updateStatus(ConnectionStatus.CONNECTING, ConnectionError.NO_ERROR, null);
+			this.notifyStatus(ConnectionStatus.CONNECTING, ConnectionError.NO_ERROR, null);
 			
 			//fill HTransportOptions
 			try {
 				this.fillHTransportOptions(publisher, password, options);
 			} catch (Exception e) { 
 				//stop connecting if filling error
-				this.updateStatus(ConnectionStatus.DISCONNECTED, ConnectionError.JID_MALFORMAT, e.getMessage());
+				this.notifyStatus(ConnectionStatus.DISCONNECTED, ConnectionError.JID_MALFORMAT, e.getMessage());
 				return;
 			}
 			
@@ -118,21 +121,21 @@ public class HClient {
 				if (this.transport == null || (this.transport.getClass() != HTransportSocketio.class)) {
 					this.transport = new HTransportSocketio();
 				}
-				this.transport.connect(transportCallback, this.transportOptions);
+				this.transport.connect(transportDelegate, this.transportOptions);
 			} else {
 				/*if (this.transport != null) { //check if other transport mode connect
 					this.transport.disconnect();
 				}*/
 				this.transport = new HTransportXMPP();
-				this.transport.connect(transportCallback, this.transportOptions);
+				this.transport.connect(transportDelegate, this.transportOptions);
 			}
 		} else {
 			if (connInProgress) {
-				updateStatus(ConnectionStatus.CONNECTING, ConnectionError.CONN_PROGRESS, null);
+				notifyStatus(ConnectionStatus.CONNECTING, ConnectionError.CONN_PROGRESS, null);
 			} else if (disconInProgress) {
 				//updateStatus(ConnectionStatus.DISCONNECTING, ConnectionError.ALREADY_CONNECTED, null);
 			} else {
-				updateStatus(ConnectionStatus.CONNECTED, ConnectionError.ALREADY_CONNECTED, null);
+				notifyStatus(ConnectionStatus.CONNECTED, ConnectionError.ALREADY_CONNECTED, null);
 			}	
 		}
 	}
@@ -151,66 +154,78 @@ public class HClient {
 		}
 		
 		if(shouldDisconnect) {
-			updateStatus(ConnectionStatus.DISCONNECTING, ConnectionError.NO_ERROR, null);
+			notifyStatus(ConnectionStatus.DISCONNECTING, ConnectionError.NO_ERROR, null);
 			transport.disconnect();
 		} else if (connectInProgress) {
-			updateStatus(ConnectionStatus.CONNECTING, ConnectionError.CONN_PROGRESS, "Can't disconnect while a connection is in progress");
+			notifyStatus(ConnectionStatus.CONNECTING, ConnectionError.CONN_PROGRESS, "Can't disconnect while a connection is in progress");
 		} else {
-			updateStatus(ConnectionStatus.DISCONNECTED, ConnectionError.NOT_CONNECTED, null);
-			//remove callback
-			this.callback = null;
+			notifyStatus(ConnectionStatus.DISCONNECTED, ConnectionError.NOT_CONNECTED, null);
 		}
 		
 		
 	}
-
+	
+	/**
+	 * Status delegate receive all connection status events.
+	 * @param statusDelgate
+	 */
+	public void onStatus(HStatusDelegate statusDelgate) {
+		this.statusDelegate = statusDelgate;
+	}
+	
+	/**
+	 * Message delegate receive all incoming HMessage
+	 * @param messageDelegate
+	 */
+	public void onMessage(HMessageDelegate messageDelegate) {
+		this.messageDelegate = messageDelegate;
+	}
+	
+	/**
+	 * Get current connection status
+	 * @return
+	 */
+	public ConnectionStatus status() {
+		return this.connectionStatus;
+	}
+	
 	/**
 	 * Used to perform a command on an hubiquitus component : a hserver or a hubot.
 	 * @param cmd - name of the command
+	 * @param commandDelegate - a delegate notified when the command result is issued. Can be null
 	 * @return reqid
 	 */
-	public String command(HCommand cmd) {
-		String reqid = null;
-		if(this.connectionStatus == ConnectionStatus.CONNECTED) {
-			if(cmd == null) {
-				cmd = new HCommand();
-			}
+	public void command(HCommand cmd, HCommandDelegate commandDelegate) {
+		if(this.connectionStatus == ConnectionStatus.CONNECTED && cmd != null) {
+			String reqid = null;
 			reqid = cmd.getReqid();
 			if(reqid == null) {
 				Random rand = new Random();
 				reqid = "javaCmd:" + rand.nextInt();
 				cmd.setReqid(reqid);
 			}
+			
 			if(cmd.getSender() == null) {
 				cmd.setSender(transportOptions.getJid().getFullJID());
 			}
+			
 			if(cmd.getTransient() == null) {
 				cmd.setTransient(true);
 			}
 			
 			if(cmd.getEntity() != null) {
+				if (commandDelegate != null) {
+					commandsDelegates.put(reqid, commandDelegate);
+				}
 				transport.sendObject(cmd.toJSON());
 			} else {
-				final HCommand command = cmd;
-				(new Thread(new Runnable() {
-					public void run() {
-						HJsonDictionnary obj = new HJsonDictionnary(); 
-						obj.put("errorMsg", "Entity not found");
-						HResult hresult = new HResult(command.getReqid(),command.getCmd(),obj);
-						hresult.setStatus(ResultStatus.MISSING_ATTR);
-						callback.hDelegate("hresult", hresult);
-					}
-				})).start();
+				this.notifyResultError(cmd.getReqid(), cmd.getCmd(), ResultStatus.MISSING_ATTR, "Entity not found");
 			}
-		} else if(callback != null){
-			(new Thread(new Runnable() {
-				public void run() {
-					HStatus hstatus = new HStatus(connectionStatus, ConnectionError.NOT_CONNECTED, "Can not send hCommand. Not connected");
-					callback.hDelegate("hstatus", hstatus);
-				}
-			})).start();
+		} else if (cmd == null) {
+			this.notifyResultError(null, null, ResultStatus.MISSING_ATTR, "Provided cmd is null", commandDelegate);
+		} else {
+			this.notifyResultError(cmd.getReqid(), cmd.getCmd(), ResultStatus.NOT_CONNECTED, null, commandDelegate);
 		}
-		return reqid;
 	}
 	
 	/**
@@ -218,34 +233,37 @@ public class HClient {
 	 * The hAPI performs a hCommand of type hsubscribe.
 	 * The server will check if not already subscribed and if authorized and subscribe him.
 	 * @param chid - channel id
+	 * @param commandDelegate - a delegate notified when the command result is issued. Can be null
 	 * @return request id
 	 */
-	public String subscribe(String chid) {
+	public void subscribe(String chid, HCommandDelegate commandDelegate) {
 		HJsonDictionnary params = new HJsonDictionnary();
 		params.put("chid", chid);
 		HCommand cmd = new HCommand(transportOptions.getHserverService(), "hsubscribe", params);
-		return this.command(cmd);
+		this.command(cmd, commandDelegate);
 	}
 	
 	/**
 	 * Demands the server an unsubscription to the channel id.
 	 * The hAPI checks the current publisher’s subscriptions and if he is subscribed performs a hCommand of type hunsubscribe.
 	 * @param chid - channel id
+	 * @param commandDelegate - a delegate notified when the command result is issued. Can be null
 	 * @return request id
 	 */
-	public String unsubscribe(String chid) {
+	public void unsubscribe(String chid, HCommandDelegate commandDelegate) {
 		HJsonDictionnary params = new HJsonDictionnary();
 		params.put("chid", chid);
 		HCommand cmd = new HCommand(transportOptions.getHserverService(), "hunsubscribe", params);
-		return this.command(cmd);
+		this.command(cmd, commandDelegate);
 	}
 	
 	/**
 	 * Perform a publish operation of the provided hMessage to a channel.
 	 * @param message
+	 * @param commandDelegate - a delegate notified when the command result is issued. Can be null
 	 * @return reqid
 	 */
-	public String publish(HMessage message) {
+	public void publish(HMessage message, HCommandDelegate commandDelegate) {
 		//fill mandatory fields
 		String msgid = message.getMsgid();
 		if(msgid == null) {
@@ -260,8 +278,13 @@ public class HClient {
 		}
 				
 		message.setConvid(convid);
+		
+		if(message.getPublisher() == null) {
+			message.setPublisher(this.transportOptions.getJid().getBareJID());
+		}
+		
 		HCommand cmd = new HCommand(transportOptions.getHserverService(), "hpublish", message);
-		return this.command(cmd);				
+		this.command(cmd, commandDelegate);				
 	}
 	/**
 	 * Demands the hserver a list of the last messages saved for a dedicated channel.
@@ -273,36 +296,99 @@ public class HClient {
 	 * @warning HResult result type will be a JSonArray if successful
 	 * @param chid - channel id
 	 * @param nbLastMsg
+	 * @param commandDelegate - a delegate notified when the command result is issued. Can be null
 	 * @return request id
 	 */
-	public String getLastMessages(String chid, int nbLastMsg) {
+	public void getLastMessages(String chid, int nbLastMsg, HCommandDelegate commandDelegate) {
 		HJsonDictionnary params = new HJsonDictionnary();
 		params.put("chid", chid);
 		if(nbLastMsg > 0) {
 			params.put("nbLastMsg", nbLastMsg);
 		}
 		HCommand cmd = new HCommand(transportOptions.getHserverService(), "hgetlastmessages", params);
-		return this.command(cmd);
+		this.command(cmd, commandDelegate);
 	}
 	
 	/**
 	 * @see getLastMessages(String chid, int nbLastMsg) 
 	 * @param chid - channel id
+	 * @param commandDelegate - a delegate notified when the command result is issued. Can be null
 	 * @return request id 
 	 */
-	public String getLastMessages(String chid) {
-		return this.getLastMessages(chid,-1);
+	public void getLastMessages(String chid, HCommandDelegate commandDelegate) {
+		this.getLastMessages(chid,-1, commandDelegate);
 	}
 	
 	/**
 	 * Demands the server a list of the publisher’s subscriptions.	
 	 * 
 	 * Nominal response : a hCallback with a hResult will be performed when the result is available with an array of channel id.
+	 * @param commandDelegate - a delegate notified when the command result is issued. Can be null
 	 * @return request id
 	 */
-	public String getSubscriptions() {
+	public void getSubscriptions(HCommandDelegate commandDelegate) {
 		HCommand cmd = new HCommand(transportOptions.getHserverService(), "hgetsubscriptions", null);
-		return this.command(cmd);
+		this.command(cmd, commandDelegate);
+	}
+	
+	/**
+	 * Demands to the hserver the list of messages correlated by the convid value on a dedicated channel chid.
+	 * 
+	 * Nominal response : hResult where the status is 0 with an array of hMessage.
+	 * @param chid - Channel id. Mandatory
+	 * @param convid - Conversation id. Mandatory
+	 * @param commandDelegate - a delegate notified when the command result is issued. Can be null
+	 */
+	public void getThread(String chid, String convid, HCommandDelegate commandDelegate) {
+		HJsonDictionnary params = new HJsonDictionnary();
+		String cmdName = "hgetthread";
+		
+		//check mandatory fields
+		if (chid == null || chid.length() <= 0) {
+			notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "Chid is missing", commandDelegate);
+			return;
+		}
+		
+		if (convid == null || convid.length() <= 0) {
+			notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "Convid is missing", commandDelegate);
+			return;
+		}
+		
+		params.put("chid", chid);
+		params.put("convid", convid);
+		
+		HCommand cmd = new HCommand(transportOptions.getHserverService(), cmdName, params);
+		this.command(cmd, commandDelegate);
+	}
+	
+	/**
+	 * Demands to the hserver the list of convid where there is a hConvState with the status value searched on the channel chid.
+	 * 
+	 * Nominal response : hResult where the status is 0 with an array of convid.
+	 * @param chid - Channel id. Mandatory
+	 * @param status - The status searched. Mandatory
+	 * @param commandDelegate - a delegate notified when the command result is issued. Can be null
+	 */
+	public void getThreads(String chid, String status, HCommandDelegate commandDelegate) {
+		HJsonDictionnary params = new HJsonDictionnary();
+		String cmdName = "hgetthreads";
+		
+		//check mandatory fields
+		if (chid == null || chid.length() <= 0) {
+			notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "Chid is missing", commandDelegate);
+			return;
+		}
+		
+		if (status == null || status.length() <= 0) {
+			notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "Status is missing", commandDelegate);
+			return;
+		}
+		
+		params.put("chid", chid);
+		params.put("status", status);
+		
+		HCommand cmd = new HCommand(transportOptions.getHserverService(), cmdName, params);
+		this.command(cmd, commandDelegate);
 	}
 	
 	/* Builder */
@@ -315,93 +401,73 @@ public class HClient {
 	 * @param payload
 	 * @param options
 	 * @return hMessage
+	 * @throws MissingAttrException 
 	 */
-	public HMessage buildMessage(String chid, String type, HJsonObj payload, HMessageOptions options) {
-		HMessage hmessage = new HMessage();
-		if(this.connectionStatus == ConnectionStatus.CONNECTED) {
-			if(chid != null && chid.length() > 0) {
-				hmessage.setChid(chid);
-				hmessage.setConvid(options.getConvid());
-				hmessage.setType(type);
-				if(options != null) {
-					hmessage.setPriority(options.getPriority());
-					hmessage.setRelevance(options.getRelevance());
-					hmessage.setTransient(options.getTransient());
-					hmessage.setLocation(options.getLocation());
-					hmessage.setAuthor(options.getAuthor());
-					hmessage.setHeaders(options.getHeaders());
-				}				
-				if(transportOptions != null && transportOptions.getJid() != null) {
-					hmessage.setPublisher(transportOptions.getJid().getBareJID());
-				} else {
-					hmessage.setPublisher(null);
-				}		
-				hmessage.setPayload(payload);
-			} else {
-				(new Thread(new Runnable() {
-					public void run() {
-						HResult hresult = new HResult();
-						hresult.setCmd("publish");
-						hresult.setStatus(ResultStatus.MISSING_ATTR);
-						HJsonDictionnary result = new HJsonDictionnary();
-						result.put("error", "missing attribut : chid");
-						hresult.setResult(result);
-						callback.hDelegate("hresult", hresult);
-					}
-				})).start();
-			}
-		} else {
-			if(callback != null) {
-				(new Thread(new Runnable() {
-					public void run() {
-						HStatus hstatus = new HStatus(connectionStatus, ConnectionError.NOT_CONNECTED, "Can not build a message. Not connected");
-						callback.hDelegate("hstatus", hstatus);
-					}
-				})).start();
-			}
+	public HMessage buildMessage(String chid, String type, HJsonObj payload, HMessageOptions options) throws MissingAttrException {
+		
+		//check for required attributes
+		if (chid == null || chid.length() <= 0) {
+			throw new MissingAttrException("chid");
 		}
+		
+		//build the message
+		HMessage hmessage = new HMessage();
+
+		hmessage.setChid(chid);
+		hmessage.setType(type);
+		if(options != null) {
+			hmessage.setConvid(options.getConvid());
+			hmessage.setPriority(options.getPriority());
+			hmessage.setRelevance(options.getRelevance());
+			hmessage.setTransient(options.getTransient());
+			hmessage.setLocation(options.getLocation());
+			hmessage.setAuthor(options.getAuthor());
+			hmessage.setHeaders(options.getHeaders());
+		}				
+			
+		if(transportOptions != null && transportOptions.getJid() != null) {
+			hmessage.setPublisher(transportOptions.getJid().getBareJID());
+		} else {
+			hmessage.setPublisher(null);
+		}		
+				
+		hmessage.setPayload(payload);
+
 		return hmessage;
 	}
 	
 	/**
-	 * Helper to create hconv
+	 * Helper to create hconvstate
 	 * @param chid - channel id : mandatory
-	 * @param topic
-	 * @param participants
+	 * @param convid - conversation id : mandatory
+	 * @param status - status of the conversation
 	 * @param options
 	 * @return hmessage
+	 * @throws MissingAttrException 
 	 */
-	public HMessage buildConv(String chid, String topic, List<String> participants, HMessageOptions options) {
-		HMessage hmessage = new HMessage();
-		if(this.connectionStatus == ConnectionStatus.CONNECTED) {
-			if(chid != null  && chid.length()>0) {
-				HConv hconv = new HConv();
-				hconv.setTopic(topic);
-				hconv.setParticipants(participants);
-				hmessage = buildMessage(chid, "hconv", hconv, options);
-			} else {
-				(new Thread(new Runnable() {
-					public void run() {
-						HResult hresult = new HResult();
-						hresult.setCmd("publish");
-						hresult.setStatus(ResultStatus.MISSING_ATTR);
-						HJsonDictionnary result = new HJsonDictionnary();
-						result.put("error", "missing attribut : chid");
-						hresult.setResult(result);
-						callback.hDelegate("hresult", hresult);
-					}
-				})).start();
-			}
-		} else {
-			if(callback != null) {
-				(new Thread(new Runnable() {
-					public void run() {
-						HStatus hstatus = new HStatus(connectionStatus, ConnectionError.NOT_CONNECTED, "Can not build a message. Not connected");
-						callback.hDelegate("hstatus", hstatus);
-					}
-				})).start();
-			}
+	public HMessage buildConvState(String chid, String convid, String status, HMessageOptions options) throws MissingAttrException {
+		
+		//check for required attributes
+		if (chid == null || chid.length() <= 0) {
+			throw new MissingAttrException("chid");
 		}
+		
+		if (convid == null || convid.length() <= 0) {
+			throw new MissingAttrException("convid");
+		}
+		
+		if (status == null || status.length() <= 0) {
+			throw new MissingAttrException("status");
+		}
+		
+		HMessage hmessage = new HMessage();
+		
+		HConvState hconvstate = new HConvState();
+		hconvstate.setStatus(status);
+		
+		hmessage = buildMessage(chid, "hConvState", hconvstate, options);
+		hmessage.setConvid(convid);
+
 		return hmessage;
 	}
 	
@@ -412,38 +478,31 @@ public class HClient {
 	 * @param ack : mandatory
 	 * @param options
 	 * @return hmessage
+	 * @throws MissingAttrException 
 	 */
-	public HMessage buildAck(String chid, String ackid,HAckValue ack, HMessageOptions options) {
-		HMessage hmessage = new HMessage();
-		if(this.connectionStatus == ConnectionStatus.CONNECTED) {
-			if(chid != null && chid.length()>0 && ackid != null && ackid.length()>0 && ack != null) {
-				HAck hack = new HAck();
-				hack.setAckid(ackid);
-				hack.setAck(ack);
-				hmessage = buildMessage(chid, "hack", hack, options);
-			} else {
-				(new Thread(new Runnable() {
-					public void run() {
-						HResult hresult = new HResult();
-						hresult.setCmd("publish");
-						hresult.setStatus(ResultStatus.MISSING_ATTR);
-						HJsonDictionnary result = new HJsonDictionnary();
-						result.put("error", "missing attribut : chid, ackid or ack");
-						hresult.setResult(result);
-						callback.hDelegate("hresult", hresult);
-					}
-				})).start();
-			}
-		} else {
-			if(callback != null) {
-				(new Thread(new Runnable() {
-					public void run() {
-						HStatus hstatus = new HStatus(connectionStatus, ConnectionError.NOT_CONNECTED, "Can not build a message. Not connected");
-						callback.hDelegate("hstatus", hstatus);
-					}
-				})).start();
-			}
+	public HMessage buildAck(String chid, String ackid,HAckValue ack, HMessageOptions options) throws MissingAttrException {
+		//check for required attributes
+		if (chid == null || chid.length() <= 0) {
+			throw new MissingAttrException("chid");
 		}
+		
+		//check for required attributes
+		if (ackid == null || ackid.length() <= 0) {
+			throw new MissingAttrException("ackid");
+		}
+		
+		//check for required attributes
+		if (ack == null) {
+			throw new MissingAttrException("ack");
+		}
+		
+		HMessage hmessage = new HMessage();
+
+		HAck hack = new HAck();
+		hack.setAckid(ackid);
+		hack.setAck(ack);
+		hmessage = buildMessage(chid, "hAck", hack, options);
+
 		return hmessage;
 	}
 	
@@ -453,37 +512,26 @@ public class HClient {
 	 * @param alert : mandatory
 	 * @param options
 	 * @return hmessage
+	 * @throws MissingAttrException 
 	 */
-	public HMessage buildAlert(String chid, String alert, HMessageOptions options) {
-		HMessage hmessage = new HMessage();
-		if(this.connectionStatus == ConnectionStatus.CONNECTED) {
-			if(chid != null && chid.length()>0 && alert != null  && alert.length()>0) {
-			HAlert halert = new HAlert();
-			halert.setAlert(alert);
-			hmessage = buildMessage(chid, "halert", halert, options);
-			} else {
-				(new Thread(new Runnable() {
-					public void run() {
-						HResult hresult = new HResult();
-						hresult.setCmd("publish");
-						hresult.setStatus(ResultStatus.MISSING_ATTR);
-						HJsonDictionnary result = new HJsonDictionnary();
-						result.put("error", "missing attribut : chid or alert");
-						hresult.setResult(result);
-						callback.hDelegate("hresult", hresult);
-					}
-				})).start();
-			}
-		} else {
-			if(callback != null) {
-				(new Thread(new Runnable() {
-					public void run() {
-						HStatus hstatus = new HStatus(connectionStatus, ConnectionError.NOT_CONNECTED, "Can not build a message. Not connected");
-						callback.hDelegate("hstatus", hstatus);
-					}
-				})).start();
-			}
+	public HMessage buildAlert(String chid, String alert, HMessageOptions options) throws MissingAttrException {
+		//check for required attributes
+		if (chid == null || chid.length() <= 0) {
+			throw new MissingAttrException("chid");
 		}
+		
+		//check for required attributes
+		if (alert == null || alert.length() <= 0) {
+			throw new MissingAttrException("chid");
+		}
+		
+		HMessage hmessage = new HMessage();
+		
+		HAlert halert = new HAlert();
+		halert.setAlert(alert);
+		
+		hmessage = buildMessage(chid, "hAlert", halert, options);
+	
 		return hmessage;
 	}
 	
@@ -494,39 +542,31 @@ public class HClient {
 	 * @param unit : mandatory
 	 * @param options
 	 * @return hmessage
+	 * @throws MissingAttrException 
 	 */
-	public HMessage buildMeasure(String chid, String value, String unit, HMessageOptions options) {
-		HMessage hmessage = new HMessage();
-		if(this.connectionStatus == ConnectionStatus.CONNECTED) {
-			if(chid != null && chid.length() > 0 && value != null 
-				&& value.length() > 0 && unit != null && unit.length() > 0) {
-				HMeasure hmeasure = new HMeasure();
-				hmeasure.setValue(value);
-				hmeasure.setUnit(unit);
-				hmessage = buildMessage(chid, "hmeasure", hmeasure, options);
-			} else {
-				(new Thread(new Runnable() {
-					public void run() {
-						HResult hresult = new HResult();
-						hresult.setCmd("publish");
-						hresult.setStatus(ResultStatus.MISSING_ATTR);
-						HJsonDictionnary result = new HJsonDictionnary();
-						result.put("error", "missing attribut : chid, value or unit");
-						hresult.setResult(result);
-						callback.hDelegate("hresult", hresult);
-					}
-				})).start();
-			}
-		} else {
-			if(callback != null) {
-				(new Thread(new Runnable() {
-					public void run() {
-						HStatus hstatus = new HStatus(connectionStatus, ConnectionError.NOT_CONNECTED, "Can not build a message. Not connected");
-						callback.hDelegate("hstatus", hstatus);
-					}
-				})).start();
-			}
+	public HMessage buildMeasure(String chid, String value, String unit, HMessageOptions options) throws MissingAttrException {
+		//check for required attributes
+		if (chid == null || chid.length() <= 0) {
+			throw new MissingAttrException("chid");
 		}
+				
+		//check for required attributes
+		if (value == null || value.length() <= 0) {
+			throw new MissingAttrException("value");
+		}
+				
+		//check for required attributes
+		if (unit == null || unit.length() <= 0) {
+			throw new MissingAttrException("unit");
+		}
+		
+		HMessage hmessage = new HMessage();
+		
+		HMeasure hmeasure = new HMeasure();
+		hmeasure.setValue(value);
+		hmeasure.setUnit(unit);
+		hmessage = buildMessage(chid, "hMeasure", hmeasure, options);
+	
 		return hmessage;
 	}
 	/* HTransportCallback functions */
@@ -577,26 +617,134 @@ public class HClient {
 	 * @param error - error code
 	 * @param errorMsg - a low level description of the error
 	 */
-	private void updateStatus(ConnectionStatus status, ConnectionError error, String errorMsg) {
-		if (callback != null) {
-			connectionStatus = status;
-			//create structure 
-			HStatus hstatus = new HStatus();
-			hstatus.setStatus(status);
-			hstatus.setErrorCode(error);
-			hstatus.setErrorMsg(errorMsg);
-			
-			try {
-				callback.hDelegate("hstatus", hstatus);
-			} catch(Exception e) {
+	private void notifyStatus(ConnectionStatus status, ConnectionError error, String errorMsg) {
+		try {
+			if (this.statusDelegate != null) {
+				connectionStatus = status;
+				
+				//create structure 
+				final HStatus hstatus = new HStatus();
+				hstatus.setStatus(status);
+				hstatus.setErrorCode(error);
+				hstatus.setErrorMsg(errorMsg);
+				
+				//return status asynchronously
+				(new Thread(new Runnable() {
+					public void run() {
+						try {
+							statusDelegate.onStatus(hstatus);
+						} catch (Exception e) {
+							// TODO: Add a message to message logger
+							e.printStackTrace();
+						}
+					}
+				})).start();
 			}
-			
-			if(status == ConnectionStatus.DISCONNECTED) {
-				callback = null;
-			}
-		} else {
-			System.out.println("Error : " + this.getClass().getName() + " requires a callback");
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO: Add a message to message logger
 		}
+	}
+	
+	/**
+	 * @internal
+	 * notify message delagate of an incoming hmessage
+	 */
+	private void notifyMessage(final HMessage message) {
+		try {
+			if (this.messageDelegate != null) {
+				
+				//return message asynchronously
+				(new Thread(new Runnable() {
+					public void run() {
+						try {
+							messageDelegate.onMessage(message);
+						} catch (Exception e) {
+							// TODO: Add a message to message logger
+							e.printStackTrace();
+						}
+					}
+				})).start();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO: Add a message to message logger
+		}
+	}
+	
+	/**
+	 * @internal
+	 * notify to a command delegate it's result
+	 */
+	private void notifyResult(final HResult result, final HCommandDelegate commandDelegate) {
+		try {
+			if (commandDelegate != null) {
+				
+				//return result asynchronously
+				(new Thread(new Runnable() {
+					public void run() {
+						try {
+							commandDelegate.onResult(result);
+						} catch (Exception e) {
+							// TODO: Add a message to message logger
+							e.printStackTrace();
+						}
+					}
+				})).start();
+			} else {
+				// TODO: add a message to logger in debug mode to know which results are dropped
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO: Add a message to message logger
+		}
+	}
+	
+	/**
+	 * @internal
+	 * notify to a command delegate it's result
+	 * internally calls notifyResult(final HResult result, HCommandDelegate commandDelegate) with
+	 * the right delegate
+	 */
+	private void notifyResult(final HResult result) {
+		HCommandDelegate commandDelegate = commandsDelegates.get(result.getReqid());
+		notifyResult(result, commandDelegate);
+	}
+	
+	/**
+	 * Helper function to return a hresult with a payload error
+	 * @param resultstatus
+	 * @param errorMsg
+	 */
+	private void notifyResultError(String reqid, String cmd, ResultStatus resultstatus, String errorMsg) {
+		HJsonDictionnary obj = new HJsonDictionnary(); 
+		obj.put("errorMsg", errorMsg);
+		HResult hresult = new HResult();
+		hresult.setResult(obj);
+		hresult.setStatus(resultstatus);
+		
+		hresult.setReqid(reqid);
+		hresult.setCmd(cmd);
+		
+		this.notifyResult(hresult);
+	}
+	
+	/**
+	 * Helper function to return a hresult with a payload error
+	 * @param resultstatus
+	 * @param errorMsg
+	 */
+	private void notifyResultError(String reqid, String cmd, ResultStatus resultstatus, String errorMsg, HCommandDelegate commandDelegate) {
+		HJsonDictionnary obj = new HJsonDictionnary(); 
+		obj.put("errorMsg", errorMsg);
+		HResult hresult = new HResult();
+		hresult.setResult(obj);
+		hresult.setStatus(resultstatus);
+		
+		hresult.setReqid(reqid);
+		hresult.setCmd(cmd);
+		
+		this.notifyResult(hresult, commandDelegate);
 	}
 	
 
@@ -604,30 +752,26 @@ public class HClient {
 	 * @internal
 	 * Class used to get callbacks from transport layer.
 	 */
-	private class TransportCallback implements HTransportCallback {
+	private class TransportDelegate implements HTransportDelegate {
 
 		/**
 		 * @internal
-		 * see HTransportCallback for more informations
+		 * see HTransportDelegate for more informations
 		 */
-		public void connectionCallback(ConnectionStatus status,
-				ConnectionError error, String errorMsg) {
-			updateStatus(status, error, errorMsg);
+		public void onStatus(ConnectionStatus status, ConnectionError error, String errorMsg) {
+			notifyStatus(status, error, errorMsg);
 		}
 
 		/**
 		 * @internal
-		 * see HTransportCallback for more information
+		 * see HTransportDelegate for more information
 		 */
-		@Override
-		public void dataCallback(String type, JSONObject jsonData) {
+		public void onData(String type, JSONObject jsonData) {
 			try {
 				if(type.equalsIgnoreCase("hresult")) {
-					callback.hDelegate(type, new HResult(jsonData));
+					notifyResult(new HResult(jsonData));
 				} else if (type.equalsIgnoreCase("hmessage")) {
-					callback.hDelegate(type, new HMessage(jsonData));
-				} else {
-					callback.hDelegate(type, new HJsonDictionnary(jsonData));
+					notifyMessage(new HMessage(jsonData));
 				}
 			} catch (Exception e) {
 				System.out.println("erreur datacallBack");

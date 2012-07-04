@@ -24,6 +24,7 @@ import java.net.URI;
 import java.util.List;
 
 /**
+ * @cond internal
  * @version 0.3
  * Contain some utils function
  */
@@ -103,7 +104,11 @@ public class HUtil {
 	 * @return HServer Jid
 	 */
 	public static String getHserverJid(String hserver, String domain) {
-		return hserver + "." + domain; 
+		return hserver + "@" + domain; 
 	}
 	
 }
+
+/**
+ * @endcond
+ */

@@ -19,22 +19,20 @@
 
 package org.hubiquitus.hapi.client;
 
-import org.hubiquitus.hapi.hStructures.HJsonObj;
+import org.hubiquitus.hapi.hStructures.HMessage;
 
 /**
- * @version 0.3
- * Interface used to receive data from hapi.
- * Async model is used
+ * @version 0.4
+ * Delegate called on incoming messages
+ * Events are received asynchronously and threaded
  */
 
-public interface HDelegate {
-	
-	/**
-	 * hAPI "callback".
-	 * called asynchronyously to notify an update
-	 * @param type - hubiquitus structure (hresult, hstatus, hmessage...)
-	 * @param data - the structure defined by the type
-	 */
-	public void hDelegate(String type, HJsonObj data);
+public interface HMessageDelegate {
 
+	/**
+	 * Called on incoming message
+	 * @param type
+	 * @param data
+	 */
+	public void onMessage(HMessage message);
 }

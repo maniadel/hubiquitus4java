@@ -36,9 +36,16 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import org.hubiquitus.hapi.client.HClient;
+import org.hubiquitus.hapi.client.HCommandDelegate;
+import org.hubiquitus.hapi.client.HMessageDelegate;
+import org.hubiquitus.hapi.client.HStatusDelegate;
+import org.hubiquitus.hapi.hStructures.ConnectionError;
 import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HMessage;
+import org.hubiquitus.hapi.hStructures.HMessageOptions;
 import org.hubiquitus.hapi.hStructures.HOptions;
+import org.hubiquitus.hapi.hStructures.HResult;
+import org.hubiquitus.hapi.hStructures.HStatus;
 import org.hubiquitus.hapi.util.HJsonDictionnary;
 
 /**
@@ -49,11 +56,11 @@ import org.hubiquitus.hapi.util.HJsonDictionnary;
  */
 
 @SuppressWarnings("serial")
-public class MainPanel extends JPanel {
+public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelegate, HCommandDelegate  {
 	private HClient client;
-	
+	final MainPanel outerClass = this;
+
 	private HOptions option = new HOptions();
-	private CallbackExample callback = new CallbackExample(this);
 
 	private JTextField usernameField = new JTextField("");
 	private JTextField passwordField = new JTextField("");
@@ -63,7 +70,8 @@ public class MainPanel extends JPanel {
 	private JTextField chidField = new JTextField("");
 	private JTextField messageField = new JTextField("");
 	private JTextField nbLastMessagesField = new JTextField("");
-	
+	private JTextField convidField = new JTextField("");
+	private JTextField convstateField = new JTextField("");
 	
 	private JButton connectButton = new JButton("Connect");
 	private JButton disconnectButton = new JButton("Disconnect");
@@ -73,6 +81,9 @@ public class MainPanel extends JPanel {
 	private JButton publishButton = new JButton("publish");
 	private JButton getLastMessagesButton = new JButton("getLstMsg");
 	private JButton getSubscriptionsButton = new JButton("getSubs");
+	private JButton getThreadButton = new JButton("getThread");
+	private JButton getThreadsButton = new JButton("getThreads");
+	private JButton pubConvStateButton = new JButton("pubConvState"); 
 	private JButton cleanButton = new JButton("Clean");
 	
 	
@@ -84,13 +95,16 @@ public class MainPanel extends JPanel {
 	private JRadioButton notTransientRadioButton = new JRadioButton("not transient");
 	private ButtonGroup transientGroup = new ButtonGroup();
 	
-	private JTextArea logArea = new JTextArea(20,90);
+	private JTextArea logArea = new JTextArea(20,100);
 	private JTextArea statusArea = new JTextArea(1,90);
-
+	
 	public MainPanel() {
 		super();
 		initComponents();
 		initListeners();
+		client = new HClient();
+		client.onStatus(this);
+		client.onMessage(this);
 	}
 
 	/**
@@ -111,7 +125,7 @@ public class MainPanel extends JPanel {
 
 		//Initialization of Labels,TextFields and RadioButtons
 		JPanel paramsPanel = new JPanel();
-		GridLayout paramsLayout = new GridLayout(11, 2);
+		GridLayout paramsLayout = new GridLayout(13, 2);
 		paramsPanel.setLayout(paramsLayout);
 		paramsPanel.add(new JLabel("username"));
 		paramsPanel.add(usernameField);
@@ -127,8 +141,10 @@ public class MainPanel extends JPanel {
 		paramsPanel.add(chidField);
 		paramsPanel.add(new JLabel("nbLastMessages"));
 		paramsPanel.add(nbLastMessagesField);
-		paramsPanel.add(new JLabel("Messages"));
-		paramsPanel.add(messageField);
+		paramsPanel.add(new JLabel("convid"));
+		paramsPanel.add(convidField);
+		paramsPanel.add(new JLabel("status"));
+		paramsPanel.add(convstateField);
 		paramsPanel.add(transientRadioButton);
 		paramsPanel.add(notTransientRadioButton);
 		paramsPanel.add(xmppRadioButton);
@@ -139,7 +155,7 @@ public class MainPanel extends JPanel {
 		
 		//Initialization of Buttons
 		JPanel controlsPanel = new JPanel();
-		GridLayout controlsLayout = new GridLayout(1, 9);
+		GridLayout controlsLayout = new GridLayout(2, 6);
 		controlsPanel.setLayout(controlsLayout);
 		controlsPanel.add(connectButton);
 		controlsPanel.add(disconnectButton);
@@ -149,6 +165,9 @@ public class MainPanel extends JPanel {
 		controlsPanel.add(publishButton);
 		controlsPanel.add(getLastMessagesButton);
 		controlsPanel.add(getSubscriptionsButton);
+		controlsPanel.add(getThreadButton);
+		controlsPanel.add(getThreadsButton);
+		controlsPanel.add(pubConvStateButton);
 		controlsPanel.add(cleanButton);
 		
 		
@@ -178,7 +197,11 @@ public class MainPanel extends JPanel {
 		publishButton.addMouseListener(new PublishButtonListener());
 		getLastMessagesButton.addMouseListener(new GetLastMessagesButtonListener());
 		getSubscriptionsButton.addMouseListener(new GetSubscriptionButtonListener());
+		getThreadButton.addMouseListener(new GetThreadButtonListener());
+		getThreadsButton.addMouseListener(new GetThreadsButtonListener());
+		pubConvStateButton.addMouseListener(new PubConvStateButtonListener());
 		cleanButton.addMouseListener(new CleanButtonListener());
+		
 	}
 	
 	/**
@@ -231,7 +254,7 @@ public class MainPanel extends JPanel {
 				option.setTransport("socketio");
 			else
 				option.setTransport("xmpp");
-			client.connect(usernameField.getText(), passwordField.getText(), callback, option);
+			client.connect(usernameField.getText(), passwordField.getText(), option);
 		}
 	}
 
@@ -248,8 +271,8 @@ public class MainPanel extends JPanel {
 			HJsonDictionnary jsonObj = new HJsonDictionnary();
 			try {
 				jsonObj.put("text",  messageField.getText());
-				HCommand cmd = new HCommand("hnode.hub.novediagroup.com","hecho",jsonObj);
-				client.command(cmd);
+				HCommand cmd = new HCommand("hnode@hub.novediagroup.com","hecho",jsonObj);
+				client.command(cmd,outerClass);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}	
@@ -265,14 +288,14 @@ public class MainPanel extends JPanel {
 	// Listener of button subscribe
 	class SubscribeButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
-			client.subscribe(chidField.getText());
+			client.subscribe(chidField.getText(),outerClass);
 		}
 	}
 	
 	// Listener of button unsubscribe
 	class UnsubscribeButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
-			client.unsubscribe(chidField.getText());
+			client.unsubscribe(chidField.getText(),outerClass);
 		}
 	}
 	
@@ -293,7 +316,7 @@ public class MainPanel extends JPanel {
 			HJsonDictionnary payload = new HJsonDictionnary();
 			payload.put("text", messageField.getText());
 			message.setPayload(payload);
-			client.publish(message);
+			client.publish(message,outerClass);
 		}
 	}
 	
@@ -304,12 +327,12 @@ public class MainPanel extends JPanel {
 			try {
 				int nbLastMessage = Integer.parseInt(nbLastMessagesField.getText());
 				if(nbLastMessage > 0) {
-					client.getLastMessages(chid, nbLastMessage);
+					client.getLastMessages(chid, nbLastMessage,outerClass);
 				} else {
-					client.getLastMessages(chid);
+					client.getLastMessages(chid,outerClass);
 				}
 			} catch (Exception e) {
-				client.getLastMessages(chid);
+				client.getLastMessages(chid,outerClass);
 			}
 		}
 	}
@@ -317,19 +340,84 @@ public class MainPanel extends JPanel {
 	//Listener of button getsubscriptions
 	class GetSubscriptionButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
-			client.getSubscriptions();
+			client.getSubscriptions(outerClass);
 		}
 	}
 	
-	/* Getters & Setters */
-	public HClient getClient() {
-		return client;
-	}
 
-	public void setClient(HClient client) {
-		this.client = client;
+	//Listener of button getThread
+	class GetThreadButtonListener extends MouseAdapter {
+		public void mouseClicked(MouseEvent event) {
+			String chid = chidField.getText();
+			String convid = convidField.getText();
+			try{
+				client.getThread(chid, convid, outerClass);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
+	//Listener of button getThreads 
+	class GetThreadsButtonListener extends MouseAdapter {
+		public void mouseClicked(MouseEvent event) {
+			String chid = chidField.getText();
+			String status = convstateField.getText();
+			try{
+				client.getThreads(chid, status, outerClass);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	//Listener of button getsubscriptions
+	class PubConvStateButtonListener extends MouseAdapter {
+		public void mouseClicked(MouseEvent event) {
+			String chid = chidField.getText();
+			String convid = convidField.getText();
+			String status = convstateField.getText();
+			HMessageOptions msgOptions = new HMessageOptions();
+
+			if(transientRadioButton.isSelected())
+				msgOptions.setTransient(true);
+			else
+				msgOptions.setTransient(false);
+			
+			try{
+				HMessage pubMsg = client.buildConvState(chid, convid, status, msgOptions);
+				client.publish(pubMsg, outerClass);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/* Override for Delegate */
+	
+	@Override
+	public void onResult(HResult result) {
+		this.addTextArea(result.toString());		
+	}
+
+	@Override
+	public void onMessage(HMessage message) {
+		this.addTextArea(message.toString());	
+	}
+
+	@Override
+	public void onStatus(HStatus status) {
+		this.setStatusArea("hstatus");
+		this.addTextArea(status.toString());
+		if(status.getErrorCode() == ConnectionError.NO_ERROR || status.getErrorMsg() == null) {
+			this.setStatusArea(status.getStatus().toString());
+		} else {
+			this.setStatusArea(status.getStatus().toString() + " : " + status.getErrorMsg() );
+		}
+	}
+	
+	
+	/* Getters & Setters */
 	public void setTextArea(String text){
 		this.logArea.setText(text);
 	}

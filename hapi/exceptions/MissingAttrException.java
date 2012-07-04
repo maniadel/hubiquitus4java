@@ -17,38 +17,45 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.hubiquitus.hapi.transport;
 
-import org.json.JSONObject;
+package exceptions;
 
 /**
- * @cond internal
- * @version 0.3
- * Interface abstracting transport layer
+ * @version 0.4
+ * Exception to notify a missing attribute (ONLY used in builders)
  */
 
-public interface HTransport {
 
-	/**
-	 * transport layer connect
-	 * should connect asynchronously and catch all errors and return them through callback
-	 * @param callback
-	 * @param options
-	 */
-	public void connect(HTransportDelegate callback, HTransportOptions options);
+public class MissingAttrException extends Exception {
+	private static final long serialVersionUID = 1L;
+	
+	private String attrName = null;
 	
 	/**
-	 * transport layer disconnect
+	 * Name of the missing attribute
+	 * @param attrName
 	 */
-	public void disconnect();
+	public MissingAttrException(String attrName) {
+		this.attrName = attrName;
+	}
 	
-	/**
-	 * transport the object to send it to the server
-	 * @param object
-	 */
-	public void sendObject(JSONObject object);
+	public String getAttrName() {
+		return attrName;
+	}
+
+	public void setAttrName(String attrName) {
+		this.attrName = attrName;
+	}
+
+	public String getMessage() {
+		return "Attribute " + this.attrName + " is required but missing";
+	}
+	
+	public String getLocalizedMessage() {
+		return getMessage();
+	}
+	
+	public String toString() {
+		return "Attribute " + this.attrName + " is required but missing";
+	}
 }
-
-/**
- * @endcond
- */

@@ -17,78 +17,43 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.hubiquitus.hapi.test;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-
 import org.hubiquitus.hapi.client.HClient;
-import org.hubiquitus.hapi.client.HDelegate;
-import org.hubiquitus.hapi.hStructures.ConnectionStatus;
 import org.hubiquitus.hapi.hStructures.HAck;
 import org.hubiquitus.hapi.hStructures.HAckValue;
 import org.hubiquitus.hapi.hStructures.HAlert;
-import org.hubiquitus.hapi.hStructures.HConv;
-import org.hubiquitus.hapi.hStructures.HJsonObj;
+import org.hubiquitus.hapi.hStructures.HConvState;
 import org.hubiquitus.hapi.hStructures.HLocation;
 import org.hubiquitus.hapi.hStructures.HMeasure;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.hStructures.HMessageOptions;
 import org.hubiquitus.hapi.hStructures.HMessagePriority;
-import org.hubiquitus.hapi.hStructures.HOptions;
-import org.hubiquitus.hapi.hStructures.HStatus;
 import org.hubiquitus.hapi.util.DateISO8601;
 import org.hubiquitus.hapi.util.HJsonDictionnary;
 import org.junit.Assert;
 import org.junit.Test;
+import exceptions.MissingAttrException;
+
+/**
+ * @cond internal
+ */
 
 public class HBuilderTest {
 	
 	@Test
 	public void HMessageBuildTest() {
 		HClient hclient = new HClient();
-		
-		class TestDelegated implements HDelegate{
-			private ConnectionStatus connStatus;
-			@Override
-			public void hDelegate(String type, HJsonObj data) {
-				if(type == "hstatus") {
-					connStatus = ((HStatus) data).getStatus();
-				}
-			}			
-			public ConnectionStatus getStatus() {
-				return connStatus;
-			}
-		};
-	
-		TestDelegated callback = new TestDelegated();
-		
-		HOptions options = new HOptions();
-		hclient.connect("u1@hub.novediagroup.com", "u1", callback, options);
-		
-		while (callback.getStatus() == ConnectionStatus.CONNECTING) {
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		Assert.assertEquals(callback.getStatus(), ConnectionStatus.CONNECTED);
-		
+			
 		HMessageOptions hmessageOption = new HMessageOptions();
 		
 		hmessageOption.setAuthor("me");
 		hmessageOption.setConvid("convid:123456789");
 		
-		List<HJsonObj> headers = new ArrayList<HJsonObj>();
-		HJsonDictionnary header1 = new HJsonDictionnary();
-		header1.put("header1", "1");
-		HJsonDictionnary header2 = new HJsonDictionnary();
-		header2.put("header2", "2");
-		headers.add(header1);
-		headers.add(header2);
+		HJsonDictionnary headers = new HJsonDictionnary();
+		headers.put("header1", "1");
+		headers.put("header2", "2");
 		hmessageOption.setHeaders(headers);		
 		
 		HLocation location = new HLocation();
@@ -104,13 +69,17 @@ public class HBuilderTest {
 		
 		HJsonDictionnary payload = new HJsonDictionnary();
 		payload.put("test", "test");
-		HMessage hmessage = hclient.buildMessage("chid:123456789", "string", payload, hmessageOption);
+		HMessage hmessage = null;
+		try {
+			hmessage = hclient.buildMessage("chid:123456789", "string", payload, hmessageOption);
+		} catch (MissingAttrException e) {
+			Assert.fail();
+		}
 		
 		Assert.assertEquals(hmessage.getAuthor(), "me");
 		Assert.assertEquals(hmessage.getChid(), "chid:123456789");
 		Assert.assertEquals(hmessage.getConvid(), "convid:123456789");
 		Assert.assertEquals(hmessage.getMsgid(), null);
-		Assert.assertEquals(hmessage.getPublisher(), "u1@hub.novediagroup.com");
 		Assert.assertEquals(hmessage.getType(), "string");
 		Assert.assertEquals(hmessage.getHeaders().toString(), headers.toString());
 		Assert.assertEquals(hmessage.getLocation().toString(), location.toString());
@@ -123,48 +92,16 @@ public class HBuilderTest {
 
 	
 	@Test
-	public void HConvBuildTest() {
+	public void HConvStateBuildTest() {
 		HClient hclient = new HClient();
-		
-		class TestDelegated implements HDelegate{
-			private ConnectionStatus connStatus;
-			@Override
-			public void hDelegate(String type, HJsonObj data) {
-				if(type == "hstatus") {
-					connStatus = ((HStatus) data).getStatus();
-				}
-			}
-			public ConnectionStatus getStatus() {
-				return connStatus;
-			}
-		};
-	
-		TestDelegated callback = new TestDelegated();
-		
-		HOptions options = new HOptions();
-		hclient.connect("u1@hub.novediagroup.com", "u1", callback, options);
-		
-		while (callback.getStatus() == ConnectionStatus.CONNECTING) {
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		Assert.assertEquals(callback.getStatus(), ConnectionStatus.CONNECTED);
 		
 		HMessageOptions hmessageOption = new HMessageOptions();
 		
 		hmessageOption.setAuthor("me");
-		hmessageOption.setConvid("convid:123456789");
 		
-		List<HJsonObj> headers = new ArrayList<HJsonObj>();
-		HJsonDictionnary header1 = new HJsonDictionnary();
-		header1.put("header1", "1");
-		HJsonDictionnary header2 = new HJsonDictionnary();
-		header2.put("header2", "2");
-		headers.add(header1);
-		headers.add(header2);
+		HJsonDictionnary headers = new HJsonDictionnary();
+		headers.put("header1", "1");
+		headers.put("header2", "2");
 		hmessageOption.setHeaders(headers);		
 		
 		HLocation location = new HLocation();
@@ -178,62 +115,32 @@ public class HBuilderTest {
 		
 		hmessageOption.setTransient(false);	
 		
-		List<String> participants = new ArrayList<String>();
-		participants.add("jaimes");
+		HMessage hmessage = null;
+		try {
+			hmessage = hclient.buildConvState("test channel", "test conv id" , "test status", hmessageOption);
+		} catch (MissingAttrException e) {
+			Assert.fail();
+		}
 		
-		HMessage hmessage = hclient.buildConv("chid:123456789", "testeur" ,participants, hmessageOption);
+		HConvState hconvstate = new HConvState();
+		hconvstate.setStatus("test status");
 		
-		HConv hconv = new HConv();
-		hconv.setTopic("testeur");
-		hconv.setParticipants(participants);
-		
-		Assert.assertEquals(hmessage.getType(),"hconv");
-		Assert.assertEquals(hmessage.getPayload().toString(),hconv.toString());
+		Assert.assertEquals(hmessage.getType(),"hconvstate");
+		Assert.assertEquals(hmessage.getPayload().toString(),hconvstate.toString());
 	}
 	
 	@Test
 	public void HAckBuildTest() {
 		HClient hclient = new HClient();
 		
-		class TestDelegated implements HDelegate{
-			private ConnectionStatus connStatus;
-			@Override
-			public void hDelegate(String type, HJsonObj data) {
-				if(type == "hstatus") {
-					connStatus = ((HStatus) data).getStatus();
-				}
-			}
-			public ConnectionStatus getStatus() {
-				return connStatus;
-			}
-		};
-	
-		TestDelegated callback = new TestDelegated();
-		
-		HOptions options = new HOptions();
-		hclient.connect("u1@hub.novediagroup.com", "u1", callback, options);
-		
-		while (callback.getStatus() == ConnectionStatus.CONNECTING) {
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		Assert.assertEquals(callback.getStatus(), ConnectionStatus.CONNECTED);
-		
 		HMessageOptions hmessageOption = new HMessageOptions();
 		
 		hmessageOption.setAuthor("me");
 		hmessageOption.setConvid("convid:123456789");
 		
-		List<HJsonObj> headers = new ArrayList<HJsonObj>();
-		HJsonDictionnary header1 = new HJsonDictionnary();
-		header1.put("header1", "1");
-		HJsonDictionnary header2 = new HJsonDictionnary();
-		header2.put("header2", "2");
-		headers.add(header1);
-		headers.add(header2);
+		HJsonDictionnary headers = new HJsonDictionnary();
+		headers.put("header1", "1");
+		headers.put("header2", "2");
 		hmessageOption.setHeaders(headers);		
 		
 		HLocation location = new HLocation();
@@ -250,7 +157,12 @@ public class HBuilderTest {
 		HAckValue ackvalue = HAckValue.READ;
 		String hackid = "ackid:123456789";
 		
-		HMessage hmessage = hclient.buildAck("chid:123456789", hackid , ackvalue, hmessageOption);
+		HMessage hmessage = null;
+		try {
+			hmessage = hclient.buildAck("chid:123456789", hackid , ackvalue, hmessageOption);
+		} catch (MissingAttrException e) {
+			Assert.fail();
+		}
 		
 		HAck hack = new HAck();
 		hack.setAck(ackvalue);
@@ -264,45 +176,14 @@ public class HBuilderTest {
 	public void HAlertBuildTest() {
 		HClient hclient = new HClient();
 		
-		class TestDelegated implements HDelegate{
-			private ConnectionStatus connStatus;
-			@Override
-			public void hDelegate(String type, HJsonObj data) {
-				if(type == "hstatus") {
-					connStatus = ((HStatus) data).getStatus();
-				}
-			}
-			public ConnectionStatus getStatus() {
-				return connStatus;
-			}
-		};
-	
-		TestDelegated callback = new TestDelegated();
-		
-		HOptions options = new HOptions();
-		hclient.connect("u1@hub.novediagroup.com", "u1", callback, options);
-		
-		while (callback.getStatus() == ConnectionStatus.CONNECTING) {
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		Assert.assertEquals(callback.getStatus(), ConnectionStatus.CONNECTED);
-		
 		HMessageOptions hmessageOption = new HMessageOptions();
 		
 		hmessageOption.setAuthor("me");
 		hmessageOption.setConvid("convid:123456789");
 		
-		List<HJsonObj> headers = new ArrayList<HJsonObj>();
-		HJsonDictionnary header1 = new HJsonDictionnary();
-		header1.put("header1", "1");
-		HJsonDictionnary header2 = new HJsonDictionnary();
-		header2.put("header2", "2");
-		headers.add(header1);
-		headers.add(header2);
+		HJsonDictionnary headers = new HJsonDictionnary();
+		headers.put("header1", "1");
+		headers.put("header2", "2");
 		hmessageOption.setHeaders(headers);		
 		
 		HLocation location = new HLocation();
@@ -318,7 +199,12 @@ public class HBuilderTest {
 		
 		String alert = "WARNING WARNING";
 		
-		HMessage hmessage = hclient.buildAlert("chid:123456789",alert, hmessageOption);
+		HMessage hmessage = null;
+		try {
+			hmessage = hclient.buildAlert("chid:123456789",alert, hmessageOption);
+		} catch (MissingAttrException e) {
+			Assert.fail();
+		}
 		
 		HAlert halert = new HAlert();
 		halert.setAlert(alert);
@@ -331,46 +217,14 @@ public class HBuilderTest {
 	public void HBuildMeasureTest() {
 		HClient hclient = new HClient();
 		
-		class TestDelegated implements HDelegate{
-			private ConnectionStatus connStatus;
-			@Override
-			public void hDelegate(String type, HJsonObj data) {
-				if(type == "hstatus") {
-					connStatus = ((HStatus) data).getStatus();
-				}
-			}
-			
-			public ConnectionStatus getStatus() {
-				return connStatus;
-			}
-		};
-	
-		TestDelegated callback = new TestDelegated();
-		
-		HOptions options = new HOptions();
-		hclient.connect("u1@hub.novediagroup.com", "u1", callback, options);
-		
-		while (callback.getStatus() == ConnectionStatus.CONNECTING) {
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		Assert.assertEquals(callback.getStatus(), ConnectionStatus.CONNECTED);
-		
 		HMessageOptions hmessageOption = new HMessageOptions();
 		
 		hmessageOption.setAuthor("me");
 		hmessageOption.setConvid("convid:123456789");
 		
-		List<HJsonObj> headers = new ArrayList<HJsonObj>();
-		HJsonDictionnary header1 = new HJsonDictionnary();
-		header1.put("header1", "1");
-		HJsonDictionnary header2 = new HJsonDictionnary();
-		header2.put("header2", "2");
-		headers.add(header1);
-		headers.add(header2);
+		HJsonDictionnary headers = new HJsonDictionnary();
+		headers.put("header1", "1");
+		headers.put("header2", "2");
 		hmessageOption.setHeaders(headers);		
 		
 		HLocation location = new HLocation();
@@ -387,7 +241,12 @@ public class HBuilderTest {
 		String unit = "metre";
 		String value = "100";
 		
-		HMessage hmessage = hclient.buildMeasure("chid:123456789",value,unit, hmessageOption);
+		HMessage hmessage = null;
+		try {
+			hmessage = hclient.buildMeasure("chid:123456789",value,unit, hmessageOption);
+		} catch (MissingAttrException e) {
+			Assert.fail();
+		}
 		
 		HMeasure hmeasure = new HMeasure();
 		hmeasure.setUnit(unit);
@@ -397,3 +256,7 @@ public class HBuilderTest {
 		Assert.assertEquals(hmessage.getPayload().toString(),hmeasure.toString());
 	}
 }
+
+/**
+ * @endcond
+ */

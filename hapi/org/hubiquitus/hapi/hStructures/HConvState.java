@@ -24,76 +24,86 @@ import org.json.JSONObject;
 
 /**
  * @version 0.3
- * Alert message payload
+ * This kind of payload is used to describe the status of a thread of correlated messages identified by its convid.
+ * Multiple hConvStates with the same convid can be published into a channel, specifying the evolution of the state of the thread during time.
  */
 
-public class HAlert implements HJsonObj{
+public class HConvState implements HJsonObj{
 
-	private JSONObject halert = new JSONObject();
+	private JSONObject hconvstate = new JSONObject();
 		
-	public HAlert() {};
+	public HConvState() {};
 	
-	public HAlert(JSONObject jsonObj){
+	public HConvState(JSONObject jsonObj){
 		fromJSON(jsonObj);
 	}
 	
 	/* HJsonObj interface */
 	
 	public JSONObject toJSON() {
-		return halert;
+		return hconvstate;
 	}
 	
 	public void fromJSON(JSONObject jsonObj) {
 		if(jsonObj != null) {
-			this.halert = jsonObj; 
+			this.hconvstate = jsonObj; 
 		} else {
-			this.halert = new JSONObject();
+			this.hconvstate = new JSONObject();
 		}
 	}
 	
 	public String getHType() {
-		return "halert";
+		return "hconv";
 	}
 	
 	@Override
 	public String toString() {
-		return halert.toString();
+		return hconvstate.toString();
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		return halert.equals(obj);
+	/**
+	 * Check are made on : status. 
+	 * @param HConvState 
+	 * @return Boolean
+	 */
+	public boolean equals(HConvState obj) {
+		if(obj.getStatus() != this.getStatus()) {
+			return false;
+		}
+		return true;
 	}
 	
 	@Override
 	public int hashCode() {
-		return halert.hashCode();
+		return hconvstate.hashCode();
 	}
 	
 	/* Getters & Setters */
 	
 	/**
-	 * The message provided by the author to describe the alert. 
-	 * @return alert message. NULL if undefined
+	 * The status of the thread
+	 * @return topic description. NULL if undefined
 	 */
-	public String getAlert() {
-		String alert;
+	public String getStatus() {
+		String status;
 		try {
-			alert = halert.getString("alert");
+			status = hconvstate.getString("status");
 		} catch (Exception e) {
-			alert = null;			
+			status = null;			
 		}
-		return alert;
+		return status;
 	}
 
-	public void setAlert(String alert) {
+	public void setStatus(String status) {
 		try {
-			if(alert == null) {
-				halert.remove("alert");
+			if(status == null) {
+				hconvstate.remove("status");
 			} else {
-				halert.put("alert", alert);
+				hconvstate.put("status", status);
 			}
 		} catch (JSONException e) {
 		}
 	}
+	
 }
+

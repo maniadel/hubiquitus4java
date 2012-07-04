@@ -21,9 +21,6 @@ package main;
 
 import javax.swing.JFrame;
 
-import org.hubiquitus.hapi.client.HClient;
-
-
 /***
  * 
  * @author speed
@@ -34,14 +31,12 @@ import org.hubiquitus.hapi.client.HClient;
 public class SimpleExample {
 
 	public static void main(String[] args) {
-		HClient client = new HClient();
 		
 		JFrame window = new JFrame("test");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setSize(1005, 650);
+		window.setSize(1150, 700);
 
 		MainPanel panel = new MainPanel();
-		panel.setClient(client);
 		window.setContentPane(panel);
 		window.setResizable(false);
 		window.setVisible(true);

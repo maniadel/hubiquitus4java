@@ -20,7 +20,6 @@
 package org.hubiquitus.hapi.hStructures;
 
 import java.util.Calendar;
-import java.util.List;
 
 /**
  * @version 0.3
@@ -35,8 +34,9 @@ public class HMessageOptions {
 	private Boolean _transient = null;
 	private HLocation location = null;
 	private String author = null;
-	private List<HJsonObj> headers = null;
+	private HJsonObj headers = null;
 	private Calendar published = null;
+	
 	/**
 	 * @return conversation id. NULL if undefined 
 	 */
@@ -105,10 +105,10 @@ public class HMessageOptions {
 	 * The list of headers attached to this message.
 	 * @return Headers. NULL if undefined
 	 */
-	public List<HJsonObj> getHeaders() {
+	public HJsonObj getHeaders() {
 		return headers;
 	}
-	public void setHeaders(List<HJsonObj> headers) {
+	public void setHeaders(HJsonObj headers) {
 		this.headers = headers;
 	}
 	
