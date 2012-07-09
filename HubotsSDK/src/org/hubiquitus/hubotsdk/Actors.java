@@ -1,9 +1,3 @@
-package org.hubiquitus.hubotsdk;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.hubiquitus.hapi.hStructures.HCommand;
-import org.hubiquitus.hapi.hStructures.HMessage;
-
-
 /*
  * Copyright (c) Novedia Group 2012.
  *
@@ -23,6 +17,16 @@ import org.hubiquitus.hapi.hStructures.HMessage;
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package org.hubiquitus.hubotsdk;
+import java.io.File;
+
+import org.apache.camel.impl.DefaultCamelContext;
+import org.hubiquitus.hapi.hStructures.HCommand;
+import org.hubiquitus.hapi.hStructures.HMessage;
+import org.hubiquitus.util.ConfigActor;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class Actors {
 	
 	private DefaultCamelContext context = null;
@@ -31,11 +35,18 @@ public class Actors {
 	public Actors() {}
 	
 	public static void main(String[] args) throws Exception {
+		
+
 	}
 	
 	public void initialize() {		
-		context = new DefaultCamelContext();
-		
+		try {
+			context = new DefaultCamelContext();
+			ObjectMapper mapper = new ObjectMapper();
+			ConfigActor config = mapper.readValue(new File("./resources/config.txt"), ConfigActor.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void put(String outboxName, HMessage msg) {

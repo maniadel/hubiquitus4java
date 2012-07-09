@@ -28,7 +28,6 @@ import java.util.List;
  * @version 0.3
  * Contain some utils function
  */
-
 public class HUtil {
 
 	/**

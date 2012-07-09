@@ -1,4 +1,3 @@
-package org.hubiquitus.hubotsdk;
 /*
  * Copyright (c) Novedia Group 2012.
  *
@@ -18,6 +17,7 @@ package org.hubiquitus.hubotsdk;
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package org.hubiquitus.hubotsdk;
 
 public class ActorContext {
 
