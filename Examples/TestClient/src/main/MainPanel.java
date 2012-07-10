@@ -38,6 +38,7 @@ import javax.swing.JTextField;
 import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hapi.client.HCommandDelegate;
 import org.hubiquitus.hapi.client.HMessageDelegate;
+import org.hubiquitus.hapi.client.HResultDelegate;
 import org.hubiquitus.hapi.client.HStatusDelegate;
 import org.hubiquitus.hapi.hStructures.ConnectionError;
 import org.hubiquitus.hapi.hStructures.HCommand;
@@ -56,7 +57,7 @@ import org.hubiquitus.hapi.util.HJsonDictionnary;
  */
 
 @SuppressWarnings("serial")
-public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelegate, HCommandDelegate  {
+public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelegate, HCommandDelegate, HResultDelegate  {
 	private HClient client;
 	final MainPanel outerClass = this;
 
@@ -416,11 +417,20 @@ public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelega
 		}
 	}
 	
+	@Override
+	public void onCommand(HCommand command) {
+		this.addTextArea(command.toString());
+	}
+	
+	
+	
 	
 	/* Getters & Setters */
 	public void setTextArea(String text){
 		this.logArea.setText(text);
 	}
+
+	
 
 	
 	

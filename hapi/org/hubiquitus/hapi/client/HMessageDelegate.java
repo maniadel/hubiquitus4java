@@ -31,8 +31,6 @@ public interface HMessageDelegate {
 
 	/**
 	 * Called on incoming message
-	 * @param type
-	 * @param data
 	 */
 	public void onMessage(HMessage message);
 }

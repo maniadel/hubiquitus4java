@@ -35,6 +35,7 @@ import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.filter.FromContainsFilter;
 import org.jivesoftware.smack.filter.OrFilter;
+import org.jivesoftware.smack.filter.PacketExtensionFilter;
 import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
@@ -124,9 +125,9 @@ public class HTransportXMPP implements HTransport, ConnectionListener,PacketList
 							//try to login and update status
 							connection.login(localOptions.getUsername(), localOptions.getPassword(), localOptions.getResource());
 							updateStatus(ConnectionStatus.CONNECTED, ConnectionError.NO_ERROR, null);
-							PacketFilter hserverPacketFilter = new FromContainsFilter(localOptions.getHserverService());
+							PacketFilter packetExtensionFilter = new PacketExtensionFilter("hbody", "");
 							PacketFilter pubsubPacketFilter = new FromContainsFilter(localOptions.getPubsubService());
-							PacketFilter packetFilter = new OrFilter(hserverPacketFilter, pubsubPacketFilter);
+							PacketFilter packetFilter = new OrFilter(packetExtensionFilter, pubsubPacketFilter);
 							connection.addPacketListener(outerClass,packetFilter);
 						} catch(Exception e) { //login failed
 							boolean wasConnected = false;
@@ -245,25 +246,7 @@ public class HTransportXMPP implements HTransport, ConnectionListener,PacketList
 	@Override
 	public void processPacket(Packet receivePacket) {
 		if(receivePacket.getClass().equals(Message.class)) {
-			if(receivePacket.getFrom().matches(options.getHserverService() + ".*")) {
-				HMessageXMPP packetExtention = (HMessageXMPP)receivePacket.getExtension("hbody","");
-				if(packetExtention != null) {
-					JSONObject jsonObj = null;
-					try {
-						jsonObj = new JSONObject(packetExtention.getContent());
-					} catch (JSONException e) {
-						e.printStackTrace();
-						System.out.println("Received malformted JSon object from hserver in :" + this.getClass());
-					}
-					if(jsonObj != null) {
-						callback.onData(packetExtention.getType(), jsonObj);
-					} else {
-						System.out.println("Received malformted JSon object from hserver in :" + this.getClass());
-					}
-				}else {
-					System.out.println("erreur lors de la reception : PacketExtension erreur");
-				}
-			} else if(receivePacket.getFrom().equalsIgnoreCase(options.getPubsubService())) {
+			if(receivePacket.getFrom().equalsIgnoreCase(options.getPubsubService())) {
 				Message message = (Message)receivePacket;
 				if(message.getExtension("http://jabber.org/protocol/pubsub#event") instanceof EventElement){
 
@@ -297,6 +280,24 @@ public class HTransportXMPP implements HTransport, ConnectionListener,PacketList
 							}
 						}
 					}
+				}
+			} else {
+				HMessageXMPP packetExtention = (HMessageXMPP)receivePacket.getExtension("hbody","");
+				if(packetExtention != null) {
+					JSONObject jsonObj = null;
+					try {
+						jsonObj = new JSONObject(packetExtention.getContent());
+					} catch (JSONException e) {
+						e.printStackTrace();
+						System.out.println("Received malformted JSon object from hserver in :" + this.getClass());
+					}
+					if(jsonObj != null) {
+						callback.onData(packetExtention.getType(), jsonObj);
+					} else {
+						System.out.println("Received malformted JSon object from hserver in :" + this.getClass());
+					}
+				}else {
+					System.out.println("erreur lors de la reception : PacketExtension erreur");
 				}
 			}
 		}

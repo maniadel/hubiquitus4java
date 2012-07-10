@@ -19,7 +19,7 @@
 
 package org.hubiquitus.hapi.client;
 
-import org.hubiquitus.hapi.hStructures.HResult;
+import org.hubiquitus.hapi.hStructures.HCommand;
 
 /**
  * @version 0.4
@@ -29,10 +29,9 @@ import org.hubiquitus.hapi.hStructures.HResult;
 
 public interface HCommandDelegate {
 
+	
 	/**
 	 * Called on command result
-	 * @param type
-	 * @param data
 	 */
-	public void onResult(HResult result);
+	public void onCommand(HCommand command);
 }

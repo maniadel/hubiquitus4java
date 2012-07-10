@@ -31,8 +31,6 @@ public interface HStatusDelegate {
 	
 	/**
 	 * Called on connection status updates
-	 * @param type
-	 * @param data
 	 */
 	public void onStatus(HStatus status);
 }

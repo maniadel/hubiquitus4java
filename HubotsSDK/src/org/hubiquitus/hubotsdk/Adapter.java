@@ -21,10 +21,9 @@ package org.hubiquitus.hubotsdk;
 
 import java.util.Map;
 
-public class Adapter {
+public abstract class Adapter {
 	
-	public Adapter(String name) {
-		
+	public Adapter(String name) {		
 	}
 
 	public void setProperties(Map params) {
