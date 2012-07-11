@@ -3,11 +3,11 @@
 	"jid" : "mybot@myDomain.com",
 	"pwdhash" : "hashDuMotDePasseenSHA1",
 	"adapters" : [ {
-		"name" : "adapter1",
-		"type" : "hChannelAdapter",
-		"properties" : {
-				"chid" : "name of a channel"
-		}
+						"name" : "adapter22",
+						"type" : "hChannelAdapter",
+						"properties" : {
+								"chid" : "name of a channel"
+						}
 	}],
 	"inbox" : [ "adapter1" ],
 	"outboxes" : [ "adapter1" ]

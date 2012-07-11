@@ -21,12 +21,27 @@ package org.hubiquitus.hubotsdk;
 
 import java.util.Map;
 
+import org.apache.camel.impl.DefaultCamelContext;
+import org.hubiquitus.hapi.hStructures.HCommand;
+import org.hubiquitus.hapi.hStructures.HMessage;
+import org.hubiquitus.hapi.util.HJsonDictionnary;
+
 public abstract class Adapter {
+
+	private DefaultCamelContext context = null;
 	
-	public Adapter(String name) {		
+	public abstract void setProperties(Map params);
+
+	public abstract void onInGoing(Object object);
+
+	public final void onOutGoing(HJsonDictionnary hjson) {
+		if(hjson.getHType() == "hCommand") {
+			sendCommand(new HCommand(hjson.toJSON()));
+		} else if (hjson.getHType() == "hMessage"){
+			sendMessage(new HMessage(hjson.toJSON()));
+		}
 	}
 
-	public void setProperties(Map params) {
-		
-	}
+	public abstract void sendCommand(HCommand command);
+	public abstract void sendMessage(HMessage message);
 }

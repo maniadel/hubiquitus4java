@@ -19,12 +19,40 @@
 
 package org.hubiquitus.hubotsdk;
 
-public class ActorContext {
+import java.util.Map;
 
-	public ActorContext() {}
+import org.apache.camel.builder.RouteBuilder;
+
+public class RouteGenerator extends RouteBuilder {
 	
-	Adapter getAdapter(String name) {
-		Adapter adapter = new Adapter(name);
-		return adapter;
+	private Map< String, Class<Object> > outboxMap;
+	private Actor actorInbox;
+	
+	public RouteGenerator(Actor actor, Map< String, Class<Object> >  outboxMap) {
+		actorInbox = actor;
+		this.outboxMap = outboxMap;
 	}
+
+	@Override
+	public void configure() throws Exception {
+
+		/* Create route for inboxQueue */
+		from("seda:inbox")
+			.split().method(actorInbox, "onInGoing");
+		
+		
+		/* Create route for all outboxesQueue */
+		from("seda:hubotAdapter")
+			.split().method(actorInbox, "onOutGoing");
+				
+		for(String key : outboxMap.keySet()) {
+			String routeName = "seda:" + key; 
+			from(routeName)
+				.split().method(outboxMap.get(key), "onOutGoing");
+		}
+		
+	}
+	
+	
+
 }
