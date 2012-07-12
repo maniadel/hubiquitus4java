@@ -17,41 +17,21 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.hubiquitus.hubotsdk;
+package main;
 
-import java.util.Map;
+public class HelloBotMain {
 
-import org.apache.camel.builder.RouteBuilder;
-
-public class RouteGenerator extends RouteBuilder {
-
-	private Map< String, Class<Object> > outboxMap;
-
-	public RouteGenerator(Map< String, Class<Object> >  outboxMap) {
-		this.outboxMap = outboxMap;
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) throws Exception{
+		System.out.println("in");
+		HelloHubot hubot = new HelloHubot();
+		hubot.start();
+		System.out.println("Great");
+		Thread.sleep(50000);
+		hubot.stop();
+		
 	}
-
-	@Override
-	public void configure() throws Exception {
-
-		/* Create route for inboxQueue */
-		from("seda:inbox")
-			.to("bean:actor?method=inProcess");
-
-
-		/* Create route for all outboxesQueue */
-		from("seda:hubotAdapter")
-			.to("bean:hubotAdapter?method=onOutGoing");
-
-		for(String key : outboxMap.keySet()) {
-			String routeName = "seda:" + key; 
-			String beanText ="bean:" + outboxMap.get(key) + "?method=onOutGoing";
-			from(routeName)
-				.to(beanText);
-		}
-
-	}
-
-
 
 }

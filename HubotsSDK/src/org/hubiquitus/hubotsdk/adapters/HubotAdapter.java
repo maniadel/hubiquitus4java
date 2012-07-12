@@ -24,12 +24,14 @@ import java.util.Map;
 
 import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hapi.client.HMessageDelegate;
+import org.hubiquitus.hapi.client.HStatusDelegate;
 import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.hStructures.HOptions;
+import org.hubiquitus.hapi.hStructures.HStatus;
 import org.hubiquitus.hubotsdk.Adapter;
 
-public class HubotAdapter extends Adapter implements HMessageDelegate{
+public class HubotAdapter extends Adapter implements HMessageDelegate,HStatusDelegate{
 
 	private String name;
 	private String jid;
@@ -61,6 +63,7 @@ public class HubotAdapter extends Adapter implements HMessageDelegate{
 		endpoints.add(endpoint);
 		options.setEndpoints(endpoints);
 		hclient.onMessage(this);
+		hclient.onStatus(this);
 		hclient.connect(jid, pwdhash, options);
 	}
 
@@ -76,10 +79,12 @@ public class HubotAdapter extends Adapter implements HMessageDelegate{
 
 	@Override
 	public void setProperties(Map<String,String> params) {	
-		if(params.get("name") != null) 
+		if(params.get("jid") != null) 
 			setJid(params.get("jid"));
 		if(params.get("pwdhash") != null) 
 			setPwdhash(params.get("pwdhash"));
+		if(params.get("endpoint") != null) 
+			setEndpoint(params.get("endpoint"));
 	}
 
 	/* Getters and Setters */
@@ -180,6 +185,12 @@ public class HubotAdapter extends Adapter implements HMessageDelegate{
 		} else if (!pwdhash.equals(other.pwdhash))
 			return false;
 		return true;
+	}
+
+	@Override
+	public void onStatus(HStatus status) {
+		// TODO Auto-generated method stub
+		System.out.println("status : " + status);
 	}
 	
 }

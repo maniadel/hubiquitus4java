@@ -22,8 +22,8 @@ package org.hubiquitus.hubotsdk;
 import java.util.Map;
 
 import org.hubiquitus.hapi.hStructures.HCommand;
+import org.hubiquitus.hapi.hStructures.HJsonObj;
 import org.hubiquitus.hapi.hStructures.HMessage;
-import org.hubiquitus.hapi.util.HJsonDictionnary;
 
 public abstract class Adapter {
 
@@ -36,10 +36,10 @@ public abstract class Adapter {
 
 
 	// Method for output message and command 
-	public final void onOutGoing(HJsonDictionnary hjson) {
-		if(hjson.getHType() == "hCommand") {
+	public final void onOutGoing(HJsonObj hjson) {
+		if(hjson.getHType() == "hcommand") {
 			sendCommand(new HCommand(hjson.toJSON()));
-		} else if (hjson.getHType() == "hMessage"){
+		} else if (hjson.getHType() == "hmessage"){
 			sendMessage(new HMessage(hjson.toJSON()));
 		}
 	}

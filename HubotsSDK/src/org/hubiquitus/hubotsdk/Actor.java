@@ -27,8 +27,8 @@ import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.JndiRegistry;
 import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hapi.hStructures.HCommand;
+import org.hubiquitus.hapi.hStructures.HJsonObj;
 import org.hubiquitus.hapi.hStructures.HMessage;
-import org.hubiquitus.hapi.util.HJsonDictionnary;
 import org.hubiquitus.hubotsdk.adapters.HubotAdapter;
 import org.hubiquitus.util.ConfigActor;
 import org.hubiquitus.util.ConfigActor.AdapterConfig;
@@ -39,17 +39,14 @@ public abstract class Actor {
 
 	private HClient hClient = new HClient();
 	private DefaultCamelContext context = null;
-	private Map<String, Class<Object>> adapterOutClasses;
-	private Map<String, Adapter> adapterIntances;
+	private Map<String, Class<Object>> adapterOutClasses = new HashMap<String, Class<Object>>();
+	private Map<String, Adapter> adapterIntances = new HashMap<String, Adapter>();
 	private ConfigActor configActor;
 
 	public Actor() {
 		initialize();
 	}
-
-	public static void main(String[] args) throws Exception {
-	}
-
+	
 	public final void initialize() {		
 		try {
 			// Create a default context for Camel
@@ -59,7 +56,7 @@ public abstract class Actor {
 			// Parsing configuration file with Jackson 
 			ObjectMapper mapper = new ObjectMapper();
 			configActor = mapper.readValue(new File("./resources/config.txt"), ConfigActor.class);
-
+			System.out.println("configActor : " + configActor);
 
 			// Create HubotAdapter
 			HubotAdapter hubotAdapter = new HubotAdapter("hubotAdapter");
@@ -79,23 +76,25 @@ public abstract class Actor {
 			ArrayList<String> outAdaptersName = configActor.getOutboxes();
 
 			// Create instance of all Adapter
-			for(int i=0; i< adapters.size(); i++) {
-				@SuppressWarnings("unchecked")
-				Class<Object> fc = (Class<Object>) Class.forName(adapters.get(i).getType());
-				Adapter newAdapter = (Adapter) fc.newInstance();
-				newAdapter.setProperties(adapters.get(i).getProperties());
-				adapterIntances.put(adapters.get(i).getName(), newAdapter);
-				if(outAdaptersName.contains(adapters.get(i).getName())) {
-					adapterOutClasses.put(adapters.get(i).getName(), fc);
+			if(adapters != null) {
+				for(int i=0; i< adapters.size(); i++) {
+					@SuppressWarnings("unchecked")
+					Class<Object> fc = (Class<Object>) Class.forName(adapters.get(i).getType());
+					Adapter newAdapter = (Adapter) fc.newInstance();
+					newAdapter.setProperties(adapters.get(i).getProperties());
+					adapterIntances.put(adapters.get(i).getName(), newAdapter);
+					if(outAdaptersName != null && outAdaptersName.contains(adapters.get(i).getName())) {
+						adapterOutClasses.put(adapters.get(i).getName(), fc);
+					}
 				}
-
-			}
-
+			}	
+			
+			System.out.println("Route create");
+			
 			//Create routes for Camel
 			RouteGenerator routes = new RouteGenerator(adapterOutClasses);
 			context.setRegistry(createRegistry());
 			context.addRoutes(routes);
-			context.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -104,33 +103,51 @@ public abstract class Actor {
 	protected final JndiRegistry createRegistry() throws Exception {
         JndiRegistry jndi = new JndiRegistry();
         jndi.bind("actor", this);
-        
-        for(String key : adapterOutClasses.keySet()) {
-        	jndi.bind(key, adapterOutClasses.get(key));
-		}       
+        System.out.println("adapter : " + adapterIntances.get("hubotAdapter"));
+        jndi.bind("hubotAdapter", adapterIntances.get("hubotAdapter"));
+        if(adapterOutClasses != null) {
+	        for(String key : adapterOutClasses.keySet()) {
+	        	jndi.bind(key, adapterOutClasses.get(key));
+			}   
+        }
         return jndi;
     }
+	
+	public final void start() {
+		try {
+			context.start();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
-	public final void closed() {
+	public final void stop() {
 		for(String key : adapterIntances.keySet()) {
         	adapterIntances.get(key).stop();
 		}  
+		try {
+			context.stop();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/* Method use for incoming message/command */
 	public abstract void inProcess(Object obj);
 
 	/* Send message to a specified adapter */
-	public final void put(String boxName, HJsonDictionnary hjson) {
-		if(hjson.getHType() == "hCommand") {
+	public final void put(String boxName, HJsonObj hjson) {
+		if(hjson.getHType() == "hcommand") {
 			putCommand(boxName, new HCommand(hjson.toJSON()));
-		} else if (hjson.getHType() == "hMessage"){
+		} else if (hjson.getHType() == "hmessage"){
 			putMessage(boxName, new HMessage(hjson.toJSON()));
 		}
 	}
 
 	public abstract void putMessage(String outboxName, HMessage msg);
 
-	public abstract void putCommand(String outboxName, HCommand msg);
+	public abstract void putCommand(String outboxName, HCommand cmd);
 
 }

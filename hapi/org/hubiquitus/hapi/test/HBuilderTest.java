@@ -20,6 +20,8 @@
 package org.hubiquitus.hapi.test;
 
 import java.util.Calendar;
+
+
 import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hapi.hStructures.HAck;
 import org.hubiquitus.hapi.hStructures.HAckValue;
@@ -34,6 +36,7 @@ import org.hubiquitus.hapi.util.DateISO8601;
 import org.hubiquitus.hapi.util.HJsonDictionnary;
 import org.junit.Assert;
 import org.junit.Test;
+
 import exceptions.MissingAttrException;
 
 /**
@@ -86,8 +89,9 @@ public class HBuilderTest {
 		Assert.assertEquals(hmessage.getPayload().toString(), payload.toString());
 		Assert.assertEquals(hmessage.getPriority(), HMessagePriority.INFO);
 		Assert.assertEquals(hmessage.getPublished(), null);
-		Assert.assertEquals(hmessage.getRelevance(), date);
 		Assert.assertEquals(hmessage.getTransient(), false);
+		Assert.assertEquals(hmessage.getRelevance(), date);
+		
 	}
 
 	

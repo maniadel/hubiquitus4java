@@ -69,8 +69,12 @@ public class ConfigActor {
 
 	@Override
 	public String toString() {
-		return "ConfigActor [name=" + name + ", jid=" + jid + ", pwdhash="
-				+ pwdhash + ", endpoints=" + endpoint + ", adapters=" + adapters.toString() + ", inbox=" + inbox
-				+ ", outbox=" + outboxes + "]";
+		String test =  "ConfigActor [name=" + name + ", jid=" + jid + ", pwdhash="
+				+ pwdhash + ", endpoints=" + endpoint + ", adapters=";
+		if( adapters == null )
+			test += "null , inbox=" + inbox + ", outbox=" + outboxes + "]";
+		else 
+			test += adapters.toString() +" , inbox=" + inbox + ", outbox=" + outboxes + "]";
+		return test;
 	}
 }

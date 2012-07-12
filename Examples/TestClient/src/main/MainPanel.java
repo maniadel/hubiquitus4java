@@ -142,6 +142,8 @@ public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelega
 		paramsPanel.add(chidField);
 		paramsPanel.add(new JLabel("nbLastMessages"));
 		paramsPanel.add(nbLastMessagesField);
+		paramsPanel.add(new JLabel("Message"));
+		paramsPanel.add(messageField);
 		paramsPanel.add(new JLabel("convid"));
 		paramsPanel.add(convidField);
 		paramsPanel.add(new JLabel("status"));
