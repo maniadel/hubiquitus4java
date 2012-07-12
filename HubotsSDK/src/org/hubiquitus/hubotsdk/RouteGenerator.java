@@ -24,12 +24,10 @@ import java.util.Map;
 import org.apache.camel.builder.RouteBuilder;
 
 public class RouteGenerator extends RouteBuilder {
-	
+
 	private Map< String, Class<Object> > outboxMap;
-	private Actor actorInbox;
-	
-	public RouteGenerator(Actor actor, Map< String, Class<Object> >  outboxMap) {
-		actorInbox = actor;
+
+	public RouteGenerator(Map< String, Class<Object> >  outboxMap) {
 		this.outboxMap = outboxMap;
 	}
 
@@ -38,21 +36,22 @@ public class RouteGenerator extends RouteBuilder {
 
 		/* Create route for inboxQueue */
 		from("seda:inbox")
-			.split().method(actorInbox, "onInGoing");
-		
-		
+			.to("bean:actor?method=inProcess");
+
+
 		/* Create route for all outboxesQueue */
 		from("seda:hubotAdapter")
-			.split().method(actorInbox, "onOutGoing");
-				
+			.to("bean:actor?method=onOutGoing");
+
 		for(String key : outboxMap.keySet()) {
 			String routeName = "seda:" + key; 
+			String beanText ="bean:" + outboxMap.get(key) + "?method=onOutGoing";
 			from(routeName)
-				.split().method(outboxMap.get(key), "onOutGoing");
+				.to(beanText);
 		}
-		
+
 	}
-	
-	
+
+
 
 }

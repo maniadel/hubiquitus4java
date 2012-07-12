@@ -23,15 +23,15 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class ConfigActor {
-		
+
 	public static class AdapterConfig {
 		public String name,type;
 		public Map<String,String> properties;
-		
+
 		public Map<String,String> getProperties() { return properties; }
 		public String getName() { return name; }
 		public String getType() { return type; }
-		   
+
 		public void setName(String s) { name = s; }
 		public void setType(String s) { type = s; }
 		public void setProperties(Map<String,String> map) { properties = map;}
@@ -42,32 +42,35 @@ public class ConfigActor {
 					+ properties + "]";
 		}
 	}
-	
+
 	public String name;
 	public String jid;
 	public String pwdhash;
+	public String endpoint;
 	public ArrayList<AdapterConfig> adapters;
 	public ArrayList<String> inbox;
 	public ArrayList<String> outboxes;
-	
+
 	public String getName() { return name; }
 	public String getJid() { return jid; }
 	public String getPwdhash() { return pwdhash; }
+	public String getEndpoint() { return endpoint; }
 	public ArrayList<AdapterConfig> getAdapters() { return adapters; }
 	public ArrayList<String> getInbox() { return inbox; }
 	public ArrayList<String> getOutboxes() { return outboxes; }
-	
+
 	public void setName(String s) { name = s; }
 	public void setJid(String s) { jid = s; }
 	public void setPwdhash(String s) { pwdhash = s; }
+	public void setEndpoint(String s) { endpoint = s; }
 	public void setAdapters(ArrayList<AdapterConfig> a) { adapters = a; }
 	public void setInbox(ArrayList<String> a) { inbox = a; }
 	public void setOutboxes(ArrayList<String> a) { outboxes = a; }
-	
+
 	@Override
 	public String toString() {
 		return "ConfigActor [name=" + name + ", jid=" + jid + ", pwdhash="
-				+ pwdhash + ", adapters=" + adapters.toString() + ", inbox=" + inbox
+				+ pwdhash + ", endpoints=" + endpoint + ", adapters=" + adapters.toString() + ", inbox=" + inbox
 				+ ", outbox=" + outboxes + "]";
 	}
 }

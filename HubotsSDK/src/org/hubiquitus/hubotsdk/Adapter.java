@@ -21,19 +21,21 @@ package org.hubiquitus.hubotsdk;
 
 import java.util.Map;
 
-import org.apache.camel.impl.DefaultCamelContext;
 import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.util.HJsonDictionnary;
 
 public abstract class Adapter {
 
-	private DefaultCamelContext context = null;
-	
-	public abstract void setProperties(Map params);
+	public abstract void setProperties(Map<String,String> params);
 
-	public abstract void onInGoing(Object object);
+	// Method for input message and command 
+	public final void onInGoing(Object object) {
+		ProducerTemplateSingleton.getProducerTemplate().sendBody("seda:inbox",object);
+	}
 
+
+	// Method for output message and command 
 	public final void onOutGoing(HJsonDictionnary hjson) {
 		if(hjson.getHType() == "hCommand") {
 			sendCommand(new HCommand(hjson.toJSON()));
@@ -44,4 +46,10 @@ public abstract class Adapter {
 
 	public abstract void sendCommand(HCommand command);
 	public abstract void sendMessage(HMessage message);
+
+	// Method to start the bot
+	public abstract void start();
+
+	// Method to stop the bot
+	public abstract void stop();
 }

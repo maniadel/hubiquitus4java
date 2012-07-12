@@ -20,14 +20,16 @@
 package org.hubiquitus.hubotsdk;
 import java.io.File; 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.camel.ProducerTemplate;
 import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.impl.JndiRegistry;
 import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.util.HJsonDictionnary;
+import org.hubiquitus.hubotsdk.adapters.HubotAdapter;
 import org.hubiquitus.util.ConfigActor;
 import org.hubiquitus.util.ConfigActor.AdapterConfig;
 
@@ -35,11 +37,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class Actor {
 
-	private HClient hClient = null;
+	private HClient hClient = new HClient();
 	private DefaultCamelContext context = null;
-	private ProducerTemplate template = null;
-	private Map<String, Class<Object>> adapterClasses;
+	private Map<String, Class<Object>> adapterOutClasses;
 	private Map<String, Adapter> adapterIntances;
+	private ConfigActor configActor;
 
 	public Actor() {
 		initialize();
@@ -50,44 +52,75 @@ public abstract class Actor {
 
 	public final void initialize() {		
 		try {
-			
-			// Create a default client
-			HClient client = new HClient();
-			
 			// Create a default context for Camel
 			context = new DefaultCamelContext();
 			ProducerTemplateSingleton.setContext(context);
 
 			// Parsing configuration file with Jackson 
 			ObjectMapper mapper = new ObjectMapper();
-			ConfigActor config = mapper.readValue(new File("./resources/config.txt"), ConfigActor.class);
+			configActor = mapper.readValue(new File("./resources/config.txt"), ConfigActor.class);
 
-			ArrayList<AdapterConfig> adapters = config.getAdapters();
-			ArrayList<String> outAdaptersName = config.getOutboxes();
+
+			// Create HubotAdapter
+			HubotAdapter hubotAdapter = new HubotAdapter("hubotAdapter");
+			hubotAdapter.setHclient(hClient);
+			Map<String,String> propertiesMap = new HashMap<String,String>();
+			propertiesMap.put("jid", configActor.getJid());
+			propertiesMap.put("pwdhash", configActor.getPwdhash());
+			propertiesMap.put("endpoint", configActor.getEndpoint());
+			hubotAdapter.setProperties(propertiesMap);
+			//Launch the HubotAdapter and put him in adapterInstances 
+			hubotAdapter.start();
+			adapterIntances.put("hubotAdapter",hubotAdapter); 
+
+
+
+			ArrayList<AdapterConfig> adapters = configActor.getAdapters();
+			ArrayList<String> outAdaptersName = configActor.getOutboxes();
 
 			// Create instance of all Adapter
 			for(int i=0; i< adapters.size(); i++) {
 				@SuppressWarnings("unchecked")
 				Class<Object> fc = (Class<Object>) Class.forName(adapters.get(i).getType());
 				Adapter newAdapter = (Adapter) fc.newInstance();
+				newAdapter.setProperties(adapters.get(i).getProperties());
+				adapterIntances.put(adapters.get(i).getName(), newAdapter);
 				if(outAdaptersName.contains(adapters.get(i).getName())) {
-					adapterClasses.put(adapters.get(i).getName(), fc);
-					adapterIntances.put(adapters.get(i).getName(), newAdapter);
+					adapterOutClasses.put(adapters.get(i).getName(), fc);
 				}
 
 			}
 
 			//Create routes for Camel
-			RouteGenerator routes = new RouteGenerator(this, adapterClasses);
+			RouteGenerator routes = new RouteGenerator(adapterOutClasses);
+			context.setRegistry(createRegistry());
 			context.addRoutes(routes);
 			context.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
+	protected final JndiRegistry createRegistry() throws Exception {
+        JndiRegistry jndi = new JndiRegistry();
+        jndi.bind("actor", this);
+        
+        for(String key : adapterOutClasses.keySet()) {
+        	jndi.bind(key, adapterOutClasses.get(key));
+		}       
+        return jndi;
+    }
 
+	public final void closed() {
+		for(String key : adapterIntances.keySet()) {
+        	adapterIntances.get(key).stop();
+		}  
+	}
 
+	/* Method use for incoming message/command */
+	public abstract void inProcess(Object obj);
 
+	/* Send message to a specified adapter */
 	public final void put(String boxName, HJsonDictionnary hjson) {
 		if(hjson.getHType() == "hCommand") {
 			putCommand(boxName, new HCommand(hjson.toJSON()));
