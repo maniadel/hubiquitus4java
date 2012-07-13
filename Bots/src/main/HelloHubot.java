@@ -19,50 +19,41 @@
 
 package main;
 
-import java.util.GregorianCalendar;
-
 import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.util.HJsonDictionnary;
 import org.hubiquitus.hubotsdk.Actor;
-import org.hubiquitus.hubotsdk.ProducerTemplateSingleton;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class HelloHubot extends Actor{
 
-	public HelloHubot() {
-		super();
+	public static void main(String[] args) throws Exception{
+		HelloHubot hubot = new HelloHubot();
+		hubot.start();
+		System.out.println("ready");
 	}
+	
 	@Override
-	public void inProcess(Object obj) {
-		// TODO Auto-generated method stub
-		
-		HMessage messageIn = (HMessage) obj;
-
+	public void inProcessMessage(HMessage messageIncoming) {
 		HMessage message = new HMessage();
-		message.setPublisher(messageIn.getChid());
-		message.setChid(messageIn.getPublisher());
-		message.setPublished(new GregorianCalendar());
-		message.setType("hMessage");
-		message.setTransient(true);
-		
+		message.setChid(messageIncoming.getPublisher());
+		message.setType("HJsonObj");
+		JSONObject jsonObj = messageIncoming.getPayload().toJSON();
+		String name = "Hello ";
+		try {
+			 name += jsonObj.getString("text");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		HJsonDictionnary payload = new HJsonDictionnary();
-		payload.put("text", "test");
+		payload.put("text", name);
 		message.setPayload(payload);
 		put("hubotAdapter",message);
 	}
-
-	@Override
-	public void putMessage(String outboxName, HMessage msg) {
-		System.out.println("outboxName:"  + outboxName + " msg : " + msg);
-		String route = "seda:" + outboxName;
-		System.out.println("route : " + route );
-		ProducerTemplateSingleton.getProducerTemplate().sendBody(route,msg);		
-	}
-
-	@Override
-	public void putCommand(String outboxName, HCommand cmd) {
-		String route = "seda:" + outboxName;
-		ProducerTemplateSingleton.getProducerTemplate().sendBody(route,cmd);		
+	
+	public void inProcessCommand(HCommand commandIncoming) {
+		put("HubotAdapter", commandIncoming);
 	}
 
 }

@@ -68,7 +68,13 @@ public class HubotAdapter extends Adapter implements HMessageDelegate,HStatusDel
 	}
 
 	public void onMessage(HMessage message) {
-		onInGoing(message);		
+		if(message.getChid().contains("#") == false) {
+			onInGoing(message);		
+		}
+	}
+	
+	public void onCommand(HCommand command) {
+		
 	}
 
 	@Override

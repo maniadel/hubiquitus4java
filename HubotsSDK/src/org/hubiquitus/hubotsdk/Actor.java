@@ -37,17 +37,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class Actor {
 
-	private HClient hClient = new HClient();
-	private DefaultCamelContext context = null;
-	private Map<String, Class<Object>> adapterOutClasses = new HashMap<String, Class<Object>>();
-	private Map<String, Adapter> adapterIntances = new HashMap<String, Adapter>();
-	private ConfigActor configActor;
+	protected HClient hClient = new HClient();
+	protected DefaultCamelContext context = null;
+	protected Map<String, Class<Object>> adapterOutClasses = new HashMap<String, Class<Object>>();
+	protected Map<String, Adapter> adapterIntances = new HashMap<String, Adapter>();
+	protected ConfigActor configActor;
 
-	public Actor() {
-		initialize();
-	}
-	
-	public final void initialize() {		
+
+	private void initialize() {		
 		try {
 			// Create a default context for Camel
 			context = new DefaultCamelContext();
@@ -56,40 +53,12 @@ public abstract class Actor {
 			// Parsing configuration file with Jackson 
 			ObjectMapper mapper = new ObjectMapper();
 			configActor = mapper.readValue(new File("./resources/config.txt"), ConfigActor.class);
-			System.out.println("configActor : " + configActor);
 
-			// Create HubotAdapter
-			HubotAdapter hubotAdapter = new HubotAdapter("hubotAdapter");
-			hubotAdapter.setHclient(hClient);
-			Map<String,String> propertiesMap = new HashMap<String,String>();
-			propertiesMap.put("jid", configActor.getJid());
-			propertiesMap.put("pwdhash", configActor.getPwdhash());
-			propertiesMap.put("endpoint", configActor.getEndpoint());
-			hubotAdapter.setProperties(propertiesMap);
-			//Launch the HubotAdapter and put him in adapterInstances 
-			hubotAdapter.start();
-			adapterIntances.put("hubotAdapter",hubotAdapter); 
-
-
-
-			ArrayList<AdapterConfig> adapters = configActor.getAdapters();
-			ArrayList<String> outAdaptersName = configActor.getOutboxes();
-
-			// Create instance of all Adapter
-			if(adapters != null) {
-				for(int i=0; i< adapters.size(); i++) {
-					@SuppressWarnings("unchecked")
-					Class<Object> fc = (Class<Object>) Class.forName(adapters.get(i).getType());
-					Adapter newAdapter = (Adapter) fc.newInstance();
-					newAdapter.setProperties(adapters.get(i).getProperties());
-					adapterIntances.put(adapters.get(i).getName(), newAdapter);
-					if(outAdaptersName != null && outAdaptersName.contains(adapters.get(i).getName())) {
-						adapterOutClasses.put(adapters.get(i).getName(), fc);
-					}
-				}
-			}	
+			//Create HubotAdapter;
+			createHubotAdapter();
 			
-			System.out.println("Route create");
+			//Create Adapters
+			createAdapters();
 			
 			//Create routes for Camel
 			RouteGenerator routes = new RouteGenerator(adapterOutClasses);
@@ -99,22 +68,60 @@ public abstract class Actor {
 			e.printStackTrace();
 		}
 	}
-	
-	protected final JndiRegistry createRegistry() throws Exception {
-        JndiRegistry jndi = new JndiRegistry();
-        jndi.bind("actor", this);
-        System.out.println("adapter : " + adapterIntances.get("hubotAdapter"));
-        jndi.bind("hubotAdapter", adapterIntances.get("hubotAdapter"));
-        if(adapterOutClasses != null) {
-	        for(String key : adapterOutClasses.keySet()) {
-	        	jndi.bind(key, adapterOutClasses.get(key));
+
+	protected void createHubotAdapter() {
+		HubotAdapter hubotAdapter = new HubotAdapter("hubotAdapter");
+		hubotAdapter.setHclient(hClient);
+		Map<String,String> propertiesMap = new HashMap<String,String>();
+		propertiesMap.put("jid", configActor.getJid());
+		propertiesMap.put("pwdhash", configActor.getPwdhash());
+		propertiesMap.put("endpoint", configActor.getEndpoint());
+		hubotAdapter.setProperties(propertiesMap);
+		//Launch the HubotAdapter and put him in adapterInstances 
+		hubotAdapter.start();
+		adapterIntances.put("hubotAdapter",hubotAdapter); 
+	}
+
+	@SuppressWarnings("unchecked")
+	protected void createAdapters() {
+		ArrayList<AdapterConfig> adapters = configActor.getAdapters();
+		ArrayList<String> outAdaptersName = configActor.getOutboxes();
+
+		// Create instance of all Adapter
+		if(adapters != null) {
+			try {
+				for(int i=0; i< adapters.size(); i++) {
+					Class<Object> fc;
+					fc = (Class<Object>) Class.forName(adapters.get(i).getType());
+					Adapter newAdapter = (Adapter) fc.newInstance();
+					newAdapter.setProperties(adapters.get(i).getProperties());
+					adapterIntances.put(adapters.get(i).getName(), newAdapter);
+					if(outAdaptersName != null && outAdaptersName.contains(adapters.get(i).getName())) {
+						adapterOutClasses.put(adapters.get(i).getName(), fc);
+					}
+				} 
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	private JndiRegistry createRegistry() throws Exception {
+		JndiRegistry jndi = new JndiRegistry();
+
+		jndi.bind("actor", this);
+		jndi.bind("hubotAdapter", adapterIntances.get("hubotAdapter"));
+
+		if(adapterOutClasses != null) {
+			for(String key : adapterOutClasses.keySet()) {
+				jndi.bind(key, adapterOutClasses.get(key));
 			}   
-        }
-        return jndi;
-    }
-	
-	public final void start() {
+		}
+		return jndi;
+	}
+
+	protected final void start() {
 		try {
+			initialize();
 			context.start();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -122,9 +129,9 @@ public abstract class Actor {
 		}
 	}
 
-	public final void stop() {
+	protected final void stop() {
 		for(String key : adapterIntances.keySet()) {
-        	adapterIntances.get(key).stop();
+			adapterIntances.get(key).stop();
 		}  
 		try {
 			context.stop();
@@ -135,19 +142,37 @@ public abstract class Actor {
 	}
 
 	/* Method use for incoming message/command */
-	public abstract void inProcess(Object obj);
+	public final void inProcess(Object obj) {
+		if (obj != null) {
+			if (obj instanceof HMessage) {
+				inProcessMessage((HMessage)obj);
+			}
+			if (obj instanceof HCommand) {
+				inProcessCommand((HCommand)obj);
+			}
+		}		
+	}
+
+	protected abstract void inProcessMessage(HMessage messageIncoming);
+	protected abstract void inProcessCommand(HCommand commandIncoming);
 
 	/* Send message to a specified adapter */
-	public final void put(String boxName, HJsonObj hjson) {
-		if(hjson.getHType() == "hcommand") {
-			putCommand(boxName, new HCommand(hjson.toJSON()));
-		} else if (hjson.getHType() == "hmessage"){
-			putMessage(boxName, new HMessage(hjson.toJSON()));
+	protected final void put(String boxName, HJsonObj hjson) {
+		if(hjson.getHType().equalsIgnoreCase("hcommand")) {
+			put(boxName, new HCommand(hjson.toJSON()));
+		} else if (hjson.getHType().equalsIgnoreCase("hmessage")){
+			put(boxName, new HMessage(hjson.toJSON()));
 		}
 	}
 
-	public abstract void putMessage(String outboxName, HMessage msg);
+	protected final void put(String outboxName, HMessage msg) {
+		String route = "seda:" + outboxName;
+		ProducerTemplateSingleton.getProducerTemplate().sendBody(route,msg);		
+	}
 
-	public abstract void putCommand(String outboxName, HCommand cmd);
+	protected final void put(String outboxName, HCommand cmd) {
+		String route = "seda:" + outboxName;
+		ProducerTemplateSingleton.getProducerTemplate().sendBody(route,cmd);		
+	}
 
 }
