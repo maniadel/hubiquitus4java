@@ -184,6 +184,14 @@ public class HClient {
 	}
 	
 	/**
+	 * Command delegate receive all incoming HCommand
+	 * @param commandDelegate
+	 */
+	public void onCommand(HCommandDelegate commandDelegate) {
+		this.commandDelegate = commandDelegate;
+	}
+	
+	/**
 	 * Get current connection status
 	 * @return
 	 */
