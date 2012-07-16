@@ -23,50 +23,51 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import org.hubiquitus.hapi.client.HClient;
+import org.hubiquitus.hapi.client.HCommandDelegate;
 import org.hubiquitus.hapi.client.HMessageDelegate;
-import org.hubiquitus.hapi.client.HStatusDelegate;
 import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.hStructures.HOptions;
-import org.hubiquitus.hapi.hStructures.HStatus;
-import org.hubiquitus.hubotsdk.Adapter;
+import org.hubiquitus.hubotsdk.AdapterInbox;
 
-public class HubotAdapter extends Adapter implements HMessageDelegate,HStatusDelegate{
-
+public class HubotAdapterInbox extends AdapterInbox implements HMessageDelegate, HCommandDelegate{
+	
 	private String name;
 	private String jid;
 	private String pwdhash;
 	private String endpoint;
-	private HClient hclient;
 
-
-	public HubotAdapter(String name) {
+	public HubotAdapterInbox(String name) {
 		this.name = name;
 	}
-
+	
 	@Override
-	public void sendCommand(HCommand command) {
-		hclient.command(command, null);
-	}
-
-	@Override
-	public void sendMessage(HMessage message) {
-		hclient.publish(message, null);
+	public void setProperties(Map<String, String> params) {
+		if(params.get("jid") != null) 
+			setJid(params.get("jid"));
+		if(params.get("pwdhash") != null) 
+			setPwdhash(params.get("pwdhash"));
+		if(params.get("endpoint") != null) 
+			setEndpoint(params.get("endpoint"));
 	}
 
 	@Override
 	public void start() {
-		hclient.onMessage(this);
 		HOptions options = new HOptions();
 		options.setTransport("socketio");
 		ArrayList<String> endpoints = new ArrayList<String>();
 		endpoints.add(endpoint);
 		options.setEndpoints(endpoints);
 		hclient.onMessage(this);
-		hclient.onStatus(this);
-		hclient.connect(jid, pwdhash, options);
+		hclient.onCommand(this);
+		hclient.connect(jid, pwdhash, options);	
 	}
 
+	@Override
+	public void stop() {
+		hclient.disconnect();		
+	}
+	
 	public void onMessage(HMessage message) {
 		if(message.getChid().contains("#") == false) {
 			onInGoing(message);		
@@ -76,23 +77,7 @@ public class HubotAdapter extends Adapter implements HMessageDelegate,HStatusDel
 	public void onCommand(HCommand command) {
 		
 	}
-
-	@Override
-	public void stop() {
-		hclient.disconnect();
-	}
-
-
-	@Override
-	public void setProperties(Map<String,String> params) {	
-		if(params.get("jid") != null) 
-			setJid(params.get("jid"));
-		if(params.get("pwdhash") != null) 
-			setPwdhash(params.get("pwdhash"));
-		if(params.get("endpoint") != null) 
-			setEndpoint(params.get("endpoint"));
-	}
-
+	
 	/* Getters and Setters */
 	public String getName() {
 		return name;
@@ -154,7 +139,8 @@ public class HubotAdapter extends Adapter implements HMessageDelegate,HStatusDel
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((hclient == null) ? 0 : hclient.hashCode());
+		result = prime * result
+				+ ((endpoint == null) ? 0 : endpoint.hashCode());
 		result = prime * result + ((jid == null) ? 0 : jid.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((pwdhash == null) ? 0 : pwdhash.hashCode());
@@ -169,11 +155,11 @@ public class HubotAdapter extends Adapter implements HMessageDelegate,HStatusDel
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		HubotAdapter other = (HubotAdapter) obj;
-		if (hclient == null) {
-			if (other.hclient != null)
+		HubotAdapterInbox other = (HubotAdapterInbox) obj;
+		if (endpoint == null) {
+			if (other.endpoint != null)
 				return false;
-		} else if (!hclient.equals(other.hclient))
+		} else if (!endpoint.equals(other.endpoint))
 			return false;
 		if (jid == null) {
 			if (other.jid != null)
@@ -192,11 +178,4 @@ public class HubotAdapter extends Adapter implements HMessageDelegate,HStatusDel
 			return false;
 		return true;
 	}
-
-	@Override
-	public void onStatus(HStatus status) {
-		// TODO Auto-generated method stub
-		System.out.println("status : " + status);
-	}
-	
 }

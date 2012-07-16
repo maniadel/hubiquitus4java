@@ -31,25 +31,29 @@ public class HelloHubot extends Actor{
 	public static void main(String[] args) throws Exception{
 		HelloHubot hubot = new HelloHubot();
 		hubot.start();
-		System.out.println("ready");
 	}
 	
 	@Override
 	public void inProcessMessage(HMessage messageIncoming) {
-		HMessage message = new HMessage();
-		message.setChid(messageIncoming.getPublisher());
-		message.setType("HJsonObj");
-		JSONObject jsonObj = messageIncoming.getPayload().toJSON();
-		String name = "Hello ";
-		try {
-			 name += jsonObj.getString("text");
-		} catch (JSONException e) {
-			e.printStackTrace();
+		if(messageIncoming.getHType().equalsIgnoreCase("hcommand")) {
+			HCommand cmd = new HCommand(messageIncoming.getPayload().toJSON());
+			put("hubotAdapter",cmd);
+		} else {
+			HMessage message = new HMessage();
+			message.setChid(messageIncoming.getPublisher());
+			message.setType("HJsonObj");
+			JSONObject jsonObj = messageIncoming.getPayload().toJSON();
+			String name = "Hello ";
+			try {
+				 name += jsonObj.getString("text");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			HJsonDictionnary payload = new HJsonDictionnary();
+			payload.put("text", name);
+			message.setPayload(payload);
+			put("hubotAdapterOutbox",message);
 		}
-		HJsonDictionnary payload = new HJsonDictionnary();
-		payload.put("text", name);
-		message.setPayload(payload);
-		put("hubotAdapter",message);
 	}
 	
 	public void inProcessCommand(HCommand commandIncoming) {

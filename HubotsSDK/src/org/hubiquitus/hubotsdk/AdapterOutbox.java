@@ -19,39 +19,22 @@
 
 package org.hubiquitus.hubotsdk;
 
-import java.util.Map;
+import org.hubiquitus.hapi.hStructures.HCommand;
+import org.hubiquitus.hapi.hStructures.HJsonObj;
+import org.hubiquitus.hapi.hStructures.HMessage;
 
-import org.apache.camel.builder.RouteBuilder;
-
-public class RouteGenerator extends RouteBuilder {
-
-	private Map< String, Class<Object> > outboxMap;
-
-	public RouteGenerator(Map< String, Class<Object> >  outboxMap) {
-		this.outboxMap = outboxMap;
-	}
-
-	@Override
-	public void configure() throws Exception {
-
-		/* Create route for inboxQueue */
-		from("seda:inbox")
-			.to("bean:actor?method=inProcess");
-
-
-		/* Create route for all outboxesQueue */
-		from("seda:hubotAdapterOutbox")
-			.to("bean:hubotAdapterOutbox?method=onOutGoing");
-
-		for(String key : outboxMap.keySet()) {
-			String routeName = "seda:" + key; 
-			String beanText ="bean:" + outboxMap.get(key) + "?method=onOutGoing";
-			from(routeName)
-				.to(beanText);
+public abstract class AdapterOutbox extends Adapter{
+	
+	// Method for output message and command 
+	public final void onOutGoing(HJsonObj hjson) {
+		if(hjson.getHType() == "hcommand") {
+			sendCommand(new HCommand(hjson.toJSON()));
+		} else if (hjson.getHType() == "hmessage"){
+			sendMessage(new HMessage(hjson.toJSON()));
 		}
-
 	}
 
-
+	public abstract void sendCommand(HCommand command);
+	public abstract void sendMessage(HMessage message);
 
 }

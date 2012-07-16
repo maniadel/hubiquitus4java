@@ -19,39 +19,11 @@
 
 package org.hubiquitus.hubotsdk;
 
-import java.util.Map;
+public abstract class AdapterInbox extends Adapter {
 
-import org.apache.camel.builder.RouteBuilder;
-
-public class RouteGenerator extends RouteBuilder {
-
-	private Map< String, Class<Object> > outboxMap;
-
-	public RouteGenerator(Map< String, Class<Object> >  outboxMap) {
-		this.outboxMap = outboxMap;
+	// Method for input message and command 
+	public final void onInGoing(Object object) {
+		ProducerTemplateSingleton.getProducerTemplate().sendBody("seda:inbox",object);
 	}
-
-	@Override
-	public void configure() throws Exception {
-
-		/* Create route for inboxQueue */
-		from("seda:inbox")
-			.to("bean:actor?method=inProcess");
-
-
-		/* Create route for all outboxesQueue */
-		from("seda:hubotAdapterOutbox")
-			.to("bean:hubotAdapterOutbox?method=onOutGoing");
-
-		for(String key : outboxMap.keySet()) {
-			String routeName = "seda:" + key; 
-			String beanText ="bean:" + outboxMap.get(key) + "?method=onOutGoing";
-			from(routeName)
-				.to(beanText);
-		}
-
-	}
-
-
 
 }

@@ -29,7 +29,8 @@ import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HJsonObj;
 import org.hubiquitus.hapi.hStructures.HMessage;
-import org.hubiquitus.hubotsdk.adapters.HubotAdapter;
+import org.hubiquitus.hubotsdk.adapters.HubotAdapterInbox;
+import org.hubiquitus.hubotsdk.adapters.HubotAdapterOutbox;
 import org.hubiquitus.util.ConfigActor;
 import org.hubiquitus.util.ConfigActor.AdapterConfig;
 
@@ -70,34 +71,55 @@ public abstract class Actor {
 	}
 
 	protected void createHubotAdapter() {
-		HubotAdapter hubotAdapter = new HubotAdapter("hubotAdapter");
-		hubotAdapter.setHclient(hClient);
+		HubotAdapterInbox hubotAdapterInbox = new HubotAdapterInbox("hubotAdapterInbox");
+		HubotAdapterOutbox hubotAdapterOutbox = new HubotAdapterOutbox("hubotAdapterOutbox");
+		hubotAdapterInbox.setHclient(hClient);
+		hubotAdapterOutbox.setHclient(hClient);
+	
+		
 		Map<String,String> propertiesMap = new HashMap<String,String>();
 		propertiesMap.put("jid", configActor.getJid());
 		propertiesMap.put("pwdhash", configActor.getPwdhash());
 		propertiesMap.put("endpoint", configActor.getEndpoint());
-		hubotAdapter.setProperties(propertiesMap);
+		
+		hubotAdapterInbox.setProperties(propertiesMap);
+		hubotAdapterOutbox.setProperties(propertiesMap);
+		
 		//Launch the HubotAdapter and put him in adapterInstances 
-		hubotAdapter.start();
-		adapterIntances.put("hubotAdapter",hubotAdapter); 
+		hubotAdapterInbox.start();
+		hubotAdapterOutbox.start();
+		
+		adapterIntances.put("hubotAdapterOutbox",hubotAdapterOutbox); 
+		adapterIntances.put("hubotAdapterInbox",hubotAdapterInbox); 
+		
 	}
 
 	@SuppressWarnings("unchecked")
 	protected void createAdapters() {
 		ArrayList<AdapterConfig> adapters = configActor.getAdapters();
 		ArrayList<String> outAdaptersName = configActor.getOutboxes();
+		ArrayList<String> inAdaptersName = configActor.getOutboxes();
 
 		// Create instance of all Adapter
 		if(adapters != null) {
 			try {
 				for(int i=0; i< adapters.size(); i++) {
-					Class<Object> fc;
-					fc = (Class<Object>) Class.forName(adapters.get(i).getType());
-					Adapter newAdapter = (Adapter) fc.newInstance();
-					newAdapter.setProperties(adapters.get(i).getProperties());
-					adapterIntances.put(adapters.get(i).getName(), newAdapter);
+					if(inAdaptersName != null && inAdaptersName.contains(adapters.get(i).getName())) {
+						Class<Object> fc;
+						fc = (Class<Object>) Class.forName(adapters.get(i).getType() + "Inbox");
+						Adapter newAdapterInbox = (Adapter) fc.newInstance();
+						newAdapterInbox.setProperties(adapters.get(i).getProperties());
+						adapterIntances.put(adapters.get(i).getName() + "Inbox", newAdapterInbox);
+						newAdapterInbox.start();
+					}
 					if(outAdaptersName != null && outAdaptersName.contains(adapters.get(i).getName())) {
-						adapterOutClasses.put(adapters.get(i).getName(), fc);
+						Class<Object> fc;
+						fc = (Class<Object>) Class.forName(adapters.get(i).getType() + "Inbox");
+						Adapter newAdapterOutbox = (Adapter) fc.newInstance();
+						newAdapterOutbox.setProperties(adapters.get(i).getProperties());
+						adapterIntances.put(adapters.get(i).getName() + "Outbox", newAdapterOutbox);
+						adapterOutClasses.put(adapters.get(i).getName() + "Outbox", fc);
+						newAdapterOutbox.start();					
 					}
 				} 
 			}catch (Exception e) {
@@ -109,11 +131,11 @@ public abstract class Actor {
 		JndiRegistry jndi = new JndiRegistry();
 
 		jndi.bind("actor", this);
-		jndi.bind("hubotAdapter", adapterIntances.get("hubotAdapter"));
+		jndi.bind("hubotAdapterOutbox", adapterIntances.get("hubotAdapterOutbox"));
 
 		if(adapterOutClasses != null) {
 			for(String key : adapterOutClasses.keySet()) {
-				jndi.bind(key, adapterOutClasses.get(key));
+				jndi.bind(key, adapterIntances.get(key));
 			}   
 		}
 		return jndi;
