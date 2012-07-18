@@ -2,5 +2,14 @@
 	"name" : "com.mycompany.WordCount",
 	"jid" : "u1@hub.novediagroup.com",
 	"pwdhash" : "u1",
-	"endpoint" : "http://hub.novediagroup.com:8080"
+	"endpoint" : "http://hub.novediagroup.com:8080",
+	"adapters" : [ {
+		"name" : "adapter1",
+		"type" : "HChannelAdapter",
+		"properties" : {
+				"chid" : "HelloChan"
+		}
+	}],
+	"inbox" : [ "adapter1" ],
+	"outboxes" : [ "adapter1" ]
 }

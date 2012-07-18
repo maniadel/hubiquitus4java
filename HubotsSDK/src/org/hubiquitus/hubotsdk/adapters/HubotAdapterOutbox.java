@@ -31,8 +31,6 @@ public class HubotAdapterOutbox extends AdapterOutbox{
 
 	private String name;
 	private String jid;
-	private String pwdhash;
-	private String endpoint;
 	private HClient hclient;
 	
 	public HubotAdapterOutbox(String name) {
@@ -50,7 +48,6 @@ public class HubotAdapterOutbox extends AdapterOutbox{
 		message.setPublished(new GregorianCalendar());
 		message.setType("hello");
 		message.setTransient(true);
-		System.out.println(message);
 		hclient.publish(message, null);
 	}
 
@@ -59,10 +56,6 @@ public class HubotAdapterOutbox extends AdapterOutbox{
 	public void setProperties(Map<String,String> params) {	
 		if(params.get("jid") != null) 
 			setJid(params.get("jid"));
-		if(params.get("pwdhash") != null) 
-			setPwdhash(params.get("pwdhash"));
-		if(params.get("endpoint") != null) 
-			setEndpoint(params.get("endpoint"));
 	}
 
 	@Override
@@ -104,79 +97,9 @@ public class HubotAdapterOutbox extends AdapterOutbox{
 	}
 
 
-	public String getPwdhash() {
-		return pwdhash;
-	}
-
-
-	public void setPwdhash(String pwdhash) {
-		this.pwdhash = pwdhash;
-	}
-
-	public String getEndpoint() {
-		return endpoint;
-	}
-
-
-	public void setEndpoint(String endpoint) {
-		this.endpoint = endpoint;
-	}
-	
-
-
 	@Override
 	public String toString() {
 		return "HubotAdapter [name=" + name + ", jid=" + jid + ", pwdhash="
-				+ pwdhash + ", hclient=" + hclient + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((endpoint == null) ? 0 : endpoint.hashCode());
-		result = prime * result + ((hclient == null) ? 0 : hclient.hashCode());
-		result = prime * result + ((jid == null) ? 0 : jid.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((pwdhash == null) ? 0 : pwdhash.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		HubotAdapterOutbox other = (HubotAdapterOutbox) obj;
-		if (endpoint == null) {
-			if (other.endpoint != null)
-				return false;
-		} else if (!endpoint.equals(other.endpoint))
-			return false;
-		if (hclient == null) {
-			if (other.hclient != null)
-				return false;
-		} else if (!hclient.equals(other.hclient))
-			return false;
-		if (jid == null) {
-			if (other.jid != null)
-				return false;
-		} else if (!jid.equals(other.jid))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (pwdhash == null) {
-			if (other.pwdhash != null)
-				return false;
-		} else if (!pwdhash.equals(other.pwdhash))
-			return false;
-		return true;
+				+ ", hclient=" + hclient + "]";
 	}
 }

@@ -44,12 +44,12 @@ public class RouteGenerator extends RouteBuilder {
 			.to("bean:hubotAdapterOutbox?method=onOutGoing");
 
 		for(String key : outboxMap.keySet()) {
+			
 			String routeName = "seda:" + key; 
-			String beanText ="bean:" + outboxMap.get(key) + "?method=onOutGoing";
+			String beanText ="bean:adapter1Outbox?method=onOutGoing";
 			from(routeName)
 				.to(beanText);
 		}
-
 	}
 
 

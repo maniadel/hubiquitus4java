@@ -82,6 +82,8 @@ public abstract class Actor {
 		propertiesMap.put("pwdhash", configActor.getPwdhash());
 		propertiesMap.put("endpoint", configActor.getEndpoint());
 		
+		hubotAdapterInbox.setname("hubotAdapterInbox");
+		hubotAdapterOutbox.setname("hubotAdapterOutbox");
 		hubotAdapterInbox.setProperties(propertiesMap);
 		hubotAdapterOutbox.setProperties(propertiesMap);
 		
@@ -106,20 +108,27 @@ public abstract class Actor {
 				for(int i=0; i< adapters.size(); i++) {
 					if(inAdaptersName != null && inAdaptersName.contains(adapters.get(i).getName())) {
 						Class<Object> fc;
-						fc = (Class<Object>) Class.forName(adapters.get(i).getType() + "Inbox");
-						Adapter newAdapterInbox = (Adapter) fc.newInstance();
+						fc = (Class<Object>) Class.forName("org.hubiquitus.hubotsdk.adapters." + adapters.get(i).getType() + "Inbox");
+						Adapter newAdapterInbox = (AdapterInbox) fc.newInstance();
+						newAdapterInbox.setname(adapters.get(i).getName() + "Inbox");
 						newAdapterInbox.setProperties(adapters.get(i).getProperties());
-						adapterIntances.put(adapters.get(i).getName() + "Inbox", newAdapterInbox);
+						newAdapterInbox.setname(adapters.get(i).getName() + "Inbox");
+						newAdapterInbox.sethclient(hClient);
 						newAdapterInbox.start();
+						adapterIntances.put(adapters.get(i).getName() + "Inbox", newAdapterInbox);
 					}
 					if(outAdaptersName != null && outAdaptersName.contains(adapters.get(i).getName())) {
 						Class<Object> fc;
-						fc = (Class<Object>) Class.forName(adapters.get(i).getType() + "Inbox");
-						Adapter newAdapterOutbox = (Adapter) fc.newInstance();
+						fc = (Class<Object>) Class.forName("org.hubiquitus.hubotsdk.adapters." + adapters.get(i).getType() + "Outbox");
+						Adapter newAdapterOutbox = (AdapterOutbox) fc.newInstance();
+						newAdapterOutbox.setname(adapters.get(i).getName() + "Outbox");
 						newAdapterOutbox.setProperties(adapters.get(i).getProperties());
+						newAdapterOutbox.setname(adapters.get(i).getName() + "Inbox");
+						newAdapterOutbox.sethclient(hClient);
+						newAdapterOutbox.start();	
 						adapterIntances.put(adapters.get(i).getName() + "Outbox", newAdapterOutbox);
 						adapterOutClasses.put(adapters.get(i).getName() + "Outbox", fc);
-						newAdapterOutbox.start();					
+										
 					}
 				} 
 			}catch (Exception e) {
@@ -133,6 +142,7 @@ public abstract class Actor {
 		jndi.bind("actor", this);
 		jndi.bind("hubotAdapterOutbox", adapterIntances.get("hubotAdapterOutbox"));
 
+		
 		if(adapterOutClasses != null) {
 			for(String key : adapterOutClasses.keySet()) {
 				jndi.bind(key, adapterIntances.get(key));
@@ -146,7 +156,6 @@ public abstract class Actor {
 			initialize();
 			context.start();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -158,7 +167,6 @@ public abstract class Actor {
 		try {
 			context.stop();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

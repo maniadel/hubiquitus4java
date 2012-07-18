@@ -26,6 +26,7 @@ import org.hubiquitus.hapi.client.HClient;
 public abstract class Adapter {
 	
 	protected HClient hclient;
+	protected String name;
 
 	public abstract void setProperties(Map<String,String> params);
 
@@ -37,5 +38,9 @@ public abstract class Adapter {
 	
 	public final void sethclient(HClient hclient) {
 		this.hclient = hclient;				
+	}
+	
+	public final void setname(String name) {
+		this.name = name;				
 	}
 }

@@ -30,6 +30,7 @@ public abstract class AdapterOutbox extends Adapter{
 		if(hjson.getHType() == "hcommand") {
 			sendCommand(new HCommand(hjson.toJSON()));
 		} else if (hjson.getHType() == "hmessage"){
+			
 			sendMessage(new HMessage(hjson.toJSON()));
 		}
 	}

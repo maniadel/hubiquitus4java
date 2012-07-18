@@ -40,7 +40,6 @@ public class HelloHubot extends Actor{
 			put("hubotAdapter",cmd);
 		} else {
 			HMessage message = new HMessage();
-			message.setChid(messageIncoming.getPublisher());
 			message.setType("HJsonObj");
 			JSONObject jsonObj = messageIncoming.getPayload().toJSON();
 			String name = "Hello ";
@@ -52,7 +51,12 @@ public class HelloHubot extends Actor{
 			HJsonDictionnary payload = new HJsonDictionnary();
 			payload.put("text", name);
 			message.setPayload(payload);
-			put("hubotAdapterOutbox",message);
+			if(messageIncoming.getChid().contains("#")) {
+				put("adapter1Outbox",message);	
+			} else {
+				message.setChid(messageIncoming.getPublisher());
+				put("hubotAdapterOutbox",message);	
+			}
 		}
 	}
 	

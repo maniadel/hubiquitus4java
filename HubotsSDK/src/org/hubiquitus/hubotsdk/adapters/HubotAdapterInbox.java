@@ -30,7 +30,7 @@ import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.hStructures.HOptions;
 import org.hubiquitus.hubotsdk.AdapterInbox;
 
-public class HubotAdapterInbox extends AdapterInbox implements HMessageDelegate, HCommandDelegate{
+public class HubotAdapterInbox extends AdapterInbox implements HMessageDelegate,HCommandDelegate{
 	
 	private String name;
 	private String jid;
@@ -69,9 +69,8 @@ public class HubotAdapterInbox extends AdapterInbox implements HMessageDelegate,
 	}
 	
 	public void onMessage(HMessage message) {
-		if(message.getChid().contains("#") == false) {
+		if(message.getPublisher().equals(jid) == false)
 			onInGoing(message);		
-		}
 	}
 	
 	public void onCommand(HCommand command) {
