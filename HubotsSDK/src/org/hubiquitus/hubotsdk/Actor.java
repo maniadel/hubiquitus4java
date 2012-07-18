@@ -45,26 +45,73 @@ public abstract class Actor {
 	protected ConfigActor configActor;
 
 
-	private void initialize() {		
+//	public void initialize() {		
+//		try {
+//			// Create a default context for Camel
+//			context = new DefaultCamelContext();
+//			ProducerTemplateSingleton.setContext(context);
+//
+//			// Parsing configuration file with Jackson 
+//			ObjectMapper mapper = new ObjectMapper();
+//			configActor = mapper.readValue(new File("./resources/config.txt"), ConfigActor.class);
+//
+//			createHubotAdapter();
+//			
+//			createAdapters();
+//			
+//			//Create routes for Camel
+//			RouteGenerator routes = new RouteGenerator(adapterOutClasses);
+//			context.setRegistry(createRegistry());
+//			context.addRoutes(routes);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
+	
+	protected void start() {
 		try {
 			// Create a default context for Camel
 			context = new DefaultCamelContext();
 			ProducerTemplateSingleton.setContext(context);
-
+	
 			// Parsing configuration file with Jackson 
 			ObjectMapper mapper = new ObjectMapper();
 			configActor = mapper.readValue(new File("./resources/config.txt"), ConfigActor.class);
-
+	
 			//Create HubotAdapter;
 			createHubotAdapter();
-			
-			//Create Adapters
-			createAdapters();
-			
-			//Create routes for Camel
-			RouteGenerator routes = new RouteGenerator(adapterOutClasses);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void init() {
+		
+	}
+	
+	
+	protected void adapters() {		
+		//Create Adapters
+		createAdapters();
+		
+		//Create routes for Camel
+		RouteGenerator routes = new RouteGenerator(adapterOutClasses);
+		try {
 			context.setRegistry(createRegistry());
 			context.addRoutes(routes);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+	}
+
+	protected void ready() {
+		if(adapterIntances != null) {
+			for(String key : adapterIntances.keySet()) {
+				adapterIntances.get(key).start();
+			}   
+		}
+		try {
+			context.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -96,6 +143,7 @@ public abstract class Actor {
 		
 	}
 
+	//Created other Adapters
 	@SuppressWarnings("unchecked")
 	protected void createAdapters() {
 		ArrayList<AdapterConfig> adapters = configActor.getAdapters();
@@ -114,7 +162,6 @@ public abstract class Actor {
 						newAdapterInbox.setProperties(adapters.get(i).getProperties());
 						newAdapterInbox.setname(adapters.get(i).getName() + "Inbox");
 						newAdapterInbox.sethclient(hClient);
-						newAdapterInbox.start();
 						adapterIntances.put(adapters.get(i).getName() + "Inbox", newAdapterInbox);
 					}
 					if(outAdaptersName != null && outAdaptersName.contains(adapters.get(i).getName())) {
@@ -125,10 +172,8 @@ public abstract class Actor {
 						newAdapterOutbox.setProperties(adapters.get(i).getProperties());
 						newAdapterOutbox.setname(adapters.get(i).getName() + "Inbox");
 						newAdapterOutbox.sethclient(hClient);
-						newAdapterOutbox.start();	
 						adapterIntances.put(adapters.get(i).getName() + "Outbox", newAdapterOutbox);
-						adapterOutClasses.put(adapters.get(i).getName() + "Outbox", fc);
-										
+						adapterOutClasses.put(adapters.get(i).getName() + "Outbox", fc);			
 					}
 				} 
 			}catch (Exception e) {
@@ -151,14 +196,14 @@ public abstract class Actor {
 		return jndi;
 	}
 
-	protected final void start() {
-		try {
-			initialize();
-			context.start();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	protected final void start() {
+//		try {
+//			initialize();
+//			context.start();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	protected final void stop() {
 		for(String key : adapterIntances.keySet()) {

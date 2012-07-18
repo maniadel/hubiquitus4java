@@ -31,6 +31,9 @@ public class HelloHubot extends Actor{
 	public static void main(String[] args) throws Exception{
 		HelloHubot hubot = new HelloHubot();
 		hubot.start();
+		hubot.init();
+		hubot.adapters();
+		hubot.ready();
 	}
 	
 	@Override

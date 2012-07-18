@@ -39,9 +39,6 @@ public class HChannelAdapterInbox extends AdapterInbox{
 	public void start() {
 		hclient.subscribe(chid, null);
 	}
-	
-	public void onCommand(HCommand command) {
-	}
 
 	@Override
 	public void stop() {
