@@ -22,7 +22,6 @@ package org.hubiquitus.hubotsdk.adapters;
 import java.util.ArrayList;
 import java.util.Map;
 
-import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hapi.client.HCommandDelegate;
 import org.hubiquitus.hapi.client.HMessageDelegate;
 import org.hubiquitus.hapi.hStructures.HCommand;
@@ -78,26 +77,6 @@ public class HubotAdapterInbox extends AdapterInbox implements HMessageDelegate,
 	}
 	
 	/* Getters and Setters */
-	public String getName() {
-		return name;
-	}
-
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-
-	public HClient getHclient() {
-		return hclient;
-	}
-
-
-	public void setHclient(HClient hclient) {
-		this.hclient = hclient;
-	}
-
-
 	public String getJid() {
 		return jid;
 	}

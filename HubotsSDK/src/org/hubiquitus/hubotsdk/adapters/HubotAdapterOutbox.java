@@ -67,26 +67,6 @@ public class HubotAdapterOutbox extends AdapterOutbox{
 	}
 
 	/* Getters and Setters */
-	public String getName() {
-		return name;
-	}
-
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-
-	public HClient getHclient() {
-		return hclient;
-	}
-
-
-	public void setHclient(HClient hclient) {
-		this.hclient = hclient;
-	}
-
-
 	public String getJid() {
 		return jid;
 	}

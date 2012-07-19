@@ -22,7 +22,6 @@ package org.hubiquitus.hubotsdk.adapters;
 import java.util.Map;
 
 import org.hubiquitus.hapi.client.HClient;
-import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hubotsdk.AdapterInbox;
 
 public class HChannelAdapterInbox extends AdapterInbox{

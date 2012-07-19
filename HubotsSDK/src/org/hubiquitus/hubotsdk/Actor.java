@@ -39,7 +39,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public abstract class Actor {
 
 	protected HClient hClient = new HClient();
-	protected DefaultCamelContext context = null;
+	protected DefaultCamelContext camelContext = null;
 	protected Map<String, Class<Object>> adapterOutClasses = new HashMap<String, Class<Object>>();
 	protected Map<String, Adapter> adapterIntances = new HashMap<String, Adapter>();
 	protected ConfigActor configActor;
@@ -71,8 +71,8 @@ public abstract class Actor {
 	protected void start() {
 		try {
 			// Create a default context for Camel
-			context = new DefaultCamelContext();
-			ProducerTemplateSingleton.setContext(context);
+			camelContext = new DefaultCamelContext();
+			ProducerTemplateSingleton.setContext(camelContext);
 	
 			// Parsing configuration file with Jackson 
 			ObjectMapper mapper = new ObjectMapper();
@@ -97,8 +97,8 @@ public abstract class Actor {
 		//Create routes for Camel
 		RouteGenerator routes = new RouteGenerator(adapterOutClasses);
 		try {
-			context.setRegistry(createRegistry());
-			context.addRoutes(routes);
+			camelContext.setRegistry(createRegistry());
+			camelContext.addRoutes(routes);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
@@ -111,7 +111,7 @@ public abstract class Actor {
 			}   
 		}
 		try {
-			context.start();
+			camelContext.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -120,8 +120,10 @@ public abstract class Actor {
 	protected void createHubotAdapter() {
 		HubotAdapterInbox hubotAdapterInbox = new HubotAdapterInbox("hubotAdapterInbox");
 		HubotAdapterOutbox hubotAdapterOutbox = new HubotAdapterOutbox("hubotAdapterOutbox");
-		hubotAdapterInbox.setHclient(hClient);
-		hubotAdapterOutbox.setHclient(hClient);
+		hubotAdapterInbox.setHClient(hClient);
+		hubotAdapterInbox.setCamelContext(camelContext);
+		hubotAdapterOutbox.setHClient(hClient);
+		hubotAdapterOutbox.setCamelContext(camelContext);
 	
 		
 		Map<String,String> propertiesMap = new HashMap<String,String>();
@@ -129,8 +131,8 @@ public abstract class Actor {
 		propertiesMap.put("pwdhash", configActor.getPwdhash());
 		propertiesMap.put("endpoint", configActor.getEndpoint());
 		
-		hubotAdapterInbox.setname("hubotAdapterInbox");
-		hubotAdapterOutbox.setname("hubotAdapterOutbox");
+		hubotAdapterInbox.setName("hubotAdapterInbox");
+		hubotAdapterOutbox.setName("hubotAdapterOutbox");
 		hubotAdapterInbox.setProperties(propertiesMap);
 		hubotAdapterOutbox.setProperties(propertiesMap);
 		
@@ -158,20 +160,22 @@ public abstract class Actor {
 						Class<Object> fc;
 						fc = (Class<Object>) Class.forName("org.hubiquitus.hubotsdk.adapters." + adapters.get(i).getType() + "Inbox");
 						Adapter newAdapterInbox = (AdapterInbox) fc.newInstance();
-						newAdapterInbox.setname(adapters.get(i).getName() + "Inbox");
+						newAdapterInbox.setName(adapters.get(i).getName() + "Inbox");
 						newAdapterInbox.setProperties(adapters.get(i).getProperties());
-						newAdapterInbox.setname(adapters.get(i).getName() + "Inbox");
-						newAdapterInbox.sethclient(hClient);
+						newAdapterInbox.setName(adapters.get(i).getName() + "Inbox");
+						newAdapterInbox.setHClient(hClient);
+						newAdapterInbox.setCamelContext(camelContext);
 						adapterIntances.put(adapters.get(i).getName() + "Inbox", newAdapterInbox);
 					}
 					if(outAdaptersName != null && outAdaptersName.contains(adapters.get(i).getName())) {
 						Class<Object> fc;
 						fc = (Class<Object>) Class.forName("org.hubiquitus.hubotsdk.adapters." + adapters.get(i).getType() + "Outbox");
 						Adapter newAdapterOutbox = (AdapterOutbox) fc.newInstance();
-						newAdapterOutbox.setname(adapters.get(i).getName() + "Outbox");
+						newAdapterOutbox.setName(adapters.get(i).getName() + "Outbox");
 						newAdapterOutbox.setProperties(adapters.get(i).getProperties());
-						newAdapterOutbox.setname(adapters.get(i).getName() + "Inbox");
-						newAdapterOutbox.sethclient(hClient);
+						newAdapterOutbox.setName(adapters.get(i).getName() + "Inbox");
+						newAdapterOutbox.setHClient(hClient);
+						newAdapterOutbox.setCamelContext(camelContext);
 						adapterIntances.put(adapters.get(i).getName() + "Outbox", newAdapterOutbox);
 						adapterOutClasses.put(adapters.get(i).getName() + "Outbox", fc);			
 					}
@@ -210,7 +214,7 @@ public abstract class Actor {
 			adapterIntances.get(key).stop();
 		}  
 		try {
-			context.stop();
+			camelContext.stop();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

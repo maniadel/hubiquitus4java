@@ -21,12 +21,14 @@ package org.hubiquitus.hubotsdk;
 
 import java.util.Map;
 
+import org.apache.camel.impl.DefaultCamelContext;
 import org.hubiquitus.hapi.client.HClient;
 
 public abstract class Adapter {
 	
 	protected HClient hclient;
 	protected String name;
+	protected DefaultCamelContext camelContext;
 
 	public abstract void setProperties(Map<String,String> params);
 
@@ -36,11 +38,16 @@ public abstract class Adapter {
 	// Method to stop the bot
 	public abstract void stop();
 	
-	public final void sethclient(HClient hclient) {
+	
+	public final void setCamelContext(DefaultCamelContext camelContext) {
+		this.camelContext = camelContext;				
+	}
+	
+	public final void setHClient(HClient hclient) {
 		this.hclient = hclient;				
 	}
 	
-	public final void setname(String name) {
+	public final void setName(String name) {
 		this.name = name;				
 	}
 }
