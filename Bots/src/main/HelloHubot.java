@@ -55,10 +55,10 @@ public class HelloHubot extends Actor{
 			payload.put("text", name);
 			message.setPayload(payload);
 			if(messageIncoming.getChid().contains("#")) {
-				put("adapter1Outbox",message);	
+				put("adapter1",message);	
 			} else {
 				message.setChid(messageIncoming.getPublisher());
-				put("hubotAdapterOutbox",message);	
+				put("hubotAdapter",message);	
 			}
 		}
 	}

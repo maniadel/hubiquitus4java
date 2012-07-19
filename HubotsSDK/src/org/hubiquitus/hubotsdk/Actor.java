@@ -236,21 +236,21 @@ public abstract class Actor {
 	protected abstract void inProcessCommand(HCommand commandIncoming);
 
 	/* Send message to a specified adapter */
-	protected final void put(String boxName, HJsonObj hjson) {
+	protected final void put(String adapterName, HJsonObj hjson) {
 		if(hjson.getHType().equalsIgnoreCase("hcommand")) {
-			put(boxName, new HCommand(hjson.toJSON()));
+			put(adapterName, new HCommand(hjson.toJSON()));
 		} else if (hjson.getHType().equalsIgnoreCase("hmessage")){
-			put(boxName, new HMessage(hjson.toJSON()));
+			put(adapterName, new HMessage(hjson.toJSON()));
 		}
 	}
 
-	protected final void put(String outboxName, HMessage msg) {
-		String route = "seda:" + outboxName;
+	protected final void put(String adapterName, HMessage msg) {
+		String route = "seda:" + adapterName + "Outbox";
 		ProducerTemplateSingleton.getProducerTemplate().sendBody(route,msg);		
 	}
 
-	protected final void put(String outboxName, HCommand cmd) {
-		String route = "seda:" + outboxName;
+	protected final void put(String adapterName, HCommand cmd) {
+		String route = "seda:" + adapterName + "Outbox";
 		ProducerTemplateSingleton.getProducerTemplate().sendBody(route,cmd);		
 	}
 
