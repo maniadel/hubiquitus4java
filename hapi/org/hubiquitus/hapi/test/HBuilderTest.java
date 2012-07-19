@@ -23,6 +23,7 @@ import java.util.Calendar;
 
 
 import org.hubiquitus.hapi.client.HClient;
+import org.hubiquitus.hapi.exceptions.MissingAttrException;
 import org.hubiquitus.hapi.hStructures.HAck;
 import org.hubiquitus.hapi.hStructures.HAckValue;
 import org.hubiquitus.hapi.hStructures.HAlert;
@@ -37,7 +38,6 @@ import org.hubiquitus.hapi.util.HJsonDictionnary;
 import org.junit.Assert;
 import org.junit.Test;
 
-import exceptions.MissingAttrException;
 
 /**
  * @cond internal

@@ -19,9 +19,11 @@
 
 package org.hubiquitus.hapi.client;
 
+import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Random;
 
+import org.hubiquitus.hapi.exceptions.MissingAttrException;
 import org.hubiquitus.hapi.hStructures.ConnectionError;
 import org.hubiquitus.hapi.hStructures.ConnectionStatus;
 import org.hubiquitus.hapi.hStructures.HAck;
@@ -33,10 +35,13 @@ import org.hubiquitus.hapi.hStructures.HJsonObj;
 import org.hubiquitus.hapi.hStructures.HMeasure;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.hStructures.HMessageOptions;
+import org.hubiquitus.hapi.hStructures.HObj;
 import org.hubiquitus.hapi.hStructures.HOptions;
 import org.hubiquitus.hapi.hStructures.HResult;
 import org.hubiquitus.hapi.hStructures.HStatus;
 import org.hubiquitus.hapi.hStructures.ResultStatus;
+import org.hubiquitus.hapi.json.CalendarSerializer;
+import org.hubiquitus.hapi.json.HObjSerializer;
 import org.hubiquitus.hapi.structures.JabberID;
 import org.hubiquitus.hapi.transport.HTransport;
 import org.hubiquitus.hapi.transport.HTransportDelegate;
@@ -47,7 +52,10 @@ import org.hubiquitus.hapi.util.HJsonDictionnary;
 import org.hubiquitus.hapi.util.HUtil;
 import org.json.JSONObject;
 
-import exceptions.MissingAttrException;
+import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+
 
 
 /**
@@ -63,6 +71,8 @@ public class HClient {
 	private HTransportOptions transportOptions = null;
 	private HTransport transport;
 	
+	private ObjectMapper objectMapper = null;
+	
 	private HStatusDelegate statusDelegate = null;
 	private HMessageDelegate messageDelegate = null;
 	private HCommandDelegate commandDelegate = null;
@@ -72,6 +82,13 @@ public class HClient {
 	private TransportDelegate transportDelegate= new TransportDelegate();
 	
 	public HClient() {
+		//Init jackson json serializer for hobj
+		objectMapper = new ObjectMapper();
+		SimpleModule hJsonModule = new SimpleModule("HJsonModule", new Version(0, 1, 0, "", "", ""));
+	    hJsonModule.addSerializer(HObj.class, new HObjSerializer());
+	    hJsonModule.addSerializer(Calendar.class, new CalendarSerializer());
+	    objectMapper.registerModule(hJsonModule);
+		
 		transportOptions = new HTransportOptions();
 	}
 

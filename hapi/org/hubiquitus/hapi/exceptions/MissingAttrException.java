@@ -18,7 +18,7 @@
  */
 
 
-package exceptions;
+package org.hubiquitus.hapi.exceptions;
 
 /**
  * @version 0.4
