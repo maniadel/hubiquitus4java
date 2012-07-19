@@ -69,7 +69,7 @@ public class HubotAdapterInbox extends AdapterInbox implements HMessageDelegate,
 	
 	public void onMessage(HMessage message) {
 		if(message.getPublisher().equals(jid) == false)
-			onInGoing(message);		
+			put(message);		
 	}
 	
 	public void onCommand(HCommand command) {
