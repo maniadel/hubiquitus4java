@@ -23,12 +23,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.JndiRegistry;
 import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HJsonObj;
 import org.hubiquitus.hapi.hStructures.HMessage;
+import org.hubiquitus.hapi.hStructures.HOptions;
 import org.hubiquitus.hubotsdk.adapters.HubotAdapterInbox;
 import org.hubiquitus.hubotsdk.adapters.HubotAdapterOutbox;
 import org.hubiquitus.util.ConfigActor;
@@ -41,33 +43,14 @@ public abstract class Actor {
 	protected HClient hClient = new HClient();
 	protected DefaultCamelContext camelContext = null;
 	protected Map<String, Class<Object>> adapterOutClasses = new HashMap<String, Class<Object>>();
-	protected Map<String, Adapter> adapterIntances = new HashMap<String, Adapter>();
+	protected Map<String, Adapter> adapterInstances = new HashMap<String, Adapter>();
 	protected ConfigActor configActor;
-
-
-//	public void initialize() {		
-//		try {
-//			// Create a default context for Camel
-//			context = new DefaultCamelContext();
-//			ProducerTemplateSingleton.setContext(context);
-//
-//			// Parsing configuration file with Jackson 
-//			ObjectMapper mapper = new ObjectMapper();
-//			configActor = mapper.readValue(new File("./resources/config.txt"), ConfigActor.class);
-//
-//			createHubotAdapter();
-//			
-//			createAdapters();
-//			
-//			//Create routes for Camel
-//			RouteGenerator routes = new RouteGenerator(adapterOutClasses);
-//			context.setRegistry(createRegistry());
-//			context.addRoutes(routes);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
 	
+	protected String name; 
+	protected String jid;
+	protected String pwd;
+	protected String endpoint;
+
 	protected void start() {
 		try {
 			// Create a default context for Camel
@@ -76,20 +59,41 @@ public abstract class Actor {
 	
 			// Parsing configuration file with Jackson 
 			ObjectMapper mapper = new ObjectMapper();
-			configActor = mapper.readValue(new File("./resources/config.txt"), ConfigActor.class);
+			configActor = mapper.readValue(new File("./src/main/resources/config.txt"), ConfigActor.class);
+			
+			this.name = configActor.getName();
+			this.jid = configActor.getJid();
+			this.pwd = configActor.getPwdhash();
+			this.endpoint = configActor.getEndpoint();
 	
-			//Create HubotAdapter;
-			createHubotAdapter();
+			//Connecting to HNode
+			HOptions options = new HOptions();
+			options.setTransport("socketio");
+			ArrayList<String> endpoints = new ArrayList<String>();
+			endpoints.add(endpoint);
+			options.setEndpoints(endpoints);
+			hClient.connect(jid, pwd , options);
+			
+			
+			//Launch the init()
+			init();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void init() {
-		
+	protected void init() {
+		initialized();
 	}
 	
-	
+	protected void initialized() {
+		//Create HubotAdapter (Mandatory)
+		createHubotAdapter();
+		
+		//Create other adapters
+		adapters();
+		ready();
+	}
 	protected void adapters() {		
 		//Create Adapters
 		createAdapters();
@@ -105,9 +109,9 @@ public abstract class Actor {
 	}
 
 	protected void ready() {
-		if(adapterIntances != null) {
-			for(String key : adapterIntances.keySet()) {
-				adapterIntances.get(key).start();
+		if(adapterInstances != null) {
+			for(String key : adapterInstances.keySet()) {
+				adapterInstances.get(key).start();
 			}   
 		}
 		try {
@@ -140,8 +144,8 @@ public abstract class Actor {
 		hubotAdapterInbox.start();
 		hubotAdapterOutbox.start();
 		
-		adapterIntances.put("hubotAdapterOutbox",hubotAdapterOutbox); 
-		adapterIntances.put("hubotAdapterInbox",hubotAdapterInbox); 
+		adapterInstances.put("hubotAdapterOutbox",hubotAdapterOutbox); 
+		adapterInstances.put("hubotAdapterInbox",hubotAdapterInbox); 
 		
 	}
 
@@ -162,10 +166,9 @@ public abstract class Actor {
 						Adapter newAdapterInbox = (AdapterInbox) fc.newInstance();
 						newAdapterInbox.setName(adapters.get(i).getName() + "Inbox");
 						newAdapterInbox.setProperties(adapters.get(i).getProperties());
-						newAdapterInbox.setName(adapters.get(i).getName() + "Inbox");
 						newAdapterInbox.setHClient(hClient);
 						newAdapterInbox.setCamelContext(camelContext);
-						adapterIntances.put(adapters.get(i).getName() + "Inbox", newAdapterInbox);
+						adapterInstances.put(adapters.get(i).getName() + "Inbox", newAdapterInbox);
 					}
 					if(outAdaptersName != null && outAdaptersName.contains(adapters.get(i).getName())) {
 						Class<Object> fc;
@@ -173,10 +176,9 @@ public abstract class Actor {
 						Adapter newAdapterOutbox = (AdapterOutbox) fc.newInstance();
 						newAdapterOutbox.setName(adapters.get(i).getName() + "Outbox");
 						newAdapterOutbox.setProperties(adapters.get(i).getProperties());
-						newAdapterOutbox.setName(adapters.get(i).getName() + "Inbox");
 						newAdapterOutbox.setHClient(hClient);
 						newAdapterOutbox.setCamelContext(camelContext);
-						adapterIntances.put(adapters.get(i).getName() + "Outbox", newAdapterOutbox);
+						adapterInstances.put(adapters.get(i).getName() + "Outbox", newAdapterOutbox);
 						adapterOutClasses.put(adapters.get(i).getName() + "Outbox", fc);			
 					}
 				} 
@@ -185,16 +187,17 @@ public abstract class Actor {
 			}
 		}
 	}
+	
 	private JndiRegistry createRegistry() throws Exception {
 		JndiRegistry jndi = new JndiRegistry();
 
 		jndi.bind("actor", this);
-		jndi.bind("hubotAdapterOutbox", adapterIntances.get("hubotAdapterOutbox"));
+		jndi.bind("hubotAdapterOutbox", adapterInstances.get("hubotAdapterOutbox"));
 
 		
 		if(adapterOutClasses != null) {
 			for(String key : adapterOutClasses.keySet()) {
-				jndi.bind(key, adapterIntances.get(key));
+				jndi.bind(key, adapterInstances.get(key));
 			}   
 		}
 		return jndi;
@@ -210,8 +213,8 @@ public abstract class Actor {
 //	}
 
 	protected final void stop() {
-		for(String key : adapterIntances.keySet()) {
-			adapterIntances.get(key).stop();
+		for(String key : adapterInstances.keySet()) {
+			adapterInstances.get(key).stop();
 		}  
 		try {
 			camelContext.stop();
@@ -221,7 +224,7 @@ public abstract class Actor {
 	}
 
 	/* Method use for incoming message/command */
-	public final void inProcess(Object obj) {
+	protected final void inProcess(Object obj) {
 		if (obj != null) {
 			if (obj instanceof HMessage) {
 				inProcessMessage((HMessage)obj);
@@ -241,6 +244,8 @@ public abstract class Actor {
 			put(adapterName, new HCommand(hjson.toJSON()));
 		} else if (hjson.getHType().equalsIgnoreCase("hmessage")){
 			put(adapterName, new HMessage(hjson.toJSON()));
+		} else {
+			// TODO faire un gros message NOT SUPPORTED
 		}
 	}
 
