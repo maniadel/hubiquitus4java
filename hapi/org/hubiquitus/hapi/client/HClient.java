@@ -22,6 +22,7 @@ package org.hubiquitus.hapi.client;
 import java.util.Hashtable;
 import java.util.Random;
 
+import org.hubiquitus.hapi.exceptions.MissingAttrException;
 import org.hubiquitus.hapi.hStructures.ConnectionError;
 import org.hubiquitus.hapi.hStructures.ConnectionStatus;
 import org.hubiquitus.hapi.hStructures.HAck;
@@ -47,7 +48,6 @@ import org.hubiquitus.hapi.util.HJsonDictionnary;
 import org.hubiquitus.hapi.util.HUtil;
 import org.json.JSONObject;
 
-import exceptions.MissingAttrException;
 
 
 /**
