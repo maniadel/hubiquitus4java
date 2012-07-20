@@ -37,4 +37,6 @@ public interface HObj {
 	Object getNativeObj();
 	void setNativeObj(Object nativeRepresentationObj);
 	
+	public String getHType();
+	
 }

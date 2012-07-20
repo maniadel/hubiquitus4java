@@ -42,11 +42,13 @@ public class HOptions implements Cloneable {
 	private String hserver = "hnode";
 	
 	public HOptions() {
+		super();
 		setServerHost(null);
 		setEndpoints(null);
 	}
 	
 	public HOptions(JSONObject jsonObj) {
+		super();
 		setEndpoints(null);
 		try {
 			if (jsonObj.has("serverHost")) {
@@ -80,6 +82,7 @@ public class HOptions implements Cloneable {
 	}
 	
 	public HOptions(HOptions options) {
+		super();
 		this.setServerHost(options.getServerHost());
 		this.setServerPort(options.serverPort);
 		this.setEndpoints(options.getEndpoints());

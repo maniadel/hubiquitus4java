@@ -21,113 +21,35 @@
 package org.hubiquitus.hapi.hStructures;
 
 import java.util.Calendar;
+import java.util.Map;
 
 import org.hubiquitus.hapi.util.DateISO8601;
-import org.hubiquitus.hapi.util.HJsonDictionnary;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
- * @version 0.3
+ * @version 0.4
  * hAPI Command. For more info, see Hubiquitus reference
  */
 
-public class HMessage implements HJsonObj {
-	
-	private JSONObject hmessage = new JSONObject();
+public class HMessage extends HStructure {
 	
 	public HMessage() {
-	}
-	
-	public HMessage(JSONObject jsonObj) {
-		fromJSON(jsonObj);		
-	}
-	
-	/* HJsonObj interface */
-	
-	public JSONObject toJSON() {
-		return this.hmessage;
-	}
-	
-	public void fromJSON(JSONObject jsonObj) {
-		if(jsonObj != null){
-			this.hmessage = jsonObj;
-		} else {
-			this.hmessage = new JSONObject();
-		}
+		super();
 	}
 	
 	public String getHType() {
 		return "hmessage";
 	}
 	
-	@Override
-	public String toString() {
-		return hmessage.toString();
-	}
-	
-	/**
-	 * Check are made on : msgid, chid, convid, type, priority, relevance,
-	 * transient, author, publisher, published and location. 
-	 * @param HAck 
-	 * @return Boolean
-	 */
-	public boolean equals(HMessage obj) {
-		if(obj.getMsgid() != this.getMsgid())
-			return false;
-		if(obj.getChid() != this.getChid())
-			return false;
-		if(obj.getConvid() != this.getConvid())
-			return false;
-		if(obj.getType() != this.getType())
-			return false;
-		if(obj.getPriority().value() != this.getPriority().value())
-			return false;
-		if(obj.getRelevance() != this.getRelevance())
-			return false;
-		if(obj.getTransient() != this.getTransient())
-			return false;
-		if(obj.getAuthor() != this.getAuthor())
-			return false;
-		if(obj.getPublisher() != this.getPublisher())
-			return false;
-		if(obj.getPublished() != this.getPublished())
-			return false;
-		if(obj.getLocation().equals(this.getLocation()))
-			return false;
-		return true;
-	}
-	
-	@Override
-	public int hashCode() {
-		return hmessage.hashCode();
-	}
-	
-	/* Getters & Setters */
-	
 	/**
 	 * Mandatory. Filled by the hApi.
 	 * @return message id. NULL if undefined
 	 */
 	public String getMsgid() {
-		String msgid;
-		try {
-			msgid = hmessage.getString("msgid");
-		} catch (Exception e) {
-			msgid = null;
-		}
-		return msgid;
+		return (String) this.get("msgid", String.class);
 	}
 
 	public void setMsgid(String msgid) {
-		try {
-			if(msgid == null) {
-				hmessage.remove("msgid");
-			} else {
-				hmessage.put("msgid", msgid);
-			}
-		} catch (JSONException e) {
-		}
+		this.put("msgid", msgid);
 	}
 
 	/**
@@ -135,24 +57,11 @@ public class HMessage implements HJsonObj {
 	 * @return channel id. NULL if undefined 
 	 */
 	public String getChid() {
-		String chid;
-		try {
-			chid = hmessage.getString("chid");
-		} catch (Exception e) {
-			chid = null;
-		}
-		return chid;
+		return (String) this.get("chid", String.class);
 	}
 
 	public void setChid(String chid) {
-		try {
-			if(chid == null) {
-				hmessage.remove("chid");
-			} else {
-				hmessage.put("chid", chid);
-			}
-		} catch (JSONException e) {
-		}
+		this.put("chid", chid);
 	}
 
 	/**
@@ -160,48 +69,22 @@ public class HMessage implements HJsonObj {
 	 * @return conversation id. NULL if undefined 
 	 */
 	public String getConvid() {
-		String convid;
-		try {
-			convid = hmessage.getString("convid");
-		} catch (Exception e) {
-			convid = null;
-		}
-		return convid;
+		return (String) this.get("convid", String.class);
 	}
 
 	public void setConvid(String convid) {
-		try {
-			if(convid == null) {
-				hmessage.remove("convid");
-			} else {
-				hmessage.put("convid", convid);
-			}
-		} catch (JSONException e) {
-		}
+		this.put("convid", convid);
 	}
 
 	/**
 	 * @return type of the message payload. NULL if undefined 
 	 */
 	public String getType() {
-		String type;
-		try {
-			type = hmessage.getString("type");
-		} catch (Exception e) {
-			type = null;
-		}
-		return type;
+		return (String) this.get("type", String.class);
 	}
 	
 	public void setType(String type) {
-		try {
-			if(type == null) {
-				hmessage.remove("type");
-			} else {
-				hmessage.put("type", type);
-			}
-		} catch (JSONException e) {
-		}
+		this.put("type", type);
 	}
 
 	/**
@@ -209,29 +92,18 @@ public class HMessage implements HJsonObj {
 	 * @return priority.
 	 */
 	public HMessagePriority getPriority() {
-		HMessagePriority priority;
-		try {
-			int priorityInt = hmessage.getInt("priority");
-			if(priorityInt < 0 || priorityInt > 5) {
-				priority = null;
-			} else {
-				priority = HMessagePriority.constant(priorityInt);
-			}
-		} catch (Exception e1) {
+		HMessagePriority priority = null;
+		int priorityInt = (Integer) this.get("priority", Integer.class);
+		if(priorityInt < 0 || priorityInt > 5) {
 			priority = null;
+		} else {
+			priority = HMessagePriority.constant(priorityInt);
 		}
 		return priority;
 	}
 
 	public void setPriority(HMessagePriority priority) {
-		try {
-			if(priority == null) {
-				hmessage.remove("priority");
-			} else {
-				hmessage.put("priority", priority.value());
-			}
-		} catch (JSONException e) {
-		}
+		this.put("priority", priority.value());
 	}
 
 	
@@ -240,25 +112,18 @@ public class HMessage implements HJsonObj {
 	 * @return relevance. NULL if undefined
 	 */
 	public Calendar getRelevance() {
-		Calendar relevance;
-		try {
-			relevance = (DateISO8601.toCalendar(hmessage.getString("relevance")));;
-		} catch (JSONException e) {
-			relevance = null;
+		Calendar relevance = (Calendar) this.get("relevance", Calendar.class);
+		if (relevance == null) {
+			String relevanceStr = (String) this.get("relevance", String.class);
+			if (relevanceStr != null) {
+				relevance = (DateISO8601.toCalendar(relevanceStr));
+			}
 		}
 		return relevance;
 	}
 
 	public void setRelevance(Calendar relevance) {
-		try {
-			if(relevance == null) {
-				hmessage.remove("relevance");
-			} else {
-				hmessage.put("relevance", DateISO8601.fromCalendar(relevance));
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		this.put("relevance", relevance);
 	}
 
 	/**
@@ -266,24 +131,11 @@ public class HMessage implements HJsonObj {
 	 * @return persist message or not. NULL if undefined
 	 */
 	public Boolean getTransient() {
-		Boolean _transient;
-		try {
-			_transient = hmessage.getBoolean("transient");
-		} catch (JSONException e) {
-			_transient = null;
-		}
-		return _transient;
+		return (Boolean) this.get("transient", Boolean.class);
 	}
 
 	public void setTransient(Boolean _transient) {
-		try {
-			if(_transient == null) {
-				hmessage.remove("transient");
-			} else {
-				hmessage.put("transient", _transient);
-			}
-		} catch (JSONException e) {
-		}
+		this.put("transient", _transient);
 	}	
 	
 	/**
@@ -291,49 +143,28 @@ public class HMessage implements HJsonObj {
 	 * @return location. NULL if undefined
 	 */
 	public HLocation getLocation() {
-		HLocation location;
-		try {
-			location = new HLocation(hmessage.getJSONObject("location"));
-		} catch (JSONException e) {
-			location = null;
+		Map<?,?> locationNativeRep = (Map<?, ?>) this.get("location", Map.class);
+		if (locationNativeRep != null) {
+			HLocation location = new HLocation();
+			location.setNativeObj(locationNativeRep);
+			return location;
 		}
-		return location;
+		return null;
 	}
 
 	public void setLocation(HLocation location) {
-		try {
-			if(location == null) {
-				hmessage.remove("location");
-			} else {
-				hmessage.put("location", location.toJSON());
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		this.put("location", location.getNativeObj());
 	}
 	
 	/**
 	 * @return author of this message. NULL if undefined 
 	 */
 	public String getAuthor() {
-		String author;
-		try {
-			author = hmessage.getString("author");
-		} catch (Exception e) {
-			author = null;
-		}
-		return author;
+		return (String) this.get("author", String.class);
 	}
 	
 	public void setAuthor(String author) {
-		try {
-			if(author == null) {
-				hmessage.remove("author");
-			} else {
-				hmessage.put("author", author);
-			}
-		} catch (JSONException e) {
-		}
+		this.put("author", author);
 	}
 	
 	/**
@@ -341,24 +172,11 @@ public class HMessage implements HJsonObj {
 	 * @return publisher of this message. NULL if undefined 
 	 */
 	public String getPublisher() {
-		String publisher;
-		try {
-			publisher = hmessage.getString("publisher");
-		} catch (Exception e) {
-			publisher = null;
-		}
-		return publisher;
+		return (String) this.get("publisher", String.class);
 	}
 	
 	public void setPublisher(String publisher) {
-		try {
-			if(publisher == null) {
-				hmessage.remove("publisher");
-			} else {
-				hmessage.put("publisher", publisher);
-			}
-		} catch (JSONException e) {
-		}
+		this.put("publisher", publisher);
 	}
 	
 	/**
@@ -367,88 +185,68 @@ public class HMessage implements HJsonObj {
 	 * @return published. NULL if undefined
 	 */
 	public Calendar getPublished() {
-		Calendar published;
-		try {
-			published = (DateISO8601.toCalendar(hmessage.getString("published")));
-		} catch (JSONException e) {
-			published = null;
+		Calendar published = (Calendar) this.get("published", Calendar.class);
+		if (published == null) {
+			String publishedStr = (String) this.get("published", String.class);
+			if (publishedStr != null) {
+				published = (DateISO8601.toCalendar(publishedStr));
+			}
 		}
 		return published;
 	}
 
 	public void setPublished(Calendar published) {
-		try {
-			if(published == null) {
-				hmessage.remove("published");
-			} else {
-				hmessage.put("published", DateISO8601.fromCalendar(published));
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		this.put("published", published);
 	}
 	
 	/**
 	 * The list of headers attached to this message.
 	 * @return Headers. NULL if undefined
 	 */
-	public HJsonObj getHeaders() {
-		HJsonDictionnary headers = new HJsonDictionnary();
-		try {
-			headers.fromJSON(hmessage.getJSONObject("headers"));
-		} catch (JSONException e) {
-			headers = null;
-		}
-		return headers;
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getHeaders() {
+		return (Map<String, Object>) this.get("headers", Map.class);
 	}
 
-	public void setHeaders(HJsonObj headers) {
-		try {
-			if(headers == null) {
-				hmessage.remove("headers");
-			} else {
-				hmessage.put("headers", headers.toJSON());
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+	public void setHeaders(Map<String, Object> headers) {
+		this.put("headers", headers);
 	}
 	
 	/**
 	 * The content of the message.
+	 * Should be either a native object or an hobj object
 	 * @return payload. NULL if undefined
 	 */
-	public HJsonObj getPayload() {
-		HJsonObj payload;
-		try {
-			JSONObject jsonPayload = hmessage.getJSONObject("payload");
-			String type = this.getType().toLowerCase();
-			if (type.equalsIgnoreCase("hmeasure")) {
-				payload = new HMeasure(jsonPayload);
-			} else if (type.equalsIgnoreCase("halert")) {
-				payload = new HAlert(jsonPayload);
-			} else if (type.equalsIgnoreCase("hack")) {
-				payload = new HAck(jsonPayload);
-			} else if (type.equalsIgnoreCase("hconvstate")) {
-				payload = new HConvState(jsonPayload);
-			} else {
-				payload = new HJsonDictionnary(jsonPayload);
-			}
-		} catch (JSONException e) {
-			payload = null;
+	public Object getPayload() {
+		Object payload;
+		Object payloadObj = this.get("payload", Object.class);
+		String type = this.getType().toLowerCase();
+		if (type.equalsIgnoreCase("hmeasure")) {
+			payload = new HMeasure();
+			((HObj)payload).setNativeObj(payloadObj);
+		} else if (type.equalsIgnoreCase("halert")) {
+			payload = new HAlert();
+			((HObj)payload).setNativeObj(payloadObj);
+		} else if (type.equalsIgnoreCase("hack")) {
+			payload = new HAck();
+			((HObj)payload).setNativeObj(payloadObj);
+		} else if (type.equalsIgnoreCase("hconvstate")) {
+			payload = new HConvState();
+			((HObj)payload).setNativeObj(payloadObj);
+		} else {
+			payload = payloadObj;
 		}
 		return payload;
 	}
 
-	public void setPayload(HJsonObj payload) {
-		try {
-			if(payload == null) {
-				hmessage.remove("payload");
-			} else {
-				hmessage.put("payload", payload.toJSON());
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
+	/**
+	 * @warning Object should either be a native object or a HObj obj
+	 */
+	public void setPayload(Object payload) {
+		if (payload instanceof HObj) {
+			this.put("payload", ((HObj)payload).getNativeObj());
+		} else {
+			this.put("paylaod", payload);
 		}
 	}
 }

@@ -19,67 +19,24 @@
 
 package org.hubiquitus.hapi.hStructures;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 /**
- * @version 0.3
+ * @version 0.4
  * Describes a measure payload
  * Message acknowledgements
  * acknowledgements are used to identify the participants that have received or not received, read or not read a message 
  * Note, when a hMessage contains a such kind of payload, the convid must be provided with the same value has the acknowledged hMessage.
  */
 
-public class HAck implements HJsonObj{
-
-	private JSONObject hack = new JSONObject();
-		
-	public HAck() {};
+public class HAck extends HStructure {
 	
-	public HAck(JSONObject jsonObj){
-		fromJSON(jsonObj);
-	}
-	
-	/* HJsonObj interface */
-	
-	public JSONObject toJSON() {
-		return hack;
-	}
-	
-	public void fromJSON(JSONObject jsonObj) {
-		if(jsonObj != null) {
-			this.hack = jsonObj; 
-		} else {
-			this.hack = new JSONObject();
-		}
+	public HAck() {
+		super();
 	}
 	
 	public String getHType() {
 		return "hack";
 	}
-	
-	@Override
-	public String toString() {
-		return hack.toString();
-	}
-	
-	/**
-	 * Check are made on : ackid, ack. 
-	 * @param HAck 
-	 * @return Boolean
-	 */
-	public boolean equals(HAck obj) {
-		if(obj.getAckid() != this.getAckid() || obj.getAck() != this.getAck() ) {
-			return false;
-		}
-		return true;
-	}
-	
-	@Override
-	public int hashCode() {
-		return hack.hashCode();
-	}
-	
+
 	/* Getters & Setters */
 	
 	/**
@@ -88,24 +45,11 @@ public class HAck implements HJsonObj{
 	 * @return ackid. NULL if undefined
 	 */
 	public String getAckid() {
-		String ackid;
-		try {
-			ackid = hack.getString("ackid");
-		} catch (Exception e) {
-			ackid = null;			
-		}
-		return ackid;
+		return (String) this.get("ackid", String.class);
 	}
 
 	public void setAckid(String ackid) {
-		try {
-			if(ackid == null) {
-				hack.remove("ackid");
-			} else {
-				hack.put("ackid", ackid);
-			}
-		} catch (JSONException e) {
-		}
+		this.put("ackid", ackid);
 	}
 
 	/**
@@ -113,25 +57,13 @@ public class HAck implements HJsonObj{
 	 * @return acknowledgement status. NULL if undefined
 	 */
 	public HAckValue getAck() {
-		HAckValue ack;
-		try {
-			String ackString = hack.getString("ack");
-			ack = HAckValue.constant(ackString);
-		} catch (Exception e) {
-			ack = null;			
-		}
+		String ackString = (String) this.get("ack", String.class);
+		HAckValue ack = HAckValue.constant(ackString);
 		return ack;
 	}
 
 	public void setAck(HAckValue ack) {
-		try {
-			if(ack == null) {
-				hack.remove("ack");
-			} else {
-				hack.put("ack", ack.value());
-			}
-		} catch (JSONException e) {
-		}
+		this.put("ack", ack.value());
 	}	
 }
 

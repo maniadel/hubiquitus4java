@@ -21,11 +21,10 @@ package org.hubiquitus.hapi.transport;
 
 import org.hubiquitus.hapi.hStructures.ConnectionError;
 import org.hubiquitus.hapi.hStructures.ConnectionStatus;
-import org.json.JSONObject;
 
 /**
  * @cond internal
- * @version 0.3
+ * @version 0.4
  * Transport layer delegate to notify events
  */
 
@@ -42,9 +41,9 @@ public interface HTransportDelegate {
 	
 	/**
 	 * transport layer callback to received serialized hapi objects
-	 * @param jsonData serialized hapi object
+	 * @param hAPI object json representation 
 	 */
-	public void onData(String type, JSONObject jsonData); 
+	public void onData(String type, String jsonRep); 
 }
 
 /**

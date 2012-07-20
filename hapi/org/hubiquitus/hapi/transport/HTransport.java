@@ -19,11 +19,9 @@
 
 package org.hubiquitus.hapi.transport;
 
-import org.json.JSONObject;
-
 /**
  * @cond internal
- * @version 0.3
+ * @version 0.4
  * Interface abstracting transport layer
  */
 
@@ -46,7 +44,7 @@ public interface HTransport {
 	 * transport the object to send it to the server
 	 * @param object
 	 */
-	public void sendObject(JSONObject object);
+	public void sendObject(String jsonRep);
 }
 
 /**

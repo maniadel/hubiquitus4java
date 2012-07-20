@@ -19,216 +19,84 @@
 
 package org.hubiquitus.hapi.hStructures;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 /**
- * @version 0.3
+ * @version 0.4
  * This structure describe the location
  */
 
-public class HLocation implements HJsonObj{
+public class HLocation extends HStructure {
 
-	private JSONObject hlocation = new JSONObject();
-		
-	public HLocation() {};
-	
-	public HLocation(JSONObject jsonObj){
-		fromJSON(jsonObj);
-	}
-	
-	/* HJsonObj interface */
-	
-	public JSONObject toJSON() {
-		return hlocation;
-	}
-	
-	public void fromJSON(JSONObject jsonObj) {
-		if(jsonObj != null) {
-			this.hlocation = jsonObj; 
-		} else {
-			this.hlocation = new JSONObject();
-		}
+	public HLocation() {
+		super();
 	}
 	
 	public String getHType() {
 		return "hlocation";
 	}
 	
-	@Override
-	public String toString() {
-		return hlocation.toString();
-	}
-	
-	/**
-	 * Check are made on : lng, lat, zip, address, city and country. 
-	 * @param HLocation 
-	 * @return Boolean
-	 */
-	public boolean equals(HLocation obj) {
-		if(obj.getLat() != this.getLat())
-			return false;
-		if(obj.getLng() != this.getLng())
-			return false;
-		if(obj.getZip() != this.getZip())
-			return false;
-		if(obj.getAddress() != this.getAddress())
-			return false;
-		if(obj.getCity() != this.getCity())
-			return false;
-		if(obj.getCountry() != this.getCountry())
-			return false;
-		return true;
-	}
-	
-	@Override
-	public int hashCode() {
-		return hlocation.hashCode();
-	}
-	
-	/* Getters & Setters */
-	
 	/**
 	 * @return latitude of the location. 0 if undefined
 	 */
-	public double getLat() {
-		double lat;
-		try {
-			lat = hlocation.getDouble("lat");
-		} catch (Exception e) {
-			lat = 0;			
-		}
-		return lat;
+	public Double getLat() {
+		return (Double) this.get("lat", Double.class);
 	}
 
-	public void setLat(double lat) {
-		try {
-			if(lat == 0) {
-				hlocation.remove("lat");
-			} else {
-				hlocation.put("lat", lat);
-			}
-		} catch (JSONException e) {
-		}
+	public void setLat(Double lat) {
+		this.put("lat", lat);
 	}
 
 	/**
 	 * @return longitude of the location. 0 if undefined
 	 */
-	public double getLng() {
-		double lng;
-		try {
-			lng = hlocation.getDouble("lng");
-		} catch (Exception e) {
-			lng = 0;			
-		}
-		return lng;
+	public Double getLng() {
+		return (Double) this.get("lng", Double.class);
 	}
 
-	public void setLng(double lng) {
-		try {
-			if(lng == 0) {
-				hlocation.remove("lng");
-			} else {
-				hlocation.put("lng", lng);
-			}
-		} catch (JSONException e) {
-		}
+	public void setLng(Double lng) {
+		this.put("lng", lng);
 	}
 	
 	/**
 	 * @return zip code of the location. NULL if undefined
 	 */
 	public String getZip() {
-		String zip;
-		try {
-			zip = hlocation.getString("zip");
-		} catch (Exception e) {
-			zip = null;			
-		}
-		return zip;
+		return (String) this.get("zip", String.class);
 	}
 
 	public void setZip(String zip) {
-		try {
-			if(zip == null) {
-				hlocation.remove("zip");
-			} else {
-				hlocation.put("zip", zip);
-			}
-		} catch (JSONException e) {
-		}
+		this.put("zip", zip);
 	}
 	
 	/**
 	 * @return address of the location. NULL if undefined
 	 */
 	public String getAddress() {
-		String address;
-		try {
-			address = hlocation.getString("addr");
-		} catch (Exception e) {
-			address = null;			
-		}
-		return address;
+		return (String) this.get("addr", String.class);
 	}
 
 	public void setAddress(String address) {
-		try {
-			if(address == null) {
-				hlocation.remove("addr");
-			} else {
-				hlocation.put("addr", address);
-			}
-		} catch (JSONException e) {
-		}
+		this.put("addr", address);
 	}
 
 	/**
 	 * @return city of the location. NULL if undefined
 	 */
 	public String getCity() {
-		String city;
-		try {
-			city = hlocation.getString("city");
-		} catch (Exception e) {
-			city = null;			
-		}
-		return city;
+		return (String) this.get("city", String.class);
 	}
 
 	public void setCity(String city) {
-		try {
-			if(city == null) {
-				hlocation.remove("city");
-			} else {
-				hlocation.put("city", city);
-			}
-		} catch (JSONException e) {
-		}
+		this.put("city", city);
 	}
 	
 	/**
 	 * @return country of the location. NULL if undefined
 	 */
 	public String getCountry() {
-		String country;
-		try {
-			country = hlocation.getString("country");
-		} catch (Exception e) {
-			country = null;			
-		}
-		return country;
+		return (String) this.get("country", String.class);
 	}
 
 	public void setCountry(String country) {
-		try {
-			if(country == null) {
-				hlocation.remove("country");
-			} else {
-				hlocation.put("country", country);
-			}
-		} catch (JSONException e) {
-		}
+		this.put("country", country);
 	}
 }

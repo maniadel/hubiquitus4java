@@ -19,55 +19,19 @@
 
 package org.hubiquitus.hapi.hStructures;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 /**
- * @version 0.3
+ * @version 0.4
  * Alert message payload
  */
 
-public class HAlert implements HJsonObj{
-
-	private JSONObject halert = new JSONObject();
-		
-	public HAlert() {};
+public class HAlert extends HStructure {
 	
-	public HAlert(JSONObject jsonObj){
-		fromJSON(jsonObj);
-	}
-	
-	/* HJsonObj interface */
-	
-	public JSONObject toJSON() {
-		return halert;
-	}
-	
-	public void fromJSON(JSONObject jsonObj) {
-		if(jsonObj != null) {
-			this.halert = jsonObj; 
-		} else {
-			this.halert = new JSONObject();
-		}
+	public HAlert() {
+		super();
 	}
 	
 	public String getHType() {
 		return "halert";
-	}
-	
-	@Override
-	public String toString() {
-		return halert.toString();
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		return halert.equals(obj);
-	}
-	
-	@Override
-	public int hashCode() {
-		return halert.hashCode();
 	}
 	
 	/* Getters & Setters */
@@ -77,23 +41,10 @@ public class HAlert implements HJsonObj{
 	 * @return alert message. NULL if undefined
 	 */
 	public String getAlert() {
-		String alert;
-		try {
-			alert = halert.getString("alert");
-		} catch (Exception e) {
-			alert = null;			
-		}
-		return alert;
+		return (String) this.get("alert", String.class);
 	}
 
 	public void setAlert(String alert) {
-		try {
-			if(alert == null) {
-				halert.remove("alert");
-			} else {
-				halert.put("alert", alert);
-			}
-		} catch (JSONException e) {
-		}
+		this.put("alert", alert);
 	}
 }

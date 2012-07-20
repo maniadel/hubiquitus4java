@@ -20,101 +20,35 @@
 
 package org.hubiquitus.hapi.hStructures;
 
-import org.hubiquitus.hapi.util.HJsonDictionnary;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 /**
  * @author j.desousag
- * @version 0.3
+ * @version 0.4
  * hAPI result. For more info, see Hubiquitus reference
  */
 
-public class HResult implements HJsonObj {
-	
-	private JSONObject hresult = new JSONObject();
-		
-	public HResult() {	}
-	
+public class HResult extends HStructure {
+
 	public HResult(String reqid, String cmd, HJsonObj result) {
+		super();
 		setReqid(reqid);
 		setCmd(cmd);
 		setResult(result);
 	}
 	
-	public HResult(JSONObject jsonObj) {
-		this.fromJSON(jsonObj);
+	public HResult() {
+		super();
 	}
-	
-	/* HJsonObj interface */
-	
-	public JSONObject toJSON() {
-		return this.hresult;
-	}
-	
-	public String getHType() {
-		return "hresult";
-	}
-	
-	public void fromJSON(JSONObject jsonObj) {
-		if( jsonObj != null) {
-			this.hresult = jsonObj;
-		} else {
-			this.hresult = new JSONObject();
-		}
-	}
-	
-	@Override
-	public String toString() {
-		return hresult.toString();
-	}
-	
-	/**
-	 * Check are made on : cmd, reqid and status. 
-	 * @param HResult 
-	 * @return Boolean
-	 */
-	public boolean equals(HResult obj) {
-		if(obj.getCmd() != this.getCmd()) 
-			return false;
-		if(obj.getReqid() != this.getReqid())
-			return false;
-		if(obj.getStatus().value() != this.getStatus().value())
-			return false;
-		return true;
-	}
-	
-	@Override
-	public int hashCode() {
-		return hresult.hashCode();
-	}
-	
-	/* Getters & Setters */
-	
+
 	/**
 	 * Mandatory.
 	 * @return command. NULL if undefined
 	 */
 	public String getCmd() {
-		String cmd;
-		try {
-			cmd = hresult.getString("cmd");
-		} catch (JSONException e) {
-			cmd = null;
-		}
-		return cmd;
+		return (String) this.get("cmd", String.class);
 	}
 
 	public void setCmd(String cmd) {
-		try {
-			if(cmd == null) {
-				hresult.remove("cmd");
-			} else {
-				hresult.put("cmd", cmd);
-			}
-		} catch (JSONException e) {
-		}
+		this.put("cmd", cmd);
 	}
 
 	/**
@@ -122,24 +56,11 @@ public class HResult implements HJsonObj {
 	 * @return reqid. NULL if undefined
 	 */
 	public String getReqid() {
-		String reqid;
-		try {
-			reqid = hresult.getString("reqid");
-		} catch (JSONException e) {
-			reqid = null;
-		}
-		return reqid;
+		return (String) this.get("reqid", String.class);
 	}
 
 	public void setReqid(String reqid) {
-		try {
-			if(reqid == null) {
-				hresult.remove("reqid");
-			} else {
-				hresult.put("reqid", reqid);
-			}
-		} catch (JSONException e) {
-		}
+		this.put("reqid", reqid);
 	}
 
 	/**
@@ -147,79 +68,32 @@ public class HResult implements HJsonObj {
 	 * @return status. NULL if undefined
 	 */
 	public ResultStatus getStatus() {
-		ResultStatus reqid;
-		try {
-			reqid = ResultStatus.constant(hresult.getInt("status"));
-		} catch (Exception e1) {
-			reqid = null;
-		}
-		return reqid;
+		int statusInt = (Integer) this.get("status", Integer.class);
+		return ResultStatus.constant(statusInt);
 	}
 
 	public void setStatus(ResultStatus status) {
-		try {
-			if(status == null) {
-				hresult.remove("status");
-			} else {
-				hresult.put("status", status.value());
-			}
-		} catch (JSONException e) {
-		}
+		this.put("status", status.value());
 	}
 
 	/**
 	 * Only if result type is a JsonObject
+	 * @warning object should either be a native object or a HObj
 	 * @see getResultString()
 	 * @see getResultArray()
 	 * @return result of a command operation or a subscriptions operation. 
 	 */
-	public HJsonObj getResult() {
-		HJsonObj result;
-		try {
-			result = new HJsonDictionnary(hresult.getJSONObject("result"));
-		} catch (JSONException e) {
-			result = null;
-		}
-		return result;
-	}
-	
-	/**
-	 * Only if result type is a String
-	 * @return result of a command operation or a subscriptions operation. 
-	 */
-	public String getResultString() {
-		String result;
-		try {
-			result = hresult.getString("result");
-		} catch (JSONException e) {
-			result = null;
-		}
-		return result;
-	}
-	
-	/**
-	 * Only if result type is a JsonArray
-	 * @return result of a command operation or a subscriptions operation. 
-	 */
-	public JSONArray getResultArray() {
-		JSONArray result;
-		try {
-			result = hresult.getJSONArray("result");
-		} catch (JSONException e) {
-			result = null;
-		}
-		return result;
+	public Object getResult() {
+		return this.get("result", Object.class);
 	}
 
-	public void setResult(HJsonObj result) {
-		try {
-			if(result == null) {
-				hresult.remove("result");
-			} else {
-				hresult.put("result", result.toJSON());
-			}
-		} catch (JSONException e) {
-		}
+	public void setResult(Object result) {
+		this.put("result", result);
+	}
+
+	@Override
+	public String getHType() {
+		return "hresult";
 	}
 
 	

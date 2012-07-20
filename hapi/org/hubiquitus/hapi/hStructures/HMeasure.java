@@ -19,90 +19,31 @@
 
 package org.hubiquitus.hapi.hStructures;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 /**
- * @version 0.3
+ * @version 0.4
  * Describes a measure payload
  */
 
-public class HMeasure implements HJsonObj{
-
-	private JSONObject hmeasure = new JSONObject();
-		
-	public HMeasure() {};
+public class HMeasure extends HStructure {
 	
-	public HMeasure(JSONObject jsonObj){
-		fromJSON(jsonObj);
-	}
-	
-	/* HJsonObj interface */
-	
-	public JSONObject toJSON() {
-		return hmeasure;
-	}
-	
-	public void fromJSON(JSONObject jsonObj) {
-		if(jsonObj != null) {
-			this.hmeasure = jsonObj; 
-		} else {
-			this.hmeasure = new JSONObject();
-		}
+	public HMeasure() {
+		super();
 	}
 	
 	public String getHType() {
 		return "hmeasure";
 	}
 	
-	@Override
-	public String toString() {
-		return hmeasure.toString();
-	}
-	
-	/**
-	 * Check are made on : value, unit. 
-	 * @param HMeasure 
-	 * @return Boolean
-	 */
-	public boolean equals(HMeasure obj) {
-		if(obj.getUnit() != this.getUnit())
-			return false;
-		if(obj.getValue() != this.getValue())
-			return false;
-		return true;
-	}
-	
-	@Override
-	public int hashCode() {
-		return hmeasure.hashCode();
-	}
-	
-	/* Getters & Setters */
-	
 	/**
 	 * Specifies the unit in which the measure is expressed, should be in lowercase. 
 	 * @return unit. NULL if undefined
 	 */
 	public String getUnit() {
-		String unit;
-		try {
-			unit = hmeasure.getString("unit");
-		} catch (Exception e) {
-			unit = null;			
-		}
-		return unit;
+		return (String) this.get("unit", String.class);
 	}
 
 	public void setUnit(String unit) {
-		try {
-			if(unit == null) {
-				hmeasure.remove("unit");
-			} else {
-				hmeasure.put("unit", unit);
-			}
-		} catch (JSONException e) {
-		}
+		this.put("unit", unit);
 	}
 
 	/**
@@ -110,23 +51,10 @@ public class HMeasure implements HJsonObj{
 	 * @return value. NULL if undefined
 	 */
 	public String getValue() {
-		String value;
-		try {
-			value = hmeasure.getString("value");
-		} catch (Exception e) {
-			value = null;			
-		}
-		return value;
+		return (String) this.get("value", String.class);
 	}
 
 	public void setValue(String value) {
-		try {
-			if(value == null) {
-				hmeasure.remove("value");
-			} else {
-				hmeasure.put("value", value);
-			}
-		} catch (JSONException e) {
-		}
+		this.put("value", value);
 	}	
 }

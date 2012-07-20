@@ -817,13 +817,19 @@ public class HClient {
 		 * @internal
 		 * see HTransportDelegate for more information
 		 */
-		public void onData(String type, JSONObject jsonData) {
+		public void onData(String type, String jsonRep) {
 			try {
+				Object nativeRep = objectMapper.readValue(jsonRep, Object.class);
 				if(type.equalsIgnoreCase("hresult")) {
-					notifyResult(new HResult(jsonData));
+					HResult result = new HResult();
+					result.setNativeObj(nativeRep);
+					notifyResult(result);
 				} else if (type.equalsIgnoreCase("hmessage")) {
-					notifyMessage(new HMessage(jsonData));
+					HMessage message = new HMessage();
+					message.setNativeObj(jsonRep);
+					notifyMessage(message);
 				}  else if (type.equalsIgnoreCase("hcommand")) {
+					HCommand
 					notifyCommand(new HCommand(jsonData));
 				}
 				

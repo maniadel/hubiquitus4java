@@ -43,8 +43,6 @@ import org.jivesoftware.smackx.pubsub.EventElement;
 import org.jivesoftware.smackx.pubsub.Item;
 import org.jivesoftware.smackx.pubsub.ItemsExtension;
 import org.jivesoftware.smackx.pubsub.PayloadItem;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 
 /**
@@ -232,10 +230,10 @@ public class HTransportXMPP implements HTransport, ConnectionListener,PacketList
 	}
 
 	@Override
-	public void sendObject(JSONObject object) {
+	public void sendObject(String jsonRep) {
 		if( connectionStatus == ConnectionStatus.CONNECTED) {
 			Message msg = new Message(options.getHserverService());
-			HMessageXMPP packet = new HMessageXMPP("hcommand",object.toString());
+			HMessageXMPP packet = new HMessageXMPP("hcommand",jsonRep);
 			msg.addExtension(packet);
 			connection.sendPacket(msg);
 		} else {
@@ -261,19 +259,18 @@ public class HTransportXMPP implements HTransport, ConnectionListener,PacketList
 						for(int i = 0; i < extension.getItems().size(); i++){
 							Item item = (Item)extension.getItems().get(i);
 							if (item instanceof PayloadItem) {
-							
-								JSONObject jsonObj = null;
+								String jsonRep = null;
 								try {
 									@SuppressWarnings("unchecked")
 									PayloadItem<HXMPPPubsubEntry> payloadItem = (PayloadItem<HXMPPPubsubEntry>)item;
-									jsonObj = new JSONObject(payloadItem.getPayload().getContent());
-								} catch (JSONException e) {
+									jsonRep = payloadItem.getPayload().getContent();
+								} catch (Exception e) {
 									e.printStackTrace();
 									System.out.println("Received malformted JSon object from pubsub in :" + this.getClass());
 									System.err.println("error message :" + e.getMessage());
 								}
-								if(jsonObj != null) {
-									callback.onData("hmessage", jsonObj);
+								if(jsonRep != null) {
+									callback.onData("hmessage", jsonRep);
 								} else {
 									System.out.println("Received malformted JSon object from pubsub in :" + this.getClass());
 								}
@@ -284,15 +281,15 @@ public class HTransportXMPP implements HTransport, ConnectionListener,PacketList
 			} else {
 				HMessageXMPP packetExtention = (HMessageXMPP)receivePacket.getExtension("hbody","");
 				if(packetExtention != null) {
-					JSONObject jsonObj = null;
+					String jsonRep = null;
 					try {
-						jsonObj = new JSONObject(packetExtention.getContent());
-					} catch (JSONException e) {
+						jsonRep = packetExtention.getContent();
+					} catch (Exception e) {
 						e.printStackTrace();
 						System.out.println("Received malformted JSon object from hserver in :" + this.getClass());
 					}
-					if(jsonObj != null) {
-						callback.onData(packetExtention.getType(), jsonObj);
+					if(jsonRep != null) {
+						callback.onData(packetExtention.getType(), jsonRep);
 					} else {
 						System.out.println("Received malformted JSon object from hserver in :" + this.getClass());
 					}

@@ -19,90 +19,32 @@
 
 package org.hubiquitus.hapi.hStructures;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 /**
- * @version 0.3
+ * @version 0.4
  * This kind of payload is used to describe the status of a thread of correlated messages identified by its convid.
  * Multiple hConvStates with the same convid can be published into a channel, specifying the evolution of the state of the thread during time.
  */
 
-public class HConvState implements HJsonObj{
-
-	private JSONObject hconvstate = new JSONObject();
-		
-	public HConvState() {};
+public class HConvState extends HStructure {
 	
-	public HConvState(JSONObject jsonObj){
-		fromJSON(jsonObj);
-	}
-	
-	/* HJsonObj interface */
-	
-	public JSONObject toJSON() {
-		return hconvstate;
-	}
-	
-	public void fromJSON(JSONObject jsonObj) {
-		if(jsonObj != null) {
-			this.hconvstate = jsonObj; 
-		} else {
-			this.hconvstate = new JSONObject();
-		}
+	public HConvState() {
+		super();
 	}
 	
 	public String getHType() {
 		return "hconv";
 	}
 	
-	@Override
-	public String toString() {
-		return hconvstate.toString();
-	}
-	
-	/**
-	 * Check are made on : status. 
-	 * @param HConvState 
-	 * @return Boolean
-	 */
-	public boolean equals(HConvState obj) {
-		if(obj.getStatus() != this.getStatus()) {
-			return false;
-		}
-		return true;
-	}
-	
-	@Override
-	public int hashCode() {
-		return hconvstate.hashCode();
-	}
-	
-	/* Getters & Setters */
-	
 	/**
 	 * The status of the thread
 	 * @return topic description. NULL if undefined
 	 */
 	public String getStatus() {
-		String status;
-		try {
-			status = hconvstate.getString("status");
-		} catch (Exception e) {
-			status = null;			
-		}
-		return status;
+		return (String) this.get("status", String.class);
 	}
 
 	public void setStatus(String status) {
-		try {
-			if(status == null) {
-				hconvstate.remove("status");
-			} else {
-				hconvstate.put("status", status);
-			}
-		} catch (JSONException e) {
-		}
+		this.put("status", status);
 	}
 	
 }

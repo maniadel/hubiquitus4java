@@ -29,15 +29,14 @@ import io.socket.SocketIOException;
 
 import org.hubiquitus.hapi.hStructures.ConnectionError;
 import org.hubiquitus.hapi.hStructures.ConnectionStatus;
-import org.hubiquitus.hapi.hStructures.HStatus;
 import org.hubiquitus.hapi.transport.HTransport;
 import org.hubiquitus.hapi.transport.HTransportDelegate;
-import org.hubiquitus.hapi.transport.HTransportOptions; 
+import org.hubiquitus.hapi.transport.HTransportOptions;
 import org.json.JSONObject;
 
 /**
  * @cond internal
- * @version 0.3
+ * @version 0.4
  * HTransportSocketIO is the socketio transport layer of the hubiquitus hAPI client
  */
 
@@ -163,9 +162,9 @@ public class HTransportSocketio implements HTransport, IOCallback {
 	}
 
 	@Override
-	public void sendObject(JSONObject object) {
+	public void sendObject(String jsonRep) {
 		if( connectionStatus == ConnectionStatus.CONNECTED) {
-			socketio.emit("hCommand",object);
+			socketio.emit("hCommand", jsonRep);
 		} else {
 			System.out.println("Not connected");
 		}		
@@ -177,12 +176,11 @@ public class HTransportSocketio implements HTransport, IOCallback {
 		if (type.equals("hStatus") && arg2 != null && arg2[0].getClass() == JSONObject.class) {
 			JSONObject data = (JSONObject)arg2[0];
 			try {
-				HStatus status = new HStatus(data);
 				if (timeoutTimer != null) {
 					timeoutTimer.cancel();
 					timeoutTimer = null;
 				}
-				updateStatus(status.getStatus(), status.getErrorCode(), status.getErrorMsg());
+				updateStatus(ConnectionStatus.constant(data.getInt("status")), ConnectionError.constant(data.getInt("errorCode")), data.getString("errorMsg"));
 			} catch (Exception e) {
 				e.printStackTrace();
 				
@@ -200,7 +198,7 @@ public class HTransportSocketio implements HTransport, IOCallback {
 					timeoutTimer.cancel();
 					timeoutTimer = null;
 				}
-				callback.onData(type, data);
+				callback.onData(type, data.toString());
 			} catch (Exception e) {
 				if (timeoutTimer != null) {
 					timeoutTimer.cancel();

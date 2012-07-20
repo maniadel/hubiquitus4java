@@ -31,11 +31,12 @@ import java.util.Map;
  * To string is based on map description
  */
 
-public class HStructure implements HObj{
+public abstract class HStructure implements HObj{
 
 	private Map<String, Object> obj;
 	
 	public HStructure() {
+		super();
 		obj = new LinkedHashMap<String, Object>();
 	}
 	
