@@ -63,7 +63,6 @@ public abstract class Actor {
 			ObjectMapper mapper = new ObjectMapper();
 			URL configFilePath = ClassLoader.getSystemResource("config.txt");
 			configActor = mapper.readValue(new File(configFilePath.getFile()), ConfigActor.class);
-			
 			this.name = configActor.getName();
 			this.jid = configActor.getJid();
 			this.pwd = configActor.getPwdhash();
@@ -157,8 +156,7 @@ public abstract class Actor {
 	protected void createAdapters() {
 		ArrayList<AdapterConfig> adapters = configActor.getAdapters();
 		ArrayList<String> outAdaptersName = configActor.getOutboxes();
-		ArrayList<String> inAdaptersName = configActor.getOutboxes();
-
+		ArrayList<String> inAdaptersName = configActor.getInbox();
 		// Create instance of all Adapter
 		if(adapters != null) {
 			try {

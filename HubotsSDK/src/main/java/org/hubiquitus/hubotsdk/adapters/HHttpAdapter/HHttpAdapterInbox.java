@@ -17,7 +17,7 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.hubiquitus.hubotsdk.adapters.HhttpAdapter;
+package org.hubiquitus.hubotsdk.adapters.HHttpAdapter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -68,10 +68,13 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 		jettyCamelUri = "jetty:http://" + this.host + ":" + this.port + this.path;
 		jettyCamelUri += "?" + jettyOptions;
 		
+		System.out.println("Starting HttpAdapter with jettyCamelUri : " + jettyCamelUri);
+		
 		//add route 
 		HHttpAdapterRouteBuilder routes = new HHttpAdapterRouteBuilder(jettyCamelUri, this);
 		try {
 			camelContext.addRoutes(routes);
+			System.out.println("route added");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -85,6 +88,7 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 	@Override
 	public void process(Exchange exchange) throws Exception {
 		Message in = exchange.getIn();
+		System.out.println("Processing : " + exchange);
 		
 		HttpServletRequest request = exchange.getIn().getBody(HttpServletRequest.class);
 		
@@ -100,7 +104,6 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 		//create message to send
 		HMessage message = new HMessage();
 		message.setAuthor("HttpAdapter-" + this.name);
-		
 		if (headers != null) {
 			JSONObject jsonHeaders = new JSONObject(); 
 			for (String key : headers.keySet()) {
@@ -114,7 +117,6 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 		}
 		
 		message.setType("hHttpData");
-		
 		//create payload
 		HHttpData httpData = new HHttpData();
 		httpData.setMethod(method);

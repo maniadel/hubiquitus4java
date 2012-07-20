@@ -18,7 +18,7 @@
  */
 
 
-package org.hubiquitus.hubotsdk.adapters.HhttpAdapter;
+package org.hubiquitus.hubotsdk.adapters.HHttpAdapter;
 
 import java.util.HashMap;
 import java.util.Map;

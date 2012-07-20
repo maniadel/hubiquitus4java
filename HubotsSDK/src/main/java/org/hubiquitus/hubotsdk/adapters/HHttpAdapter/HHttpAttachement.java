@@ -17,7 +17,7 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.hubiquitus.hubotsdk.adapters.HhttpAdapter;
+package org.hubiquitus.hubotsdk.adapters.HHttpAdapter;
 
 import java.util.Arrays;
 

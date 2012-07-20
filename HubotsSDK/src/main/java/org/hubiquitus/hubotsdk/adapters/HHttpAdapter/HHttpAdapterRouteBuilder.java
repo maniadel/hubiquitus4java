@@ -17,7 +17,7 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.hubiquitus.hubotsdk.adapters.HhttpAdapter;
+package org.hubiquitus.hubotsdk.adapters.HHttpAdapter;
 
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
@@ -29,11 +29,12 @@ public class HHttpAdapterRouteBuilder extends RouteBuilder {
 	
 	public HHttpAdapterRouteBuilder(String jettyCamelUri, Processor processor) {
 		this.jettyCamelUri = jettyCamelUri;
+		this.processor = processor;
 	}
 	
 	@Override
 	public void configure() throws Exception {
-		from(this.jettyCamelUri).process(processor);
+		from(this.jettyCamelUri).process(this.processor);
 	}
 
 }
