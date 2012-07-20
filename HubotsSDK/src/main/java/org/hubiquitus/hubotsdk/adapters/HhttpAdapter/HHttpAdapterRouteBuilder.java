@@ -17,7 +17,7 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.hubiquitus.hubotsdk.HhttpAdapter;
+package org.hubiquitus.hubotsdk.adapters.HhttpAdapter;
 
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;

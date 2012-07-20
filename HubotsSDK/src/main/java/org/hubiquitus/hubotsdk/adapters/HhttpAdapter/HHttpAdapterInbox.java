@@ -17,13 +17,23 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.hubiquitus.hubotsdk.HhttpAdapter;
+package org.hubiquitus.hubotsdk.adapters.HhttpAdapter;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 
+import javax.activation.DataHandler;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.camel.Exchange;
+import org.apache.camel.Message;
 import org.apache.camel.Processor;
+import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterInbox;
+import org.json.JSONObject;
+
 
 public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 
@@ -72,27 +82,76 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 				
 	}
 
-	public void process(Exchange arg0) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/*@Override
+	@Override
 	public void process(Exchange exchange) throws Exception {
 		Message in = exchange.getIn();
 		
-		//get body as bytes
+		HttpServletRequest request = exchange.getIn().getBody(HttpServletRequest.class);
+		
+		//Gather data to send through an hmessage
 		byte[] rawBody = (byte[]) in.getBody(byte[].class);
 		Map<String, Object> headers = in.getHeaders();
 		Map<String, DataHandler> attachments = in.getAttachments();
 		
+		String method = request.getMethod().toLowerCase();
+		String queryArgs = request.getQueryString();
+		String queryPath = request.getServletPath();
 		
+		//create message to send
+		HMessage message = new HMessage();
+		message.setAuthor("HttpAdapter-" + this.name);
 		
-		//HttpServletRequest req = exchange.getIn().getBody(HttpServletRequest.class);
+		if (headers != null) {
+			JSONObject jsonHeaders = new JSONObject(); 
+			for (String key : headers.keySet()) {
+				Object header = headers.get(key);
+				String value = null;
+				if (header != null) {
+					value = header.toString();
+				}
+				jsonHeaders.put(key, value);
+			}
+		}
 		
+		message.setType("hHttpData");
 		
+		//create payload
+		HHttpData httpData = new HHttpData();
+		httpData.setMethod(method);
+		httpData.setQueryArgs(queryArgs);
+		httpData.setQueryPath(queryPath);
+		httpData.setRawBody(rawBody);
 		
-	}*/
-
+		//create attachements
+		Map<String, HHttpAttachement> hattachements = new HashMap<String, HHttpAttachement>();
+		for (String key : attachments.keySet()) {
+			DataHandler attachement = attachments.get(key);
+			if(attachement != null) {
+				HHttpAttachement hattachement = new HHttpAttachement();
+				hattachement.setContentType(attachement.getContentType());
+				hattachement.setName(attachement.getName());
+				
+				//read attachement
+				byte[] buffer = new byte[8 * 1024];
+				InputStream input = attachement.getInputStream();
+				
+				ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+				int bytesRead;
+				while ((bytesRead = input.read(buffer)) != -1) {
+					byteOutputStream.write(buffer, 0, bytesRead);
+				}
+				hattachement.setData(byteOutputStream.toByteArray());
+				hattachements.put(key, hattachement);
+			} else {
+				hattachements.put(key, null);
+			}
+		}
+		
+		httpData.setAttachments(hattachements);
+		message.setPayload(httpData);
+		
+		//finally send message to actor
+		this.put(message);
+	}
 
 }
