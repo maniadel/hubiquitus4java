@@ -47,5 +47,19 @@
             <artifactId>HubotsSDK</artifactId>
             <version>0.3.11</version>
         </dependency>
+	<dependency>
+                <groupId>org.json.jar</groupId>
+                <artifactId>json-lib</artifactId>
+                <version>0.0.0</version>
+                <scope>system</scope>
+                <systemPath>${basedir}/lib/org.json.jar</systemPath>
+        </dependency>
+	<dependency>
+                <groupId>org.hubiquitus.hapi</groupId>
+                <artifactId>hapi</artifactId>
+                <version>0.3.11</version>
+                <scope>system</scope>
+                <systemPath>${basedir}/lib/hapi-0.3.11.jar</systemPath>
+        </dependency>
   </dependencies> 
 </project>
