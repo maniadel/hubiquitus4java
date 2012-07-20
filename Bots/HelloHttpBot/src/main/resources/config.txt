@@ -1,0 +1,16 @@
+{
+	"name" : "com.mycompany.WordCount",
+	"jid" : "u1@hub.novediagroup.com",
+	"pwdhash" : "u1",
+	"endpoint" : "http://hub.novediagroup.com:8080",
+	"adapters" : [
+		{
+		"name" : "httpAdapter",
+		"type" : "HHttpAdapter.HHttpAdapter",
+		"properties" : {
+				"port" : "8086"
+		}
+	}],
+	"inbox" : [ "httpAdapter" ],
+	"outboxes" : [ "" ]
+}
