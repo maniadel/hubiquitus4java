@@ -19,6 +19,8 @@
 
 package org.hubiquitus.hubotsdk;
 import java.io.File; 
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -59,7 +61,8 @@ public abstract class Actor {
 	
 			// Parsing configuration file with Jackson 
 			ObjectMapper mapper = new ObjectMapper();
-			configActor = mapper.readValue(new File("./src/main/resources/config.txt"), ConfigActor.class);
+			URL configFilePath = ClassLoader.getSystemResource("config.txt");
+			configActor = mapper.readValue(new File(configFilePath.getFile()), ConfigActor.class);
 			
 			this.name = configActor.getName();
 			this.jid = configActor.getJid();
