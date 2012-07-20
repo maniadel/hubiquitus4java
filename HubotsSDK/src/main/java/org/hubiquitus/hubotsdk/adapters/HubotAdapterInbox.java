@@ -19,14 +19,12 @@
 
 package org.hubiquitus.hubotsdk.adapters;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import org.hubiquitus.hapi.client.HCommandDelegate;
 import org.hubiquitus.hapi.client.HMessageDelegate;
 import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HMessage;
-import org.hubiquitus.hapi.hStructures.HOptions;
 import org.hubiquitus.hubotsdk.AdapterInbox;
 
 public class HubotAdapterInbox extends AdapterInbox implements HMessageDelegate,HCommandDelegate{
@@ -52,14 +50,8 @@ public class HubotAdapterInbox extends AdapterInbox implements HMessageDelegate,
 
 	@Override
 	public void start() {
-		HOptions options = new HOptions();
-		options.setTransport("socketio");
-		ArrayList<String> endpoints = new ArrayList<String>();
-		endpoints.add(endpoint);
-		options.setEndpoints(endpoints);
 		hclient.onMessage(this);
 		hclient.onCommand(this);
-		hclient.connect(jid, pwdhash, options);	
 	}
 
 	@Override
