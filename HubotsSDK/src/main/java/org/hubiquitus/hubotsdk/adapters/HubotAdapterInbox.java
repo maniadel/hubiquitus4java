@@ -29,9 +29,7 @@ import org.hubiquitus.hubotsdk.AdapterInbox;
 
 public class HubotAdapterInbox extends AdapterInbox implements HMessageDelegate,HCommandDelegate{
 	
-	private String name;
 	private String jid;
-	private String pwdhash;
 	private String endpoint;
 
 	public HubotAdapterInbox(String name) {
@@ -41,11 +39,9 @@ public class HubotAdapterInbox extends AdapterInbox implements HMessageDelegate,
 	@Override
 	public void setProperties(Map<String, String> params) {
 		if(params.get("jid") != null) 
-			setJid(params.get("jid"));
-		if(params.get("pwdhash") != null) 
-			setPwdhash(params.get("pwdhash"));
+			this.jid = params.get("jid");
 		if(params.get("endpoint") != null) 
-			setEndpoint(params.get("endpoint"));
+			this.endpoint = params.get("endpoint");
 	}
 
 	@Override
@@ -56,16 +52,16 @@ public class HubotAdapterInbox extends AdapterInbox implements HMessageDelegate,
 
 	@Override
 	public void stop() {
-		hclient.disconnect();		
 	}
 	
 	public void onMessage(HMessage message) {
-		if(message.getPublisher().equals(jid) == false)
+		if(!message.getPublisher().equals(jid))
 			put(message);		
 	}
 	
 	public void onCommand(HCommand command) {
-		
+		if(!command.getSender().equals(jid))
+			put(command);			
 	}
 	
 	/* Getters and Setters */
@@ -73,36 +69,13 @@ public class HubotAdapterInbox extends AdapterInbox implements HMessageDelegate,
 		return jid;
 	}
 
-
-	public void setJid(String jid) {
-		this.jid = jid;
-	}
-
-
-	public String getPwdhash() {
-		return pwdhash;
-	}
-
-
-	public void setPwdhash(String pwdhash) {
-		this.pwdhash = pwdhash;
-	}
-
 	public String getEndpoint() {
 		return endpoint;
 	}
 
-
-	public void setEndpoint(String endpoint) {
-		this.endpoint = endpoint;
-	}
-	
-
-
 	@Override
 	public String toString() {
-		return "HubotAdapter [name=" + name + ", jid=" + jid + ", pwdhash="
-				+ pwdhash + ", hclient=" + hclient + "]";
+		return "HubotAdapter [name=" + name + ", jid=" + jid + "]";
 	}
 
 	@Override
@@ -113,7 +86,6 @@ public class HubotAdapterInbox extends AdapterInbox implements HMessageDelegate,
 				+ ((endpoint == null) ? 0 : endpoint.hashCode());
 		result = prime * result + ((jid == null) ? 0 : jid.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((pwdhash == null) ? 0 : pwdhash.hashCode());
 		return result;
 	}
 
@@ -140,11 +112,6 @@ public class HubotAdapterInbox extends AdapterInbox implements HMessageDelegate,
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
-			return false;
-		if (pwdhash == null) {
-			if (other.pwdhash != null)
-				return false;
-		} else if (!pwdhash.equals(other.pwdhash))
 			return false;
 		return true;
 	}

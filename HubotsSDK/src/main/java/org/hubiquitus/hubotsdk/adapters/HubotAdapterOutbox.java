@@ -22,16 +22,14 @@ package org.hubiquitus.hubotsdk.adapters;
 import java.util.GregorianCalendar;
 import java.util.Map;
 
-import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterOutbox;
 
-public class HubotAdapterOutbox extends AdapterOutbox{
+public class HubotAdapterOutbox extends AdapterOutbox {
 
 	private String name;
 	private String jid;
-	private HClient hclient;
 	
 	public HubotAdapterOutbox(String name) {
 		this.name = name;
@@ -39,7 +37,7 @@ public class HubotAdapterOutbox extends AdapterOutbox{
 	
 	@Override
 	public void sendCommand(HCommand command) {
-		hclient.command(command, null);
+		hclient.command(command, this);
 	}
 
 	@Override
@@ -48,14 +46,14 @@ public class HubotAdapterOutbox extends AdapterOutbox{
 		message.setPublished(new GregorianCalendar());
 		message.setType("hello");
 		message.setTransient(true);
-		hclient.publish(message, null);
+		hclient.publish(message, this);
 	}
 
 
 	@Override
 	public void setProperties(Map<String,String> params) {	
 		if(params.get("jid") != null) 
-			setJid(params.get("jid"));
+			this.jid = params.get("jid");
 	}
 
 	@Override
@@ -72,14 +70,8 @@ public class HubotAdapterOutbox extends AdapterOutbox{
 	}
 
 
-	public void setJid(String jid) {
-		this.jid = jid;
-	}
-
-
 	@Override
 	public String toString() {
-		return "HubotAdapter [name=" + name + ", jid=" + jid + ", pwdhash="
-				+ ", hclient=" + hclient + "]";
+		return "HubotAdapter [name=" + name + ", jid=" + jid + "]";
 	}
 }

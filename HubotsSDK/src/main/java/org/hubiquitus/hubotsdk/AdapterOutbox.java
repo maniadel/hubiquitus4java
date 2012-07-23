@@ -23,14 +23,14 @@ import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HJsonObj;
 import org.hubiquitus.hapi.hStructures.HMessage;
 
-public abstract class AdapterOutbox extends Adapter{
+public abstract class AdapterOutbox extends Adapter {
 	
 	// Method for output message and command 
 	public final void onOutGoing(HJsonObj hjson) {
+		System.out.println("hello4");
 		if(hjson.getHType() == "hcommand") {
 			sendCommand(new HCommand(hjson.toJSON()));
-		} else if (hjson.getHType() == "hmessage"){
-			
+		} else if (hjson.getHType() == "hmessage"){	
 			sendMessage(new HMessage(hjson.toJSON()));
 		}
 	}

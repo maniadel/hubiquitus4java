@@ -21,7 +21,6 @@ package org.hubiquitus.hubotsdk.adapters;
 
 import java.util.Map;
 
-import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hubotsdk.AdapterInbox;
 
 public class HChannelAdapterInbox extends AdapterInbox{
@@ -36,12 +35,12 @@ public class HChannelAdapterInbox extends AdapterInbox{
 
 	@Override
 	public void start() {
-		hclient.subscribe(chid, null);
+		hclient.subscribe(chid, this);
 	}
 
 	@Override
 	public void stop() {
-		hclient.disconnect();
+		hclient.unsubscribe(chid, this);
 	}
 
 
@@ -62,18 +61,9 @@ public class HChannelAdapterInbox extends AdapterInbox{
 	}
 
 
-	public HClient getHclient() {
-		return hclient;
-	}
-
-
-	public void setHclient(HClient hclient) {
-		this.hclient = hclient;
-	}
-
 	@Override
 	public String toString() {
-		return "HubotAdapter [name=" + name + ", chid" + chid + ", hclient=" + hclient + "]";
+		return "HubotAdapter [name=" + name + ", chid" + chid + "]";
 	}
 
 	@Override

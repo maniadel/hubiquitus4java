@@ -2,7 +2,6 @@ package org.hubiquitus.hubotsdk.adapters;
 
 import java.util.Map;
 
-import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterOutbox;
@@ -11,11 +10,7 @@ public class HChannelAdapterOutbox extends AdapterOutbox {
 
 	private String chid;
 	
-	public HChannelAdapterOutbox() {}
-
-	public HChannelAdapterOutbox(String name) {
-		this.name = name;
-	}
+	public HChannelAdapterOutbox() { }
 
 	@Override
 	public void start() {
@@ -23,7 +18,6 @@ public class HChannelAdapterOutbox extends AdapterOutbox {
 
 	@Override
 	public void stop() {
-		hclient.disconnect();
 	}
 
 	@Override
@@ -32,13 +26,13 @@ public class HChannelAdapterOutbox extends AdapterOutbox {
 		message.setChid(chid);
 		message.setType("hcommand");
 		message.setPayload(command);
-		hclient.publish(message, null);
+		hclient.publish(message, this);
 	}
 
 	@Override
 	public void sendMessage(HMessage message) {
 		message.setChid(chid);
-		hclient.publish(message, null);
+		hclient.publish(message, this);
 	}
 	@Override
 	public void setProperties(Map<String,String> params) {	
@@ -58,18 +52,9 @@ public class HChannelAdapterOutbox extends AdapterOutbox {
 	}
 
 
-	public HClient getHclient() {
-		return hclient;
-	}
-
-
-	public void setHclient(HClient hclient) {
-		this.hclient = hclient;
-	}
-
 	@Override
 	public String toString() {
-		return "HubotAdapter [name=" + name + ", chid" + chid + ", hclient=" + hclient + "]";
+		return "HubotAdapter [name=" + name + ", chid" + chid + "]";
 	}
 
 	@Override
