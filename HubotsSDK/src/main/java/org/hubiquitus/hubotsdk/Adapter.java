@@ -23,8 +23,11 @@ import java.util.Map;
 
 import org.apache.camel.impl.DefaultCamelContext;
 import org.hubiquitus.hapi.client.HClient;
+import org.hubiquitus.hapi.client.HResultDelegate;
+import org.hubiquitus.hapi.hStructures.HResult;
+import org.hubiquitus.hapi.hStructures.ResultStatus;
 
-public abstract class Adapter {
+public abstract class Adapter implements HResultDelegate{
 	
 	protected HClient hclient;
 	protected String name;
@@ -49,5 +52,11 @@ public abstract class Adapter {
 	
 	public final void setName(String name) {
 		this.name = name;				
+	}
+	
+	@Override
+	public void onResult(HResult result) {
+		if(result.getStatus() != ResultStatus.NO_ERROR) 
+			System.out.println("Erreur lors de la commande : " + result);
 	}
 }

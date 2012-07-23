@@ -44,9 +44,9 @@ public class RouteGenerator extends RouteBuilder {
 			.to("bean:hubotAdapterOutbox?method=onOutGoing");
 
 		for(String key : outboxMap.keySet()) {
-			
 			String routeName = "seda:" + key; 
-			String beanText ="bean:" + key + "Outbox?method=onOutGoing";
+			System.out.println("route name " + routeName);
+			String beanText ="bean:" + key + "?method=onOutGoing";
 			from(routeName)
 				.to(beanText);
 		}

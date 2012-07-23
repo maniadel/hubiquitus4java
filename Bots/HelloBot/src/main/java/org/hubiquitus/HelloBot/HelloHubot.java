@@ -34,7 +34,7 @@ public class HelloHubot extends Actor{
 	}
 	
 	@Override
-	public void inProcessMessage(HMessage messageIncoming) {
+	protected void inProcessMessage(HMessage messageIncoming) {
 		if(messageIncoming.getHType().equalsIgnoreCase("hcommand")) {
 			HCommand cmd = new HCommand(messageIncoming.getPayload().toJSON());
 			put("hubotAdapter",cmd);
@@ -51,7 +51,9 @@ public class HelloHubot extends Actor{
 			HJsonDictionnary payload = new HJsonDictionnary();
 			payload.put("text", name);
 			message.setPayload(payload);
+			System.out.println("here");
 			if(messageIncoming.getChid().contains("#")) {
+				System.out.println("here2");
 				put("adapter1",message);	
 			} else {
 				message.setChid(messageIncoming.getPublisher());
@@ -60,7 +62,7 @@ public class HelloHubot extends Actor{
 		}
 	}
 	
-	public void inProcessCommand(HCommand commandIncoming) {
+	protected void inProcessCommand(HCommand commandIncoming) {
 		put("HubotAdapter", commandIncoming);
 	}
 
