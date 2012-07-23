@@ -20,6 +20,7 @@
 
 package org.hubiquitus.hubotsdk.adapters.HHttpAdapter;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +36,8 @@ public class HHttpData implements HJsonObj {
 	private String method = null;
 	private String queryArgs = null;
 	private String queryPath = null;
+	private String serverName = null;
+	private Integer serverPort = null;
 	
 	public HHttpData() {};
 	
@@ -51,49 +54,47 @@ public class HHttpData implements HJsonObj {
 			try {
 				jsonAttachements.put(key, attachments.get(key).toJSON());
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 		}
 		
 		try {
 			jsonObj.put("attachements", jsonAttachements);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		
 		if (this.rawBody != null) {
 			try {
 				jsonObj.put("rawBody", Base64.encodeBase64String(this.rawBody));
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 		}
 		
 		try {
 			jsonObj.put("method", method);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		
 		try {
 			jsonObj.put("queryArgs", queryArgs);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		
 		try {
 			jsonObj.put("queryPath", queryPath);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		
-		return null;
+		try {
+			jsonObj.put("serverName", serverName);
+		} catch (JSONException e) {
+		}
+		
+		try {
+			jsonObj.put("serverPort", serverPort);
+		} catch (JSONException e) {
+		}
+		
+		return jsonObj;
 	}
 	
 	public void fromJSON(JSONObject jsonObj) {
@@ -101,22 +102,26 @@ public class HHttpData implements HJsonObj {
 			try {
 				this.method = jsonObj.getString("method");
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 
 			try {
 				this.queryArgs = jsonObj.getString("queryArgs");
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 
 			try {
 				this.queryPath = jsonObj.getString("queryPath");
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			}
+			
+			try {
+				this.serverName = jsonObj.getString("serverName");
+			} catch (JSONException e) {
+			}
+			
+			try {
+				this.serverPort = jsonObj.getInt("serverPort");
+			} catch (JSONException e) {
 			}
 
 			String encodedRawBody;
@@ -126,17 +131,14 @@ public class HHttpData implements HJsonObj {
 					this.rawBody = Base64.decodeBase64(encodedRawBody);
 				}
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 
 			JSONObject jsonAttachements = null;
 			try {
 				jsonAttachements = jsonObj.getJSONObject("attachements");
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
+			
 			if (jsonAttachements != null) {
 				String[] keys = JSONObject.getNames(jsonAttachements);
 				this.attachments = new HashMap<String, HHttpAttachement>();
@@ -146,8 +148,6 @@ public class HHttpData implements HJsonObj {
 						hattachement = new HHttpAttachement(jsonAttachements.getJSONObject(keys[i]));
 						this.attachments.put(keys[i], hattachement);
 					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
 					}	
 				}
 			}
@@ -198,5 +198,94 @@ public class HHttpData implements HJsonObj {
 	public void setQueryPath(String queryPath) {
 		this.queryPath = queryPath;
 	}
+
+	public String getServerName() {
+		return serverName;
+	}
+
+	public void setServerName(String serverName) {
+		this.serverName = serverName;
+	}
+
+	public Integer getServerPort() {
+		return serverPort;
+	}
+
+	public void setServerPort(Integer serverPort) {
+		this.serverPort = serverPort;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((attachments == null) ? 0 : attachments.hashCode());
+		result = prime * result + ((method == null) ? 0 : method.hashCode());
+		result = prime * result
+				+ ((queryArgs == null) ? 0 : queryArgs.hashCode());
+		result = prime * result
+				+ ((queryPath == null) ? 0 : queryPath.hashCode());
+		result = prime * result + Arrays.hashCode(rawBody);
+		result = prime * result
+				+ ((serverName == null) ? 0 : serverName.hashCode());
+		result = prime * result
+				+ ((serverPort == null) ? 0 : serverPort.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		HHttpData other = (HHttpData) obj;
+		if (attachments == null) {
+			if (other.attachments != null)
+				return false;
+		} else if (!attachments.equals(other.attachments))
+			return false;
+		if (method == null) {
+			if (other.method != null)
+				return false;
+		} else if (!method.equals(other.method))
+			return false;
+		if (queryArgs == null) {
+			if (other.queryArgs != null)
+				return false;
+		} else if (!queryArgs.equals(other.queryArgs))
+			return false;
+		if (queryPath == null) {
+			if (other.queryPath != null)
+				return false;
+		} else if (!queryPath.equals(other.queryPath))
+			return false;
+		if (!Arrays.equals(rawBody, other.rawBody))
+			return false;
+		if (serverName == null) {
+			if (other.serverName != null)
+				return false;
+		} else if (!serverName.equals(other.serverName))
+			return false;
+		if (serverPort == null) {
+			if (other.serverPort != null)
+				return false;
+		} else if (!serverPort.equals(other.serverPort))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "HHttpData [attachments=" + attachments + ", rawBody="
+				+ Arrays.toString(rawBody) + ", method=" + method
+				+ ", queryArgs=" + queryArgs + ", queryPath=" + queryPath
+				+ ", serverName=" + serverName + ", serverPort=" + serverPort
+				+ "]";
+	}
+
 
 }

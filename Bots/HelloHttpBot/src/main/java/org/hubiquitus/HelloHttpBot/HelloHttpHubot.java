@@ -22,6 +22,7 @@ package org.hubiquitus.HelloHttpBot;
 import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.Actor;
+import org.hubiquitus.hubotsdk.adapters.HHttpAdapter.HHttpData;
 public class HelloHttpHubot extends Actor{
 
 	public static void main(String[] args) throws Exception{
@@ -30,11 +31,17 @@ public class HelloHttpHubot extends Actor{
 	}
 	
 	@Override
-	public void inProcessMessage(HMessage messageIncoming) {
-		System.out.println(messageIncoming.toString());
+	public void inProcessMessage(HMessage incomingMessage) {
+		System.out.println(incomingMessage);
+		if (incomingMessage != null && incomingMessage.getType().equals("hHttpData")) {
+			System.out.println("httpdata : " + incomingMessage.getPayload());
+			HHttpData httpData = new HHttpData(incomingMessage.getPayload().toJSON());
+			System.out.println(httpData);
+		}
+		
 	}
 	
-	public void inProcessCommand(HCommand commandIncoming) {
+	public void inProcessCommand(HCommand incomingCommand) {
 	}
 
 }

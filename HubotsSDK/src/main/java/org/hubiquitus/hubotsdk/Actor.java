@@ -216,8 +216,8 @@ public abstract class Actor {
 		}
 	}
 
-	protected abstract void inProcessMessage(HMessage messageIncoming);
-	protected abstract void inProcessCommand(HCommand commandIncoming);
+	protected abstract void inProcessMessage(HMessage incomingMessage);
+	protected abstract void inProcessCommand(HCommand incomingCommand);
 
 	/* Send message to a specified adapter */
 	protected final void put(String adapterName, HJsonObj hjson) {

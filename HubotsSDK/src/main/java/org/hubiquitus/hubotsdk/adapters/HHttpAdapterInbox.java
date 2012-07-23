@@ -100,11 +100,13 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 		
 		String method = request.getMethod().toLowerCase();
 		String queryArgs = request.getQueryString();
-		String queryPath = request.getServletPath();
+		String queryPath = request.getRequestURI();
+		String serverName = request.getServerName();
+		Integer serverPort = request.getServerPort();
 		
 		//create message to send
 		HMessage message = new HMessage();
-		message.setAuthor("HttpAdapter-" + this.name);
+		message.setAuthor(this.name);
 		if (headers != null) {
 			JSONObject jsonHeaders = new JSONObject(); 
 			for (String key : headers.keySet()) {
@@ -123,6 +125,8 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 		httpData.setMethod(method);
 		httpData.setQueryArgs(queryArgs);
 		httpData.setQueryPath(queryPath);
+		httpData.setServerName(serverName);
+		httpData.setServerPort(serverPort);
 		httpData.setRawBody(rawBody);
 		
 		//create attachements
