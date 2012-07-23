@@ -6,7 +6,7 @@
 	"adapters" : [
 		{
 		"name" : "httpAdapter",
-		"type" : "HHttpAdapter.HHttpAdapter",
+		"type" : "HHttpAdapter",
 		"properties" : {
 				"port" : "8086"
 		}

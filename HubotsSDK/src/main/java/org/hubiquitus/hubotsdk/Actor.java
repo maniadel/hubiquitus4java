@@ -19,7 +19,6 @@
 
 package org.hubiquitus.hubotsdk;
 import java.io.File; 
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,6 +51,8 @@ public abstract class Actor {
 	protected String jid;
 	protected String pwd;
 	protected String endpoint;
+	
+	protected MessagesDelegate messageDelegate = new MessagesDelegate();
 
 	protected void start() {
 		try {
@@ -192,7 +193,7 @@ public abstract class Actor {
 	private JndiRegistry createRegistry() throws Exception {
 		JndiRegistry jndi = new JndiRegistry();
 
-		jndi.bind("actor", this);
+		jndi.bind("actor", messageDelegate);
 		jndi.bind("hubotAdapterOutbox", adapterInstances.get("hubotAdapterOutbox"));
 
 		
@@ -203,16 +204,7 @@ public abstract class Actor {
 		}
 		return jndi;
 	}
-
-//	protected final void start() {
-//		try {
-//			initialize();
-//			context.start();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-
+	
 	protected final void stop() {
 		for(String key : adapterInstances.keySet()) {
 			adapterInstances.get(key).stop();
@@ -222,18 +214,6 @@ public abstract class Actor {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	/* Method use for incoming message/command */
-	protected final void inProcess(Object obj) {
-		if (obj != null) {
-			if (obj instanceof HMessage) {
-				inProcessMessage((HMessage)obj);
-			}
-			if (obj instanceof HCommand) {
-				inProcessCommand((HCommand)obj);
-			}
-		}		
 	}
 
 	protected abstract void inProcessMessage(HMessage messageIncoming);
@@ -259,5 +239,19 @@ public abstract class Actor {
 		String route = "seda:" + adapterName + "Outbox";
 		ProducerTemplateSingleton.getProducerTemplate().sendBody(route,cmd);		
 	}
-
+	
+	protected class MessagesDelegate {
+		/* Method use for incoming message/command */
+		public final void inProcess(Object obj) {
+			if (obj != null) {
+				if (obj instanceof HMessage) {
+					inProcessMessage((HMessage)obj);
+				}
+				if (obj instanceof HCommand) {
+					inProcessCommand((HCommand)obj);
+				}
+			}		
+		}
+	}
+	
 }

@@ -31,7 +31,6 @@ public class HelloHttpHubot extends Actor{
 	
 	@Override
 	public void inProcessMessage(HMessage messageIncoming) {
-		System.out.println("bla");
 		System.out.println(messageIncoming.toString());
 	}
 	

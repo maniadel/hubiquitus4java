@@ -17,7 +17,7 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.hubiquitus.hubotsdk.adapters.HHttpAdapter;
+package org.hubiquitus.hubotsdk.adapters;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -32,6 +32,9 @@ import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterInbox;
+import org.hubiquitus.hubotsdk.adapters.HHttpAdapter.HHttpAdapterRouteBuilder;
+import org.hubiquitus.hubotsdk.adapters.HHttpAdapter.HHttpAttachement;
+import org.hubiquitus.hubotsdk.adapters.HHttpAdapter.HHttpData;
 import org.json.JSONObject;
 
 
@@ -74,7 +77,6 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 		HHttpAdapterRouteBuilder routes = new HHttpAdapterRouteBuilder(jettyCamelUri, this);
 		try {
 			camelContext.addRoutes(routes);
-			System.out.println("route added");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -88,7 +90,6 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 	@Override
 	public void process(Exchange exchange) throws Exception {
 		Message in = exchange.getIn();
-		System.out.println("Processing : " + exchange);
 		
 		HttpServletRequest request = exchange.getIn().getBody(HttpServletRequest.class);
 		
