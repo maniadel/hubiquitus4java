@@ -19,6 +19,7 @@
 
 package org.hubiquitus.HelloBot;
 
+import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.util.HJsonDictionnary;
@@ -31,6 +32,11 @@ public class HelloHubot extends Actor{
 	public static void main(String[] args) throws Exception{
 		HelloHubot hubot = new HelloHubot();
 		hubot.start();
+	}
+	
+	@Override
+	public void init(HClient hclient) {
+		initialized();
 	}
 	
 	@Override
