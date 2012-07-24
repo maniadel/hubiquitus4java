@@ -13,6 +13,13 @@ local.properties
 .settings/
 .loadpath
 
+target/**
+target/**/*
+**/target/**
+**/target/**/*
+*/**/target/**/*
+*/**/tagert/**
+
 # External tool builders
 .externalToolBuilders/
 

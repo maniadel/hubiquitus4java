@@ -53,7 +53,7 @@ public class HConvState implements HJsonObj{
 	}
 	
 	public String getHType() {
-		return "hconv";
+		return "hconvstate";
 	}
 	
 	@Override

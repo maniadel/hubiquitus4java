@@ -129,7 +129,7 @@ public class HBuilderTest {
 		HConvState hconvstate = new HConvState();
 		hconvstate.setStatus("test status");
 		
-		Assert.assertEquals(hmessage.getType(),"hconvstate");
+		Assert.assertEquals(hmessage.getType(),"hConvState");
 		Assert.assertEquals(hmessage.getPayload().toString(),hconvstate.toString());
 	}
 	
@@ -172,7 +172,7 @@ public class HBuilderTest {
 		hack.setAck(ackvalue);
 		hack.setAckid(hackid);
 		
-		Assert.assertEquals(hmessage.getType(),"hack");
+		Assert.assertEquals(hmessage.getType(),"hAck");
 		Assert.assertEquals(hmessage.getPayload().toString(),hack.toString());
 	}
 	
@@ -202,18 +202,22 @@ public class HBuilderTest {
 		hmessageOption.setTransient(false);
 		
 		String alert = "WARNING WARNING";
+		String raw = "507 : Power Failure";
+		String status = "C";
 		
 		HMessage hmessage = null;
 		try {
-			hmessage = hclient.buildAlert("chid:123456789",alert, hmessageOption);
+			hmessage = hclient.buildAlert("chid:123456789",alert,status,raw,hmessageOption);
 		} catch (MissingAttrException e) {
 			Assert.fail();
 		}
 		
 		HAlert halert = new HAlert();
 		halert.setAlert(alert);
+		halert.setRaw(raw);
+		halert.setStatus(status);
 		
-		Assert.assertEquals(hmessage.getType(),"halert");
+		Assert.assertEquals(hmessage.getType(),"hAlert");
 		Assert.assertEquals(hmessage.getPayload().toString(),halert.toString());
 	}
 	
@@ -256,7 +260,7 @@ public class HBuilderTest {
 		hmeasure.setUnit(unit);
 		hmeasure.setValue(value);
 		
-		Assert.assertEquals(hmessage.getType(),"hmeasure");
+		Assert.assertEquals(hmessage.getType(),"hMeasure");
 		Assert.assertEquals(hmessage.getPayload().toString(),hmeasure.toString());
 	}
 }

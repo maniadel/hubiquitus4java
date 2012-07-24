@@ -520,11 +520,13 @@ public class HClient {
 	 * Helper to create halert
 	 * @param chid - channel id : mandatory
 	 * @param alert : mandatory
+	 * @param status : Possible values : O stand for opened, C stand for closed
+	 * @param raw : raw description of the alert
 	 * @param options
 	 * @return hmessage
 	 * @throws MissingAttrException 
 	 */
-	public HMessage buildAlert(String chid, String alert, HMessageOptions options) throws MissingAttrException {
+	public HMessage buildAlert(String chid, String alert, String  status, String  raw, HMessageOptions options) throws MissingAttrException {
 		//check for required attributes
 		if (chid == null || chid.length() <= 0) {
 			throw new MissingAttrException("chid");
@@ -534,12 +536,14 @@ public class HClient {
 		if (alert == null || alert.length() <= 0) {
 			throw new MissingAttrException("chid");
 		}
-		
+					
 		HMessage hmessage = new HMessage();
 		
 		HAlert halert = new HAlert();
 		halert.setAlert(alert);
-		
+		halert.setRaw(raw);
+		halert.setStatus(status);
+	
 		hmessage = buildMessage(chid, "hAlert", halert, options);
 	
 		return hmessage;

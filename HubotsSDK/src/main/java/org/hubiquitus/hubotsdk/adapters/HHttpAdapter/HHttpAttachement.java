@@ -21,11 +21,12 @@ package org.hubiquitus.hubotsdk.adapters.HHttpAdapter;
 
 import java.util.Arrays;
 
+import org.hubiquitus.hapi.hStructures.HJsonObj;
 import org.jivesoftware.smack.util.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class HHttpAttachement {
+public class HHttpAttachement implements HJsonObj {
 	private String name = null;
 	private byte[] data = null;
 	private String contentType = null;

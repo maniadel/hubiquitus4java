@@ -73,27 +73,96 @@ public class HAlert implements HJsonObj{
 	/* Getters & Setters */
 	
 	/**
-	 * The message provided by the author to describe the alert. 
+	 * The message provided by the author to describe the alert. (Eg : Power Failure) 
 	 * @return alert message. NULL if undefined
 	 */
-	public String getAlert() {
+	public String getAlert() 
+	{
 		String alert;
 		try {
 			alert = halert.getString("alert");
-		} catch (Exception e) {
+		} catch (Exception e) 
+		{
 			alert = null;			
 		}
 		return alert;
 	}
 
-	public void setAlert(String alert) {
+	public void setAlert(String alert) 
+	{
 		try {
-			if(alert == null) {
+			if(alert == null) 
+			{
 				halert.remove("alert");
-			} else {
+			} else 
+			{
 				halert.put("alert", alert);
-			}
-		} catch (JSONException e) {
-		}
+				}
+		} catch (JSONException e) { 	}
 	}
+	
+	/**
+	 * Raw description of the alert (eg : 507 : POWER FAILURE)
+	 * @return raw description. NULL if undefined
+	 */
+	public String getRaw() 
+	{
+		String raw;
+		try {
+			raw = halert.getString("raw");
+		} catch (Exception e) 
+		{
+			raw = null;			
+		}
+		return raw;
+	}
+
+	public void setRaw(String raw) 
+	{
+		try {
+			if(raw == null) 
+			{
+				halert.remove("raw");
+			} else 
+			{
+				halert.put("raw", raw);
+			}
+		} catch (JSONException e) { 	}
+	}
+
+	/**
+	 * Status of the alert.
+	 * Possible values : 
+	 * 	C : Stands for closed
+	 *  O : Stands for open 
+	 * @return alert message. NULL if undefined
+	 */
+	public String getStatus() 
+	{
+		String status;
+		try {
+			status = halert.getString("status");
+		} catch (Exception e) 
+		{
+			status = null;			
+		}
+		return status;
+	}
+
+	public void setStatus(String status) 
+	{
+		try {
+			if(status == null) 
+			{
+				halert.remove("status");
+			} else 
+			{
+				halert.put("status", status);
+			}
+		} catch (JSONException e) { 	}
+	}
+
+	
+
+	
 }
