@@ -21,6 +21,7 @@ package org.hubiquitus.hubotsdk.adapters;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -118,6 +119,8 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 				jsonHeaders.put(key, value);
 			}
 		}
+		
+		message.setPublished(Calendar.getInstance());
 		
 		message.setType("hHttpData");
 		//create payload
