@@ -49,16 +49,16 @@ public class HHttpData implements HJsonObj {
 	public JSONObject toJSON() {
 		JSONObject jsonObj = new JSONObject();
 		
-		JSONObject jsonAttachements = new JSONObject();
+		JSONObject jsonAttachments = new JSONObject();
 		for (String key : attachments.keySet()) {
 			try {
-				jsonAttachements.put(key, attachments.get(key).toJSON());
+				jsonAttachments.put(key, attachments.get(key).toJSON());
 			} catch (JSONException e) {
 			}
 		}
 		
 		try {
-			jsonObj.put("attachements", jsonAttachements);
+			jsonObj.put("attachments", jsonAttachments);
 		} catch (JSONException e) {
 		}
 		
@@ -135,20 +135,22 @@ public class HHttpData implements HJsonObj {
 
 			JSONObject jsonAttachements = null;
 			try {
-				jsonAttachements = jsonObj.getJSONObject("attachements");
+				jsonAttachements = jsonObj.getJSONObject("attachments");
 			} catch (JSONException e) {
 			}
 			
 			if (jsonAttachements != null) {
 				String[] keys = JSONObject.getNames(jsonAttachements);
-				this.attachments = new HashMap<String, HHttpAttachement>();
-				for (int i = 0; i < keys.length; i++) {
-					HHttpAttachement hattachement;
-					try {
-						hattachement = new HHttpAttachement(jsonAttachements.getJSONObject(keys[i]));
-						this.attachments.put(keys[i], hattachement);
-					} catch (JSONException e) {
-					}	
+				if (keys != null) {
+					this.attachments = new HashMap<String, HHttpAttachement>();
+					for (int i = 0; i < keys.length; i++) {
+						HHttpAttachement hattachement;
+						try {
+							hattachement = new HHttpAttachement(jsonAttachements.getJSONObject(keys[i]));
+							this.attachments.put(keys[i], hattachement);
+						} catch (JSONException e) {
+						}	
+					}
 				}
 			}
 		}
