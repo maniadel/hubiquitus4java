@@ -23,6 +23,7 @@ import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.util.HJsonDictionnary;
 import org.hubiquitus.hubotsdk.Actor;
+import org.hubiquitus.hubotsdk.AdapterInbox;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,35 +36,30 @@ public class HelloHubot extends Actor{
 	
 	@Override
 	protected void inProcessMessage(HMessage messageIncoming) {
-		if(messageIncoming.getHType().equalsIgnoreCase("hcommand")) {
-			HCommand cmd = new HCommand(messageIncoming.getPayload().toJSON());
-			put("hubotAdapter",cmd);
-		} else {
-			HMessage message = new HMessage();
-			message.setType("HJsonObj");
-			JSONObject jsonObj = messageIncoming.getPayload().toJSON();
-			String name = "Hello ";
-			try {
-				 name += jsonObj.getString("text");
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			HJsonDictionnary payload = new HJsonDictionnary();
-			payload.put("text", name);
-			message.setPayload(payload);
-			System.out.println("here");
-			if(messageIncoming.getChid().contains("#")) {
-				System.out.println("here2");
-				put("adapter1",message);	
-			} else {
-				message.setChid(messageIncoming.getPublisher());
-				put("hubotAdapter",message);	
-			}
+		HMessage message = new HMessage();
+		message.setType("hello");
+		JSONObject jsonObj = messageIncoming.getPayload().toJSON();
+		String name = "Hello ";
+		try {
+			 name += jsonObj.getString("text");
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
+		HJsonDictionnary payload = new HJsonDictionnary();
+		payload.put("text", name);
+		message.setPayload(payload);
+		message.setChid(messageIncoming.getPublisher());
+		put("hubotAdapter",message);	
 	}
 	
 	protected void inProcessCommand(HCommand commandIncoming) {
+		//TODO to be modified
+		HJsonDictionnary rep = new HJsonDictionnary();
+		rep.put("hello", commandIncoming.getParams().toString());
+		commandIncoming.setParams(rep);
+		commandIncoming.setEntity(commandIncoming.getSender());
 		put("HubotAdapter", commandIncoming);
 	}
+	
 
 }
