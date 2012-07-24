@@ -40,10 +40,10 @@ import org.json.JSONObject;
 
 public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 
-	public String host = "0.0.0.0";
-	public int port = 80;
-	public String path = "";
-	public String jettyCamelUri = "";
+	private String host = "0.0.0.0";
+	private int port = 80;
+	private String path = "";
+	private String jettyCamelUri = "";
 	
 	@Override
 	public void setProperties(Map<String, String> params) {
