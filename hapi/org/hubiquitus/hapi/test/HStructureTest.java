@@ -448,17 +448,11 @@ public class HStructureTest {
 		JSONObject jsonObj = new JSONObject();
 		try {
 			String alert = "Failure";
-			String raw = "507 : Power Failure";
-			String status = "C";
 			jsonObj.put("alert", alert);
-			jsonObj.put("raw", raw);
-			jsonObj.put("status", status);
 						
 			HAlert halert = new HAlert(jsonObj);
 
 			Assert.assertEquals(halert.getAlert(), alert);
-			Assert.assertEquals(halert.getRaw(), raw);
-			Assert.assertEquals(halert.getStatus(), status);
 		} catch (JSONException e) {
 			e.printStackTrace();
 			fail("fail");
@@ -470,19 +464,13 @@ public class HStructureTest {
 		JSONObject jsonObj = new JSONObject();
 		try {
 			String alert = "warning";
-			String raw = "507 : Power Failure";
-			String status = "C";
 						
 			HAlert halert = new HAlert();
 			halert.setAlert(alert);
-			halert.setRaw(raw);
-			halert.setStatus(status);
 			
 			jsonObj = halert.toJSON();
 			
 			Assert.assertEquals(jsonObj.get("alert"), alert);
-			Assert.assertEquals(jsonObj.get("status"), status);
-			Assert.assertEquals(jsonObj.get("raw"), raw);
 		} catch (JSONException e) {
 			e.printStackTrace();
 			fail("fail");

@@ -202,20 +202,16 @@ public class HBuilderTest {
 		hmessageOption.setTransient(false);
 		
 		String alert = "WARNING WARNING";
-		String raw = "507 : Power Failure";
-		String status = "C";
 		
 		HMessage hmessage = null;
 		try {
-			hmessage = hclient.buildAlert("chid:123456789",alert,status,raw,hmessageOption);
+			hmessage = hclient.buildAlert("chid:123456789",alert,hmessageOption);
 		} catch (MissingAttrException e) {
 			Assert.fail();
 		}
 		
 		HAlert halert = new HAlert();
 		halert.setAlert(alert);
-		halert.setRaw(raw);
-		halert.setStatus(status);
 		
 		Assert.assertEquals(hmessage.getType(),"hAlert");
 		Assert.assertEquals(hmessage.getPayload().toString(),halert.toString());

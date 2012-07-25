@@ -526,7 +526,7 @@ public class HClient {
 	 * @return hmessage
 	 * @throws MissingAttrException 
 	 */
-	public HMessage buildAlert(String chid, String alert, String  status, String  raw, HMessageOptions options) throws MissingAttrException {
+	public HMessage buildAlert(String chid, String alert, HMessageOptions options) throws MissingAttrException {
 		//check for required attributes
 		if (chid == null || chid.length() <= 0) {
 			throw new MissingAttrException("chid");
@@ -541,8 +541,6 @@ public class HClient {
 		
 		HAlert halert = new HAlert();
 		halert.setAlert(alert);
-		halert.setRaw(raw);
-		halert.setStatus(status);
 	
 		hmessage = buildMessage(chid, "hAlert", halert, options);
 	
