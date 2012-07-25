@@ -21,12 +21,16 @@ package org.hubiquitus.hubotsdk.adapters.HHttpAdapter;
 
 import java.util.Arrays;
 
+import org.apache.log4j.Logger;
 import org.hubiquitus.hapi.hStructures.HJsonObj;
 import org.jivesoftware.smack.util.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class HHttpAttachement implements HJsonObj {
+
+	private static Logger logger = Logger.getLogger(HHttpAttachement.class);
+	
 	private String name = null;
 	private byte[] data = null;
 	private String contentType = null;
@@ -45,8 +49,7 @@ public class HHttpAttachement implements HJsonObj {
 			jsonObj.put("contentType", getContentType());
 			jsonObj.put("data", Base64.encodeBytes(getData()));
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.toString());
 		}
 		
 		return jsonObj;
@@ -57,15 +60,13 @@ public class HHttpAttachement implements HJsonObj {
 			try {
 				setName(jsonObj.getString("name"));
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e.toString());
 			}
 			
 			try {
 				setContentType(jsonObj.getString("contentType"));
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e.toString());
 			}
 			
 			try {
@@ -76,8 +77,7 @@ public class HHttpAttachement implements HJsonObj {
 					setData(null);
 				}
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e.toString());
 			}
 		}
 	}

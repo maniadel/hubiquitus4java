@@ -45,7 +45,6 @@ public class RouteGenerator extends RouteBuilder {
 
 		for(String key : outboxMap.keySet()) {
 			String routeName = "seda:" + key; 
-			System.out.println("route name " + routeName);
 			String beanText ="bean:" + key + "?method=onOutGoing";
 			from(routeName)
 				.to(beanText);

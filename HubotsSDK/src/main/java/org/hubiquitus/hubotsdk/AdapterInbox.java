@@ -20,7 +20,7 @@
 package org.hubiquitus.hubotsdk;
 
 public abstract class AdapterInbox extends Adapter {
-
+	
 	// Method for input message and command 
 	public final void put(Object object) {
 		ProducerTemplateSingleton.getProducerTemplate().sendBody("seda:inbox",object);

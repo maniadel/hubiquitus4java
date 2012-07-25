@@ -19,19 +19,23 @@
 
 package org.hubiquitus.hubotsdk;
 
+import org.apache.log4j.Logger;
 import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HJsonObj;
 import org.hubiquitus.hapi.hStructures.HMessage;
 
 public abstract class AdapterOutbox extends Adapter {
 	
+	private static Logger logger = Logger.getLogger(AdapterOutbox.class);
+	
 	// Method for output message and command 
 	public final void onOutGoing(HJsonObj hjson) {
-		System.out.println("hello4");
 		if(hjson.getHType() == "hcommand") {
 			sendCommand(new HCommand(hjson.toJSON()));
 		} else if (hjson.getHType() == "hmessage"){	
 			sendMessage(new HMessage(hjson.toJSON()));
+		} else {
+			logger.error("Type not support");
 		}
 	}
 
