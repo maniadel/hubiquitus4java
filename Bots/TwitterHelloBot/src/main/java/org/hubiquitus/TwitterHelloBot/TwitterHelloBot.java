@@ -19,6 +19,7 @@
 
 package org.hubiquitus.TwitterHelloBot;
 
+
 import org.hubiquitus.hubotsdk.Actor;
 import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HMessage;
@@ -26,23 +27,24 @@ import org.hubiquitus.hapi.hStructures.HMessage;
 
 
 public class TwitterHelloBot extends Actor  {
+	
 
 	public static void main( String[] args )throws Exception{
+		        
 		TwitterHelloBot bot  = new TwitterHelloBot();
 		bot.start();
-		Thread.sleep(10000);
+		Thread.sleep(100000);
 		bot.stop();
 	}
 
 	@Override
-	protected void inProcessMessage(HMessage incomingMessage) {
-		// TODO Auto-generated method stub
-		
+	protected void inProcessMessage(HMessage messageIncoming) {
+		System.out.println(messageIncoming.toString());
 	}
 
 	@Override
 	protected void inProcessCommand(HCommand commandIncoming) {
-		put("HubotAdapter", commandIncoming);		
+		put("twitterAdapter", commandIncoming);		
 	}
 	
 

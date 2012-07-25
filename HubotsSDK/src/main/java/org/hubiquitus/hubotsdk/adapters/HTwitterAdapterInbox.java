@@ -1,8 +1,13 @@
 package org.hubiquitus.hubotsdk.adapters;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Map;
 
+import org.hubiquitus.hapi.hStructures.HLocation;
+import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterInbox;
+import org.hubiquitus.hubotsdk.adapters.HtwitterAdapter.HTweet;
 
 
 import twitter4j.FilterQuery;
@@ -12,13 +17,20 @@ import twitter4j.StatusListener;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
 import twitter4j.conf.ConfigurationBuilder;
-
+/**
+ * 
+ * @author Hubiquitus
+ *
+ */
 public class HTwitterAdapterInbox extends AdapterInbox{
 
 	private String consumerKey ;
 	private String consumerSecret;
 	private String twitterAccessToken;
 	private String twitterAccessTokenSecret;
+	private String host;
+	private String langFilter;
+	private int port;
 
 	private String tags;
 
@@ -36,15 +48,26 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 			setTwitterAccessTokenSecret(params.get("twitterAccessTokenSecret"));
 		if(params.get("tags") != null) 
 			setTags(params.get("tags"));
+		if(params.get("host") != null) 
+			setHost(params.get("host"));
+		if(params.get("lang") != null) 
+			setLangFilter(params.get("lang"));
+		if(params != null && params.containsKey("port")) {
+			this.port = Integer.parseInt(params.get("port"));
 
+		}
 	}
 
-	@Override
+	/**
+	 * Function to start Streaming
+	 */
 	public void start() {
 		stream();
 	}
 
-	@Override
+	/**
+	 * Function to stop Streaming
+	 */
 	public void stop() {
 		twitterStream.shutdown();
 	}
@@ -53,45 +76,9 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		super();
 	}
 
-	/*public void stream() throws TwitterException {
-		StatusListener listener = new StatusListener(){
-			public void onStatus(Status status) {
-				System.out.println(status.getUser().getName() + " : " + status.getText());
-			}
-			public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {}
-			public void onTrackLimitationNotice(int numberOfLimitedStatuses) {}
-			public void onScrubGeo(long userId, long upToStatusId) {}
-			public void onException(Exception ex) {
-				ex.printStackTrace();
-			}
-		};
-		ConfigurationBuilder cb = new ConfigurationBuilder();
-		cb.setDebugEnabled(true); 
-		cb.setOAuthConsumerKey("consumerKey");
-		cb.setOAuthConsumerSecret("consumerSecret");
-
-		//cb.setOAuthAccessToken("twitterAccessToken");
-		//cb.setOAuthAccessTokenSecret("twitterAccessTokenSecret");
-		//AccessToken aToken  = cb.getOAuthAccessToken(twitterAccessToken, twitterAccessTokenSecret);
-		//AccessToken acToken = new AccessToken(twitterAccessToken, twitterAccessTokenSecret);
-		twitterStream = new TwitterStreamFactory(cb.build()).getInstance();      
-		//twitterStream.addListener(listener);
-		//twitterStream.sample();
-		RequestToken requestToken = twitterStream.getOAuthRequestToken();
-
-		String token = requestToken.getToken();
-        String tokenSecret = requestToken.getTokenSecret();
-        System.out.println("My token :: " + token);
-        System.out.println("My token Secret :: " + tokenSecret);
-
-        //AccessToken a = new AccessToken(token, tokenSecret);
-        //twitter.setOAuthAccessToken(a);
-        //twitterStream.updateStatus("If you're reading this on Twitter, it worked!");
-
-    }*/
-
-
-
+	/**
+	 * Function for tweet Streaming
+	 */
 	public void stream() {
 
 		ConfigurationBuilder cb = new ConfigurationBuilder();
@@ -103,10 +90,14 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
 		StatusListener listener = new StatusListener() {
 
-			public void onStatus(Status status) {
-				System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
+			public void onStatus(Status tweet) {
+				String lang = tweet.getUser().getLang();
+				if( lang != null && lang.equalsIgnoreCase(langFilter)) {
+					HMessage message = transformtweet(tweet);
+					put(message);
+				}
 			}
-
+			
 			public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
 				System.out.println("Got a status deletion notice id:" + statusDeletionNotice.getStatusId());
 			}
@@ -125,16 +116,67 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		};
 
 		FilterQuery fq = new FilterQuery();
-		//String keywords[] = {"test", "toto"};
-		//tags.split("#");
 		fq.track(tags.split("#"));
+
 
 		twitterStream.addListener(listener);
 		twitterStream.filter(fq);  
 	}
+	
+	/**
+	 * Function for transforming Tweet to HMessage
+	 * @param tweet
+	 * @return
+	 */
+	private HMessage transformtweet(Status tweet){
+		HMessage message = new HMessage();
+		HTweet htweet = new HTweet();
+		message.setAuthor(tweet.getUser().getName());
 
+		if(tweet.getGeoLocation() != null ) {
+			HLocation location = new HLocation();
+			location.setLat(tweet.getGeoLocation().getLatitude());
+			location.setLng(tweet.getGeoLocation().getLongitude());
+			message.setLocation(location);
+		}
+		
+		tweet.getCreatedAt().getTime();
+		Calendar createdAt = new GregorianCalendar();
+		createdAt.setTime(tweet.getCreatedAt());
+		htweet.setCreatedAt(createdAt);
+		htweet.setFriendsCount(tweet.getUser().getFriendsCount());
+		htweet.setIdTweet(tweet.getId());
+		htweet.setInReplyToScreenName(tweet.getInReplyToScreenName());
+		htweet.setLocation(tweet.getUser().getLocation());
+		htweet.setRetweetcount(tweet.getRetweetCount());
+		htweet.setScreenName(tweet.getUser().getScreenName());
+		htweet.setSource(tweet.getSource());
+		htweet.setTweetText(tweet.getText());
+		htweet.setLang(tweet.getUser().getLang());
+		htweet.setStatus(tweet.getUser().getStatus());
+		message.setPayload(htweet);
+		
+		return message;
+	}
+	
 
+	/* Getters & Setters */
+	
+	public String getHost() {
+		return host;
+	}
 
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	public int getPort() {
+		return port;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
+	}
 
 	public String getConsumerKey() {
 		return consumerKey;
@@ -174,6 +216,14 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 
 	public void setTags(String tags) {
 		this.tags = tags;
+	}
+	
+	public String getLangFilter() {
+		return langFilter;
+	}
+
+	public void setLangFilter(String langFilter) {
+		this.langFilter = langFilter;
 	}
 
 }

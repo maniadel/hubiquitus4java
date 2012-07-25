@@ -17,6 +17,7 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 package org.hubiquitus.HelloBot;
 
 import org.hubiquitus.hapi.client.HClient;
@@ -26,6 +27,8 @@ import org.hubiquitus.hapi.util.HJsonDictionnary;
 import org.hubiquitus.hubotsdk.Actor;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+
 
 public class HelloHubot extends Actor{
 
