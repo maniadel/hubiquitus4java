@@ -25,11 +25,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.log4j.Logger;
 import org.hubiquitus.hapi.hStructures.HJsonObj;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class HHttpData implements HJsonObj {
+	
+	private static Logger logger = Logger.getLogger(HHttpData.class);
+	
 	private Map<String, HHttpAttachement> attachments = null;
 
 	private byte[] rawBody = null;
@@ -49,49 +53,57 @@ public class HHttpData implements HJsonObj {
 	public JSONObject toJSON() {
 		JSONObject jsonObj = new JSONObject();
 		
-		JSONObject jsonAttachements = new JSONObject();
+		JSONObject jsonAttachments = new JSONObject();
 		for (String key : attachments.keySet()) {
 			try {
-				jsonAttachements.put(key, attachments.get(key).toJSON());
+				jsonAttachments.put(key, attachments.get(key).toJSON());
 			} catch (JSONException e) {
+				logger.error(e.toString());
 			}
 		}
 		
 		try {
-			jsonObj.put("attachements", jsonAttachements);
+			jsonObj.put("attachments", jsonAttachments);
 		} catch (JSONException e) {
+			logger.error(e.toString());
 		}
 		
 		if (this.rawBody != null) {
 			try {
 				jsonObj.put("rawBody", Base64.encodeBase64String(this.rawBody));
 			} catch (JSONException e) {
+				logger.error(e.toString());
 			}
 		}
 		
 		try {
 			jsonObj.put("method", method);
 		} catch (JSONException e) {
+			logger.error(e.toString());
 		}
 		
 		try {
 			jsonObj.put("queryArgs", queryArgs);
 		} catch (JSONException e) {
+			logger.error(e.toString());
 		}
 		
 		try {
 			jsonObj.put("queryPath", queryPath);
 		} catch (JSONException e) {
+			logger.error(e.toString());
 		}
 		
 		try {
 			jsonObj.put("serverName", serverName);
 		} catch (JSONException e) {
+			logger.error(e.toString());
 		}
 		
 		try {
 			jsonObj.put("serverPort", serverPort);
 		} catch (JSONException e) {
+			logger.error(e.toString());
 		}
 		
 		return jsonObj;
@@ -102,28 +114,33 @@ public class HHttpData implements HJsonObj {
 			try {
 				this.method = jsonObj.getString("method");
 			} catch (JSONException e) {
+				logger.error(e.toString());
 			}
 
 			try {
 				this.queryArgs = jsonObj.getString("queryArgs");
 			} catch (JSONException e) {
+				logger.error(e.toString());
 			}
 
 			try {
 				this.queryPath = jsonObj.getString("queryPath");
 			} catch (JSONException e) {
+				logger.error(e.toString());
 			}
 			
 			try {
 				this.serverName = jsonObj.getString("serverName");
 			} catch (JSONException e) {
+				logger.error(e.toString());
 			}
 			
 			try {
 				this.serverPort = jsonObj.getInt("serverPort");
 			} catch (JSONException e) {
+				logger.error(e.toString());
 			}
-
+			
 			String encodedRawBody;
 			try {
 				encodedRawBody = jsonObj.getString("rawBody");
@@ -131,24 +148,29 @@ public class HHttpData implements HJsonObj {
 					this.rawBody = Base64.decodeBase64(encodedRawBody);
 				}
 			} catch (JSONException e) {
+				logger.error(e.toString());
 			}
 
 			JSONObject jsonAttachements = null;
 			try {
-				jsonAttachements = jsonObj.getJSONObject("attachements");
+				jsonAttachements = jsonObj.getJSONObject("attachments");
 			} catch (JSONException e) {
+				logger.error(e.toString());
 			}
 			
 			if (jsonAttachements != null) {
 				String[] keys = JSONObject.getNames(jsonAttachements);
-				this.attachments = new HashMap<String, HHttpAttachement>();
-				for (int i = 0; i < keys.length; i++) {
-					HHttpAttachement hattachement;
-					try {
-						hattachement = new HHttpAttachement(jsonAttachements.getJSONObject(keys[i]));
-						this.attachments.put(keys[i], hattachement);
-					} catch (JSONException e) {
-					}	
+				if (keys != null) {
+					this.attachments = new HashMap<String, HHttpAttachement>();
+					for (int i = 0; i < keys.length; i++) {
+						HHttpAttachement hattachement;
+						try {
+							hattachement = new HHttpAttachement(jsonAttachements.getJSONObject(keys[i]));
+							this.attachments.put(keys[i], hattachement);
+						} catch (JSONException e) {
+							logger.error(e.toString());
+						}	
+					}
 				}
 			}
 		}

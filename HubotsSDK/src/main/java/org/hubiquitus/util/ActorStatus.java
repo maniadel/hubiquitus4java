@@ -5,7 +5,8 @@ public enum ActorStatus {
 	CREATED (0), 			// just created, not connected througth to the hclient API
 	STARTED (1), 			// connected to the hAPI but not ready
 	INITIALIZED (2),		// connected and initialized
-	READY (3); 				// connected and ready. Adapters are all initialized and started
+	READY (3), 				// connected and ready. Adapters are all initialized and started
+	STOPPED (4);			// disconnected and adapters are all stopped
 	
 	private int value;
 	

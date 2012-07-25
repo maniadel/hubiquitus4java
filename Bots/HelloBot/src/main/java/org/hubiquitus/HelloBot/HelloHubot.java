@@ -20,6 +20,8 @@
 
 package org.hubiquitus.HelloBot;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HMessage;
@@ -32,7 +34,11 @@ import org.json.JSONObject;
 
 public class HelloHubot extends Actor{
 
+	private static Logger logger = Logger.getLogger(HelloHubot.class);
+	
 	public static void main(String[] args) throws Exception{
+		BasicConfigurator.configure();
+		logger.info("test");
 		HelloHubot hubot = new HelloHubot();
 		hubot.start();
 	}
@@ -44,35 +50,25 @@ public class HelloHubot extends Actor{
 	
 	@Override
 	protected void inProcessMessage(HMessage messageIncoming) {
-		if(messageIncoming.getHType().equalsIgnoreCase("hcommand")) {
-			HCommand cmd = new HCommand(messageIncoming.getPayload().toJSON());
-			put("hubotAdapter",cmd);
-		} else {
-			HMessage message = new HMessage();
-			message.setType("HJsonObj");
-			JSONObject jsonObj = messageIncoming.getPayload().toJSON();
-			String name = "Hello ";
-			try {
-				 name += jsonObj.getString("text");
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			HJsonDictionnary payload = new HJsonDictionnary();
-			payload.put("text", name);
-			message.setPayload(payload);
-			System.out.println("here");
-			if(messageIncoming.getChid().contains("#")) {
-				System.out.println("here2");
-				put("adapter1",message);	
-			} else {
-				message.setChid(messageIncoming.getPublisher());
-				put("hubotAdapter",message);	
-			}
+		HMessage message = new HMessage();
+		message.setType("hello");
+		JSONObject jsonObj = messageIncoming.getPayload().toJSON();
+		String name = "Hello ";
+		try {
+			 name += jsonObj.getString("text");
+		} catch (JSONException e) {
+			logger.error(e.toString());
 		}
+		HJsonDictionnary payload = new HJsonDictionnary();
+		payload.put("text", name);
+		message.setPayload(payload);
+		message.setChid(messageIncoming.getPublisher());
+		put("hubotAdapter",message);	
 	}
 	
 	protected void inProcessCommand(HCommand commandIncoming) {
-		put("HubotAdapter", commandIncoming);
+		logger.debug("not supported");
 	}
+	
 
 }

@@ -18,11 +18,12 @@
  */
 
 package org.hubiquitus.hubotsdk;
-import java.io.File; 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.log4j.Logger;
 
 
 import org.apache.camel.impl.DefaultCamelContext;
@@ -45,6 +46,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class Actor {
 
+	private static Logger logger = Logger.getLogger(Actor.class);
+	
 	private static final String HUBOT_ADAPTER_OUTBOX = "hubotAdapterOutbox";
 	private static final String HUBOT_ADAPTER_INBOX = "hubotAdapterInbox";
 	
@@ -65,6 +68,9 @@ public abstract class Actor {
 	private MessagesDelegate messageDelegate = new MessagesDelegate();
 	private StatusDelegate statusDelegate = new StatusDelegate();
 	
+	/**
+	 * Connect the Actor to the hAPI with params set in the file "config.txt" 
+	 */
 	protected final void start() {
 		setStatus(ActorStatus.CREATED);
 		try {
@@ -91,7 +97,7 @@ public abstract class Actor {
 			hClient.connect(jid, pwd , options);
 			// see onStatus to know how this actor go the started status
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.toString());
 		}
 	}
 	
@@ -105,6 +111,11 @@ public abstract class Actor {
 		initialized();
 	}
 	
+	/**
+	 * Create the hubotAdapter and all adapters declared in the file. Call the <i>startAdapters</i> for 
+	 * start all adapters
+	 * Set the status status READY when its over
+	 */
 	protected final void initialized() {
 		setStatus(ActorStatus.INITIALIZED);
 
@@ -125,22 +136,9 @@ public abstract class Actor {
 			camelContext.setRegistry(createRegistry());
 			camelContext.addRoutes(routes);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.toString());
 		}
 		
-	}
-
-	private void startAdapters() {
-		if(adapterInstances != null) {
-			for(String key : adapterInstances.keySet()) {
-				adapterInstances.get(key).start();
-			}   
-		}
-		try {
-			camelContext.start();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void createHubotAdapter() {
@@ -206,11 +204,29 @@ public abstract class Actor {
 					}
 				} 
 			}catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.toString());
 			}
 		}
 	}
 	
+	private void startAdapters() {
+		if(adapterInstances != null) {
+			for(String key : adapterInstances.keySet()) {
+				adapterInstances.get(key).start();
+			}   
+		}
+		try {
+			camelContext.start();
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
+	}
+	
+	/**
+	 * Method used by camel. See Camel documentation for more information
+	 * @return
+	 * @throws Exception
+	 */
 	private JndiRegistry createRegistry() throws Exception {
 		JndiRegistry jndi = new JndiRegistry();
 
@@ -226,41 +242,7 @@ public abstract class Actor {
 		return jndi;
 	}
 	
-	protected final void stop() {
-		for(String key : adapterInstances.keySet()) {
-			adapterInstances.get(key).stop();
-		}  
-		try {
-			camelContext.stop();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	protected abstract void inProcessMessage(HMessage incomingMessage);
-	protected abstract void inProcessCommand(HCommand incomingCommand);
-
-	/* Send message to a specified adapter */
-	protected final void put(String adapterName, HJsonObj hjson) {
-		if(hjson.getHType().equalsIgnoreCase("hcommand")) {
-			put(adapterName, new HCommand(hjson.toJSON()));
-		} else if (hjson.getHType().equalsIgnoreCase("hmessage")){
-			put(adapterName, new HMessage(hjson.toJSON()));
-		} else {
-			// TODO faire un gros message NOT SUPPORTED
-		}
-	}
-
-	protected final void put(String adapterName, HMessage msg) {
-		String route = "seda:" + adapterName + "Outbox";
-		System.out.println("hello3" + route);
-		ProducerTemplateSingleton.getProducerTemplate().sendBody(route,msg);		
-	}
-
-	protected final void put(String adapterName, HCommand cmd) {
-		String route = "seda:" + adapterName + "Outbox";
-		ProducerTemplateSingleton.getProducerTemplate().sendBody(route,cmd);		
-	}
+	
 	
 	protected class MessagesDelegate {
 		/* Method use for incoming message/command */
@@ -275,9 +257,48 @@ public abstract class Actor {
 			}		
 		}
 	}
+	
+	protected abstract void inProcessMessage(HMessage incomingMessage);
+	protected abstract void inProcessCommand(HCommand incomingCommand);
 
+	/**
+	 *  Send an object to a specified adapter outbox. Only HMessage and HCommand supported 
+	 */
+	protected final void put(String adapterName, HJsonObj hjson) {
+		if(hjson.getHType().equalsIgnoreCase("hcommand")) {
+			put(adapterName, new HCommand(hjson.toJSON()));
+		} else if (hjson.getHType().equalsIgnoreCase("hmessage")){
+			put(adapterName, new HMessage(hjson.toJSON()));
+		} else {
+			logger.error("Not supported");
+		}
+	}
+	
+	/**
+	 * Send an HMessage to a specified adapter outbox.
+	 * @param adapterName
+	 * @param msg
+	 */
+	protected final void put(String adapterName, HMessage msg) {
+		String route = "seda:" + adapterName + "Outbox";
+		ProducerTemplateSingleton.getProducerTemplate().sendBody(route,msg);		
+	}
+
+	/**
+	 * Send an HCommand to a specified adapter outbox.
+	 * @param adapterName
+	 * @param cmd
+	 */
+	protected final void put(String adapterName, HCommand cmd) {
+		String route = "seda:" + adapterName + "Outbox";
+		ProducerTemplateSingleton.getProducerTemplate().sendBody(route,cmd);		
+	}
+
+	/**
+	 * Check if the hClient is connect and if connected, set the status to STARTED 
+	 * and launch the init method
+	 */
 	private class StatusDelegate implements HStatusDelegate {
-		
 		/* Method use for incoming message/command */
 		public final void onStatus(HStatus status) {
 			if(status.getStatus() == ConnectionStatus.CONNECTED && outerclass.status == ActorStatus.CREATED) {
@@ -289,13 +310,25 @@ public abstract class Actor {
 
 	private void setStatus(ActorStatus status) {
 		this.status = status;
-		System.out.println(name+"("+jid+") : "+status);
+		logger.info((name+"("+jid+") : "+status));
 	}
 	
+	/**
+	 * Retrived the instance of a specified AdapterInbox
+	 * You can use this method to modified some properties of this adapter
+	 * @param name
+	 * @return
+	 */
 	protected final AdapterInbox getAdapterInbox(String name) {
 		return (AdapterInbox) adapterInstances.get(name+"Inbox");
 	}
 
+	/**
+	 * Retrived the instance of a specified AdapterOutbox
+	 * You can use this method to modified some properties of this adapter
+	 * @param name
+	 * @return
+	 */
 	protected final AdapterOutbox getAdapterOutbox(String name) {
 		return (AdapterOutbox) adapterInstances.get(name+"Outbox");
 	}

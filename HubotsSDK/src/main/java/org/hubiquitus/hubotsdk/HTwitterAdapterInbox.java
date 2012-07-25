@@ -4,9 +4,12 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Map;
 
+<<<<<<< HEAD
 import org.hubiquitus.hapi.hStructures.HLocation;
 import org.hubiquitus.hapi.hStructures.HMessage;
+=======
 import org.apache.log4j.Logger;
+>>>>>>> 0ef85ab68d054bc40b02ca37141c72a68e50c861
 import org.hubiquitus.hubotsdk.AdapterInbox;
 import org.hubiquitus.hubotsdk.adapters.HtwitterAdapter.HTweet;
 
@@ -79,9 +82,12 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		super();
 	}
 
+<<<<<<< HEAD
 	/**
 	 * Function for tweet Streaming
 	 */
+=======
+>>>>>>> 0ef85ab68d054bc40b02ca37141c72a68e50c861
 	public void stream() {
 
 		ConfigurationBuilder cb = new ConfigurationBuilder();
@@ -93,14 +99,19 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
 		StatusListener listener = new StatusListener() {
 
+<<<<<<< HEAD
 			public void onStatus(Status tweet) {
 				String lang = tweet.getUser().getLang();
 				if( lang != null && lang.equalsIgnoreCase(langFilter)) {
 					HMessage message = transformtweet(tweet);
 					put(message);
 				}
+=======
+			public void onStatus(Status status) {
+				logger.info("@" + status.getUser().getScreenName() + " - " + status.getText());
+>>>>>>> 0ef85ab68d054bc40b02ca37141c72a68e50c861
 			}
-	
+			
 			public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
 			}
 

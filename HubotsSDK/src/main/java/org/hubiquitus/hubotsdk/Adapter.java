@@ -22,23 +22,34 @@ package org.hubiquitus.hubotsdk;
 import java.util.Map;
 
 import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.log4j.Logger;
 import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hapi.client.HResultDelegate;
 import org.hubiquitus.hapi.hStructures.HResult;
 import org.hubiquitus.hapi.hStructures.ResultStatus;
 
 public abstract class Adapter implements HResultDelegate{
+	private static Logger logger = Logger.getLogger(Adapter.class);
 	
 	protected HClient hclient;
 	protected String name;
 	protected DefaultCamelContext camelContext;
-
+	
+	/**
+	 * Method used to set properties of the adapters. 
+	 * SHOULD BE OVERWRITE
+	 * @param params
+	 */
 	public abstract void setProperties(Map<String,String> params);
 
-	// Method to start the bot
+	/**
+	 *  Method to start the bot
+	 */
 	public abstract void start();
 
-	// Method to stop the bot
+	/**
+	 * Method to stop the bot
+	 */
 	public abstract void stop();
 	
 	
@@ -57,6 +68,6 @@ public abstract class Adapter implements HResultDelegate{
 	@Override
 	public void onResult(HResult result) {
 		if(result.getStatus() != ResultStatus.NO_ERROR) 
-			System.out.println("Erreur lors de la commande : " + result);
+			logger.error(("Erreur lors de la commande : " + result));
 	}
 }

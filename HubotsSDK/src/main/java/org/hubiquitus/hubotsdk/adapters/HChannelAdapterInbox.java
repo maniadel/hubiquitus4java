@@ -24,7 +24,7 @@ import java.util.Map;
 import org.hubiquitus.hubotsdk.AdapterInbox;
 
 public class HChannelAdapterInbox extends AdapterInbox{
-
+	
 	private String chid;
 
 	public HChannelAdapterInbox() {}

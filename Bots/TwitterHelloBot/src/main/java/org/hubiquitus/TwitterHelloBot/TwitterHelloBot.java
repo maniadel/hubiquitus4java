@@ -24,8 +24,6 @@ import org.hubiquitus.hubotsdk.Actor;
 import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HMessage;
 
-
-
 public class TwitterHelloBot extends Actor  {
 	
 

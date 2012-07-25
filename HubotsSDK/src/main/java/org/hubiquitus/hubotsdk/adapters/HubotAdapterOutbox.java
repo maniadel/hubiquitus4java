@@ -37,6 +37,7 @@ public class HubotAdapterOutbox extends AdapterOutbox {
 	
 	@Override
 	public void sendCommand(HCommand command) {
+		
 		hclient.command(command, this);
 	}
 

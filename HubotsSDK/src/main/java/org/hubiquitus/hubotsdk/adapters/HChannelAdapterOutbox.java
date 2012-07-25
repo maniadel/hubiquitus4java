@@ -2,31 +2,27 @@ package org.hubiquitus.hubotsdk.adapters;
 
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterOutbox;
 
 public class HChannelAdapterOutbox extends AdapterOutbox {
-
+	
+	private static Logger logger = Logger.getLogger(HChannelAdapterOutbox.class);
 	private String chid;
 	
 	public HChannelAdapterOutbox() { }
 
 	@Override
-	public void start() {
-	}
+	public void start() {}
 
 	@Override
-	public void stop() {
-	}
+	public void stop() {}
 
 	@Override
 	public void sendCommand(HCommand command) {
-		HMessage message = new HMessage();
-		message.setChid(chid);
-		message.setType("hcommand");
-		message.setPayload(command);
-		hclient.publish(message, this);
+		logger.error("The HChannelAdapter for the channel "+ chid + "can not send command");
 	}
 
 	@Override
