@@ -25,15 +25,16 @@ import twitter4j.conf.ConfigurationBuilder;
  */
 public class HTwitterAdapterInbox extends AdapterInbox{
 
+	@SuppressWarnings("unused")
 	private static Logger logger = Logger.getLogger(HChannelAdapterOutbox.class);
 	
 	private String consumerKey ;
 	private String consumerSecret;
 	private String twitterAccessToken;
 	private String twitterAccessTokenSecret;
-	private String host;
+
 	private String langFilter;
-	private int port;
+
 
 	private String tags;
 
@@ -51,15 +52,11 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 			setTwitterAccessTokenSecret(params.get("twitterAccessTokenSecret"));
 		if(params.get("tags") != null) 
 			setTags(params.get("tags"));
-		if(params.get("host") != null) 
-			setHost(params.get("host"));
 		if(params.get("lang") != null) 
 			setLangFilter(params.get("lang"));
-		if(params != null && params.containsKey("port")) {
-			this.port = Integer.parseInt(params.get("port"));
+
 
 		}
-	}
 
 	/**
 	 * Function to start Streaming
@@ -83,16 +80,23 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 	 * Function for tweet Streaming
 	 */
 	public void stream() {
-
+		/**
+		 * Configuration for access to twitter account
+		 */
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true).setUseSSL(false); 
 		cb.setOAuthConsumerKey(consumerKey);
 		cb.setOAuthConsumerSecret(consumerSecret);
 		cb.setOAuthAccessToken(twitterAccessToken);
 		cb.setOAuthAccessTokenSecret(twitterAccessTokenSecret);
+		/**
+		 * Instantiation of tweet stream
+		 */
 		twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
 		StatusListener listener = new StatusListener() {
-
+			/**
+			 * Language filter
+			 */
 			public void onStatus(Status tweet) {
 				String lang = tweet.getUser().getLang();
 				if( lang != null && lang.equalsIgnoreCase(langFilter)) {
@@ -162,22 +166,6 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 
 	/* Getters & Setters */
 	
-	public String getHost() {
-		return host;
-	}
-
-	public void setHost(String host) {
-		this.host = host;
-	}
-
-	public int getPort() {
-		return port;
-	}
-
-	public void setPort(int port) {
-		this.port = port;
-	}
-
 	public String getConsumerKey() {
 		return consumerKey;
 	}
