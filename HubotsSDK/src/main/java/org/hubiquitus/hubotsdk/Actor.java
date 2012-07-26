@@ -242,8 +242,17 @@ public abstract class Actor {
 		return jndi;
 	}
 	
-	
-	
+	protected final void stop() {
+		for(String key : adapterInstances.keySet()) {
+		  adapterInstances.get(key).stop();
+	  	}
+	  	try {
+		  camelContext.stop();
+	  	} catch (Exception e) {
+		  	logger.error(e.toString());
+		  }
+	}
+		
 	protected class MessagesDelegate {
 		/* Method use for incoming message/command */
 		public final void inProcess(Object obj) {
