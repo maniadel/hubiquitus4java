@@ -64,6 +64,7 @@ public abstract class Actor {
 	private String jid;
 	private String pwd;
 	private String endpoint;
+	private Map<String,String> properties;
 	
 	private MessagesDelegate messageDelegate = new MessagesDelegate();
 	private StatusDelegate statusDelegate = new StatusDelegate();
@@ -86,6 +87,7 @@ public abstract class Actor {
 			this.jid = configActor.getJid();
 			this.pwd = configActor.getPwdhash();
 			this.endpoint = configActor.getEndpoint();
+			this.properties = configActor.getProperties();
 	
 			//Connecting to HNode
 			HOptions options = new HOptions();
@@ -250,7 +252,7 @@ public abstract class Actor {
 		  camelContext.stop();
 	  	} catch (Exception e) {
 		  	logger.error(e.toString());
-		  }
+		}
 	}
 		
 	protected class MessagesDelegate {
@@ -340,6 +342,14 @@ public abstract class Actor {
 	 */
 	protected final AdapterOutbox getAdapterOutbox(String name) {
 		return (AdapterOutbox) adapterInstances.get(name+"Outbox");
+	}
+	
+	/**
+	 * Retrived the properties of this Bot
+	 * @return
+	 */
+	protected final Map<String,String> getProperties() {
+		return properties;
 	}
 
 }
