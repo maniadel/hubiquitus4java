@@ -17,7 +17,9 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 package org.hubiquitus.HelloBot;
+
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -29,13 +31,14 @@ import org.hubiquitus.hubotsdk.Actor;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
+
 public class HelloHubot extends Actor{
 
 	private static Logger logger = Logger.getLogger(HelloHubot.class);
 	
 	public static void main(String[] args) throws Exception{
 		BasicConfigurator.configure();
-		logger.info("test");
 		HelloHubot hubot = new HelloHubot();
 		hubot.start();
 	}

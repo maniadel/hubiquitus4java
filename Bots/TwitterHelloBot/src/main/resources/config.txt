@@ -12,7 +12,8 @@
 				"consumerSecret" : "BgEzMqPcjZM3Gywh38YQGc8A5Cl8YV76UoXhcQaVo",
 				"twitterAccessToken" : "707158087-CmcA03GnOHHHyFBGmF2xPqWEJujrhDqQ42lsy8k6",
 				"twitterAccessTokenSecret" : "DtP0vZri1taqKkjl26PD7fzDX3rZWYtXgiKR9UXXU",
-				"tags" : "toto#test"
+				"tags" : "test#toto",
+				"lang" : "fr"
 			}
 		}
 	],

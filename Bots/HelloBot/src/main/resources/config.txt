@@ -3,6 +3,9 @@
 	"jid" : "u1@hub.novediagroup.com",
 	"pwdhash" : "u1",
 	"endpoint" : "http://hub.novediagroup.com:8080",
+	"properties" : {
+			"properties1" : "test"
+	},
 	"adapters" : [ {
 		"name" : "adapter1",
 		"type" : "HChannelAdapter",

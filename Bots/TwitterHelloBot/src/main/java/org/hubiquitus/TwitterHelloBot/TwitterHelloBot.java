@@ -19,30 +19,35 @@
 
 package org.hubiquitus.TwitterHelloBot;
 
+
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 import org.hubiquitus.hubotsdk.Actor;
 import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HMessage;
 
 public class TwitterHelloBot extends Actor  {
 
+
+	private static Logger logger = Logger.getLogger(TwitterHelloBot.class);
+	
 	public static void main( String[] args )throws Exception{
+		BasicConfigurator.configure();    
 		TwitterHelloBot bot  = new TwitterHelloBot();
 		bot.start();
-		Thread.sleep(10000);
-		bot.stop();
 	}
 
 	@Override
-	protected void inProcessMessage(HMessage incomingMessage) {
-		// TODO Auto-generated method stub
-		
+	protected void inProcessMessage(HMessage messageIncoming) {
+		logger.info(messageIncoming.toString());
 	}
 
 	@Override
 	protected void inProcessCommand(HCommand commandIncoming) {
-		put("HubotAdapter", commandIncoming);		
+		//put("twitterAdapter", commandIncoming);
+		
 	}
-	
+
 
 
 }
