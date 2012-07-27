@@ -58,52 +58,52 @@ public class HHttpData implements HJsonObj {
 			try {
 				jsonAttachments.put(key, attachments.get(key).toJSON());
 			} catch (JSONException e) {
-				logger.error(e.toString());
+				logger.debug(e.toString());
 			}
 		}
 		
 		try {
 			jsonObj.put("attachments", jsonAttachments);
 		} catch (JSONException e) {
-			logger.error(e.toString());
+			logger.debug(e.toString());
 		}
 		
 		if (this.rawBody != null) {
 			try {
 				jsonObj.put("rawBody", Base64.encodeBase64String(this.rawBody));
 			} catch (JSONException e) {
-				logger.error(e.toString());
+				logger.debug(e.toString());
 			}
 		}
 		
 		try {
 			jsonObj.put("method", method);
 		} catch (JSONException e) {
-			logger.error(e.toString());
+			logger.debug(e.toString());
 		}
 		
 		try {
 			jsonObj.put("queryArgs", queryArgs);
 		} catch (JSONException e) {
-			logger.error(e.toString());
+			logger.debug(e.toString());
 		}
 		
 		try {
 			jsonObj.put("queryPath", queryPath);
 		} catch (JSONException e) {
-			logger.error(e.toString());
+			logger.debug(e.toString());
 		}
 		
 		try {
 			jsonObj.put("serverName", serverName);
 		} catch (JSONException e) {
-			logger.error(e.toString());
+			logger.debug(e.toString());
 		}
 		
 		try {
 			jsonObj.put("serverPort", serverPort);
 		} catch (JSONException e) {
-			logger.error(e.toString());
+			logger.debug(e.toString());
 		}
 		
 		return jsonObj;
@@ -114,31 +114,31 @@ public class HHttpData implements HJsonObj {
 			try {
 				this.method = jsonObj.getString("method");
 			} catch (JSONException e) {
-				logger.error(e.toString());
+				logger.debug(e.toString());
 			}
 
 			try {
 				this.queryArgs = jsonObj.getString("queryArgs");
 			} catch (JSONException e) {
-				logger.error(e.toString());
+				logger.debug(e.toString());
 			}
 
 			try {
 				this.queryPath = jsonObj.getString("queryPath");
 			} catch (JSONException e) {
-				logger.error(e.toString());
+				logger.debug(e.toString());
 			}
 			
 			try {
 				this.serverName = jsonObj.getString("serverName");
 			} catch (JSONException e) {
-				logger.error(e.toString());
+				logger.debug(e.toString());
 			}
 			
 			try {
 				this.serverPort = jsonObj.getInt("serverPort");
 			} catch (JSONException e) {
-				logger.error(e.toString());
+				logger.debug(e.toString());
 			}
 			
 			String encodedRawBody;
@@ -148,14 +148,14 @@ public class HHttpData implements HJsonObj {
 					this.rawBody = Base64.decodeBase64(encodedRawBody);
 				}
 			} catch (JSONException e) {
-				logger.error(e.toString());
+				logger.debug(e.toString());
 			}
 
 			JSONObject jsonAttachements = null;
 			try {
 				jsonAttachements = jsonObj.getJSONObject("attachments");
 			} catch (JSONException e) {
-				logger.error(e.toString());
+				logger.debug(e.toString());
 			}
 			
 			if (jsonAttachements != null) {
@@ -168,7 +168,7 @@ public class HHttpData implements HJsonObj {
 							hattachement = new HHttpAttachement(jsonAttachements.getJSONObject(keys[i]));
 							this.attachments.put(keys[i], hattachement);
 						} catch (JSONException e) {
-							logger.error(e.toString());
+							logger.debug(e.toString());
 						}	
 					}
 				}

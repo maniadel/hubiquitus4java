@@ -43,10 +43,6 @@ public class HubotAdapterOutbox extends AdapterOutbox {
 
 	@Override
 	public void sendMessage(HMessage message) {
-		message.setPublisher(jid);
-		message.setPublished(new GregorianCalendar());
-		message.setType("hello");
-		message.setTransient(true);
 		hclient.publish(message, this);
 	}
 
