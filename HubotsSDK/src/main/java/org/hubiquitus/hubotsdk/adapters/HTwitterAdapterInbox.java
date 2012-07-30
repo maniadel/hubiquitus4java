@@ -27,15 +27,12 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 
 	@SuppressWarnings("unused")
 	private static Logger logger = Logger.getLogger(HChannelAdapterOutbox.class);
-	
+
 	private String consumerKey ;
 	private String consumerSecret;
 	private String twitterAccessToken;
 	private String twitterAccessTokenSecret;
-
 	private String langFilter;
-
-
 	private String tags;
 
 	protected TwitterStream twitterStream;
@@ -56,7 +53,7 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 			setLangFilter(params.get("lang"));
 
 
-		}
+	}
 
 	/**
 	 * Function to start Streaming
@@ -89,30 +86,24 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		cb.setOAuthConsumerSecret(consumerSecret);
 		cb.setOAuthAccessToken(twitterAccessToken);
 		cb.setOAuthAccessTokenSecret(twitterAccessTokenSecret);
-		/**
-		 * Instantiation of tweet stream
-		 */
+
+		//Instantiation of tweet stream
 		twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
 		StatusListener listener = new StatusListener() {
-			/**
-			 * Language filter
-			 */
 			public void onStatus(Status tweet) {
 				String lang = tweet.getUser().getLang();
+				//Set the filter for the language
 				if( lang != null && lang.equalsIgnoreCase(langFilter)) {
 					HMessage message = transformtweet(tweet);
 					put(message);
 				}
 			}
-	
-			public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
-			}
 
-			public void onTrackLimitationNotice(int numberOfLimitedStatuses) {
-			}
+			public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {}
 
-			public void onScrubGeo(long userId, long upToStatusId) {
-			}
+			public void onTrackLimitationNotice(int numberOfLimitedStatuses) {}
+
+			public void onScrubGeo(long userId, long upToStatusId) {}
 
 			public void onException(Exception ex) {
 				ex.printStackTrace();
@@ -120,13 +111,12 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		};
 
 		FilterQuery fq = new FilterQuery();
-		fq.track(tags.split("#"));
-
-
+		fq.track(tags.split(","));
+		
 		twitterStream.addListener(listener);
 		twitterStream.filter(fq);  
 	}
-	
+
 	/**
 	 * Function for transforming Tweet to HMessage
 	 * @param tweet
@@ -143,11 +133,11 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 			location.setLng(tweet.getGeoLocation().getLongitude());
 			message.setLocation(location);
 		}
-		
 		tweet.getCreatedAt().getTime();
 		Calendar createdAt = new GregorianCalendar();
 		createdAt.setTime(tweet.getCreatedAt());
 		htweet.setCreatedAt(createdAt);
+		htweet.setAuthorName(tweet.getUser().getName());
 		htweet.setFriendsCount(tweet.getUser().getFriendsCount());
 		htweet.setIdTweet(tweet.getId());
 		htweet.setInReplyToScreenName(tweet.getInReplyToScreenName());
@@ -158,21 +148,33 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		htweet.setTweetText(tweet.getText());
 		htweet.setLang(tweet.getUser().getLang());
 		htweet.setStatus(tweet.getUser().getStatus());
+		htweet.setFollowerscount(tweet.getUser().getFollowersCount());
+		htweet.setStatusesCount(tweet.getUser().getStatusesCount());
 		message.setPayload(htweet);
-		
+		message.setType("htweet");
+
 		return message;
 	}
-	
+
 
 	/* Getters & Setters */
-	
 	public String getConsumerKey() {
 		return consumerKey;
 	}
 
+
 	public void setConsumerKey(String consumerKey) {
 		this.consumerKey = consumerKey;
 	}
+
+	public String getTags() {
+		return tags;
+	}
+
+	public void setTags(String tags) {
+		this.tags = tags;
+	}
+
 
 	public String getConsumerSecret() {
 		return consumerSecret;
@@ -198,14 +200,6 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		this.twitterAccessTokenSecret = twitterAccessTokenSecret;
 	}
 
-	public String getTags() {
-		return tags;
-	}
-
-	public void setTags(String tags) {
-		this.tags = tags;
-	}
-	
 	public String getLangFilter() {
 		return langFilter;
 	}
