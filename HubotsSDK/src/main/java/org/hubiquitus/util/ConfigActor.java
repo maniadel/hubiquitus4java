@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class ConfigActor {
 
-	public static class AdapterConfig {
+		public static class AdapterConfig {
 		public String name,type;
 		public Map<String,String> properties;
 
@@ -47,14 +47,19 @@ public class ConfigActor {
 	public String jid;
 	public String pwdhash;
 	public String endpoint;
+	public Map<String,String>  properties;
 	public ArrayList<AdapterConfig> adapters;
 	public ArrayList<String> inbox;
 	public ArrayList<String> outboxes;
+	
+	
+	
 
 	public String getName() { return name; }
 	public String getJid() { return jid; }
 	public String getPwdhash() { return pwdhash; }
 	public String getEndpoint() { return endpoint; }
+	public Map<String,String> getProperties() { return properties;}
 	public ArrayList<AdapterConfig> getAdapters() { return adapters; }
 	public ArrayList<String> getInbox() { return inbox; }
 	public ArrayList<String> getOutboxes() { return outboxes; }
@@ -63,6 +68,7 @@ public class ConfigActor {
 	public void setJid(String s) { jid = s; }
 	public void setPwdhash(String s) { pwdhash = s; }
 	public void setEndpoint(String s) { endpoint = s; }
+	public void setProperties(Map<String,String> map) { properties = map;}
 	public void setAdapters(ArrayList<AdapterConfig> a) { adapters = a; }
 	public void setInbox(ArrayList<String> a) { inbox = a; }
 	public void setOutboxes(ArrayList<String> a) { outboxes = a; }

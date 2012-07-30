@@ -20,6 +20,7 @@
 
 package org.hubiquitus.HelloBot;
 
+
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.hubiquitus.hapi.client.HClient;
@@ -38,7 +39,6 @@ public class HelloHubot extends Actor{
 	
 	public static void main(String[] args) throws Exception{
 		BasicConfigurator.configure();
-		logger.info("test");
 		HelloHubot hubot = new HelloHubot();
 		hubot.start();
 	}
