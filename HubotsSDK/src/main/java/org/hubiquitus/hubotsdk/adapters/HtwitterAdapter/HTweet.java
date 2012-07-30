@@ -76,6 +76,27 @@ public class HTweet implements HJsonObj{
 	}
 
 	/* Getters & Setters */
+	
+	public String getAuthorName() {
+		String tweetText;
+		try {
+			tweetText = htweet.getString("authorName");
+		} catch (Exception e) {
+			tweetText = null;			
+		}
+		return tweetText;
+	}
+
+	public void setAuthorName(String authorName) {
+		try {
+			if(authorName == null) {
+				htweet.remove("authorName");
+			} else {
+				htweet.put("authorName", authorName);
+			}
+		} catch (JSONException e) {
+		}
+	}
 
 	public String getTweetText() {
 		String tweetText;
@@ -99,7 +120,7 @@ public class HTweet implements HJsonObj{
 	}
 	
 	/** 
-	 *the screen name of the user : see TwitterApi
+	 * The screen name of the user : see TwitterApi
 	 * @return
 	 */
 	public String getScreenName() {
@@ -124,7 +145,7 @@ public class HTweet implements HJsonObj{
 	}
 	
 	/**
-	 * Returns the screen name of the users: See TwitterApi
+	 * The screen name of the users: See TwitterApi
 	 * @return
 	 */
 	public String getInReplyToScreenName() {
@@ -149,7 +170,7 @@ public class HTweet implements HJsonObj{
 	}
 
 	/**
-	 * Returns the Application source
+	 * The Application source
 	 * @return
 	 */
 
@@ -176,6 +197,10 @@ public class HTweet implements HJsonObj{
 
 	}
 	
+	/**
+	 * The ISOLanguage of the tweet
+	 * @return
+	 */
 	public String getIsoLanguageCode() {
 		String isoLanguageCode;
 		try {
@@ -200,7 +225,7 @@ public class HTweet implements HJsonObj{
 	}
 
 	/**
-	 *    Returns The location that this tweet refers to if available
+	 * The location that this tweet refers to if available
 	 * @return
 	 */
 	public String getLocation() {
@@ -227,7 +252,7 @@ public class HTweet implements HJsonObj{
 	}
 	
 	/**
-	 * Return language of tweet
+	 * The language of tweet
 	 * @return
 	 */	
 	public String getLang() {
@@ -280,10 +305,19 @@ public class HTweet implements HJsonObj{
 
 	}
 	/**
-	 * Returns the number of times this tweet has been retweeted
-	 * @param retweetcount
+	 * The number of times this tweet has been retweeted
+	 * @return
 	 */
-	
+	public int getRetweetcount() {
+		int retweetcount;
+		try {
+			retweetcount = htweet.getInt("retweetcount");
+		} catch (Exception e) {
+			retweetcount = 0;			
+		}
+		return retweetcount;
+	}
+
 	public void setRetweetcount(long retweetcount) {
 		try {
 			if(retweetcount == 0) {
@@ -295,19 +329,20 @@ public class HTweet implements HJsonObj{
 		}
 	}
 
-	public int getRetweetcount() {
-		int retweetcount;
-		try {
-			retweetcount = htweet.getInt("retweetcount");
-		} catch (Exception e) {
-			retweetcount = 0;			
-		}
-		return retweetcount;
-	}
 	/**
-	 * Returns the id of the status
+	 * The id of the status
 	 * @return
 	 */
+	public int getIdtweet() {
+		int idTweet;
+		try {
+			idTweet = htweet.getInt("idTweet");
+		} catch (Exception e) {
+			idTweet = 0;			
+		}
+		return idTweet;
+	}
+	
 	public void setIdTweet(long idTweet) {
 		try {
 			if(idTweet == 0) {
@@ -319,20 +354,22 @@ public class HTweet implements HJsonObj{
 		}
 	}
 	
-	public int getIdtweet() {
-		int idTweet;
-		try {
-			idTweet = htweet.getInt("idTweet");
-		} catch (Exception e) {
-			idTweet = 0;			
-		}
-		return idTweet;
-	}
+	
 	
 	/**
-	 * Returns the friends Count
+	 * The friends Count
 	 * @return
 	 */
+	public int 	getFriendsCount() {
+		int friendsCount;
+		try {
+			friendsCount = htweet.getInt("friendsCount");
+		} catch (Exception e) {
+			friendsCount = 0;			
+		}
+		return friendsCount;
+	}
+	
 	public void setFriendsCount(int friendsCount) {
 		try {
 			if(friendsCount == 0) {
@@ -344,19 +381,8 @@ public class HTweet implements HJsonObj{
 		}
 	}
 
-	
-	public int 	getFriendsCount() {
-		int friendsCount;
-		try {
-			friendsCount = htweet.getInt("friendsCount");
-		} catch (Exception e) {
-			friendsCount = 0;			
-		}
-		return friendsCount;
-	}
-	
 	/**
-	 * Return the date of tweet creation 
+	 * The date of tweet creation 
 	 * @return
 	 */
 	public Calendar getCreatedAt() {
@@ -378,6 +404,58 @@ public class HTweet implements HJsonObj{
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * The number of followers
+	 * @return
+	 */
+	public int getFollowerscount() {
+		int followerscount;
+		try {
+			followerscount = htweet.getInt("followerscount");
+		} catch (Exception e) {
+			followerscount = 0;		
+		}
+		return followerscount;
+	}
+
+	public void setFollowerscount(int followerscount) {
+		try {
+			if(followerscount == 0) {
+				htweet.remove("followerscount");
+			} else {
+				htweet.put("followerscount", followerscount);
+			}
+		} catch (JSONException e) {
+		}
+
+
+	}
+	
+	/**
+	 * The Status counter
+	 * @return
+	 */
+	public int getStatusesCount() {
+		int statusesCount;
+		try {
+			statusesCount = htweet.getInt("statusesCount");
+		} catch (Exception e) {
+			statusesCount = 0;			
+		}
+		return statusesCount;
+	}
+	
+	public void setStatusesCount(int statusesCount) {
+		try {
+			if(statusesCount == 0) {
+				htweet.remove("statusesCount");
+			} else {
+				htweet.put("statusesCount", statusesCount);
+			}
+		} catch (JSONException e) {
 		}
 	}
 
