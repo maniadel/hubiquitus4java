@@ -325,6 +325,27 @@ public abstract class Actor {
 	}
 	
 	/**
+	 * Update a specified inboxAdapter's properties
+	 * @param String : adapterName
+	 * @param Map<String,String> : params - params for update properties
+	 */
+	protected void updateInboxAdapterProperties(String adapterName, Map<String, String> params) {
+		Adapter updatedAdapter = adapterInstances.get(adapterName + "Inbox");
+		updatedAdapter.updateProperties(params);
+	}
+	
+	/**
+	 * Update a specified outboxAdapter's properties
+	 * @param String : adapterName
+	 * @param Map<String,String> : params - params for update properties
+	 */
+	protected void updateOutboxAdapterProperties(String adapterName, Map<String, String> params) {
+		Adapter updatedAdapter = adapterInstances.get(adapterName + "Outbox");
+		updatedAdapter.updateProperties(params);
+	}
+	
+	
+	/**
 	 * Retrived the instance of a specified AdapterInbox
 	 * You can use this method to modified some properties of this adapter
 	 * @param name
