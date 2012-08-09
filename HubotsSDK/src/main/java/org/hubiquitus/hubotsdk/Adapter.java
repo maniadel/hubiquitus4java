@@ -65,6 +65,17 @@ public abstract class Adapter implements HResultDelegate{
 		this.name = name;				
 	}
 	
+	
+	/**
+	 * Allow the user to update the properties of the adapter. During this update, this adapter is stop.
+	 * @param params
+	 */
+	public final void updateProperties(Map<String,String> params) {
+		stop();
+		setProperties(params);
+		start();
+	}
+	
 	@Override
 	public void onResult(HResult result) {
 		if(result.getStatus() != ResultStatus.NO_ERROR) 

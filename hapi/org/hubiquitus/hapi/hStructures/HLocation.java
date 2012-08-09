@@ -61,7 +61,7 @@ public class HLocation implements HJsonObj{
 	}
 	
 	/**
-	 * Check are made on : lng, lat, zip, address, city and country. 
+	 * Check are made on : lng, lat, zip, num, building, floor, way, waytype, addr, city and countryCode. 
 	 * @param HLocation 
 	 * @return Boolean
 	 */
@@ -72,11 +72,21 @@ public class HLocation implements HJsonObj{
 			return false;
 		if(obj.getZip() != this.getZip())
 			return false;
-		if(obj.getAddress() != this.getAddress())
+		if(obj.getNum() != this.getNum())
+			return false;
+		if(obj.getBuilding() != this.getBuilding())
+			return false;
+		if(obj.getFloor() != this.getFloor())
+			return false;
+		if(obj.getWay() != this.getWay())
+			return false;
+		if(obj.getWayType() != this.getWayType())
+			return false;
+		if(obj.getAddr() != this.getAddr())
 			return false;
 		if(obj.getCity() != this.getCity())
 			return false;
-		if(obj.getCountry() != this.getCountry())
+		if(obj.getCountryCode() != this.getCountryCode())
 			return false;
 		return true;
 	}
@@ -89,7 +99,7 @@ public class HLocation implements HJsonObj{
 	/* Getters & Setters */
 	
 	/**
-	 * @return latitude of the location. 0 if undefined
+	 * @return the latitude of the location. 0 if undefined
 	 */
 	public double getLat() {
 		double lat;
@@ -113,7 +123,7 @@ public class HLocation implements HJsonObj{
 	}
 
 	/**
-	 * @return longitude of the location. 0 if undefined
+	 * @return the longitude of the location. 0 if undefined
 	 */
 	public double getLng() {
 		double lng;
@@ -137,7 +147,7 @@ public class HLocation implements HJsonObj{
 	}
 	
 	/**
-	 * @return zip code of the location. NULL if undefined
+	 * @return the zip code of the location. NULL if undefined
 	 */
 	public String getZip() {
 		String zip;
@@ -159,31 +169,152 @@ public class HLocation implements HJsonObj{
 		} catch (JSONException e) {
 		}
 	}
-	
+
 	/**
-	 * @return address of the location. NULL if undefined
+	 * @return the way number of the location. NULL if undefined
 	 */
-	public String getAddress() {
-		String address;
+	public String getNum() {
+		String num;
 		try {
-			address = hlocation.getString("addr");
+			num = hlocation.getString("num");
 		} catch (Exception e) {
-			address = null;			
+			num = null;			
 		}
-		return address;
+		return num;
 	}
 
-	public void setAddress(String address) {
+	public void setNum(String num) {
 		try {
-			if(address == null) {
-				hlocation.remove("addr");
+			if(num == null) {
+				hlocation.remove("num");
 			} else {
-				hlocation.put("addr", address);
+				hlocation.put("num", num);
+			}
+		} catch (JSONException e) {
+		}
+	}
+	
+	/**
+	 * @return the type of the way of the location. NULL if undefined
+	 */
+	public String getWayType() {
+		String wayType;
+		try {
+			wayType = hlocation.getString("wayType");
+		} catch (Exception e) {
+			wayType = null;			
+		}
+		return wayType;
+	}
+
+	public void setWayType(String wayType) {
+		try {
+			if(wayType == null) {
+				hlocation.remove("wayType");
+			} else {
+				hlocation.put("wayType", wayType);
 			}
 		} catch (JSONException e) {
 		}
 	}
 
+	/**
+	 * @return the name of the street/way of the location. NULL if undefined
+	 */
+	public String getWay() {
+		String way;
+		try {
+			way = hlocation.getString("way");
+		} catch (Exception e) {
+			way = null;			
+		}
+		return way;
+	}
+	
+	public void setWay(String way) {
+		try {
+			if(way == null) {
+				hlocation.remove("way");
+			} else {
+				hlocation.put("way", way);
+			}
+		} catch (JSONException e) {
+		}
+	}
+	
+	/**
+	 * @return the address complement of the location. NULL if undefined
+	 */
+	public String getAddr() {
+		String addr;
+		try {
+			addr = hlocation.getString("addr");
+		} catch (Exception e) {
+			addr = null;			
+		}
+		return addr;
+	}
+	
+	public void setAddr(String addr) {
+		try {
+			if(addr == null) {
+				hlocation.remove("addr");
+			} else {
+				hlocation.put("addr", addr);
+			}
+		} catch (JSONException e) {
+		}
+	}
+
+	/**
+	 * @return the floor number of the location. NULL if undefined
+	 */
+	public String getFloor() {
+		String floor;
+		try {
+			floor = hlocation.getString("floor");
+		} catch (Exception e) {
+			floor = null;			
+		}
+		return floor;
+	}
+	
+	public void setFloor(String floor) {
+		try {
+			if(floor == null) {
+				hlocation.remove("floor");
+			} else {
+				hlocation.put("floor", floor);
+			}
+		} catch (JSONException e) {
+		}
+	}
+
+	/**
+	 * @return the building’s identifier of the location. NULL if undefined
+	 */
+	public String getBuilding() {
+		String building;
+		try {
+			building = hlocation.getString("building");
+		} catch (Exception e) {
+			building = null;			
+		}
+		return building;
+	}
+	
+	public void setBuilding(String building) {
+		try {
+			if(building == null) {
+				hlocation.remove("building");
+			} else {
+				hlocation.put("building", building);
+			}
+		} catch (JSONException e) {
+		}
+	}
+
+	
 	/**
 	 * @return city of the location. NULL if undefined
 	 */
@@ -209,24 +340,24 @@ public class HLocation implements HJsonObj{
 	}
 	
 	/**
-	 * @return country of the location. NULL if undefined
+	 * @return countryCode of the location. NULL if undefined
 	 */
-	public String getCountry() {
-		String country;
+	public String getCountryCode() {
+		String countryCode;
 		try {
-			country = hlocation.getString("country");
+			countryCode = hlocation.getString("countryCode");
 		} catch (Exception e) {
-			country = null;			
+			countryCode = null;			
 		}
-		return country;
+		return countryCode;
 	}
 
-	public void setCountry(String country) {
+	public void setCountryCode(String countryCode) {
 		try {
-			if(country == null) {
-				hlocation.remove("country");
+			if(countryCode == null) {
+				hlocation.remove("countryCode");
 			} else {
-				hlocation.put("country", country);
+				hlocation.put("countryCode", countryCode);
 			}
 		} catch (JSONException e) {
 		}
