@@ -38,7 +38,6 @@ public class HOptions implements Cloneable {
 	private int serverPort = 5222;
 	private String transport = "xmpp";
 	private List<String> endpoints = null;
-	private int nbLastMessage = 10;
 	private String hserver = "hnode";
 	
 	public HOptions() {
@@ -70,10 +69,6 @@ public class HOptions implements Cloneable {
 				setEndpoints(arrayEndpoints);
 			}
 			
-			if (jsonObj.has("nbLastMessage")) {
-				setNbLastMessage(jsonObj.getInt("nbLastMessage"));
-			}
-			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -84,7 +79,6 @@ public class HOptions implements Cloneable {
 		this.setServerPort(options.serverPort);
 		this.setEndpoints(options.getEndpoints());
 		this.setTransport(options.getTransport());
-		this.setNbLastMessage(options.getNbLastMessage());
 	}
 	
 	/* Getters & Setters */
@@ -158,20 +152,6 @@ public class HOptions implements Cloneable {
 		}	
 	}
 
-	/**
-	 * max number of messages that should be return by a call to getLastMessages
-	 */
-	public int getNbLastMessage() {
-		return nbLastMessage;
-	}
-
-	public void setNbLastMessage(int nbLastMessage) {
-		if(nbLastMessage >=1)
-			this.nbLastMessage = nbLastMessage;
-		else
-			this.nbLastMessage = 10;
-	}
-
 	public String getHserver() {
 		return hserver;
 	}
@@ -189,7 +169,6 @@ public class HOptions implements Cloneable {
 		result = prime * result
 				+ ((endpoints == null) ? 0 : endpoints.hashCode());
 		result = prime * result + ((hserver == null) ? 0 : hserver.hashCode());
-		result = prime * result + nbLastMessage;
 		result = prime * result
 				+ ((serverHost == null) ? 0 : serverHost.hashCode());
 		result = prime * result + serverPort;
@@ -202,7 +181,7 @@ public class HOptions implements Cloneable {
 	public String toString() {
 		return "HOptions [serverHost=" + serverHost + ", serverPort="
 				+ serverPort + ", transport=" + transport + ", endpoints="
-				+ endpoints + ", nbLastMessage=" + nbLastMessage + ", hserver="
+				+ endpoints + ", hserver="
 				+ hserver + "]";
 	}
 
@@ -224,8 +203,6 @@ public class HOptions implements Cloneable {
 			if (other.hserver != null)
 				return false;
 		} else if (!hserver.equals(other.hserver))
-			return false;
-		if (nbLastMessage != other.nbLastMessage)
 			return false;
 		if (serverHost == null) {
 			if (other.serverHost != null)
