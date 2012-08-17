@@ -436,12 +436,38 @@ public class HClient {
 		HJsonDictionnary params = new HJsonDictionnary();
 		String cmdName = "hListFilters";
 		
-		//check mandatory fields
 		if (chid != null) {
 			params.put("chid", chid);
 		}
+				
+		HCommand cmd = new HCommand(transportOptions.getHserverService(), cmdName, params);
+		this.command(cmd, resultDelegate);
+	}
+	
+	/**
+	 * Unset a filter for a specified channel.
+	 * 
+	 * Nominal response : hResult where the status is 0 and a array of HFilterTemplate.
+	 * @param chid - Channel id Mandatory
+	 * @param resultDelegate - a delegate notified when the command result is issued. Can be null
+	 */
+	public void unsetFilter(String name,String chid, HResultDelegate resultDelegate) {
+		HJsonDictionnary params = new HJsonDictionnary();
+		String cmdName = "hUnsetFilter";
 		
+		//check mandatory fields
+		if (name == null) {
+			notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "name is missing", resultDelegate);
+			return;
+		}
 		
+		if (chid == null) {
+			notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "chid is missing", resultDelegate);
+			return;
+		}
+		
+		params.put("name", name);
+		params.put("chid", chid);
 		
 		HCommand cmd = new HCommand(transportOptions.getHserverService(), cmdName, params);
 		this.command(cmd, resultDelegate);
