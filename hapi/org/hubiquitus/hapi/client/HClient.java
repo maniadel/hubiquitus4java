@@ -429,7 +429,7 @@ public class HClient {
 	 * Fetches the list of filters set on the current session.
 	 * 
 	 * Nominal response : hResult where the status is 0 and a array of HFilterTemplate.
-	 * @param chid - Channel id Mandatory
+	 * @param chid - Channel id.
 	 * @param resultDelegate - a delegate notified when the command result is issued. Can be null
 	 */
 	public void listFilters(String chid, HResultDelegate resultDelegate) {
@@ -437,12 +437,11 @@ public class HClient {
 		String cmdName = "hListFilters";
 		
 		//check mandatory fields
-		if (chid == null) {
-			notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "chid is missing", resultDelegate);
-			return;
+		if (chid != null) {
+			params.put("chid", chid);
 		}
 		
-		params.put("chid", chid);
+		
 		
 		HCommand cmd = new HCommand(transportOptions.getHserverService(), cmdName, params);
 		this.command(cmd, resultDelegate);
