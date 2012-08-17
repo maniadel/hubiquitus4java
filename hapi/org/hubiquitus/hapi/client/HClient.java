@@ -409,7 +409,7 @@ public class HClient {
 	 * @param filter - Mandatory
 	 * @param resultDelegate - a delegate notified when the command result is issued. Can be null
 	 */
-	public void setFilters(HFilterTemplate filter, HResultDelegate resultDelegate) {
+	public void setFilter(HFilterTemplate filter, HResultDelegate resultDelegate) {
 		HJsonDictionnary params = new HJsonDictionnary();
 		String cmdName = "hSetFilter";
 		
