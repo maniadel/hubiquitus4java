@@ -94,6 +94,7 @@ public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelega
 	private JButton setFilterButton = new JButton("setFilter");
 	private JButton listFiltersButton = new JButton("listFilters");
 	private JButton unsetFilterButton = new JButton("unsetFilter"); 
+	private JButton getRelevantMessagesButton = new JButton("getRelevantMessages"); 
 	private JButton cleanButton = new JButton("Clean");
 	
 	
@@ -189,6 +190,7 @@ public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelega
 		controlsPanel.add(setFilterButton);
 		controlsPanel.add(listFiltersButton);
 		controlsPanel.add(unsetFilterButton);
+		controlsPanel.add(getRelevantMessagesButton);
 		controlsPanel.add(cleanButton);
 		
 		
@@ -224,6 +226,7 @@ public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelega
 		setFilterButton.addMouseListener(new SetFilterListener());
 		listFiltersButton.addMouseListener(new ListFiltersListener());
 		unsetFilterButton.addMouseListener(new UnsetFilterListener());
+		getRelevantMessagesButton.addMouseListener(new GetRelevantMessagesListener());
 		cleanButton.addMouseListener(new CleanButtonListener());
 		
 	}
@@ -459,6 +462,14 @@ public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelega
 			String chid = chidField.getText();
 			String filterName = filterNameField.getText();
 			client.unsetFilter(filterName,chid,outerClass);
+		}
+	}
+	
+	//Listener of button getRelevantMessages
+	class GetRelevantMessagesListener extends MouseAdapter {
+		public void mouseClicked(MouseEvent event) {
+			String chid = chidField.getText();
+			client.getRelevantMessages(chid,outerClass);
 		}
 	}
 	
