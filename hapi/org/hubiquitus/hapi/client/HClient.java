@@ -30,6 +30,7 @@ import org.hubiquitus.hapi.hStructures.HAckValue;
 import org.hubiquitus.hapi.hStructures.HAlert;
 import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HConvState;
+import org.hubiquitus.hapi.hStructures.HFilterTemplate;
 import org.hubiquitus.hapi.hStructures.HJsonObj;
 import org.hubiquitus.hapi.hStructures.HMeasure;
 import org.hubiquitus.hapi.hStructures.HMessage;
@@ -396,6 +397,29 @@ public class HClient {
 		
 		params.put("chid", chid);
 		params.put("status", status);
+		
+		HCommand cmd = new HCommand(transportOptions.getHserverService(), cmdName, params);
+		this.command(cmd, resultDelegate);
+	}
+	
+	/**
+	 * Sets a filter to be applied to upcoming messages at the session level for a dedicated channel id.
+	 * 
+	 * Nominal response : hResult where the status is 0.
+	 * @param filter - Mandatory
+	 * @param resultDelegate - a delegate notified when the command result is issued. Can be null
+	 */
+	public void setFilters(HFilterTemplate filter, HResultDelegate resultDelegate) {
+		HJsonDictionnary params = new HJsonDictionnary();
+		String cmdName = "hSetFilter";
+		
+		//check mandatory fields
+		if (filter == null) {
+			notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "filter is missing", resultDelegate);
+			return;
+		}
+		
+		params.put("filter", filter);
 		
 		HCommand cmd = new HCommand(transportOptions.getHserverService(), cmdName, params);
 		this.command(cmd, resultDelegate);
