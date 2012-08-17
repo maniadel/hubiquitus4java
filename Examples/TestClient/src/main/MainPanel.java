@@ -221,6 +221,9 @@ public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelega
 		getThreadButton.addMouseListener(new GetThreadButtonListener());
 		getThreadsButton.addMouseListener(new GetThreadsButtonListener());
 		pubConvStateButton.addMouseListener(new PubConvStateButtonListener());
+		setFilterButton.addMouseListener(new SetFilterListener());
+		listFiltersButton.addMouseListener(new ListFiltersListener());
+		unsetFilterButton.addMouseListener(new UnsetFilterListener());
 		cleanButton.addMouseListener(new CleanButtonListener());
 		
 	}
@@ -415,7 +418,7 @@ public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelega
 	}
 	
 	//Listener of button setFilter
-	class setFilterListener extends MouseAdapter {
+	class SetFilterListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
 			String chid = chidField.getText();
 			String filterName = filterNameField.getText();
@@ -440,7 +443,7 @@ public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelega
 	}
 	
 	//Listener of button listerFilter
-	class listFiltersListener extends MouseAdapter {
+	class ListFiltersListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
 			String chid = chidField.getText();
 			if(chid  == "")
@@ -451,7 +454,7 @@ public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelega
 	}
 	
 	//Listener of button unsetFilter
-	class unsetFilterListener extends MouseAdapter {
+	class UnsetFilterListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
 			String chid = chidField.getText();
 			String filterName = filterNameField.getText();
