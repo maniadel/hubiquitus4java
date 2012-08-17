@@ -448,7 +448,8 @@ public class HClient {
 	 * Unset a filter for a specified channel.
 	 * 
 	 * Nominal response : hResult where the status is 0.
-	 * @param chid - Channel id Mandatory
+	 * @param name - Filter's name. Mandatory
+	 * @param chid - Channel id. Mandatory
 	 * @param resultDelegate - a delegate notified when the command result is issued. Can be null
 	 */
 	public void unsetFilter(String name,String chid, HResultDelegate resultDelegate) {
@@ -467,6 +468,28 @@ public class HClient {
 		}
 		
 		params.put("name", name);
+		params.put("chid", chid);
+		
+		HCommand cmd = new HCommand(transportOptions.getHserverService(), cmdName, params);
+		this.command(cmd, resultDelegate);
+	}
+	
+	/**
+	 * Demands to the hserver the list of the available relevant message for a dedicated channel.
+	 * 
+	 * Nominal response : hResult where the status is 0 and a array of HMessage .
+	 * @param chid - Channel id Mandatory
+	 * @param resultDelegate - a delegate notified when the command result is issued. Can be null
+	 */
+	public void getRelevantMessages(String chid, HResultDelegate resultDelegate) {
+		HJsonDictionnary params = new HJsonDictionnary();
+		String cmdName = "hRelevantMessages";
+		
+		//check mandatory fields
+		if (chid == null) {
+			notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "chid is missing", resultDelegate);
+			return;
+		}
 		params.put("chid", chid);
 		
 		HCommand cmd = new HCommand(transportOptions.getHserverService(), cmdName, params);
