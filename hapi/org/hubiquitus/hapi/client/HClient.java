@@ -447,7 +447,7 @@ public class HClient {
 	/**
 	 * Unset a filter for a specified channel.
 	 * 
-	 * Nominal response : hResult where the status is 0 and a array of HFilterTemplate.
+	 * Nominal response : hResult where the status is 0.
 	 * @param chid - Channel id Mandatory
 	 * @param resultDelegate - a delegate notified when the command result is issued. Can be null
 	 */

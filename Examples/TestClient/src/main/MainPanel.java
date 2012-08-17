@@ -42,12 +42,15 @@ import org.hubiquitus.hapi.client.HResultDelegate;
 import org.hubiquitus.hapi.client.HStatusDelegate;
 import org.hubiquitus.hapi.hStructures.ConnectionError;
 import org.hubiquitus.hapi.hStructures.HCommand;
+import org.hubiquitus.hapi.hStructures.HFilterTemplate;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.hStructures.HMessageOptions;
 import org.hubiquitus.hapi.hStructures.HOptions;
 import org.hubiquitus.hapi.hStructures.HResult;
 import org.hubiquitus.hapi.hStructures.HStatus;
 import org.hubiquitus.hapi.util.HJsonDictionnary;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * 
@@ -73,6 +76,9 @@ public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelega
 	private JTextField nbLastMessagesField = new JTextField("");
 	private JTextField convidField = new JTextField("");
 	private JTextField convstateField = new JTextField("");
+	private JTextField filterNameField = new JTextField("");
+	private JTextField filterAttrField = new JTextField("");
+	private JTextField filterValueField = new JTextField("");
 	
 	private JButton connectButton = new JButton("Connect");
 	private JButton disconnectButton = new JButton("Disconnect");
@@ -85,6 +91,9 @@ public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelega
 	private JButton getThreadButton = new JButton("getThread");
 	private JButton getThreadsButton = new JButton("getThreads");
 	private JButton pubConvStateButton = new JButton("pubConvState"); 
+	private JButton setFilterButton = new JButton("setFilter");
+	private JButton listFiltersButton = new JButton("listFilters");
+	private JButton unsetFilterButton = new JButton("unsetFilter"); 
 	private JButton cleanButton = new JButton("Clean");
 	
 	
@@ -96,7 +105,7 @@ public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelega
 	private JRadioButton notTransientRadioButton = new JRadioButton("not transient");
 	private ButtonGroup transientGroup = new ButtonGroup();
 	
-	private JTextArea logArea = new JTextArea(20,100);
+	private JTextArea logArea = new JTextArea(30,100);
 	private JTextArea statusArea = new JTextArea(1,90);
 	
 	public MainPanel() {
@@ -126,7 +135,7 @@ public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelega
 
 		//Initialization of Labels,TextFields and RadioButtons
 		JPanel paramsPanel = new JPanel();
-		GridLayout paramsLayout = new GridLayout(13, 2);
+		GridLayout paramsLayout = new GridLayout(16, 2);
 		paramsPanel.setLayout(paramsLayout);
 		paramsPanel.add(new JLabel("username"));
 		paramsPanel.add(usernameField);
@@ -148,6 +157,12 @@ public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelega
 		paramsPanel.add(convidField);
 		paramsPanel.add(new JLabel("status"));
 		paramsPanel.add(convstateField);
+		paramsPanel.add(new JLabel("Filter Name"));
+		paramsPanel.add(filterNameField);
+		paramsPanel.add(new JLabel("Filter attr"));
+		paramsPanel.add(filterAttrField);
+		paramsPanel.add(new JLabel("Filter value"));
+		paramsPanel.add(filterValueField);
 		paramsPanel.add(transientRadioButton);
 		paramsPanel.add(notTransientRadioButton);
 		paramsPanel.add(xmppRadioButton);
@@ -158,7 +173,7 @@ public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelega
 		
 		//Initialization of Buttons
 		JPanel controlsPanel = new JPanel();
-		GridLayout controlsLayout = new GridLayout(2, 6);
+		GridLayout controlsLayout = new GridLayout(3, 6);
 		controlsPanel.setLayout(controlsLayout);
 		controlsPanel.add(connectButton);
 		controlsPanel.add(disconnectButton);
@@ -171,6 +186,9 @@ public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelega
 		controlsPanel.add(getThreadButton);
 		controlsPanel.add(getThreadsButton);
 		controlsPanel.add(pubConvStateButton);
+		controlsPanel.add(setFilterButton);
+		controlsPanel.add(listFiltersButton);
+		controlsPanel.add(unsetFilterButton);
 		controlsPanel.add(cleanButton);
 		
 		
@@ -395,6 +413,52 @@ public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelega
 			}
 		}
 	}
+	
+	//Listener of button setFilter
+	class setFilterListener extends MouseAdapter {
+		public void mouseClicked(MouseEvent event) {
+			String chid = chidField.getText();
+			String filterName = filterNameField.getText();
+			String filterAttr = filterAttrField.getText();
+			String filterValue = filterValueField.getText();
+			
+			JSONObject jsonObj = new JSONObject();
+			try {
+				jsonObj.put(filterAttr, filterValue);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			HMessage template = new HMessage(jsonObj);
+			
+			HFilterTemplate filter = new HFilterTemplate();
+			filter.setChid(chid);
+			filter.setName(filterName);
+			filter.setTemplate(template);
+			
+			client.setFilter(filter, outerClass);
+		}
+	}
+	
+	//Listener of button listerFilter
+	class listFiltersListener extends MouseAdapter {
+		public void mouseClicked(MouseEvent event) {
+			String chid = chidField.getText();
+			if(chid  == "")
+				client.listFilters(null, outerClass);
+			else
+				client.listFilters(chid, outerClass);
+		}
+	}
+	
+	//Listener of button unsetFilter
+	class unsetFilterListener extends MouseAdapter {
+		public void mouseClicked(MouseEvent event) {
+			String chid = chidField.getText();
+			String filterName = filterNameField.getText();
+			client.unsetFilter(filterName,chid,outerClass);
+		}
+	}
+	
 	
 	/* Override for Delegate */
 	

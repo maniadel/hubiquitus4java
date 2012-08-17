@@ -34,7 +34,7 @@ public class SimpleExample {
 		
 		JFrame window = new JFrame("test");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setSize(1150, 700);
+		window.setSize(1150, 1000);
 
 		MainPanel panel = new MainPanel();
 		window.setContentPane(panel);
