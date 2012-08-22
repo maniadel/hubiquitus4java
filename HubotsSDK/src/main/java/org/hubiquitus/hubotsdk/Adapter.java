@@ -65,6 +65,10 @@ public abstract class Adapter implements HResultDelegate{
 		this.name = name;				
 	}
 	
+	public final String getName() {
+		return name;
+	}
+	
 	
 	/**
 	 * Allow the user to update the properties of the adapter. During this update, this adapter is stop.

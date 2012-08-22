@@ -349,7 +349,7 @@ public abstract class Actor {
 	 * Retrived the instance of a specified AdapterInbox
 	 * You can use this method to modified some properties of this adapter
 	 * @param name
-	 * @return
+	 * @return the instance of this adapter
 	 */
 	protected final AdapterInbox getAdapterInbox(String name) {
 		return (AdapterInbox) adapterInstances.get(name+"Inbox");
@@ -359,10 +359,22 @@ public abstract class Actor {
 	 * Retrived the instance of a specified AdapterOutbox
 	 * You can use this method to modified some properties of this adapter
 	 * @param name
-	 * @return
+	 * @return the instance of this adapter
 	 */
 	protected final AdapterOutbox getAdapterOutbox(String name) {
 		return (AdapterOutbox) adapterInstances.get(name+"Outbox");
+	}
+	
+	
+	/**
+	 * Add a adapterInbox
+	 * Can be used before starting the bot
+	 * You can use this method to modified some properties of this adapter
+	 * @param adapterInbox
+	 * @return
+	 */
+	protected final void addAdapterInbox(AdapterInbox adapterInbox) {
+		adapterInstances.put(adapterInbox.getName(), adapterInbox);
 	}
 	
 	/**
