@@ -51,11 +51,9 @@ public class HTimerAdapterInbox extends AdapterInbox{
 	
 	private Scheduler scheduler = null;
 	private Timer timer = null;
-	
+		
 	public HTimerAdapterInbox() {}
-	
-	
-	
+		
 	public HTimerAdapterInbox(String name) {
 		this.name = name;
 	}
@@ -65,18 +63,11 @@ public class HTimerAdapterInbox extends AdapterInbox{
 		//Timer using millisecond
 		if(mode.equalsIgnoreCase("millisecond"))
 		{
-			if(period < 0) {
-				final HMessage timerMessage = new HMessage();
-				timerMessage.setAuthor(name);
-				timerMessage.setType("hAlert");
-				HAlert halert = new HAlert();
-				halert.setAlert(name);
-				timerMessage.setPayload(halert);
-				
+			if(period > 0) {
 				timer = new Timer();
 				timer.scheduleAtFixedRate(new TimerTask() {
 			        public void run() {
-			           put(timerMessage);
+				      sendMessage();
 			        }
 			    }, 0, period);
 			} else {
@@ -88,7 +79,6 @@ public class HTimerAdapterInbox extends AdapterInbox{
 			try {
 				SchedulerFactory sf = new StdSchedulerFactory();
 				scheduler = sf.getScheduler();
-				
 				// define the job and tie it to the TimerClass
 				JobDetail job = newJob(TimerClass.class)
 				    .withIdentity("timerJob", "group1")
@@ -100,13 +90,22 @@ public class HTimerAdapterInbox extends AdapterInbox{
 				    .startNow()
 				    .withSchedule(cronSchedule(crontab))
 				    .build();
-	
 				// Tell quartz to schedule the job using our trigger
 				scheduler.scheduleJob(job, trigger);
 			} catch (Exception e) {
 				logger.equals(e.toString());
 			}
 		}
+	}
+	
+	private void sendMessage() {
+		HMessage timerMessage = new HMessage();
+		timerMessage.setAuthor(name);
+		timerMessage.setType("hAlert");
+		HAlert halert = new HAlert();
+		halert.setAlert(name);
+		timerMessage.setPayload(halert);
+		put(timerMessage);
 	}
 	
 	@Override
@@ -137,17 +136,11 @@ public class HTimerAdapterInbox extends AdapterInbox{
 		}
 	}
 	
-	private class TimerClass implements Job {
+	private static class TimerClass implements Job {
 		@Override
 		public void execute(JobExecutionContext context)
 				throws JobExecutionException {
-			final HMessage timerMessage = new HMessage();
-			timerMessage.setAuthor(name);
-			timerMessage.setType("hAlert");
-			HAlert halert = new HAlert();
-			halert.setAlert("TimeOut : " + name);
-			timerMessage.setPayload(halert);
-			put(timerMessage);
+			logger.info("here");
 		}
 	}
 	
