@@ -25,10 +25,9 @@ public final class DateISO8601 {
     }
 
     /** Transform ISO 8601 string to Calendar. */
-    public static Calendar toCalendar(final String iso8601string)
-            {
+    public static Calendar toCalendar(final String iso8601string) {
         Calendar calendar = GregorianCalendar.getInstance();
-        String s = iso8601string.replace("Z", "+00:00");
+        String s = iso8601string.replace("Z", "+0000");
         try {
             s = s.substring(0, 22) + s.substring(23);
         } catch (IndexOutOfBoundsException e) {
@@ -36,10 +35,9 @@ public final class DateISO8601 {
         }
         Date date;
 		try {
-			date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(s);
+			date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(s);
 			calendar.setTime(date);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         
