@@ -14,9 +14,9 @@ public final class DateISO8601 {
     /** Transform Calendar to ISO 8601 string. */
     public static String fromCalendar(final Calendar calendar) {
         Date date = calendar.getTime();
-        String formatted = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+        String formatted = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
             .format(date);
-        return formatted.substring(0, 22) + ":" + formatted.substring(22);
+        return formatted;
     }
 
     /** Get current date and time formatted as ISO 8601 string. */
