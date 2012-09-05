@@ -25,8 +25,7 @@ import twitter4j.conf.ConfigurationBuilder;
  */
 public class HTwitterAdapterInbox extends AdapterInbox{
 
-	@SuppressWarnings("unused")
-	private static Logger logger = Logger.getLogger(HChannelAdapterOutbox.class);
+	private static Logger log = Logger.getLogger(HTwitterAdapterInbox.class);
 
 	private String consumerKey ;
 	private String consumerSecret;
@@ -51,7 +50,8 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 			setTags(params.get("tags"));
 		if(params.get("lang") != null) 
 			setLangFilter(params.get("lang"));
-
+		
+		log.info("Properties Initialized : " + this);
 
 	}
 
@@ -59,14 +59,18 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 	 * Function to start Streaming
 	 */
 	public void start() {
+		log.info("Starting...");
 		stream();
+		log.info("Started.");
 	}
 
 	/**
 	 * Function to stop Streaming
 	 */
 	public void stop() {
+		log.info("Stopping...");
 		twitterStream.shutdown();
+		log.info("Stopped.");
 	}
 
 	public HTwitterAdapterInbox() {
@@ -76,7 +80,7 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 	/**
 	 * Function for tweet Streaming
 	 */
-	public void stream() {
+	private void stream() {
 		/**
 		 * Configuration for access to twitter account
 		 */
@@ -125,7 +129,7 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 	private HMessage transformtweet(Status tweet){
 		HMessage message = new HMessage();
 		HTweet htweet = new HTweet();
-		message.setAuthor(tweet.getUser().getName());
+		message.setAuthor(tweet.getUser().getScreenName());
 
 		if(tweet.getGeoLocation() != null ) {
 			HLocation location = new HLocation();
@@ -139,20 +143,23 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		htweet.setCreatedAt(createdAt);
 		htweet.setAuthorName(tweet.getUser().getName());
 		htweet.setFriendsCount(tweet.getUser().getFriendsCount());
-		htweet.setIdTweet(tweet.getId());
-		htweet.setInReplyToScreenName(tweet.getInReplyToScreenName());
+		//htweet.setIdTweet(tweet.getId());
+		//htweet.setInReplyToScreenName(tweet.getInReplyToScreenName());
 		htweet.setLocation(tweet.getUser().getLocation());
 		htweet.setRetweetcount(tweet.getRetweetCount());
-		htweet.setScreenName(tweet.getUser().getScreenName());
 		htweet.setSource(tweet.getSource());
 		htweet.setTweetText(tweet.getText());
-		htweet.setLang(tweet.getUser().getLang());
+		//htweet.setLang(tweet.getUser().getLang());
 		htweet.setStatus(tweet.getUser().getStatus());
 		htweet.setFollowerscount(tweet.getUser().getFollowersCount());
 		htweet.setStatusesCount(tweet.getUser().getStatusesCount());
 		message.setPayload(htweet);
-		message.setType("htweet");
+		message.setType("tweet");
 
+		if (log.isDebugEnabled()) {
+			log.debug("tweet("+tweet+") -> hMessage :"+message);
+		}
+		
 		return message;
 	}
 
@@ -173,6 +180,9 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 
 	public void setTags(String tags) {
 		this.tags = tags;
+		if(log.isDebugEnabled()){
+			log.debug("Tags updated : " +tags);
+		}
 	}
 
 
@@ -208,4 +218,15 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		this.langFilter = langFilter;
 	}
 
+	@Override
+	public String toString() {
+		return "HTwitterAdapterInbox [consumerKey=" + consumerKey
+				+ ", consumerSecret=" + consumerSecret
+				+ ", twitterAccessToken=" + twitterAccessToken
+				+ ", twitterAccessTokenSecret=" + twitterAccessTokenSecret
+				+ ", langFilter=" + langFilter + ", tags=" + tags + "]";
+	}
+	
+	
+	
 }

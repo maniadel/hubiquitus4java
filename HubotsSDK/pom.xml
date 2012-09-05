@@ -25,7 +25,6 @@
   <groupId>org.hubiquitus.hubiquitus4j</groupId>
   <artifactId>HubotsSDK</artifactId>
   <version>0.3.11</version>
-
   <build>
         <plugins>
             <plugin>

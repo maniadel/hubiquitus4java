@@ -60,19 +60,19 @@ public class ConfigActor {
 	public String getPwdhash() { return pwdhash; }
 	public String getEndpoint() { return endpoint; }
 	public Map<String,String> getProperties() { return properties;}
+	public void setJid(String s) { jid = s; }
 	public ArrayList<AdapterConfig> getAdapters() { return adapters; }
 	public ArrayList<String> getInbox() { return inbox; }
 	public ArrayList<String> getOutboxes() { return outboxes; }
 
 	public void setName(String s) { name = s; }
-	public void setJid(String s) { jid = s; }
 	public void setPwdhash(String s) { pwdhash = s; }
 	public void setEndpoint(String s) { endpoint = s; }
 	public void setProperties(Map<String,String> map) { properties = map;}
 	public void setAdapters(ArrayList<AdapterConfig> a) { adapters = a; }
 	public void setInbox(ArrayList<String> a) { inbox = a; }
-	public void setOutboxes(ArrayList<String> a) { outboxes = a; }
 
+	public void setOutboxes(ArrayList<String> a) { outboxes = a; }
 	@Override
 	public String toString() {
 		String test =  "ConfigActor [name=" + name + ", jid=" + jid + ", pwdhash="
