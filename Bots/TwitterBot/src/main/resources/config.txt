@@ -1,0 +1,21 @@
+{
+	"name" : "com.mycompany.WordCount",
+	"jid" : "u1@hub.novediagroup.com",
+	"pwdhash" : "u1",
+	"endpoint" : "http://hub.novediagroup.com:8080",
+	"adapters" : [ 
+		{
+			"name" : "twitterAdapter",
+			"type" : "HTwitterAdapter",
+			"properties" : {
+				"consumerKey" : "",
+				"consumerSecret" : "",
+				"twitterAccessToken" : "",
+				"twitterAccessTokenSecret" : "",
+				"tags" : "france",
+				"lang" : "fr"
+			}
+		}
+	],
+	"inbox" : ["twitterAdapter" ]
+}
