@@ -406,22 +406,19 @@ public class HClient {
 	 * Sets a filter to be applied to upcoming messages at the session level for a dedicated channel id.
 	 * 
 	 * Nominal response : hResult where the status is 0.
-	 * @param chid - Mandatory
 	 * @param filter - Mandatory
 	 * @param resultDelegate - a delegate notified when the command result is issued. Can be null
 	 */
-	public void setFilter(String chid, HFilterTemplate filter, HResultDelegate resultDelegate) {
-		HJsonDictionnary params = new HJsonDictionnary();
-		String cmdName = "hSetFilter";
+	public void setFilter(HFilterTemplate filter, HResultDelegate resultDelegate) {
 		
+		String cmdName = "hSetFilter";
 		//check mandatory fields
-		if (chid == null || filter == null) {
-			notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "filter or chid is missing", resultDelegate);
+		if (filter == null) {
+			notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR, "filter is missing", resultDelegate);
 			return;
 		}
+		HJsonDictionnary params = new HJsonDictionnary(filter.toJSON());
 		
-		params.put("filter", filter);
-		params.put("chid", chid);
 		
 		HCommand cmd = new HCommand(transportOptions.getHserverService(), cmdName, params);
 		this.command(cmd, resultDelegate);

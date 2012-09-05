@@ -67,13 +67,13 @@ public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelega
 
 	private HOptions option = new HOptions();
 
-	private JTextField usernameField = new JTextField("u1@hub.novediagroup.com");
-	private JTextField passwordField = new JTextField("u1");
-	private JTextField endPointField = new JTextField("http://hub.novediagroup.com:8080");
+	private JTextField usernameField = new JTextField("");
+	private JTextField passwordField = new JTextField("");
+	private JTextField endPointField = new JTextField("");
 	private JTextField serverPortField = new JTextField("");
 	private JTextField serverHostField = new JTextField("");
 	private JTextField chidField = new JTextField("test");
-	private JTextField messageField = new JTextField("hello");
+	private JTextField messageField = new JTextField("");
 	private JTextField nbLastMessagesField = new JTextField("");
 	private JTextField convidField = new JTextField("");
 	private JTextField convstateField = new JTextField("");
@@ -430,18 +430,18 @@ public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelega
 			String filterValue = filterValueField.getText();
 			
 			JSONObject jsonObj = new JSONObject();
+			System.out.println("filter Attr : " + filterAttr + "filter valu : " + filterValue);
 			try {
 				jsonObj.put(filterAttr, filterValue);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 			HMessage template = new HMessage(jsonObj);
-			
 			HFilterTemplate filter = new HFilterTemplate();
+			filter.setChid(chid);
 			filter.setName(filterName);
 			filter.setTemplate(template);
-			
-			client.setFilter(chid, filter, outerClass);
+			client.setFilter(filter, outerClass);
 		}
 	}
 	
