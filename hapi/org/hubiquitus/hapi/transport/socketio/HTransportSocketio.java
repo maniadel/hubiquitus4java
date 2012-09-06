@@ -162,7 +162,6 @@ public class HTransportSocketio implements HTransport, IOCallback {
 		return endpointAdress;
 	}
 
-	@Override
 	public void sendObject(JSONObject object) {
 		if( connectionStatus == ConnectionStatus.CONNECTED) {
 			socketio.emit("hCommand",object);
@@ -210,7 +209,6 @@ public class HTransportSocketio implements HTransport, IOCallback {
 		}
 	}
 	
-	@Override
 	public void onConnect() {
 		//try to log in once connected
 		String publisher = options.getJid().getFullJID();
@@ -240,7 +238,6 @@ public class HTransportSocketio implements HTransport, IOCallback {
 		}
 	}
 
-	@Override
 	public void onDisconnect() {
 		if (timeoutTimer != null) {
 			timeoutTimer.cancel();
@@ -255,7 +252,6 @@ public class HTransportSocketio implements HTransport, IOCallback {
 		}
 	}
 
-	@Override
 	public void onError(SocketIOException arg0) {
 		if (socketio != null && socketio.isConnected()) {
 			socketio.disconnect();
@@ -272,17 +268,16 @@ public class HTransportSocketio implements HTransport, IOCallback {
 		updateStatus(ConnectionStatus.DISCONNECTED, ConnectionError.TECH_ERROR, errorMsg);
 	}
 
-	@Override
+
 	public void onMessage(String arg0, IOAcknowledge arg1) {
 		System.out.println("socketio" + arg0);
 	}
 
-	@Override
+
 	public void onMessage(JSONObject arg0, IOAcknowledge arg1) {
 		System.out.println("socketio" + arg0.toString());
 	}
 
-	@Override
 	public String toString() {
 		return "HTransportSocketio [callback=" + callback + ", options="
 				+ options + ", socketio=" + socketio + ", connectionStatus="

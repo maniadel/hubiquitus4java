@@ -8,10 +8,13 @@ import org.hubiquitus.hapi.hStructures.HLocation;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.apache.log4j.Logger;
 import org.hubiquitus.hubotsdk.AdapterInbox;
+import org.hubiquitus.hubotsdk.adapters.HtwitterAdapter.HAuthorTweet;
 import org.hubiquitus.hubotsdk.adapters.HtwitterAdapter.HTweet;
+import org.json.JSONObject;
 
 
 import twitter4j.FilterQuery;
+import twitter4j.Location;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.StatusListener;
@@ -50,7 +53,7 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 			setTags(params.get("tags"));
 		if(params.get("lang") != null) 
 			setLangFilter(params.get("lang"));
-		
+
 		log.info("Properties Initialized : " + this);
 
 	}
@@ -116,7 +119,7 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 
 		FilterQuery fq = new FilterQuery();
 		fq.track(tags.split(","));
-		
+
 		twitterStream.addListener(listener);
 		twitterStream.filter(fq);  
 	}
@@ -128,38 +131,61 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 	 */
 	private HMessage transformtweet(Status tweet){
 		HMessage message = new HMessage();
-		HTweet htweet = new HTweet();
-		message.setAuthor(tweet.getUser().getScreenName());
 
+		HTweet htweet = new HTweet();
+		HAuthorTweet hauthortweet = new HAuthorTweet();
+		message.setAuthor(tweet.getUser().getScreenName());
+		HLocation location = new HLocation();
 		if(tweet.getGeoLocation() != null ) {
-			HLocation location = new HLocation();
 			location.setLat(tweet.getGeoLocation().getLatitude());
 			location.setLng(tweet.getGeoLocation().getLongitude());
 			message.setLocation(location);
 		}
+
+		if(tweet.getPlace()!= null){
+			if(tweet.getPlace().getStreetAddress()!= null){
+				location.setAddr(tweet.getPlace().getStreetAddress());
+			}
+			if(tweet.getPlace().getCountryCode()!= null){
+				location.setCountryCode(tweet.getPlace().getCountryCode());
+			}
+			if((tweet.getPlace().getPlaceType()!= null) && ("city".equalsIgnoreCase(tweet.getPlace().getPlaceType()))){
+				location.setCity(tweet.getPlace().getName());
+			}
+		}
+
 		tweet.getCreatedAt().getTime();
 		Calendar createdAt = new GregorianCalendar();
+		Calendar createdAtAuthor = new GregorianCalendar();
 		createdAt.setTime(tweet.getCreatedAt());
-		htweet.setCreatedAt(createdAt);
-		htweet.setAuthorName(tweet.getUser().getName());
-		htweet.setFriendsCount(tweet.getUser().getFriendsCount());
-		//htweet.setIdTweet(tweet.getId());
-		//htweet.setInReplyToScreenName(tweet.getInReplyToScreenName());
-		htweet.setLocation(tweet.getUser().getLocation());
-		htweet.setRetweetcount(tweet.getRetweetCount());
+		createdAtAuthor.setTime(tweet.getUser().getCreatedAt());
+		message.setPublished(createdAt);	
+		hauthortweet.setStatusesCount(tweet.getUser().getStatusesCount());
+		hauthortweet.setFollowerscount(tweet.getUser().getFollowersCount());
+		hauthortweet.setFriendsCount(tweet.getUser().getFriendsCount());
+		hauthortweet.setLocation(tweet.getUser().getLocation());
+		hauthortweet.setDescription(tweet.getUser().getDescription());		
+		hauthortweet.setProfileImg(tweet.getUser().getProfileImageURL().toString());
+		hauthortweet.setUrl(tweet.getUser().getURL());
+		hauthortweet.setCreatedAtAuthor(createdAtAuthor);
+		hauthortweet.setLang(tweet.getUser().getLang());
+		hauthortweet.setListedCount(tweet.getUser().getListedCount());
+		hauthortweet.setGeo(tweet.getUser().isGeoEnabled());
+		hauthortweet.setVerif(tweet.getUser().isVerified());
+		hauthortweet.setName(tweet.getUser().getName());
+		htweet.setIdTweet(tweet.getId());
 		htweet.setSource(tweet.getSource());
 		htweet.setTweetText(tweet.getText());
-		//htweet.setLang(tweet.getUser().getLang());
-		htweet.setStatus(tweet.getUser().getStatus());
-		htweet.setFollowerscount(tweet.getUser().getFollowersCount());
-		htweet.setStatusesCount(tweet.getUser().getStatusesCount());
+
+		htweet.setAuthortwt(hauthortweet.toJSON());
 		message.setPayload(htweet);
 		message.setType("tweet");
+
 
 		if (log.isDebugEnabled()) {
 			log.debug("tweet("+tweet+") -> hMessage :"+message);
 		}
-		
+
 		return message;
 	}
 
@@ -226,7 +252,7 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 				+ ", twitterAccessTokenSecret=" + twitterAccessTokenSecret
 				+ ", langFilter=" + langFilter + ", tags=" + tags + "]";
 	}
-	
-	
-	
+
+
+
 }

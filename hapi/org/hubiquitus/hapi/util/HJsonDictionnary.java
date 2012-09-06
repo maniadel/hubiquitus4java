@@ -72,23 +72,22 @@ public class HJsonDictionnary implements HJsonObj{
 			System.out.println("erreur :" + this.getClass());
 		}		
 	}
-	
-	@Override
+
 	public JSONObject toJSON() {
 		return jsonObj;
 	}
 
-	@Override
+
 	public void fromJSON(JSONObject jsonObj) {
 		this.jsonObj = jsonObj;		
 	}
 
-	@Override
+
 	public String getHType() {
 		return "hjsondictionnary";
 	}
 	
-	@Override
+
 	public String toString() {
 		return "HJsonDictionnary [jsonObj=" + jsonObj.toString() + "]";
 	}

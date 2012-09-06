@@ -64,17 +64,16 @@ public class HMessageXMPP implements PacketExtension{
 		this.body = content;
 	}
 	
-	@Override
+
 	public String getElementName() {
 		return HMessageXMPP.ELEMENT_NAME;
 	}
 
-	@Override
+
 	public String getNamespace() {
 		return HMessageXMPP.NAMESPACE;
 	}
 
-	@Override
 	public String toXML() {
 		StringBuilder localStringBuilder = new StringBuilder();
 		

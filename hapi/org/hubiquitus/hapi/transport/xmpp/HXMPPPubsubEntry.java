@@ -53,17 +53,17 @@ public class HXMPPPubsubEntry implements PacketExtension{
 		this.entry = content;
 	}
 	
-	@Override
+
 	public String getElementName() {
 		return HXMPPPubsubEntry.ELEMENT_NAME;
 	}
 
-	@Override
+
 	public String getNamespace() {
 		return HXMPPPubsubEntry.NAMESPACE;
 	}
 
-	@Override
+
 	public String toXML() {
 		StringBuilder localStringBuilder = new StringBuilder();
 

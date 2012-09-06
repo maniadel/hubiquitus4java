@@ -231,7 +231,6 @@ public class HTransportXMPP implements HTransport, ConnectionListener,PacketList
 		}
 	}
 
-	@Override
 	public void sendObject(JSONObject object) {
 		if( connectionStatus == ConnectionStatus.CONNECTED) {
 			Message msg = new Message(options.getHserverService());
@@ -243,7 +242,7 @@ public class HTransportXMPP implements HTransport, ConnectionListener,PacketList
 		}		
 	}
 
-	@Override
+
 	public void processPacket(Packet receivePacket) {
 		if(receivePacket.getClass().equals(Message.class)) {
 			if(receivePacket.getFrom().equalsIgnoreCase(options.getPubsubService())) {
@@ -304,12 +303,11 @@ public class HTransportXMPP implements HTransport, ConnectionListener,PacketList
 	}
 
 	/* Connection listener interface */
-	@Override
+
 	public void connectionClosed() {
 
 	}
-
-	@Override
+	
 	public void connectionClosedOnError(Exception e) {
 		this.connectionThread.interrupt();
 		this.connectionThread = null;
@@ -319,17 +317,17 @@ public class HTransportXMPP implements HTransport, ConnectionListener,PacketList
 	}
 
 	//as we use our reconnection system, this shouldn't be called
-	@Override
+
 	public void reconnectingIn(int arg0) {
 	}
 
 	//as we use our reconnection system, this shouldn't be called
-	@Override
+
 	public void reconnectionFailed(Exception arg0) {
 	}
 
 	//as we use our reconnection system, this shouldn't be called
-	@Override
+
 	public void reconnectionSuccessful() {
 	}
 

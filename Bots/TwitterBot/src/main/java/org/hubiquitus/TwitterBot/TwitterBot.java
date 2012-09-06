@@ -20,7 +20,6 @@
 package org.hubiquitus.TwitterBot;
 
 
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.hubiquitus.hubotsdk.Actor;
 import org.hubiquitus.hapi.hStructures.HCommand;
@@ -29,21 +28,21 @@ import org.hubiquitus.hapi.hStructures.HMessage;
 public class TwitterBot extends Actor  {
 
 
-	private static Logger logger = Logger.getLogger(TwitterBot.class);
+	private static Logger log = Logger.getLogger(TwitterBot.class);
 	
 	public static void main( String[] args )throws Exception{
-		BasicConfigurator.configure();    
 		TwitterBot bot  = new TwitterBot();
 		bot.start();
 	}
 
 	@Override
 	protected void inProcessMessage(HMessage messageIncoming) {
-		logger.info(messageIncoming.toString());
+		log.info(messageIncoming.toString());
 	}
 
 	@Override
-	protected void inProcessCommand(HCommand commandIncoming) {		
+	protected void inProcessCommand(HCommand commandIncoming) {
+		log.debug("not supported");
 	}
 
 
