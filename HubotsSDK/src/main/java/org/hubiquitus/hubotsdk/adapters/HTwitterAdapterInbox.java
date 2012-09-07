@@ -10,22 +10,16 @@ import org.apache.log4j.Logger;
 import org.hubiquitus.hubotsdk.AdapterInbox;
 import org.hubiquitus.hubotsdk.adapters.HtwitterAdapter.HAuthorTweet;
 import org.hubiquitus.hubotsdk.adapters.HtwitterAdapter.HTweet;
-import org.json.JSONObject;
 
 
 import twitter4j.FilterQuery;
-import twitter4j.Location;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.StatusListener;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
 import twitter4j.conf.ConfigurationBuilder;
-/**
- * 
- * @author Hubiquitus
- *
- */
+
 public class HTwitterAdapterInbox extends AdapterInbox{
 
 	private static Logger log = Logger.getLogger(HTwitterAdapterInbox.class);
@@ -176,7 +170,7 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		htweet.setIdTweet(tweet.getId());
 		htweet.setSource(tweet.getSource());
 		htweet.setTweetText(tweet.getText());
-
+		
 		htweet.setAuthortwt(hauthortweet.toJSON());
 		message.setPayload(htweet);
 		message.setType("tweet");
