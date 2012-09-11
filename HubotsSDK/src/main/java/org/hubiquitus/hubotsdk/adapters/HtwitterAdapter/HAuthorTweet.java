@@ -81,25 +81,25 @@ public class HAuthorTweet implements HJsonObj{
 	/* Getters & Setters */
 	
 	
-	public String getAuthorName() {
-		String author;
+	public String getScrName() {
+		String scrName;
 		try {
-			author = hauthortweet.getString("author");
+			scrName = hauthortweet.getString("scrName");
 		} catch (Exception e) {
-			author = null;			
+			scrName = null;			
 		}
-		return author;
+		return scrName;
 	}
 
-	public void setAuthorName(String author) {
+	public void setScrName(String scrName) {
 		try {
-			if(author == null & author.length()== 0) {
-				hauthortweet.remove("author");
+			if(scrName == null & scrName.length()== 0) {
+				hauthortweet.remove("scrName");
 			} else {
-				hauthortweet.put("author", author);
+				hauthortweet.put("scrName", scrName);
 			}
 		} catch (JSONException e) {
-			log.error("Can't update the author attribut",e);
+			log.error("Can't update the scrName attribut",e);
 		}
 	}
 	
@@ -108,22 +108,22 @@ public class HAuthorTweet implements HJsonObj{
 	 * The Status counter
 	 * @return
 	 */
-	public int getStatusesCount() {
-		int statusCnt;
+	public int getStatus() {
+		int status;
 		try {
-			statusCnt = hauthortweet.getInt("status");
+			status = hauthortweet.getInt("status");
 		} catch (Exception e) {
-			statusCnt = 0;			
+			status = 0;			
 		}
-		return statusCnt;
+		return status;
 	}
 	
-	public void setStatusesCount(int statusCnt) {
+	public void setStatus(int status) {
 		try {
-			if(statusCnt == 0) {
+			if(status == 0) {
 				hauthortweet.remove("status");
 			} else {
-				hauthortweet.put("status", statusCnt);
+				hauthortweet.put("status", status);
 			}
 		} catch (JSONException e) {
 			log.error("Can't update the status attribut",e);
@@ -134,25 +134,25 @@ public class HAuthorTweet implements HJsonObj{
 	 * The number of followers
 	 * @return
 	 */
-	public int getFollowerscount() {
-		int followerscnt;
+	public int getFollowers() {
+		int followers;
 		try {
-			followerscnt = hauthortweet.getInt("followers");
+			followers = hauthortweet.getInt("followers");
 		} catch (Exception e) {
-			followerscnt = 0;		
+			followers = 0;		
 		}
-		return followerscnt;
+		return followers;
 	}
 
-	public void setFollowerscount(int followerscnt) {
+	public void setFollowers(int followers) {
 		try {
-			if(followerscnt == 0) {
+			if(followers== 0) {
 				hauthortweet.remove("followers");
 			} else {
-				hauthortweet.put("followers", followerscnt);
+				hauthortweet.put("followers", followers);
 			}
 		} catch (JSONException e) {
-			log.error("Can't update the followersCount attribut",e);
+			log.error("Can't update the followers attribut",e);
 		}
 
 
@@ -164,21 +164,21 @@ public class HAuthorTweet implements HJsonObj{
 	 * @return
 	 */
 	public String getName() {
-		String screen;
+		String name;
 		try {
-			screen = hauthortweet.getString("name");
+			name = hauthortweet.getString("name");
 		} catch (Exception e) {
-			screen = null;			
+			name = null;			
 		}
-		return screen;
+		return name;
 	}
 
-	public void setName(String screen) {
+	public void setName(String name) {
 		try {
-			if(screen == null & screen.length()== 0) {
+			if(name == null & name.length()== 0) {
 				hauthortweet.remove("name");
 			} else {
-				hauthortweet.put("name", screen);
+				hauthortweet.put("name", name);
 			}
 		} catch (JSONException e) {
 			log.error("Can't update the name attribut",e);
@@ -190,84 +190,30 @@ public class HAuthorTweet implements HJsonObj{
 	 * The friends Count
 	 * @return
 	 */
-	public int 	getFriendsCount() {
-		int friendCnt;
+	public int 	getFriends() {
+		int friends;
 		try {
-			friendCnt = hauthortweet.getInt("friends");
+			friends = hauthortweet.getInt("friends");
 		} catch (Exception e) {
-			friendCnt = 0;			
+			friends = 0;			
 		}
-		return friendCnt;
+		return friends;
 	}
 	
-	public void setFriendsCount(int friendCnt) {
+	public void setFriends(int friends) {
 		try {
-			if(friendCnt == 0 ) {
+			if(friends == 0 ) {
 				hauthortweet.remove("friends");
 			} else {
-				hauthortweet.put("friends", friendCnt);
+				hauthortweet.put("friends", friends);
 			}
 		} catch (JSONException e) {
-			log.error("Can't update the friendCount attribut",e);
+			log.error("Can't update the friends attribut",e);
 			
 		}
 	}
 	
 	
-
-	
-	/**
-	 * The screen name of the users: See TwitterApi
-	 * @return
-	 */
-//	public String getInReplyToScreenName() {
-//		String replyToScreen;
-//		try {
-//			replyToScreen = hauthortweet.getString("replyToScreen");
-//		} catch (Exception e) {
-//			replyToScreen = null;			
-//		}
-//		return replyToScreen;
-//	}
-//
-//	public void setInReplyToScreenName(String replyToScreen) {
-//		try {
-//			if(replyToScreen == null) {
-//				hauthortweet.remove("replyToScreen");
-//			} else {
-//				hauthortweet.put("replyToScreen", replyToScreen);
-//			}
-//		} catch (JSONException e) {
-//		}
-//	}
-
-	
-	/**
-	 * The ISOLanguage of the tweet
-	 * @return
-	 */
-//	public String getIsoLanguageCode() {
-//		String langCode;
-//		try {
-//			langCode = hauthortweet.getString("langCode");
-//		} catch (Exception e) {
-//			langCode = null;			
-//		}
-//		return langCode;
-//	}
-//
-//	public void setIsoLanguageCode(String langCode) {
-//		try {
-//			if(langCode == null) {
-//				hauthortweet.remove("langCode");
-//			} else {
-//				hauthortweet.put("langCode", langCode);
-//			}
-//		} catch (JSONException e) {
-//		}
-//
-//
-//	}
 
 	/**
 	 * The location that this tweet refers to if available
@@ -306,7 +252,7 @@ public class HAuthorTweet implements HJsonObj{
 	public String getDescription() {
 		String description;
 		try {
-			description = hauthortweet.getString("desc");
+			description = hauthortweet.getString("description");
 		} catch (Exception e) {
 			description = null;			
 		}
@@ -316,9 +262,9 @@ public class HAuthorTweet implements HJsonObj{
 	public void setDescription(String description) {
 		try {
 			if(description == null & description.length()==0 ) {
-				hauthortweet.remove("desc");
+				hauthortweet.remove("description");
 			} else {
-				hauthortweet.put("desc", description);
+				hauthortweet.put("description", description);
 			}
 		} catch (JSONException e) {
 			log.error("Can't update the description attribut",e);
@@ -333,7 +279,7 @@ public class HAuthorTweet implements HJsonObj{
 	public String getProfileImg() {
 		String profileImg;
 		try {
-			profileImg = hauthortweet.getString("prfImg");
+			profileImg = hauthortweet.getString("profileImg");
 		} catch (Exception e) {
 			profileImg = null;			
 		}
@@ -343,9 +289,9 @@ public class HAuthorTweet implements HJsonObj{
 	public void setProfileImg(String profileImg) {
 		try {
 			if(profileImg == null & profileImg.length()== 0) {
-				hauthortweet.remove("prfImg");
+				hauthortweet.remove("profileImg");
 			} else {
-				hauthortweet.put("prfImg", profileImg);
+				hauthortweet.put("profileImg", profileImg);
 			}
 		} catch (JSONException e) {
 			log.error("Can't update the profile Image attribut",e);
@@ -385,22 +331,22 @@ public class HAuthorTweet implements HJsonObj{
 	 * The date of profile creation 
 	 * @return
 	 */
-	public Calendar getCreatedAtAuthor() {
-		Calendar createdAtAuthor;
+	public Calendar getCreatedAt() {
+		Calendar createdAt;
 		try {
-			createdAtAuthor = (DateISO8601.toCalendar(hauthortweet.getString("createdAt")));;
+			createdAt = (DateISO8601.toCalendar(hauthortweet.getString("createdAt")));;
 		} catch (JSONException e) {
-			createdAtAuthor = null;
+			createdAt = null;
 		}
-		return createdAtAuthor;
+		return createdAt;
 	}
 
-	public void setCreatedAtAuthor(Calendar createdAtAuthor) {
+	public void setCreatedAt(Calendar createdAt) {
 		try {
-			if(createdAtAuthor == null ) {
+			if(createdAt == null ) {
 				hauthortweet.remove("createdAt");
 			} else {
-				hauthortweet.put("createdAt", DateISO8601.fromCalendar(createdAtAuthor));
+				hauthortweet.put("createdAt", DateISO8601.fromCalendar(createdAt));
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -468,25 +414,25 @@ public class HAuthorTweet implements HJsonObj{
 	 * The verified
 	 * @return
 	 */	
-	public boolean getVerif() {
-		boolean verif;
+	public boolean getVerified() {
+		boolean verified;
 		try {
-			verif = hauthortweet.getBoolean("verified");
+			verified = hauthortweet.getBoolean("verified");
 		} catch (Exception e) {
-			verif = false;		
+			verified = false;		
 		}
-		return verif;
+		return verified;
 	}
 
-	public void setVerif(boolean verif) {
+	public void setVerified(boolean verified) {
 		try {
-			if(verif == false) {
+			if(verified == false) {
 				hauthortweet.remove("verified");
 			} else {
-				hauthortweet.put("verified", verif);
+				hauthortweet.put("verified", verified);
 			}
 		} catch (JSONException e) {
-			log.error("Can't update the Geolocation attribut",e);
+			log.error("Can't update the verified attribut",e);
 		}
 	}
 
@@ -496,17 +442,17 @@ public class HAuthorTweet implements HJsonObj{
 	 * The Listed counter
 	 * @return
 	 */
-	public int getListedCount() {
+	public int getListeds() {
 		int listeds;
 		try {
-			listeds = hauthortweet.getInt("listed");
+			listeds = hauthortweet.getInt("listeds");
 		} catch (Exception e) {
 			listeds = 0;			
 		}
 		return listeds;
 	}
 	
-	public void setListedCount(int listeds) {
+	public void setListeds(int listeds) {
 		try {
 			if(listeds == 0) {
 				hauthortweet.remove("listed");

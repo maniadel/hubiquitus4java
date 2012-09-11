@@ -82,7 +82,7 @@ public class HTweet implements HJsonObj{
 	
 	
 
-	public String getTweetText() {
+	public String getText() {
 		String text;
 		try {
 			text = htweet.getString("text");
@@ -92,7 +92,7 @@ public class HTweet implements HJsonObj{
 		return text;
 	}
 
-	public void setTweetText(String text) {
+	public void setText(String text) {
 		try {
 			if(text == null & text.length()== 0) {
 				htweet.remove("text");
@@ -100,7 +100,7 @@ public class HTweet implements HJsonObj{
 				htweet.put("text", text);
 			}
 		} catch (JSONException e) {
-			log.error("Can't update the author attribut",e);
+			log.error("Can't update the text attribut",e);
 		}
 	}
 	
@@ -115,7 +115,7 @@ public class HTweet implements HJsonObj{
 	public String getSource() {
 		String source;
 		try {
-			source = htweet.getString("src");
+			source = htweet.getString("source");
 		} catch (Exception e) {
 			source = null;			
 		}
@@ -125,9 +125,9 @@ public class HTweet implements HJsonObj{
 	public void setSource(String source) {
 		try {
 			if(source == null & source.length()== 0 ) {
-				htweet.remove("src");
+				htweet.remove("source");
 			} else {
-				htweet.put("src", source);
+				htweet.put("source", source);
 			}
 		} catch (JSONException e) {
 			log.error("Can't update the source attribut",e);
@@ -136,16 +136,29 @@ public class HTweet implements HJsonObj{
 
 	}
 	
+	/**
+	 * The Object Author Tweet 
+	 * @return
+	 */
 	
+	public JSONObject getAuthortwt() {
+		JSONObject authortweet;
+		try {
+			authortweet  = htweet.getJSONObject("authortweet");
+		} catch (JSONException e) {
+			authortweet = null;
+		}
+		return authortweet;
+	}
 
 		
 	
 	public void setAuthortwt(JSONObject authortweet) {
 		try {
 			if(authortweet == null) {
-				htweet.remove("author");
+				htweet.remove("authortweet");
 			} else {
-				htweet.put("author", authortweet);
+				htweet.put("authortweet", authortweet);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -157,22 +170,22 @@ public class HTweet implements HJsonObj{
 	 * The date of tweet creation 
 	 * @return
 	 */
-	public Calendar getCreatedAt() {
-		Calendar createdAt;
+	public Calendar getPublish() {
+		Calendar publish;
 		try {
-			createdAt = (DateISO8601.toCalendar(htweet.getString("publish")));;
+			publish = (DateISO8601.toCalendar(htweet.getString("publish")));;
 		} catch (JSONException e) {
-			createdAt = null;
+			publish = null;
 		}
-		return createdAt;
+		return publish;
 	}
 
-	public void setCreatedAt(Calendar createdAt) {
+	public void setPublish(Calendar publish) {
 		try {
-			if(createdAt == null ) {
+			if(publish == null ) {
 				htweet.remove("publish");
 			} else {
-				htweet.put("publish", DateISO8601.fromCalendar(createdAt));
+				htweet.put("publish", DateISO8601.fromCalendar(publish));
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -180,15 +193,7 @@ public class HTweet implements HJsonObj{
 		}
 	}
 	
-	public JSONObject getAuthortwt() {
-		JSONObject authortweet;
-		try {
-			authortweet  = htweet.getJSONObject("authortweet");
-		} catch (JSONException e) {
-			authortweet = null;
-		}
-		return authortweet;
-	}
+	
 	
 	/**
 	 * The Idtweet
@@ -197,19 +202,19 @@ public class HTweet implements HJsonObj{
 	public long getIdTweet() {
 		long id;
 		try {
-			id = htweet.getLong("IdTweet");
+			id = htweet.getLong("Id");
 		} catch (Exception e) {
 			id = 0;			
 		}
 		return id;
 	}
 	
-	public void setIdTweet(long id) {
+	public void setId(long id) {
 		try {
 			if(id == 0) {
-				htweet.remove("IdTweet");
+				htweet.remove("Id");
 			} else {
-				htweet.put("IdTweet", id);
+				htweet.put("Id", id);
 			}
 		} catch (JSONException e) {
 			log.error("Can't update the Id Tweet  attribut",e);

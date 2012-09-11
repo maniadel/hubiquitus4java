@@ -128,7 +128,8 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 
 		HTweet htweet = new HTweet();
 		HAuthorTweet hauthortweet = new HAuthorTweet();
-		message.setAuthor(tweet.getUser().getScreenName());
+
+		//Construct the location 
 		HLocation location = new HLocation();
 		if(tweet.getGeoLocation() != null ) {
 			location.setLat(tweet.getGeoLocation().getLatitude());
@@ -136,6 +137,7 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 			message.setLocation(location);
 		}
 
+		//Construct the Place
 		if(tweet.getPlace()!= null){
 			if(tweet.getPlace().getStreetAddress()!= null){
 				location.setAddr(tweet.getPlace().getStreetAddress());
@@ -148,32 +150,39 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 			}
 		}
 
+		// Init The date
 		tweet.getCreatedAt().getTime();
 		Calendar createdAt = new GregorianCalendar();
 		Calendar createdAtAuthor = new GregorianCalendar();
 		createdAt.setTime(tweet.getCreatedAt());
 		createdAtAuthor.setTime(tweet.getUser().getCreatedAt());
 		message.setPublished(createdAt);	
-		hauthortweet.setStatusesCount(tweet.getUser().getStatusesCount());
-		hauthortweet.setFollowerscount(tweet.getUser().getFollowersCount());
-		hauthortweet.setFriendsCount(tweet.getUser().getFriendsCount());
+
+		//Construct the Authortweet JSONObject
+
+		hauthortweet.setStatus(tweet.getUser().getStatusesCount());
+		hauthortweet.setFollowers(tweet.getUser().getFollowersCount());
+		hauthortweet.setFriends(tweet.getUser().getFriendsCount());
 		hauthortweet.setLocation(tweet.getUser().getLocation());
 		hauthortweet.setDescription(tweet.getUser().getDescription());		
 		hauthortweet.setProfileImg(tweet.getUser().getProfileImageURL().toString());
 		hauthortweet.setUrl(tweet.getUser().getURL());
-		hauthortweet.setCreatedAtAuthor(createdAtAuthor);
+		hauthortweet.setCreatedAt(createdAtAuthor);
 		hauthortweet.setLang(tweet.getUser().getLang());
-		hauthortweet.setListedCount(tweet.getUser().getListedCount());
+		hauthortweet.setListeds(tweet.getUser().getListedCount());
 		hauthortweet.setGeo(tweet.getUser().isGeoEnabled());
-		hauthortweet.setVerif(tweet.getUser().isVerified());
+		hauthortweet.setVerified(tweet.getUser().isVerified());
 		hauthortweet.setName(tweet.getUser().getName());
-		htweet.setIdTweet(tweet.getId());
+		hauthortweet.setScrName(tweet.getUser().getScreenName());
+
+		//Construct the tweet JSONObject		
+		htweet.setId(tweet.getId());
 		htweet.setSource(tweet.getSource());
-		htweet.setTweetText(tweet.getText());
-		
+		htweet.setText(tweet.getText());
 		htweet.setAuthortwt(hauthortweet.toJSON());
+
 		message.setPayload(htweet);
-		message.setType("tweet");
+		message.setType("hTweet");
 
 
 		if (log.isDebugEnabled()) {
