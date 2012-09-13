@@ -22,6 +22,7 @@ package org.hubiquitus.hapi.hStructures;
 import java.util.Calendar;
 import org.hubiquitus.hapi.util.DateISO8601;
 import org.hubiquitus.hapi.util.HJsonDictionnary;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -476,11 +477,44 @@ public class HMessage implements HJsonObj {
 	}
 
 	/**
-	 * The content of the message.
+	 * if payload type is JSONObject
 	 * 
 	 * @return payload. NULL if undefined
 	 */
-	public HJsonObj getPayload() {
+
+	public JSONObject getPayloadAsJSONObject() {
+		JSONObject payload;
+		try {
+			payload = hmessage.getJSONObject("payload");
+		} catch (JSONException e) {
+			payload = null;
+		}
+		return payload;
+	}
+
+	/**
+	 * if payload type is JSONArray
+	 * 
+	 * @return payload. NULL if undefined
+	 */
+	public JSONArray getPayloadAsJSONArray() {
+		JSONArray payload;
+		try {
+			payload = hmessage.getJSONArray("payload");
+		} catch (JSONException e) {
+			payload = null;
+		}
+		return payload;
+	}
+
+	/**
+	 * if payload type is HJsonObj. Data model defined by hAPI (ie: HAlert,
+	 * HCommand, HAck ...)
+	 * 
+	 * @return payload. NULL if undefined
+	 */
+
+	public HJsonObj getPayloadAsHJsoObj() {
 		HJsonObj payload;
 		try {
 			JSONObject jsonPayload = hmessage.getJSONObject("payload");
@@ -502,6 +536,121 @@ public class HMessage implements HJsonObj {
 		return payload;
 	}
 
+	/**
+	 * if payload type is String
+	 * 
+	 * @return payload. NULL if undefined
+	 */
+	public String getPayloadAsString() {
+		String payload;
+		try {
+			payload = hmessage.getString("payload");
+		} catch (JSONException e) {
+			payload = null;
+		}
+		return payload;
+	}
+
+	/**
+	 * if payload type is Boolean
+	 * 
+	 * @return payload. Null if undefined
+	 */
+	public Boolean getPayloadAsBoolean() {
+		Boolean payload;
+		try {
+			payload = hmessage.getBoolean("payload");
+		} catch (JSONException e) {
+			payload = null;
+		}
+		return payload;
+	}
+
+	/**
+	 * if payload type is long
+	 * 
+	 * @return payload. Null if undefined.
+	 */
+	public Long getPayloadAsLong() {
+		Long payload;
+		try {
+			payload = hmessage.getLong("payload");
+		} catch (JSONException e) {
+			payload = null;
+		}
+		return payload;
+	}
+
+	/**
+	 * if payload type is Integer
+	 * 
+	 * @return payload. Null if undefined.
+	 */
+	public Integer getPayloadAsInt() {
+		Integer payload;
+		try {
+			payload = hmessage.getInt("payload");
+		} catch (JSONException e) {
+			payload = null;
+		}
+		return payload;
+	}
+
+	/**
+	 * if payload type is Double
+	 * 
+	 * @return payload, Null if undefined.
+	 */
+	public Double getPayloadAsDouble() {
+		Double payload;
+		try {
+			payload = hmessage.getDouble("payload");
+		} catch (JSONException e) {
+			payload = null;
+		}
+		return payload;
+	}
+
+	/**
+	 * if payload type is JSONObject.
+	 * 
+	 * @param payload
+	 */
+	public void setPayload(JSONObject payload) {
+		try {
+			if (payload == null) {
+				hmessage.remove("payload");
+			} else {
+				hmessage.put("payload", payload);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * if payload type is JSONArray.
+	 * 
+	 * @param payload
+	 */
+	public void setPayload(JSONArray payload) {
+		try {
+			if (payload == null) {
+				hmessage.remove("payload");
+			} else {
+				hmessage.put("payload", payload);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * if payload type is HJsonObj. Data model defined by hAPI (ie: HAlert,
+	 * HCommand, HAck ...)
+	 * 
+	 * @param payload
+	 */
 	public void setPayload(HJsonObj payload) {
 		try {
 			if (payload == null) {
@@ -509,6 +658,82 @@ public class HMessage implements HJsonObj {
 			} else {
 				hmessage.put("payload", payload.toJSON());
 			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * if payload type is String.
+	 * 
+	 * @param payload
+	 */
+	public void setPayload(String payload) {
+		try {
+			if (payload == null) {
+				hmessage.remove("payload");
+			} else {
+				hmessage.put("payload", payload);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * if payload type is Boolean
+	 * 
+	 * @param payload
+	 */
+	public void setPayload(Boolean payload) {
+		try {
+			if (payload == null) {
+				hmessage.remove("payload");
+			} else {
+				hmessage.put("payload", payload);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * if payload type is int
+	 * 
+	 * @param payload
+	 */
+	public void setPayload(int payload) {
+		try {
+			hmessage.put("payload", payload);
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * if payload type is double.
+	 * 
+	 * @param payload
+	 */
+	public void setPayload(double payload) {
+		try {
+			hmessage.put("payload", payload);
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * if payload type is long
+	 * 
+	 * @param payload
+	 */
+	public void setPayload(long payload) {
+		try {
+			hmessage.put("payload", payload);
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

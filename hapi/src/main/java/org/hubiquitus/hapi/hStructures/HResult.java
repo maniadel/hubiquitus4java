@@ -152,6 +152,11 @@ public class HResult implements HJsonObj {
 		return result;
 	}
 
+	/**
+	 * if result type is Boolean
+	 * 
+	 * @return
+	 */
 	public Boolean getResultAsBoolean() {
 		Boolean result;
 		try {
@@ -162,58 +167,49 @@ public class HResult implements HJsonObj {
 		return result;
 	}
 
-	public int getResultAsInt() {
-		int result;
+	/**
+	 * if result type is Integer
+	 * 
+	 * @return
+	 */
+	public Integer getResultAsInt() {
+		Integer result;
 		try {
 			result = hresult.getInt("result");
 		} catch (JSONException e) {
-			result = 0;
+			result = null;
 		}
 		return result;
 	}
 
 	/**
-	 * if result type is int
+	 * if result type is Double
 	 * 
-	 * @param result
+	 * @return
 	 */
-	public void setResult(int result) {
+	public Double getResultAsDouble() {
+		Double result;
 		try {
-			hresult.put("result", result);
+			result = hresult.getDouble("result");
 		} catch (JSONException e) {
+			result = null;
 		}
+		return result;
 	}
 
 	/**
-	 * if result type is Boolean
+	 * if result type is Long
 	 * 
-	 * @param result
+	 * @return
 	 */
-	public void setResult(Boolean result) {
+	public Long getResultAsLong() {
+		Long result;
 		try {
-			if (result == null) {
-				hresult.remove("result");
-			} else {
-				hresult.put("result", result);
-			}
+			result = hresult.getLong("result");
 		} catch (JSONException e) {
+			result = null;
 		}
-	}
-
-	/**
-	 * if result type is String
-	 * 
-	 * @param result
-	 */
-	public void setResult(String result) {
-		try {
-			if (result == null) {
-				hresult.remove("result");
-			} else {
-				hresult.put("result", result);
-			}
-		} catch (JSONException e) {
-		}
+		return result;
 	}
 
 	/**
@@ -260,6 +256,74 @@ public class HResult implements HJsonObj {
 			} else {
 				hresult.put("result", result.toJSON());
 			}
+		} catch (JSONException e) {
+		}
+	}
+
+	/**
+	 * if result type is String
+	 * 
+	 * @param result
+	 */
+	public void setResult(String result) {
+		try {
+			if (result == null) {
+				hresult.remove("result");
+			} else {
+				hresult.put("result", result);
+			}
+		} catch (JSONException e) {
+		}
+	}
+
+	/**
+	 * if result type is Boolean
+	 * 
+	 * @param result
+	 */
+	public void setResult(Boolean result) {
+		try {
+			if (result == null) {
+				hresult.remove("result");
+			} else {
+				hresult.put("result", result);
+			}
+		} catch (JSONException e) {
+		}
+	}
+
+	/**
+	 * if result type is int
+	 * 
+	 * @param result
+	 */
+	public void setResult(int result) {
+		try {
+			hresult.put("result", result);
+		} catch (JSONException e) {
+		}
+	}
+
+	/**
+	 * if result type is double
+	 * 
+	 * @param result
+	 */
+	public void setResult(double result) {
+		try {
+			hresult.put("result", result);
+		} catch (JSONException e) {
+		}
+	}
+
+	/**
+	 * if result type is long
+	 * 
+	 * @param result
+	 */
+	public void setResult(long result) {
+		try {
+			hresult.put("result", result);
 		} catch (JSONException e) {
 		}
 	}
