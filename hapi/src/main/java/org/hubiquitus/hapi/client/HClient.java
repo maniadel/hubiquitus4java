@@ -47,6 +47,7 @@ import org.hubiquitus.hapi.transport.socketio.HTransportSocketio;
 import org.hubiquitus.hapi.util.HJsonDictionnary;
 import org.hubiquitus.hapi.util.HUtil;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -234,21 +235,6 @@ public class HClient {
 	 */
 	public void command(HCommand cmd, HResultDelegate resultDelegate) {
 		if (this.connectionStatus == ConnectionStatus.CONNECTED && cmd != null) {
-			String reqid = null;
-			reqid = cmd.getReqid();
-			if (reqid == null) {
-				Random rand = new Random();
-				reqid = "javaCmd:" + rand.nextInt();
-				cmd.setReqid(reqid);
-			}
-
-			if (cmd.getSender() == null) {
-				cmd.setSender(transportOptions.getJid().getFullJID());
-			}
-
-			if (cmd.getTransient() == null) {
-				cmd.setTransient(true);
-			}
 
 			if (cmd.getEntity() != null) {
 				if (resultDelegate != null) {
@@ -281,8 +267,12 @@ public class HClient {
 	 * @return request id
 	 */
 	public void subscribe(String actor, HResultDelegate resultDelegate) {
-		HJsonDictionnary params = new HJsonDictionnary();
-		params.put("actor", actor);
+		JSONObject params = new JSONObject();
+		try {
+			params.put("actor", actor);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		HCommand cmd = new HCommand(transportOptions.getHserverService(),
 				"hsubscribe", params);
 		this.command(cmd, resultDelegate);
@@ -301,8 +291,12 @@ public class HClient {
 	 * @return request id
 	 */
 	public void unsubscribe(String actor, HResultDelegate resultDelegate) {
-		HJsonDictionnary params = new HJsonDictionnary();
-		params.put("actor", actor);
+		JSONObject params = new JSONObject();
+		try {
+			params.put("actor", actor);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		HCommand cmd = new HCommand(transportOptions.getHserverService(),
 				"hunsubscribe", params);
 		this.command(cmd, resultDelegate);
@@ -362,11 +356,16 @@ public class HClient {
 	 */
 	public void getLastMessages(String actor, int nbLastMsg,
 			HResultDelegate resultDelegate) {
-		HJsonDictionnary params = new HJsonDictionnary();
-		params.put("actor", actor);
-		if (nbLastMsg > 0) {
-			params.put("nbLastMsg", nbLastMsg);
+		JSONObject params = new JSONObject();
+		try {
+			params.put("actor", actor);
+			if (nbLastMsg > 0) {
+				params.put("nbLastMsg", nbLastMsg);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
+
 		HCommand cmd = new HCommand(transportOptions.getHserverService(),
 				"hgetlastmessages", params);
 		this.command(cmd, resultDelegate);
@@ -419,7 +418,7 @@ public class HClient {
 	 */
 	public void getThread(String actor, String convid,
 			HResultDelegate resultDelegate) {
-		HJsonDictionnary params = new HJsonDictionnary();
+		JSONObject params = new JSONObject();
 		String cmdName = "hgetthread";
 
 		// check mandatory fields
@@ -435,8 +434,13 @@ public class HClient {
 			return;
 		}
 
-		params.put("actor", actor);
-		params.put("convid", convid);
+		try {
+			params.put("actor", actor);
+			params.put("convid", convid);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		HCommand cmd = new HCommand(transportOptions.getHserverService(),
 				cmdName, params);
@@ -459,7 +463,7 @@ public class HClient {
 	 */
 	public void getThreads(String actor, String status,
 			HResultDelegate resultDelegate) {
-		HJsonDictionnary params = new HJsonDictionnary();
+		JSONObject params = new JSONObject();
 		String cmdName = "hgetthreads";
 
 		// check mandatory fields
@@ -475,8 +479,13 @@ public class HClient {
 			return;
 		}
 
-		params.put("actor", actor);
-		params.put("status", status);
+		try {
+			params.put("actor", actor);
+			params.put("status", status);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		HCommand cmd = new HCommand(transportOptions.getHserverService(),
 				cmdName, params);
@@ -504,10 +513,9 @@ public class HClient {
 					"filter is missing", resultDelegate);
 			return;
 		}
-		HJsonDictionnary params = new HJsonDictionnary(filter.toJSON());
 
 		HCommand cmd = new HCommand(transportOptions.getHserverService(),
-				cmdName, params);
+				cmdName, filter.toJSON());
 		this.command(cmd, resultDelegate);
 	}
 
@@ -524,11 +532,15 @@ public class HClient {
 	 *            be null
 	 */
 	public void listFilters(String actor, HResultDelegate resultDelegate) {
-		HJsonDictionnary params = new HJsonDictionnary();
+		JSONObject params = new JSONObject();
 		String cmdName = "hListFilters";
 
 		if (actor != null) {
-			params.put("actor", actor);
+			try {
+				params.put("actor", actor);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 		}
 
 		HCommand cmd = new HCommand(transportOptions.getHserverService(),
@@ -551,7 +563,7 @@ public class HClient {
 	 */
 	public void unsetFilter(String name, String actor,
 			HResultDelegate resultDelegate) {
-		HJsonDictionnary params = new HJsonDictionnary();
+		JSONObject params = new JSONObject();
 		String cmdName = "hUnsetFilter";
 
 		// check mandatory fields
@@ -567,8 +579,12 @@ public class HClient {
 			return;
 		}
 
-		params.put("name", name);
-		params.put("actor", actor);
+		try {
+			params.put("name", name);
+			params.put("actor", actor);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 
 		HCommand cmd = new HCommand(transportOptions.getHserverService(),
 				cmdName, params);
@@ -589,7 +605,7 @@ public class HClient {
 	 *            be null
 	 */
 	public void getRelevantMessages(String actor, HResultDelegate resultDelegate) {
-		HJsonDictionnary params = new HJsonDictionnary();
+		JSONObject params = new JSONObject();
 		String cmdName = "hRelevantMessages";
 
 		// check mandatory fields
@@ -598,7 +614,12 @@ public class HClient {
 					"actor is missing", resultDelegate);
 			return;
 		}
-		params.put("actor", actor);
+		try {
+			params.put("actor", actor);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		HCommand cmd = new HCommand(transportOptions.getHserverService(),
 				cmdName, params);
