@@ -26,40 +26,27 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 /**
- * @version 0.3
- * hAPI options. For more info, see Hubiquitus reference
+ * @version 0.3 hAPI options. For more info, see Hubiquitus reference
  */
 
 public class HOptions implements Cloneable {
-	
-	private String serverHost = null;
-	private int serverPort = 5222;
-	private String transport = "xmpp";
+
+	private String transport = "socketio";
 	private List<String> endpoints = null;
-	private String hserver = "hnode";
-	
+
 	public HOptions() {
-		setServerHost(null);
 		setEndpoints(null);
 	}
-	
+
 	public HOptions(JSONObject jsonObj) {
 		setEndpoints(null);
 		try {
-			if (jsonObj.has("serverHost")) {
-				setServerHost(jsonObj.getString("serverHost"));
-			}
-			
-			if (jsonObj.has("serverPort") && !jsonObj.getString("serverPort").equals("")) {
-				setServerPort(jsonObj.getInt("serverPort"));
-			}
-			
+
 			if (jsonObj.has("transport")) {
 				setTransport(jsonObj.getString("transport"));
 			}
-			
+
 			if (jsonObj.has("endpoints")) {
 				JSONArray jsonEndpoints = jsonObj.getJSONArray("endpoints");
 				ArrayList<String> arrayEndpoints = new ArrayList<String>();
@@ -68,110 +55,58 @@ public class HOptions implements Cloneable {
 				}
 				setEndpoints(arrayEndpoints);
 			}
-			
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public HOptions(HOptions options) {
-		this.setServerHost(options.getServerHost());
-		this.setServerPort(options.serverPort);
 		this.setEndpoints(options.getEndpoints());
 		this.setTransport(options.getTransport());
 	}
-	
+
 	/* Getters & Setters */
-	
-	/**
-	 * server host (localhost by default for xmpp host)
-	 */
-	public String getServerHost() {
-		return serverHost;
-	}
 
-	public void setServerHost(String serverHost) {
-		if (serverHost == null || serverHost.equals("")) {
-			serverHost = null;
-		} else {
-			this.serverHost = serverHost;
-		}
-	}
-
-	/**
-	 * server port (by default 5222 for xmpp)
-	 */
-	public int getServerPort() {
-		return serverPort;
-	}
-
-	public void setServerPort(int serverPort) {
-		if(serverPort == 0)
-			this.serverPort = 5222;
-		else
-			this.serverPort = serverPort;
-	}
-	
-	public void setServerPort(String serverPort) {
-		try {
-			this.serverPort = Integer.valueOf(serverPort);
-		} catch (Exception e) {
-			setServerPort(0);
-		}
-	}
-	
 	/**
 	 * Transport layer used to connect to hNode (ie : xmpp, socketio)
 	 */
 	public String getTransport() {
 		return transport;
-	}	
+	}
 
 	public void setTransport(String transport) {
-		if(transport.equals("xmpp") || transport.equals("socketio")) {
-			this.transport = transport;
-		} else {
-			this.transport = "xmpp";
-		}
+
+		this.transport = transport;
+
 	}
 
 	/**
-	 * Only valid if transport = xmpp
-	 * hNode gateway endpoints formated as domain:port/path (by default : localhost:8080)
+	 * Only valid if transport = xmpp hNode gateway endpoints formated as
+	 * domain:port/path (by default : localhost:8080)
 	 */
 	public List<String> getEndpoints() {
 		return new ArrayList<String>(this.endpoints);
 	}
 
 	public void setEndpoints(List<String> endpoints) {
-		if(endpoints != null && endpoints.size() > 0)
+		if (endpoints != null && endpoints.size() > 0)
 			this.endpoints = new ArrayList<String>(endpoints);
 		else {
 			this.endpoints = new ArrayList<String>();
 			this.endpoints.add("http://localhost:8080/");
-		}	
+		}
 	}
 
-	public String getHserver() {
-		return hserver;
-	}
-
-	public void setHserver(String hserver) {
-		this.hserver = hserver;
-	}
 
 	/* overrides */
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
 				+ ((endpoints == null) ? 0 : endpoints.hashCode());
-		result = prime * result + ((hserver == null) ? 0 : hserver.hashCode());
-		result = prime * result
-				+ ((serverHost == null) ? 0 : serverHost.hashCode());
-		result = prime * result + serverPort;
 		result = prime * result
 				+ ((transport == null) ? 0 : transport.hashCode());
 		return result;
@@ -179,10 +114,8 @@ public class HOptions implements Cloneable {
 
 	@Override
 	public String toString() {
-		return "HOptions [serverHost=" + serverHost + ", serverPort="
-				+ serverPort + ", transport=" + transport + ", endpoints="
-				+ endpoints + ", hserver="
-				+ hserver + "]";
+		return "HOptions [transport=" + transport + ", endpoints="
+				+ endpoints + "]";
 	}
 
 	@Override
@@ -198,18 +131,6 @@ public class HOptions implements Cloneable {
 			if (other.endpoints != null)
 				return false;
 		} else if (!endpoints.equals(other.endpoints))
-			return false;
-		if (hserver == null) {
-			if (other.hserver != null)
-				return false;
-		} else if (!hserver.equals(other.hserver))
-			return false;
-		if (serverHost == null) {
-			if (other.serverHost != null)
-				return false;
-		} else if (!serverHost.equals(other.serverHost))
-			return false;
-		if (serverPort != other.serverPort)
 			return false;
 		if (transport == null) {
 			if (other.transport != null)

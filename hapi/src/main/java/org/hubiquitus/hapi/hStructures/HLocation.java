@@ -23,7 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * @version 0.3
+ * @version 0.5
  * This structure describe the location
  */
 
@@ -66,9 +66,7 @@ public class HLocation implements HJsonObj{
 	 * @return Boolean
 	 */
 	public boolean equals(HLocation obj) {
-		if(obj.getLat() != this.getLat())
-			return false;
-		if(obj.getLng() != this.getLng())
+		if(obj.getPos().equals(this.getPos()))
 			return false;
 		if(obj.getZip() != this.getZip())
 			return false;
@@ -98,49 +96,23 @@ public class HLocation implements HJsonObj{
 	
 	/* Getters & Setters */
 	
-	/**
-	 * @return the latitude of the location. 0 if undefined
-	 */
-	public double getLat() {
-		double lat;
+
+	public HGeo getPos() {
+		HGeo pos;
 		try {
-			lat = hlocation.getDouble("lat");
+			pos = new HGeo(hlocation.getJSONObject("pos"));
 		} catch (Exception e) {
-			lat = 0;			
+			pos = null;			
 		}
-		return lat;
+		return pos;
 	}
 
-	public void setLat(double lat) {
+	public void setPos(HGeo pos) {
 		try {
-			if(lat == 0) {
-				hlocation.remove("lat");
+			if(pos == null) {
+				hlocation.remove("pos");
 			} else {
-				hlocation.put("lat", lat);
-			}
-		} catch (JSONException e) {
-		}
-	}
-
-	/**
-	 * @return the longitude of the location. 0 if undefined
-	 */
-	public double getLng() {
-		double lng;
-		try {
-			lng = hlocation.getDouble("lng");
-		} catch (Exception e) {
-			lng = 0;			
-		}
-		return lng;
-	}
-
-	public void setLng(double lng) {
-		try {
-			if(lng == 0) {
-				hlocation.remove("lng");
-			} else {
-				hlocation.put("lng", lng);
+				hlocation.put("pos", pos.toJSON());
 			}
 		} catch (JSONException e) {
 		}

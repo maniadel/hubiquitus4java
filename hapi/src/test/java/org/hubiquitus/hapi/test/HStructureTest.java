@@ -30,6 +30,7 @@ import org.hubiquitus.hapi.hStructures.HAckValue;
 import org.hubiquitus.hapi.hStructures.HAlert;
 import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HConvState;
+import org.hubiquitus.hapi.hStructures.HGeo;
 import org.hubiquitus.hapi.hStructures.HLocation;
 import org.hubiquitus.hapi.hStructures.HMeasure;
 import org.hubiquitus.hapi.hStructures.HMessage;
@@ -77,8 +78,8 @@ public class HStructureTest {
 			jsonObj.put("persistent", _persistent);
 			
 			HLocation location = new HLocation();
-			location.setLat(100);
-			location.setLng(100);
+			HGeo pos = new HGeo(100,100);
+			location.setPos(pos);
 			location.setZip("79000");
 			jsonObj.put("location",location.toJSON());
 			
@@ -113,7 +114,7 @@ public class HStructureTest {
 			Assert.assertEquals(hmessage.getType(), type);
 			Assert.assertEquals(hmessage.getHeaders().toJSON().toString(), headers.toString());
 			Assert.assertEquals(hmessage.getLocation().toString(), location.toString());
-			Assert.assertEquals(hmessage.getPayload().toString(), payloadResult.toString());
+			Assert.assertEquals(hmessage.getPayloadAsHJsoObj().toString(), payloadResult.toString());
 			Assert.assertEquals(hmessage.getPriority(), HMessagePriority.INFO);
 			Assert.assertEquals(hmessage.getPublished(), date);
 			Assert.assertEquals(hmessage.getRelevance(), date);
@@ -145,8 +146,8 @@ public class HStructureTest {
 			Boolean _persistent = false;
 			
 			HLocation location = new HLocation();
-			location.setLat(100);
-			location.setLng(100);
+			HGeo pos = new HGeo(100,100);
+			location.setPos(pos);
 			location.setZip("79000");
 			
 			String author = "Mysth";
@@ -235,11 +236,8 @@ public class HStructureTest {
 	public void HlocationGetTest() {
 		JSONObject jsonObj = new JSONObject();
 		try {
-			Double longitude = 100.0;
-			jsonObj.put("lng", longitude);
-			
-			Double latitude = 100.0;
-			jsonObj.put("lat", latitude);
+			HGeo pos = new HGeo(100.0, 100.0);
+			jsonObj.put("pos", pos.toJSON());
 			
 			String zip = "79000";
 			jsonObj.put("zip", zip);
@@ -274,8 +272,7 @@ public class HStructureTest {
 			
 			HLocation hlocation = new HLocation(jsonObj);
 
-			Assert.assertEquals(hlocation.getLng(), longitude, 0);
-			Assert.assertEquals(hlocation.getLat(), latitude, 0);
+			Assert.assertEquals(hlocation.getPos().toJSON(), pos.toJSON());
 			Assert.assertEquals(hlocation.getZip(), zip);
 			Assert.assertEquals(hlocation.getAddr(), addr);
 			Assert.assertEquals(hlocation.getCountryCode(), countryCode);
@@ -295,9 +292,7 @@ public class HStructureTest {
 	public void HlocationSetTest() {
 		JSONObject jsonObj = new JSONObject();
 		try {
-			Double longitude = 100.0;
-			
-			Double latitude = 100.0;
+			HGeo pos = new HGeo(100.0,100.0);
 			
 			String num = "24";
 			
@@ -318,21 +313,20 @@ public class HStructureTest {
 			String building = "tour Montparnasse";
 						
 			HLocation hlocation = new HLocation();
+			hlocation.setPos(pos);
 			hlocation.setAddr(addr);
 			hlocation.setBuilding(building);
 			hlocation.setCity(city);
 			hlocation.setCountryCode(countryCode);
 			hlocation.setFloor(floor);
-			hlocation.setLat(latitude);
-			hlocation.setLng(longitude);
+			hlocation.setPos(pos);
 			hlocation.setNum(num);
 			hlocation.setWay(way);
 			hlocation.setWayType(wayType);
 			hlocation.setZip(zip);
 			jsonObj = hlocation.toJSON();
 			
-			Assert.assertEquals(jsonObj.getDouble("lng"), longitude, 0);
-			Assert.assertEquals(jsonObj.getDouble("lat"), latitude, 0);
+			Assert.assertEquals(jsonObj.getJSONObject("pos").toString(), pos.toJSON().toString());
 			Assert.assertEquals(jsonObj.get("floor"), floor);
 			Assert.assertEquals(jsonObj.get("building"), building);
 			Assert.assertEquals(jsonObj.get("way"), way);
@@ -371,14 +365,12 @@ public class HStructureTest {
 		JSONObject jsonObj = new JSONObject();
 		try {
 			HAckValue ack = HAckValue.READ;			
-			String ackid = "ackid:123456789";
 						
 			HAck hack = new HAck();
 			hack.setAck(ack);
 			
 			jsonObj = hack.toJSON();
 			Assert.assertEquals(jsonObj.get("ack"), ack.value());
-			Assert.assertEquals(jsonObj.get("ackid"), ackid);
 		} catch (JSONException e) {
 			e.printStackTrace();
 			fail("fail");
@@ -392,40 +384,17 @@ public class HStructureTest {
 		try {
 			String cmd = "publish";
 			jsonObj.put("cmd", cmd);
-			
-			String entity = "me";
-			jsonObj.put("entity", entity);
-			
-			String reqid = "reqid:123456789";
-			jsonObj.put("reqid", reqid);
-			
-			String requester = "you";
-			jsonObj.put("requester", requester);
-			
-			String sender = "him";
-			jsonObj.put("sender", sender);
-			
-			String dateIso = DateISO8601.now();
-			Calendar date = DateISO8601.toCalendar(dateIso);
-			jsonObj.put("sent", dateIso);
-			
-			HJsonDictionnary params = new HJsonDictionnary();
+		
+					
+			JSONObject params = new JSONObject();
 			params.put("text", "test");
-			jsonObj.put("params", params.toJSON());
+			jsonObj.put("params", params);
 			
-			Boolean _persistent = false; 
-			jsonObj.put("persistent", _persistent);
-			
+		
 			HCommand hcommand = new HCommand(jsonObj);
 
 			Assert.assertEquals(hcommand.getCmd(), cmd);
-			Assert.assertEquals(hcommand.getEntity(), entity);
-			Assert.assertEquals(hcommand.getReqid(), reqid);
-			Assert.assertEquals(hcommand.getRequester(), requester);
-			Assert.assertEquals(hcommand.getSender(), sender);
-			Assert.assertEquals(hcommand.getSent(), date);
 			Assert.assertEquals(hcommand.getParams().toString(), params.toString());
-			Assert.assertEquals(hcommand.getTransient(), _persistent);
 			
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -439,37 +408,13 @@ public class HStructureTest {
 		try {
 			String cmd = "publish";
 			
-			String entity = "me";
-			
-			String reqid = "reqid:123456789";
-			
-			String requester = "you";
-			
-			String sender = "him";
-			
-			String dateIso = DateISO8601.now();
-			Calendar date = DateISO8601.toCalendar(dateIso);
-			
-			Boolean _persistent = false; 
 			
 			HCommand hcommand = new HCommand();
 			hcommand.setCmd(cmd);
-			hcommand.setEntity(entity);
-			hcommand.setReqid(reqid);
-			hcommand.setRequester(requester);
-			hcommand.setSender(sender);
-			hcommand.setSent(date);
-			hcommand.setTransient(_persistent);
 			
 			jsonObj = hcommand.toJSON();
 
 			Assert.assertEquals(jsonObj.get("cmd"), cmd);
-			Assert.assertEquals(jsonObj.get("entity"), entity);
-			Assert.assertEquals(jsonObj.get("reqid"), reqid);
-			Assert.assertEquals(jsonObj.get("requester"), requester);
-			Assert.assertEquals(jsonObj.get("sender"), sender);
-			Assert.assertEquals(jsonObj.get("sent"), dateIso);
-			Assert.assertEquals(jsonObj.get("persistent"), _persistent);
 		} catch (JSONException e) {
 			e.printStackTrace();
 			fail("fail");
@@ -618,7 +563,7 @@ public class HStructureTest {
 			HResult hresult = new HResult(jsonObj);
 
 			Assert.assertEquals(hresult.getStatus(), status);
-			Assert.assertEquals(hresult.getResultAsJSONObject().toString(), result.toString());
+			Assert.assertEquals(hresult.getResultAsJSONObject(), result.toJSON());
 		} catch (JSONException e) {
 			e.printStackTrace();
 			fail("fail");
@@ -631,7 +576,6 @@ public class HStructureTest {
 		try {
 			ResultStatus status = ResultStatus.NO_ERROR;
 			
-			String reqid ="reqid:123456789";
 			
 			HJsonDictionnary result = new HJsonDictionnary();
 			result.put("test", "test");
@@ -642,7 +586,6 @@ public class HStructureTest {
 			jsonObj = hresult.toJSON();
 
 			Assert.assertEquals(jsonObj.get("status"), status.value());
-			Assert.assertEquals(jsonObj.get("reqid"), reqid);
 			Assert.assertEquals(jsonObj.get("result"), result.toJSON());
 		} catch (JSONException e) {
 			e.printStackTrace();

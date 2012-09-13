@@ -87,7 +87,7 @@ public class HBuilderTest {
 				headers.toString());
 		Assert.assertEquals(hmessage.getLocation().toString(),
 				location.toString());
-		Assert.assertEquals(hmessage.getPayload().toString(),
+		Assert.assertEquals(hmessage.getPayloadAsHJsoObj().toString(),
 				payload.toString());
 		Assert.assertEquals(hmessage.getPriority(), HMessagePriority.INFO);
 		Assert.assertEquals(hmessage.getPublished(), null);
@@ -132,7 +132,7 @@ public class HBuilderTest {
 		hconvstate.setStatus("test status");
 
 		Assert.assertEquals(hmessage.getType(), "hConvState");
-		Assert.assertEquals(hmessage.getPayload().toString(),
+		Assert.assertEquals(hmessage.getPayloadAsHJsoObj().toString(),
 				hconvstate.toString());
 	}
 
@@ -175,7 +175,7 @@ public class HBuilderTest {
 		hack.setAck(ackvalue);
 
 		Assert.assertEquals(hmessage.getType(), "hAck");
-		Assert.assertEquals(hmessage.getPayload().toString(), hack.toString());
+		Assert.assertEquals(hmessage.getPayloadAsHJsoObj().toString(), hack.toString());
 	}
 
 	@Test
@@ -217,7 +217,7 @@ public class HBuilderTest {
 		halert.setAlert(alert);
 
 		Assert.assertEquals(hmessage.getType(), "hAlert");
-		Assert.assertEquals(hmessage.getPayload().toString(), halert.toString());
+		Assert.assertEquals(hmessage.getPayloadAsHJsoObj().toString(), halert.toString());
 	}
 
 	@Test
@@ -261,7 +261,7 @@ public class HBuilderTest {
 		hmeasure.setValue(value);
 
 		Assert.assertEquals(hmessage.getType(), "hMeasure");
-		Assert.assertEquals(hmessage.getPayload().toString(),
+		Assert.assertEquals(hmessage.getPayloadAsHJsoObj().toString(),
 				hmeasure.toString());
 	}
 }
