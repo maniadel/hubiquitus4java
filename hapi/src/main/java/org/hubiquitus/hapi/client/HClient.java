@@ -608,7 +608,7 @@ public class HClient {
 	/* Builder */
 
 	/**
-	 * Helper to create hmessage
+	 * Helper to create hmessage. Payload type is HJsonObj.
 	 * 
 	 * @see HMessage
 	 * @param actor
@@ -620,6 +620,384 @@ public class HClient {
 	 * @throws MissingAttrException
 	 */
 	public HMessage buildMessage(String actor, String type, HJsonObj payload,
+			HMessageOptions options) throws MissingAttrException {
+
+		// check for required attributes
+		if (actor == null || actor.length() <= 0) {
+			throw new MissingAttrException("actor");
+		}
+
+		// build the message
+		HMessage hmessage = new HMessage();
+
+		hmessage.setActor(actor);
+		hmessage.setType(type);
+		if (options != null) {
+			hmessage.setRef(options.getRef());
+			hmessage.setConvid(options.getConvid());
+			hmessage.setPriority(options.getPriority());
+			hmessage.setRelevance(options.getRelevance());
+			hmessage.setPersistent(options.getPersistent());
+			hmessage.setLocation(options.getLocation());
+			hmessage.setAuthor(options.getAuthor());
+			hmessage.setHeaders(options.getHeaders());
+			hmessage.setTimeout(options.getTimeout());
+		}
+
+		// since v0.5
+		// provided by the server at publishing time.
+		// A prefix could be set by the hAPI if a a value is set on timeout
+		// (cf. new command pattern : idFromhAPI#idFromhServer)
+		if (hmessage.getTimeout() > 0) {
+			// TODO prefix msgid.
+		}
+
+		if (transportOptions != null && transportOptions.getJid() != null) {
+			hmessage.setPublisher(transportOptions.getJid().getBareJID());
+		} else {
+			hmessage.setPublisher(null);
+		}
+
+		hmessage.setPayload(payload);
+
+		return hmessage;
+	}
+
+	/**
+	 * Helper to create hmessage. Payload type is JSONObject.
+	 * 
+	 * @param actor
+	 * @param type
+	 * @param payload
+	 * @param options
+	 * @return
+	 * @throws MissingAttrException
+	 */
+	public HMessage buildMessage(String actor, String type, JSONObject payload,
+			HMessageOptions options) throws MissingAttrException {
+
+		// check for required attributes
+		if (actor == null || actor.length() <= 0) {
+			throw new MissingAttrException("actor");
+		}
+
+		// build the message
+		HMessage hmessage = new HMessage();
+
+		hmessage.setActor(actor);
+		hmessage.setType(type);
+		if (options != null) {
+			hmessage.setRef(options.getRef());
+			hmessage.setConvid(options.getConvid());
+			hmessage.setPriority(options.getPriority());
+			hmessage.setRelevance(options.getRelevance());
+			hmessage.setPersistent(options.getPersistent());
+			hmessage.setLocation(options.getLocation());
+			hmessage.setAuthor(options.getAuthor());
+			hmessage.setHeaders(options.getHeaders());
+			hmessage.setTimeout(options.getTimeout());
+		}
+
+		// since v0.5
+		// provided by the server at publishing time.
+		// A prefix could be set by the hAPI if a a value is set on timeout
+		// (cf. new command pattern : idFromhAPI#idFromhServer)
+		if (hmessage.getTimeout() > 0) {
+			// TODO prefix msgid.
+		}
+
+		if (transportOptions != null && transportOptions.getJid() != null) {
+			hmessage.setPublisher(transportOptions.getJid().getBareJID());
+		} else {
+			hmessage.setPublisher(null);
+		}
+
+		hmessage.setPayload(payload);
+
+		return hmessage;
+	}
+
+	/**
+	 * Helper to create hmessage Payload type is JSONArray.
+	 * 
+	 * @param actor
+	 * @param type
+	 * @param payload
+	 * @param options
+	 * @return
+	 * @throws MissingAttrException
+	 */
+	public HMessage buildMessage(String actor, String type, JSONArray payload,
+			HMessageOptions options) throws MissingAttrException {
+
+		// check for required attributes
+		if (actor == null || actor.length() <= 0) {
+			throw new MissingAttrException("actor");
+		}
+
+		// build the message
+		HMessage hmessage = new HMessage();
+
+		hmessage.setActor(actor);
+		hmessage.setType(type);
+		if (options != null) {
+			hmessage.setRef(options.getRef());
+			hmessage.setConvid(options.getConvid());
+			hmessage.setPriority(options.getPriority());
+			hmessage.setRelevance(options.getRelevance());
+			hmessage.setPersistent(options.getPersistent());
+			hmessage.setLocation(options.getLocation());
+			hmessage.setAuthor(options.getAuthor());
+			hmessage.setHeaders(options.getHeaders());
+			hmessage.setTimeout(options.getTimeout());
+		}
+
+		// since v0.5
+		// provided by the server at publishing time.
+		// A prefix could be set by the hAPI if a a value is set on timeout
+		// (cf. new command pattern : idFromhAPI#idFromhServer)
+		if (hmessage.getTimeout() > 0) {
+			// TODO prefix msgid.
+		}
+
+		if (transportOptions != null && transportOptions.getJid() != null) {
+			hmessage.setPublisher(transportOptions.getJid().getBareJID());
+		} else {
+			hmessage.setPublisher(null);
+		}
+
+		hmessage.setPayload(payload);
+
+		return hmessage;
+	}
+
+	/**
+	 * Helper to create hmessage. Payload type is String
+	 * 
+	 * @param actor
+	 * @param type
+	 * @param payload
+	 * @param options
+	 * @return
+	 * @throws MissingAttrException
+	 */
+	public HMessage buildMessage(String actor, String type, String payload,
+			HMessageOptions options) throws MissingAttrException {
+
+		// check for required attributes
+		if (actor == null || actor.length() <= 0) {
+			throw new MissingAttrException("actor");
+		}
+
+		// build the message
+		HMessage hmessage = new HMessage();
+
+		hmessage.setActor(actor);
+		hmessage.setType(type);
+		if (options != null) {
+			hmessage.setRef(options.getRef());
+			hmessage.setConvid(options.getConvid());
+			hmessage.setPriority(options.getPriority());
+			hmessage.setRelevance(options.getRelevance());
+			hmessage.setPersistent(options.getPersistent());
+			hmessage.setLocation(options.getLocation());
+			hmessage.setAuthor(options.getAuthor());
+			hmessage.setHeaders(options.getHeaders());
+			hmessage.setTimeout(options.getTimeout());
+		}
+
+		// since v0.5
+		// provided by the server at publishing time.
+		// A prefix could be set by the hAPI if a a value is set on timeout
+		// (cf. new command pattern : idFromhAPI#idFromhServer)
+		if (hmessage.getTimeout() > 0) {
+			// TODO prefix msgid.
+		}
+
+		if (transportOptions != null && transportOptions.getJid() != null) {
+			hmessage.setPublisher(transportOptions.getJid().getBareJID());
+		} else {
+			hmessage.setPublisher(null);
+		}
+
+		hmessage.setPayload(payload);
+
+		return hmessage;
+	}
+
+	/**
+	 * Helper to create hmessage. Payload type is Boolean.
+	 * 
+	 * @param actor
+	 * @param type
+	 * @param payload
+	 * @param options
+	 * @return
+	 * @throws MissingAttrException
+	 */
+	public HMessage buildMessage(String actor, String type, Boolean payload,
+			HMessageOptions options) throws MissingAttrException {
+
+		// check for required attributes
+		if (actor == null || actor.length() <= 0) {
+			throw new MissingAttrException("actor");
+		}
+
+		// build the message
+		HMessage hmessage = new HMessage();
+
+		hmessage.setActor(actor);
+		hmessage.setType(type);
+		if (options != null) {
+			hmessage.setRef(options.getRef());
+			hmessage.setConvid(options.getConvid());
+			hmessage.setPriority(options.getPriority());
+			hmessage.setRelevance(options.getRelevance());
+			hmessage.setPersistent(options.getPersistent());
+			hmessage.setLocation(options.getLocation());
+			hmessage.setAuthor(options.getAuthor());
+			hmessage.setHeaders(options.getHeaders());
+			hmessage.setTimeout(options.getTimeout());
+		}
+
+		// since v0.5
+		// provided by the server at publishing time.
+		// A prefix could be set by the hAPI if a a value is set on timeout
+		// (cf. new command pattern : idFromhAPI#idFromhServer)
+		if (hmessage.getTimeout() > 0) {
+			// TODO prefix msgid.
+		}
+
+		if (transportOptions != null && transportOptions.getJid() != null) {
+			hmessage.setPublisher(transportOptions.getJid().getBareJID());
+		} else {
+			hmessage.setPublisher(null);
+		}
+
+		hmessage.setPayload(payload);
+
+		return hmessage;
+	}
+
+	/**
+	 * Helper to create hmessage. Payload type is int.
+	 * 
+	 * @param actor
+	 * @param type
+	 * @param payload
+	 * @param options
+	 * @return
+	 * @throws MissingAttrException
+	 */
+	public HMessage buildMessage(String actor, String type, int payload,
+			HMessageOptions options) throws MissingAttrException {
+
+		// check for required attributes
+		if (actor == null || actor.length() <= 0) {
+			throw new MissingAttrException("actor");
+		}
+
+		// build the message
+		HMessage hmessage = new HMessage();
+
+		hmessage.setActor(actor);
+		hmessage.setType(type);
+		if (options != null) {
+			hmessage.setRef(options.getRef());
+			hmessage.setConvid(options.getConvid());
+			hmessage.setPriority(options.getPriority());
+			hmessage.setRelevance(options.getRelevance());
+			hmessage.setPersistent(options.getPersistent());
+			hmessage.setLocation(options.getLocation());
+			hmessage.setAuthor(options.getAuthor());
+			hmessage.setHeaders(options.getHeaders());
+			hmessage.setTimeout(options.getTimeout());
+		}
+
+		// since v0.5
+		// provided by the server at publishing time.
+		// A prefix could be set by the hAPI if a a value is set on timeout
+		// (cf. new command pattern : idFromhAPI#idFromhServer)
+		if (hmessage.getTimeout() > 0) {
+			// TODO prefix msgid.
+		}
+
+		if (transportOptions != null && transportOptions.getJid() != null) {
+			hmessage.setPublisher(transportOptions.getJid().getBareJID());
+		} else {
+			hmessage.setPublisher(null);
+		}
+
+		hmessage.setPayload(payload);
+
+		return hmessage;
+	}
+
+	/**
+	 * Helper to create hmessage. Payload type is double.
+	 * 
+	 * @param actor
+	 * @param type
+	 * @param payload
+	 * @param options
+	 * @return
+	 * @throws MissingAttrException
+	 */
+	public HMessage buildMessage(String actor, String type, double payload,
+			HMessageOptions options) throws MissingAttrException {
+
+		// check for required attributes
+		if (actor == null || actor.length() <= 0) {
+			throw new MissingAttrException("actor");
+		}
+
+		// build the message
+		HMessage hmessage = new HMessage();
+
+		hmessage.setActor(actor);
+		hmessage.setType(type);
+		if (options != null) {
+			hmessage.setRef(options.getRef());
+			hmessage.setConvid(options.getConvid());
+			hmessage.setPriority(options.getPriority());
+			hmessage.setRelevance(options.getRelevance());
+			hmessage.setPersistent(options.getPersistent());
+			hmessage.setLocation(options.getLocation());
+			hmessage.setAuthor(options.getAuthor());
+			hmessage.setHeaders(options.getHeaders());
+			hmessage.setTimeout(options.getTimeout());
+		}
+
+		// since v0.5
+		// provided by the server at publishing time.
+		// A prefix could be set by the hAPI if a a value is set on timeout
+		// (cf. new command pattern : idFromhAPI#idFromhServer)
+		if (hmessage.getTimeout() > 0) {
+			// TODO prefix msgid.
+		}
+
+		if (transportOptions != null && transportOptions.getJid() != null) {
+			hmessage.setPublisher(transportOptions.getJid().getBareJID());
+		} else {
+			hmessage.setPublisher(null);
+		}
+
+		hmessage.setPayload(payload);
+
+		return hmessage;
+	}
+
+	/**
+	 * Helper to create hmessage. Payload type is long.
+	 * 
+	 * @param actor
+	 * @param type
+	 * @param payload
+	 * @param options
+	 * @return
+	 * @throws MissingAttrException
+	 */
+	public HMessage buildMessage(String actor, String type, long payload,
 			HMessageOptions options) throws MissingAttrException {
 
 		// check for required attributes
@@ -936,6 +1314,7 @@ public class HClient {
 
 	/**
 	 * if result type is Boolean
+	 * 
 	 * @param actor
 	 * @param ref
 	 * @param status
@@ -973,8 +1352,10 @@ public class HClient {
 		buildMessage(actor, "hResult", hresult, options);
 		return hmessage;
 	}
+
 	/**
 	 * if result type is int
+	 * 
 	 * @param actor
 	 * @param ref
 	 * @param status
@@ -984,8 +1365,7 @@ public class HClient {
 	 * @throws MissingAttrException
 	 */
 	public HMessage buildResult(String actor, String ref, ResultStatus status,
-			int result, HMessageOptions options)
-			throws MissingAttrException {
+			int result, HMessageOptions options) throws MissingAttrException {
 		// check for required attributes
 		if (actor == null || actor.length() <= 0) {
 			throw new MissingAttrException("actor");
@@ -1008,6 +1388,79 @@ public class HClient {
 		buildMessage(actor, "hResult", hresult, options);
 		return hmessage;
 	}
+
+	/**
+	 * if result type is double
+	 * 
+	 * @param actor
+	 * @param ref
+	 * @param status
+	 * @param result
+	 * @param options
+	 * @return
+	 * @throws MissingAttrException
+	 */
+	public HMessage buildResult(String actor, String ref, ResultStatus status,
+			double result, HMessageOptions options) throws MissingAttrException {
+		// check for required attributes
+		if (actor == null || actor.length() <= 0) {
+			throw new MissingAttrException("actor");
+		}
+		// check for required attributes
+		if (ref == null || ref.length() <= 0) {
+			throw new MissingAttrException("ref");
+		}
+
+		// check for required attributes
+		if (status == null) {
+			throw new MissingAttrException("status");
+		}
+
+		HMessage hmessage = new HMessage();
+		HResult hresult = new HResult();
+		hresult.setResult(result);
+		hresult.setStatus(status);
+		options.setRef(ref);
+		buildMessage(actor, "hResult", hresult, options);
+		return hmessage;
+	}
+
+	/**
+	 * if result type is long.
+	 * 
+	 * @param actor
+	 * @param ref
+	 * @param status
+	 * @param result
+	 * @param options
+	 * @return
+	 * @throws MissingAttrException
+	 */
+	public HMessage buildResult(String actor, String ref, ResultStatus status,
+			long result, HMessageOptions options) throws MissingAttrException {
+		// check for required attributes
+		if (actor == null || actor.length() <= 0) {
+			throw new MissingAttrException("actor");
+		}
+		// check for required attributes
+		if (ref == null || ref.length() <= 0) {
+			throw new MissingAttrException("ref");
+		}
+
+		// check for required attributes
+		if (status == null) {
+			throw new MissingAttrException("status");
+		}
+
+		HMessage hmessage = new HMessage();
+		HResult hresult = new HResult();
+		hresult.setResult(result);
+		hresult.setStatus(status);
+		options.setRef(ref);
+		buildMessage(actor, "hResult", hresult, options);
+		return hmessage;
+	}
+
 	/* HTransportCallback functions */
 
 	/**
@@ -1211,7 +1664,6 @@ public class HClient {
 		HResult hresult = new HResult();
 		hresult.setResult(obj);
 		hresult.setStatus(resultstatus);
-
 
 		this.notifyResult(hresult, resultDelegate);
 	}
