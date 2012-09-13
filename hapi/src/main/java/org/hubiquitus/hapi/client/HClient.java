@@ -273,8 +273,7 @@ public class HClient {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		HCommand cmd = new HCommand(transportOptions.getHserverService(),
-				"hsubscribe", params);
+		HCommand cmd = new HCommand("hsubscribe", params);
 		this.command(cmd, resultDelegate);
 	}
 
@@ -297,8 +296,7 @@ public class HClient {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		HCommand cmd = new HCommand(transportOptions.getHserverService(),
-				"hunsubscribe", params);
+		HCommand cmd = new HCommand("hunsubscribe", params);
 		this.command(cmd, resultDelegate);
 	}
 
@@ -331,8 +329,7 @@ public class HClient {
 			message.setPublisher(this.transportOptions.getJid().getBareJID());
 		}
 
-		HCommand cmd = new HCommand(transportOptions.getHserverService(),
-				"hpublish", message);
+		HCommand cmd = new HCommand("hpublish", message.toJSON());
 		this.command(cmd, resultDelegate);
 	}
 
@@ -366,8 +363,7 @@ public class HClient {
 			e.printStackTrace();
 		}
 
-		HCommand cmd = new HCommand(transportOptions.getHserverService(),
-				"hgetlastmessages", params);
+		HCommand cmd = new HCommand("hgetlastmessages", params);
 		this.command(cmd, resultDelegate);
 	}
 
@@ -396,8 +392,7 @@ public class HClient {
 	 * @return request id
 	 */
 	public void getSubscriptions(HResultDelegate resultDelegate) {
-		HCommand cmd = new HCommand(transportOptions.getHserverService(),
-				"hgetsubscriptions", null);
+		HCommand cmd = new HCommand("hgetsubscriptions", null);
 		this.command(cmd, resultDelegate);
 	}
 
@@ -442,8 +437,7 @@ public class HClient {
 			e.printStackTrace();
 		}
 
-		HCommand cmd = new HCommand(transportOptions.getHserverService(),
-				cmdName, params);
+		HCommand cmd = new HCommand(cmdName, params);
 		this.command(cmd, resultDelegate);
 	}
 
@@ -487,8 +481,7 @@ public class HClient {
 			e.printStackTrace();
 		}
 
-		HCommand cmd = new HCommand(transportOptions.getHserverService(),
-				cmdName, params);
+		HCommand cmd = new HCommand(cmdName, params);
 		this.command(cmd, resultDelegate);
 	}
 
@@ -514,8 +507,7 @@ public class HClient {
 			return;
 		}
 
-		HCommand cmd = new HCommand(transportOptions.getHserverService(),
-				cmdName, filter.toJSON());
+		HCommand cmd = new HCommand(cmdName, filter.toJSON());
 		this.command(cmd, resultDelegate);
 	}
 
@@ -543,8 +535,7 @@ public class HClient {
 			}
 		}
 
-		HCommand cmd = new HCommand(transportOptions.getHserverService(),
-				cmdName, params);
+		HCommand cmd = new HCommand(cmdName, params);
 		this.command(cmd, resultDelegate);
 	}
 
@@ -586,8 +577,7 @@ public class HClient {
 			e.printStackTrace();
 		}
 
-		HCommand cmd = new HCommand(transportOptions.getHserverService(),
-				cmdName, params);
+		HCommand cmd = new HCommand(cmdName, params);
 		this.command(cmd, resultDelegate);
 	}
 
@@ -621,8 +611,7 @@ public class HClient {
 			e.printStackTrace();
 		}
 
-		HCommand cmd = new HCommand(transportOptions.getHserverService(),
-				cmdName, params);
+		HCommand cmd = new HCommand(cmdName, params);
 		this.command(cmd, resultDelegate);
 	}
 
@@ -1091,12 +1080,11 @@ public class HClient {
 			throw new MissingAttrException("status");
 		}
 
-		HMessage hmessage = new HMessage();
 
 		HConvState hconvstate = new HConvState();
 		hconvstate.setStatus(status);
 
-		hmessage = buildMessage(actor, "hConvState", hconvstate, options);
+		HMessage hmessage = buildMessage(actor, "hConvState", hconvstate, options);
 		hmessage.setConvid(convid);
 
 		return hmessage;
@@ -1125,11 +1113,11 @@ public class HClient {
 			throw new MissingAttrException("ack");
 		}
 
-		HMessage hmessage = new HMessage();
 
 		HAck hack = new HAck();
 		hack.setAck(ack);
-		hmessage = buildMessage(actor, "hAck", hack, options);
+		
+		HMessage hmessage = buildMessage(actor, "hAck", hack, options);
 
 		return hmessage;
 	}
@@ -1161,12 +1149,11 @@ public class HClient {
 			throw new MissingAttrException("actor");
 		}
 
-		HMessage hmessage = new HMessage();
 
 		HAlert halert = new HAlert();
 		halert.setAlert(alert);
 
-		hmessage = buildMessage(actor, "hAlert", halert, options);
+		HMessage hmessage = buildMessage(actor, "hAlert", halert, options);
 
 		return hmessage;
 	}
@@ -1201,14 +1188,36 @@ public class HClient {
 			throw new MissingAttrException("unit");
 		}
 
-		HMessage hmessage = new HMessage();
 
 		HMeasure hmeasure = new HMeasure();
 		hmeasure.setValue(value);
 		hmeasure.setUnit(unit);
-		hmessage = buildMessage(actor, "hMeasure", hmeasure, options);
+		HMessage hmessage = buildMessage(actor, "hMeasure", hmeasure, options);
 
 		return hmessage;
+	}
+
+	public HMessage buildCommand(String actor, String cmd, JSONObject params,
+			HMessageOptions options) throws MissingAttrException {
+		// check for required attributes
+		if (actor == null || actor.length() <= 0) {
+			throw new MissingAttrException("actor");
+		}
+
+		// check for required attributes
+		if (cmd	 == null || cmd.length() <= 0) {
+			throw new MissingAttrException("cmd");
+		}
+
+		// check for required attributes
+		if (params == null) {
+			throw new MissingAttrException("params");
+		}
+		
+		HCommand hcommand = new HCommand(cmd, params);
+		HMessage hmessage = buildMessage(actor, "hCommand", hcommand, options);
+		return hmessage;
+
 	}
 
 	/**
@@ -1243,12 +1252,11 @@ public class HClient {
 		if (result == null) {
 			throw new MissingAttrException("result");
 		}
-		HMessage hmessage = new HMessage();
 		HResult hresult = new HResult();
 		hresult.setResult(result);
 		hresult.setStatus(status);
 		options.setRef(ref);
-		buildMessage(actor, "hResult", hresult, options);
+		HMessage hmessage = buildMessage(actor, "hResult", hresult, options);
 		return hmessage;
 	}
 
@@ -1284,12 +1292,11 @@ public class HClient {
 		if (result == null) {
 			throw new MissingAttrException("result");
 		}
-		HMessage hmessage = new HMessage();
 		HResult hresult = new HResult();
 		hresult.setResult(result);
 		hresult.setStatus(status);
 		options.setRef(ref);
-		buildMessage(actor, "hResult", hresult, options);
+		HMessage hmessage = buildMessage(actor, "hResult", hresult, options);
 		return hmessage;
 	}
 
@@ -1324,12 +1331,11 @@ public class HClient {
 		if (result == null) {
 			throw new MissingAttrException("result");
 		}
-		HMessage hmessage = new HMessage();
 		HResult hresult = new HResult();
 		hresult.setResult(result);
 		hresult.setStatus(status);
 		options.setRef(ref);
-		buildMessage(actor, "hResult", hresult, options);
+		HMessage hmessage = buildMessage(actor, "hResult", hresult, options);
 		return hmessage;
 	}
 
@@ -1365,12 +1371,11 @@ public class HClient {
 		if (result == null) {
 			throw new MissingAttrException("result");
 		}
-		HMessage hmessage = new HMessage();
 		HResult hresult = new HResult();
 		hresult.setResult(result);
 		hresult.setStatus(status);
 		options.setRef(ref);
-		buildMessage(actor, "hResult", hresult, options);
+		HMessage hmessage = buildMessage(actor, "hResult", hresult, options);
 		return hmessage;
 	}
 
@@ -1401,12 +1406,11 @@ public class HClient {
 			throw new MissingAttrException("status");
 		}
 
-		HMessage hmessage = new HMessage();
 		HResult hresult = new HResult();
 		hresult.setResult(result);
 		hresult.setStatus(status);
 		options.setRef(ref);
-		buildMessage(actor, "hResult", hresult, options);
+		HMessage hmessage = buildMessage(actor, "hResult", hresult, options);
 		return hmessage;
 	}
 
@@ -1437,12 +1441,11 @@ public class HClient {
 			throw new MissingAttrException("status");
 		}
 
-		HMessage hmessage = new HMessage();
 		HResult hresult = new HResult();
 		hresult.setResult(result);
 		hresult.setStatus(status);
 		options.setRef(ref);
-		buildMessage(actor, "hResult", hresult, options);
+		HMessage hmessage = buildMessage(actor, "hResult", hresult, options);
 		return hmessage;
 	}
 
@@ -1473,12 +1476,11 @@ public class HClient {
 			throw new MissingAttrException("status");
 		}
 
-		HMessage hmessage = new HMessage();
 		HResult hresult = new HResult();
 		hresult.setResult(result);
 		hresult.setStatus(status);
 		options.setRef(ref);
-		buildMessage(actor, "hResult", hresult, options);
+		HMessage hmessage = buildMessage(actor, "hResult", hresult, options);
 		return hmessage;
 	}
 
