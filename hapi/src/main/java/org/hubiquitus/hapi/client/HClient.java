@@ -259,10 +259,11 @@ public class HClient {
 												+ "is time out!");
 							}
 						}, message.getTimeout());
-					}
-					timeoutHashtable.put(message.getMsgid(), timeoutTimer);
+						timeoutHashtable.put(message.getMsgid(), timeoutTimer);
+					}	
 				}
 				transport.sendObject(message.toJSON());
+				System.out.println("<<<<"+message.toJSON().toString());
 			} else {
 				notifyResultError(message.getMsgid(),
 						ResultStatus.MISSING_ATTR,
@@ -1631,7 +1632,11 @@ public class HClient {
 	}
 
 	/**
-	 * @internal notify to a result delegate it's result
+	 * Notify message delegate of an incoming hmessage. Run the message
+	 * delegate.
+	 * 
+	 * @param message
+	 * @param messageDelegate
 	 */
 	private void notifyMessage(final HMessage message,
 			final HMessageDelegate messageDelegate) {
@@ -1660,8 +1665,9 @@ public class HClient {
 	}
 
 	/**
-	 * Helper function to return a hresult with a payload error
+	 * Helper function to return a hmessage with hresult error
 	 * 
+	 * @param ref
 	 * @param resultstatus
 	 * @param errorMsg
 	 */
@@ -1686,10 +1692,12 @@ public class HClient {
 	}
 
 	/**
-	 * Helper function to return a hresult with a payload error
+	 * Helper function to return a hmessage with hresult error
 	 * 
+	 * @param ref
 	 * @param resultstatus
 	 * @param errorMsg
+	 * @param messageDelegate
 	 */
 	private void notifyResultError(String ref, ResultStatus resultstatus,
 			String errorMsg, HMessageDelegate messageDelegate) {
@@ -1729,6 +1737,7 @@ public class HClient {
 		 */
 		public void onData(String type, JSONObject jsonData) {
 			try {
+				System.out.println(">>>>"+jsonData.toString());
 				if (type.equalsIgnoreCase("hmessage")) {
 					notifyMessage(new HMessage(jsonData));
 				}

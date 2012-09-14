@@ -566,20 +566,7 @@ public class HMessage implements HJsonObj {
 		return payload;
 	}
 
-	/**
-	 * if payload type is long
-	 * 
-	 * @return payload. Null if undefined.
-	 */
-	public Long getPayloadAsLong() {
-		Long payload;
-		try {
-			payload = hmessage.getLong("payload");
-		} catch (JSONException e) {
-			payload = null;
-		}
-		return payload;
-	}
+	
 
 	/**
 	 * if payload type is Integer
@@ -611,6 +598,40 @@ public class HMessage implements HJsonObj {
 		return payload;
 	}
 
+	/**
+	 * if payload type is long
+	 * 
+	 * @return payload. Null if undefined.
+	 */
+	public Long getPayloadAsLong() {
+		Long payload;
+		try {
+			payload = hmessage.getLong("payload");
+		} catch (JSONException e) {
+			payload = null;
+		}
+		return payload;
+	}
+	
+	/**
+	 * if payload type is HJsonObj. Data model defined by hAPI (ie: HAlert,
+	 * HCommand, HAck ...)
+	 * 
+	 * @param payload
+	 */
+	public void setPayload(HJsonObj payload) {
+		try {
+			if (payload == null) {
+				hmessage.remove("payload");
+			} else {
+				hmessage.put("payload", payload.toJSON());
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	
 	/**
 	 * if payload type is JSONObject.
 	 * 
@@ -645,24 +666,7 @@ public class HMessage implements HJsonObj {
 		}
 	}
 
-	/**
-	 * if payload type is HJsonObj. Data model defined by hAPI (ie: HAlert,
-	 * HCommand, HAck ...)
-	 * 
-	 * @param payload
-	 */
-	public void setPayload(HJsonObj payload) {
-		try {
-			if (payload == null) {
-				hmessage.remove("payload");
-			} else {
-				hmessage.put("payload", payload.toJSON());
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
+	
 	/**
 	 * if payload type is String.
 	 * 

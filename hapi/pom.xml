@@ -57,7 +57,7 @@
                 <artifactId>json-lib</artifactId>
                 <version>0.0.0</version>
                 <scope>system</scope>
-                <systemPath>${basedir}/lib/org.json.jar</systemPath>
+                <systemPath>${basedir}/lib/json-org.jar</systemPath>
         </dependency>
 
 	<dependency>

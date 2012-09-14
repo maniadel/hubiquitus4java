@@ -164,7 +164,7 @@ public class HTransportSocketio implements HTransport, IOCallback {
 
 	public void sendObject(JSONObject object) {
 		if( connectionStatus == ConnectionStatus.CONNECTED) {
-			socketio.emit("hCommand",object);
+			socketio.emit("hMessage",object);
 		} else {
 			System.out.println("Not connected");
 		}		
