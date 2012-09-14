@@ -759,9 +759,9 @@ public class HMessage implements HJsonObj {
 	 * 
 	 * @param timeout
 	 */
-	public void setTimeout(int timeout) {
+	public void setTimeout(Integer timeout) {
 		try {
-			if (timeout == 0) {
+			if (timeout == null) {
 				hmessage.remove("timeout");
 			} else {
 				hmessage.put("timeout", timeout);

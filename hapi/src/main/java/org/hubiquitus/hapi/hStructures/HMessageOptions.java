@@ -37,7 +37,7 @@ public class HMessageOptions {
 	private String author = null;
 	private HJsonObj headers = null;
 	private Calendar published = null;
-	private int timeout = 0;
+	private Integer timeout = null;
 	
 	/**
 	 * @return The msgid of the message refered to
@@ -140,10 +140,10 @@ public class HMessageOptions {
 	 * Time (in ms) to wait for a response before hAPI sends a timeout
 	 *@return timeout. 0 if undefined.
 	 */
-	public int getTimeout() {
+	public Integer getTimeout() {
 		return timeout;
 	}
-	public void setTimeout(int timeout) {
+	public void setTimeout(Integer timeout) {
 		this.timeout = timeout;
 	}
 	
