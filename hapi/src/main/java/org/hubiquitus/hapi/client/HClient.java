@@ -408,7 +408,6 @@ public class HClient {
 	public void getSubscriptions(HMessageDelegate messageDelegate) {
 		HMessage cmdMessage = null;
 		try {
-			System.out.println("-->" + transportOptions.getHserverService());
 			cmdMessage = buildCommand(transportOptions.getHserverService(),
 					"hgetsubscriptions", null, null);
 		} catch (MissingAttrException e) {
@@ -650,8 +649,6 @@ public class HClient {
 
 	/* Builder */
 
-	
-
 	/**
 	 * Helper to create hmessage. Payload type is JSONObject.
 	 * 
@@ -733,7 +730,6 @@ public class HClient {
 			hmessage.setTimeout(options.getTimeout());
 		}
 
-
 		if (transportOptions != null && transportOptions.getJid() != null) {
 			hmessage.setPublisher(transportOptions.getJid().getBareJID());
 		} else {
@@ -779,8 +775,6 @@ public class HClient {
 			hmessage.setHeaders(options.getHeaders());
 			hmessage.setTimeout(options.getTimeout());
 		}
-
-		
 
 		if (transportOptions != null && transportOptions.getJid() != null) {
 			hmessage.setPublisher(transportOptions.getJid().getBareJID());
@@ -828,7 +822,6 @@ public class HClient {
 			hmessage.setTimeout(options.getTimeout());
 		}
 
-
 		if (transportOptions != null && transportOptions.getJid() != null) {
 			hmessage.setPublisher(transportOptions.getJid().getBareJID());
 		} else {
@@ -874,7 +867,6 @@ public class HClient {
 			hmessage.setHeaders(options.getHeaders());
 			hmessage.setTimeout(options.getTimeout());
 		}
-
 
 		if (transportOptions != null && transportOptions.getJid() != null) {
 			hmessage.setPublisher(transportOptions.getJid().getBareJID());
@@ -922,7 +914,6 @@ public class HClient {
 			hmessage.setTimeout(options.getTimeout());
 		}
 
-
 		if (transportOptions != null && transportOptions.getJid() != null) {
 			hmessage.setPublisher(transportOptions.getJid().getBareJID());
 		} else {
@@ -968,7 +959,6 @@ public class HClient {
 			hmessage.setHeaders(options.getHeaders());
 			hmessage.setTimeout(options.getTimeout());
 		}
-
 
 		if (transportOptions != null && transportOptions.getJid() != null) {
 			hmessage.setPublisher(transportOptions.getJid().getBareJID());
@@ -1494,36 +1484,42 @@ public class HClient {
 	 * @param message
 	 */
 	private void notifyMessage(final HMessage message) {
-		if (!this.messagesDelegates.isEmpty()
-				&& this.messagesDelegates.containsKey(message.getRef())) {
-			notifyMessage(message, this.messagesDelegates.get(message.getRef()));
-			if (this.timeoutHashtable.contains(message.getRef())) {
-				Timer timeout = timeoutHashtable.get(message.getRef());
-				if (timeout != null) {
-					timeout.cancel();
-					timeout = null;
+		try {
+			if (!this.messagesDelegates.isEmpty()
+					&& this.messagesDelegates.containsKey(message.getRef())) {
+				notifyMessage(message,
+						this.messagesDelegates.get(message.getRef()));
+				if (this.timeoutHashtable.contains(message.getRef())) {
+					Timer timeout = timeoutHashtable.get(message.getRef());
+					if (timeout != null) {
+						timeout.cancel();
+						timeout = null;
+					}
 				}
-			}
 
-		} else {
-			try {
-				if (this.messageDelegate != null) {
+			} else {
+				try {
+					if (this.messageDelegate != null) {
 
-					// return message asynchronously
-					(new Thread(new Runnable() {
-						public void run() {
-							try {
-								messageDelegate.onMessage(message);
-							} catch (Exception e) {
-								e.printStackTrace();
+						// return message asynchronously
+						(new Thread(new Runnable() {
+							public void run() {
+								try {
+									messageDelegate.onMessage(message);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
 							}
-						}
-					})).start();
+						})).start();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+
 	}
 
 	/**

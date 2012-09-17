@@ -26,7 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- * @version 0.3
+ * @version 0.5
  * Basic implementation of HJonObj. Can be use as a dictionnary.
  */
 public class HJsonDictionnary implements HJsonObj{

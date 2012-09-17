@@ -24,7 +24,7 @@ import java.util.List;
 
 /**
  * @cond internal
- * @version 0.3 Contain some utils function
+ * @version 0.5 Contain some utils function
  */
 public class HUtil {
 

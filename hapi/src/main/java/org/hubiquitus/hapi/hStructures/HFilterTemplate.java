@@ -23,7 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * @version 0.4
+ * @version 0.5
  * This structure describe the location
  */
 

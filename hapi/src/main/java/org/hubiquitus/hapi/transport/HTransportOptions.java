@@ -23,7 +23,7 @@ import org.hubiquitus.hapi.structures.JabberID;
 
 /** 
  * @cond internal
- * @version 0.3
+ * @version 0.5
  * options used for transport layers
  */
 

@@ -520,7 +520,6 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 
 	@Override
 	public void onMessage(HMessage message) {
-		System.out.println("-----> onMessage");
 		String txtComplete = this.logArea.getText() + "\n" + message.toString();
 		if (message.getPayload() != null)
 			txtComplete += "\n" + "Payload >>>>>> "

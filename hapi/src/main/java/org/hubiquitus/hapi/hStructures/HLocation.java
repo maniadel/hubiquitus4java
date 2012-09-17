@@ -28,7 +28,6 @@ import org.json.JSONObject;
 
 public class HLocation extends JSONObject {
 
-	// private JSONObject hlocation = new JSONObject();
 
 	public HLocation() {
 		super();
@@ -38,64 +37,6 @@ public class HLocation extends JSONObject {
 		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
 
-	/* HJsonObj interface */
-
-//	public JSONObject toJSON() {
-//		return hlocation;
-//	}
-//
-//	public void fromJSON(JSONObject jsonObj) {
-//		if (jsonObj != null) {
-//			this.hlocation = jsonObj;
-//		} else {
-//			this.hlocation = new JSONObject();
-//		}
-//	}
-//
-//	public String getHType() {
-//		return "hlocation";
-//	}
-//
-//	@Override
-//	public String toString() {
-//		return hlocation.toString();
-//	}
-//
-//	/**
-//	 * Check are made on : lng, lat, zip, num, building, floor, way, waytype,
-//	 * addr, city and countryCode.
-//	 * 
-//	 * @param HLocation
-//	 * @return Boolean
-//	 */
-//	public boolean equals(HLocation obj) {
-//		if (obj.getPos().equals(this.getPos()))
-//			return false;
-//		if (obj.getZip() != this.getZip())
-//			return false;
-//		if (obj.getNum() != this.getNum())
-//			return false;
-//		if (obj.getBuilding() != this.getBuilding())
-//			return false;
-//		if (obj.getFloor() != this.getFloor())
-//			return false;
-//		if (obj.getWay() != this.getWay())
-//			return false;
-//		if (obj.getWayType() != this.getWayType())
-//			return false;
-//		if (obj.getAddr() != this.getAddr())
-//			return false;
-//		if (obj.getCity() != this.getCity())
-//			return false;
-//		if (obj.getCountryCode() != this.getCountryCode())
-//			return false;
-//		return true;
-//	}
-//
-//	@Override
-//	public int hashCode() {
-//		return hlocation.hashCode();
-//	}
 
 	/* Getters & Setters */
 

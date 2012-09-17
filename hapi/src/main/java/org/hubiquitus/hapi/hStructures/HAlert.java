@@ -23,7 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * @version 0.3 Alert message payload
+ * @version 0.5 Alert message payload
  */
 
 public class HAlert extends JSONObject {
@@ -38,38 +38,7 @@ public class HAlert extends JSONObject {
 		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
 
-	/* HJsonObj interface */
 
-//	public JSONObject toJSON() {
-//		return halert;
-//	}
-//
-//	public void fromJSON(JSONObject jsonObj) {
-//		if (jsonObj != null) {
-//			this.halert = jsonObj;
-//		} else {
-//			this.halert = new JSONObject();
-//		}
-//	}
-//
-//	public String getHType() {
-//		return "halert";
-//	}
-//
-//	@Override
-//	public String toString() {
-//		return halert.toString();
-//	}
-//
-//	@Override
-//	public boolean equals(Object obj) {
-//		return halert.equals(obj);
-//	}
-//
-//	@Override
-//	public int hashCode() {
-//		return halert.hashCode();
-//	}
 
 	/* Getters & Setters */
 

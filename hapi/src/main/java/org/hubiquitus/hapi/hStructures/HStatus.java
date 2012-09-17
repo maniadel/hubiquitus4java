@@ -23,12 +23,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * @version 0.3 This structure describe the connection status
+ * @version 0.5 This structure describe the connection status
  */
 
 public class HStatus extends JSONObject {
 
-	// private JSONObject hstatus = new JSONObject();
 
 	public HStatus() {
 		super();
@@ -45,49 +44,6 @@ public class HStatus extends JSONObject {
 		setErrorMsg(errorMsg);
 	}
 
-	/* HJsonObj interface */
-
-	// public JSONObject toJSON() {
-	// return hstatus;
-	// }
-	//
-	// public void fromJSON(JSONObject jsonObj) {
-	// if (jsonObj != null) {
-	// this.hstatus = jsonObj;
-	// } else {
-	// this.hstatus = new JSONObject();
-	// }
-	// }
-	//
-	// public String getHType() {
-	// return "hstatus";
-	// }
-	//
-	// @Override
-	// public String toString() {
-	// return hstatus.toString();
-	// }
-	//
-	// /**
-	// * Check are made on : status, errorcode and errormsg.
-	// *
-	// * @param HStatus
-	// * @return Boolean
-	// */
-	// public boolean equals(HStatus obj) {
-	// if (obj.getStatus().value() != this.getStatus().value())
-	// return false;
-	// if (obj.getErrorCode().value() != this.getErrorCode().value())
-	// return false;
-	// if (obj.getErrorMsg() != this.getErrorMsg())
-	// return false;
-	// return true;
-	// }
-	//
-	// @Override
-	// public int hashCode() {
-	// return hstatus.hashCode();
-	// }
 
 	/* Getters & Setters */
 

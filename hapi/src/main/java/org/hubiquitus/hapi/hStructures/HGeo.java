@@ -12,7 +12,6 @@ import org.json.JSONObject;
  */
 public class HGeo extends JSONObject {
 
-	// private JSONObject hgeo = new JSONObject();
 
 	public HGeo() {
 		super();
@@ -28,33 +27,6 @@ public class HGeo extends JSONObject {
 		setLat(lat);
 	}
 
-//	@Override
-//	public JSONObject toJSON() {
-//		return this.hgeo;
-//	}
-//
-//	@Override
-//	public void fromJSON(JSONObject jsonObj) {
-//		if (jsonObj != null) {
-//			this.hgeo = jsonObj;
-//		} else {
-//			this.hgeo = new JSONObject();
-//		}
-//	}
-//
-//	@Override
-//	public String getHType() {
-//		return "hgeo";
-//	}
-//
-//	@Override
-//	public String toString() {
-//		return this.hgeo.toString();
-//	}
-//
-//	public boolean equals(HGeo obj) {
-//		return true;
-//	}
 
 	/* Setter & Getter */
 

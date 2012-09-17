@@ -28,7 +28,6 @@ import org.json.JSONObject;
 
 public class HCommand extends JSONObject {
 
-	// private JSONObject hcommand = new JSONObject();
 
 	public HCommand() {
 		super();
@@ -44,45 +43,6 @@ public class HCommand extends JSONObject {
 		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
 
-	/* HJsonObj interface */
-
-//	public JSONObject toJSON() {
-//		return this.hcommand;
-//	}
-//
-//	public void fromJSON(JSONObject jsonObj) {
-//		if (jsonObj != null) {
-//			this.hcommand = jsonObj;
-//		} else {
-//			this.hcommand = new JSONObject();
-//		}
-//	}
-//
-//	public String getHType() {
-//		return "hcommand";
-//	}
-//
-//	@Override
-//	public String toString() {
-//		return hcommand.toString();
-//	}
-//
-//	/**
-//	 * Check are made on : cmd.
-//	 * 
-//	 * @param HCommand
-//	 * @return Boolean
-//	 */
-//	public boolean equals(HCommand obj) {
-//		if (obj.getCmd() != this.getCmd())
-//			return false;
-//		return true;
-//	}
-//
-//	@Override
-//	public int hashCode() {
-//		return hcommand.hashCode();
-//	}
 
 	/* Getters & Setters */
 

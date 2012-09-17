@@ -23,12 +23,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * @version 0.3 Describes a measure payload
+ * @version 0.5 Describes a measure payload
  */
 
 public class HMeasure extends JSONObject {
-
-	// private JSONObject hmeasure = new JSONObject();
 
 	public HMeasure() {
 		super();
@@ -38,47 +36,6 @@ public class HMeasure extends JSONObject {
 		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
 
-	/* HJsonObj interface */
-//
-//	public JSONObject toJSON() {
-//		return hmeasure;
-//	}
-//
-//	public void fromJSON(JSONObject jsonObj) {
-//		if (jsonObj != null) {
-//			this.hmeasure = jsonObj;
-//		} else {
-//			this.hmeasure = new JSONObject();
-//		}
-//	}
-//
-//	public String getHType() {
-//		return "hmeasure";
-//	}
-//
-//	@Override
-//	public String toString() {
-//		return hmeasure.toString();
-//	}
-//
-//	/**
-//	 * Check are made on : value, unit.
-//	 * 
-//	 * @param HMeasure
-//	 * @return Boolean
-//	 */
-//	public boolean equals(HMeasure obj) {
-//		if (obj.getUnit() != this.getUnit())
-//			return false;
-//		if (obj.getValue() != this.getValue())
-//			return false;
-//		return true;
-//	}
-//
-//	@Override
-//	public int hashCode() {
-//		return hmeasure.hashCode();
-//	}
 
 	/* Getters & Setters */
 

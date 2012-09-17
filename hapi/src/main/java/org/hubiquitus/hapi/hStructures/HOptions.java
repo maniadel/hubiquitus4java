@@ -27,7 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * @version 0.3 hAPI options. For more info, see Hubiquitus reference
+ * @version 0.5 hAPI options. For more info, see Hubiquitus reference
  */
 
 public class HOptions implements Cloneable {

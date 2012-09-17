@@ -42,45 +42,6 @@ public class HAck extends JSONObject {
 		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
 	
-	/* HJsonObj interface */
-
-//	public JSONObject toJSON() {
-//		return hack;
-//	}
-
-//	public void fromJSON(JSONObject jsonObj) {
-//		if (jsonObj != null) {
-//			this.hack = jsonObj;
-//		} else {
-//			this.hack = new JSONObject();
-//		}
-//	}
-
-	
-//
-//	@Override
-//	public String toString() {
-//		return this.toString();
-//	}
-
-	/**
-	 * Check are made on : ackid, ack.
-	 * 
-	 * @param HAck
-	 * @return Boolean
-	 */
-	public boolean equals(HAck obj) {
-		if (obj.getAck() != this.getAck()) {
-			return false;
-		}
-		return true;
-	}
-
-//	@Override
-//	public int hashCode() {
-//		return hack.hashCode();
-//	}
-
 	/* Getters & Setters */
 
 	/**

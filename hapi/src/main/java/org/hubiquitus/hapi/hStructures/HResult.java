@@ -25,12 +25,11 @@ import org.json.JSONObject;
 
 /**
  * @author j.desousag
- * @version 0.3 hAPI result. For more info, see Hubiquitus reference
+ * @version 0.5 hAPI result. For more info, see Hubiquitus reference
  */
 
 public class HResult extends JSONObject {
 
-//	private JSONObject hresult = new JSONObject();
 
 	public HResult() {super();
 	}
@@ -39,45 +38,6 @@ public class HResult extends JSONObject {
 		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
 
-	/* HJsonObj interface */
-
-//	public JSONObject toJSON() {
-//		return this.hresult;
-//	}
-//
-//	public String getHType() {
-//		return "hresult";
-//	}
-//
-//	public void fromJSON(JSONObject jsonObj) {
-//		if (jsonObj != null) {
-//			this.hresult = jsonObj;
-//		} else {
-//			this.hresult = new JSONObject();
-//		}
-//	}
-//
-//	@Override
-//	public String toString() {
-//		return hresult.toString();
-//	}
-//
-//	/**
-//	 * Check are made on : and status.
-//	 * 
-//	 * @param HResult
-//	 * @return Boolean
-//	 */
-//	public boolean equals(HResult obj) {
-//		if (obj.getStatus().value() != this.getStatus().value())
-//			return false;
-//		return true;
-//	}
-//
-//	@Override
-//	public int hashCode() {
-//		return hresult.hashCode();
-//	}
 
 	/* Getters & Setters */
 

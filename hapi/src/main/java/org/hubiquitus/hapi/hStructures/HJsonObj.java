@@ -22,7 +22,7 @@ package org.hubiquitus.hapi.hStructures;
 import org.json.JSONObject;
 
 /**
- * @version 0.3
+ * @version 0.5
  * JSON serializable interface for hstructures
  * Should be implemented by all hstructures
  */

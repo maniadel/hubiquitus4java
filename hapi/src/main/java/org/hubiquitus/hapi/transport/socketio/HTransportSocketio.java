@@ -37,7 +37,7 @@ import org.json.JSONObject;
 
 /**
  * @cond internal
- * @version 0.3
+ * @version 0.5
  * HTransportSocketIO is the socketio transport layer of the hubiquitus hAPI client
  */
 

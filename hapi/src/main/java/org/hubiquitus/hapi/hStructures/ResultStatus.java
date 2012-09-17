@@ -20,7 +20,7 @@
 package org.hubiquitus.hapi.hStructures;
 
 /**
- * @version 0.3
+ * @version 0.5
  * hResult status codes. Returned on all action
  * For more information see Hubiquitus reference
  */

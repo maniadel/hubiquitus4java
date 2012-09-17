@@ -32,7 +32,6 @@ import org.json.JSONObject;
 
 public class HMessage extends JSONObject {
 
-	// private JSONObject hmessage = new JSONObject();
 
 	public HMessage() {
 		super();
@@ -41,72 +40,6 @@ public class HMessage extends JSONObject {
 	public HMessage(JSONObject jsonObj) throws JSONException {
 		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
-
-	/* HJsonObj interface */
-
-	// public JSONObject toJSON() {
-	// return this.hmessage;
-	// }
-	//
-	// public void fromJSON(JSONObject jsonObj) {
-	// if (jsonObj != null) {
-	// this.hmessage = jsonObj;
-	// } else {
-	// this.hmessage = new JSONObject();
-	// }
-	// }
-	//
-	// public String getHType() {
-	// return "hmessage";
-	// }
-	//
-	// @Override
-	// public String toString() {
-	// return hmessage.toString();
-	// }
-	//
-	// /**
-	// * Check are made on : msgid, chid, convid, ref, type, priority,
-	// relevance,
-	// * transient, author, publisher, published, timeout and location.
-	// *
-	// * @param HAck
-	// * @return Boolean
-	// */
-	// public boolean equals(HMessage obj) {
-	// if (obj.getMsgid() != this.getMsgid())
-	// return false;
-	// if (obj.getActor() != this.getActor())
-	// return false;
-	// if (obj.getConvid() != this.getConvid())
-	// return false;
-	// if (obj.getRef() != this.getRef())
-	// return false;
-	// if (obj.getType() != this.getType())
-	// return false;
-	// if (obj.getPriority().value() != this.getPriority().value())
-	// return false;
-	// if (obj.getRelevance() != this.getRelevance())
-	// return false;
-	// if (obj.getPersistent() != this.getPersistent())
-	// return false;
-	// if (obj.getAuthor() != this.getAuthor())
-	// return false;
-	// if (obj.getPublisher() != this.getPublisher())
-	// return false;
-	// if (obj.getPublished() != this.getPublished())
-	// return false;
-	// if (obj.getTimeout() != this.getTimeout())
-	// return false;
-	// if (obj.getLocation().equals(this.getLocation()))
-	// return false;
-	// return true;
-	// }
-	//
-	// @Override
-	// public int hashCode() {
-	// return hmessage.hashCode();
-	// }
 
 	/* Getters & Setters */
 
@@ -598,13 +531,12 @@ public class HMessage extends JSONObject {
 		return payload;
 	}
 
-	/**
-	 * if payload type is native objects. Data model defined by hAPI (ie:
-	 * HAlert, HCommand, HAck ...)
-	 * 
-	 * @return payload. NULL if undefined
-	 */
+	
 
+	/**
+	 * if payload type is HAlert. if not return null.
+	 * @return HAlert. NULL if undefined
+	 */
 	public HAlert getPayloadAsHAlert() {
 		try {
 			if (this.getType().toLowerCase().equalsIgnoreCase("halert")) {
@@ -619,6 +551,10 @@ public class HMessage extends JSONObject {
 		}
 	}
 	
+	/**
+	 * if payload type is HAck, if not return null.
+	 * @return HAck. Null if undefined.
+	 */
 	public HAck getPayloadAsHAck() {
 		try {
 			if (this.getType().toLowerCase().equalsIgnoreCase("hack")) {
@@ -632,6 +568,10 @@ public class HMessage extends JSONObject {
 		}
 	}
 	
+	/**
+	 * if payload is HMeasure, if not return null.
+	 * @return HMeasure. Null if undefined.
+	 */
 	public HMeasure getPayloadAsHmeasure() {
 		try {
 			if (this.getType().toLowerCase().equalsIgnoreCase("hmeasure")) {
@@ -645,6 +585,10 @@ public class HMessage extends JSONObject {
 		}
 	}
 
+	/**
+	 * if payload is HConvState, if not return null.
+	 * @return HConvState. Null if undefined.
+	 */
 	public HConvState getPayloadAsHConvState() {
 		try {
 			if (this.getType().toLowerCase().equalsIgnoreCase("hconvstate")) {
@@ -658,6 +602,10 @@ public class HMessage extends JSONObject {
 		}
 	}
 	
+	/**
+	 * if payload is HResult, if not return null.
+	 * @return HResult. Null if undefined.
+	 */
 	public HResult getPayloadAsHResult() {
 		try {
 			if (this.getType().toLowerCase().equalsIgnoreCase("hresult")) {
@@ -671,6 +619,10 @@ public class HMessage extends JSONObject {
 		}
 	}
 	
+	/**
+	 * if payload is HCommand, if not return null.
+	 * @return HCommand. Null if undefined.
+	 */
 	public HCommand getPayloadAsHCommand() {
 		try {
 			if (this.getType().toLowerCase().equalsIgnoreCase("hcommand")) {
