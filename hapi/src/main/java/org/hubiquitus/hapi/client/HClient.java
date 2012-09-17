@@ -32,7 +32,6 @@ import org.hubiquitus.hapi.hStructures.HAckValue;
 import org.hubiquitus.hapi.hStructures.HAlert;
 import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HConvState;
-import org.hubiquitus.hapi.hStructures.HJsonObj;
 import org.hubiquitus.hapi.hStructures.HMeasure;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.hStructures.HMessageOptions;
@@ -208,15 +207,6 @@ public class HClient {
 	}
 
 	/**
-	 * Command delegate receive all incoming HCommand
-	 * 
-	 * @param commandDelegate
-	 */
-	// public void onCommand(HCommandDelegate commandDelegate) {
-	// this.commandDelegate = commandDelegate;
-	// }
-
-	/**
 	 * Get current connection status
 	 * 
 	 * @return
@@ -242,10 +232,30 @@ public class HClient {
 				message.setConvid(message.getMsgid());
 			}
 			if (message.getActor() != null) {
-				if (messageDelegate != null) {
-					messagesDelegates.put(message.getMsgid(), messageDelegate);
-
-					if (message.getTimeout() > 0) {
+				if (message.getTimeout() == null) {
+					if (messageDelegate != null) {
+						messagesDelegates.put(message.getMsgid(),
+								messageDelegate);
+					}
+				} else if (message.getTimeout() == 0) {
+					if (messageDelegate == null) {
+						// if value is equal to 0 and no callback is provided,
+						// this value is set by hAPI to -1. hAPI doesn’t plan
+						// correlation.
+						message.setTimeout(-1);
+					} else {
+						// if value is equal 0 with callback,hAPI will do
+						// correlation but no timeout will be sent. Only error
+						// responses should be sent.
+						messagesDelegates.put(message.getMsgid(),
+								messageDelegate);
+					}
+				} else if (message.getTimeout() > 0) {
+					// hAPI will do correlation. If no answer within the
+					// timeout, a timeout error will be sent.
+					if (messageDelegate != null) {
+						messagesDelegates.put(message.getMsgid(),
+								messageDelegate);
 						timeoutTimer = new Timer();
 						timeoutTimer.schedule(new TimerTask() {
 
@@ -257,13 +267,14 @@ public class HClient {
 										"The response of message: "
 												+ message.getMsgid()
 												+ "is time out!");
+								messagesDelegates.remove(message.getMsgid());
 							}
 						}, message.getTimeout());
 						timeoutHashtable.put(message.getMsgid(), timeoutTimer);
-					}	
+					}
 				}
-				transport.sendObject(message.toJSON());
-				System.out.println("<<<<"+message.toJSON().toString());
+				transport.sendObject(message);
+				System.out.println(">>>>" + message.toString());
 			} else {
 				notifyResultError(message.getMsgid(),
 						ResultStatus.MISSING_ATTR,
@@ -302,7 +313,6 @@ public class HClient {
 		try {
 			cmdMessage = buildCommand(actor, "hsubscribe", params, null);
 		} catch (MissingAttrException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		send(cmdMessage, messageDelegate);
@@ -331,7 +341,6 @@ public class HClient {
 		try {
 			cmdMessage = buildCommand(actor, "hunsubscribe", params, null);
 		} catch (MissingAttrException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		send(cmdMessage, messageDelegate);
@@ -370,7 +379,6 @@ public class HClient {
 		try {
 			cmdMessage = buildCommand(actor, "hgetlastmessages", params, null);
 		} catch (MissingAttrException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		send(cmdMessage, messageDelegate);
@@ -400,10 +408,10 @@ public class HClient {
 	public void getSubscriptions(HMessageDelegate messageDelegate) {
 		HMessage cmdMessage = null;
 		try {
+			System.out.println("-->" + transportOptions.getHserverService());
 			cmdMessage = buildCommand(transportOptions.getHserverService(),
 					"hgetsubscriptions", null, null);
 		} catch (MissingAttrException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		this.send(cmdMessage, messageDelegate);
@@ -445,7 +453,6 @@ public class HClient {
 			params.put("actor", actor);
 			params.put("convid", convid);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -453,7 +460,6 @@ public class HClient {
 		try {
 			msgCommand = this.buildCommand(actor, cmdName, params, null);
 		} catch (MissingAttrException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		this.send(msgCommand, messageDelegate);
@@ -494,14 +500,12 @@ public class HClient {
 			params.put("actor", actor);
 			params.put("status", status);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		HMessage cmdMessage = null;
 		try {
 			cmdMessage = buildCommand(actor, "hgetthreads", params, null);
 		} catch (MissingAttrException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		this.send(cmdMessage, messageDelegate);
@@ -632,7 +636,6 @@ public class HClient {
 		try {
 			params.put("actor", actor);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -640,7 +643,6 @@ public class HClient {
 		try {
 			cmdMessage = buildCommand(actor, "hRelevantMessages", params, null);
 		} catch (MissingAttrException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		this.send(cmdMessage, messageDelegate);
@@ -648,61 +650,7 @@ public class HClient {
 
 	/* Builder */
 
-	/**
-	 * Helper to create hmessage. Payload type is HJsonObj.
-	 * 
-	 * @see HMessage
-	 * @param actor
-	 *            - channel id : mandatory
-	 * @param type
-	 * @param payload
-	 * @param options
-	 * @return hMessage
-	 * @throws MissingAttrException
-	 */
-	public HMessage buildMessage(String actor, String type, HJsonObj payload,
-			HMessageOptions options) throws MissingAttrException {
-
-		// check for required attributes
-		if (actor == null || actor.length() <= 0) {
-			throw new MissingAttrException("actor");
-		}
-
-		// build the message
-		HMessage hmessage = new HMessage();
-
-		hmessage.setActor(actor);
-		hmessage.setType(type);
-		if (options != null) {
-			hmessage.setRef(options.getRef());
-			hmessage.setConvid(options.getConvid());
-			hmessage.setPriority(options.getPriority());
-			hmessage.setRelevance(options.getRelevance());
-			hmessage.setPersistent(options.getPersistent());
-			hmessage.setLocation(options.getLocation());
-			hmessage.setAuthor(options.getAuthor());
-			hmessage.setHeaders(options.getHeaders());
-			hmessage.setTimeout(options.getTimeout());
-		}
-
-		// since v0.5
-		// provided by the server at publishing time.
-		// A prefix could be set by the hAPI if a a value is set on timeout
-		// (cf. new command pattern : idFromhAPI#idFromhServer)
-		if (hmessage.getTimeout() > 0) {
-			// TODO prefix msgid.
-		}
-
-		if (transportOptions != null && transportOptions.getJid() != null) {
-			hmessage.setPublisher(transportOptions.getJid().getBareJID());
-		} else {
-			hmessage.setPublisher(null);
-		}
-
-		hmessage.setPayload(payload);
-
-		return hmessage;
-	}
+	
 
 	/**
 	 * Helper to create hmessage. Payload type is JSONObject.
@@ -737,14 +685,6 @@ public class HClient {
 			hmessage.setAuthor(options.getAuthor());
 			hmessage.setHeaders(options.getHeaders());
 			hmessage.setTimeout(options.getTimeout());
-		}
-
-		// since v0.5
-		// provided by the server at publishing time.
-		// A prefix could be set by the hAPI if a a value is set on timeout
-		// (cf. new command pattern : idFromhAPI#idFromhServer)
-		if (hmessage.getTimeout() > 0) {
-			// TODO prefix msgid.
 		}
 
 		if (transportOptions != null && transportOptions.getJid() != null) {
@@ -793,13 +733,6 @@ public class HClient {
 			hmessage.setTimeout(options.getTimeout());
 		}
 
-		// since v0.5
-		// provided by the server at publishing time.
-		// A prefix could be set by the hAPI if a a value is set on timeout
-		// (cf. new command pattern : idFromhAPI#idFromhServer)
-		if (hmessage.getTimeout() > 0) {
-			// TODO prefix msgid.
-		}
 
 		if (transportOptions != null && transportOptions.getJid() != null) {
 			hmessage.setPublisher(transportOptions.getJid().getBareJID());
@@ -847,13 +780,7 @@ public class HClient {
 			hmessage.setTimeout(options.getTimeout());
 		}
 
-		// since v0.5
-		// provided by the server at publishing time.
-		// A prefix could be set by the hAPI if a a value is set on timeout
-		// (cf. new command pattern : idFromhAPI#idFromhServer)
-		if (hmessage.getTimeout() > 0) {
-			// TODO prefix msgid.
-		}
+		
 
 		if (transportOptions != null && transportOptions.getJid() != null) {
 			hmessage.setPublisher(transportOptions.getJid().getBareJID());
@@ -901,13 +828,6 @@ public class HClient {
 			hmessage.setTimeout(options.getTimeout());
 		}
 
-		// since v0.5
-		// provided by the server at publishing time.
-		// A prefix could be set by the hAPI if a a value is set on timeout
-		// (cf. new command pattern : idFromhAPI#idFromhServer)
-		if (hmessage.getTimeout() > 0) {
-			// TODO prefix msgid.
-		}
 
 		if (transportOptions != null && transportOptions.getJid() != null) {
 			hmessage.setPublisher(transportOptions.getJid().getBareJID());
@@ -955,13 +875,6 @@ public class HClient {
 			hmessage.setTimeout(options.getTimeout());
 		}
 
-		// since v0.5
-		// provided by the server at publishing time.
-		// A prefix could be set by the hAPI if a a value is set on timeout
-		// (cf. new command pattern : idFromhAPI#idFromhServer)
-		if (hmessage.getTimeout() > 0) {
-			// TODO prefix msgid.
-		}
 
 		if (transportOptions != null && transportOptions.getJid() != null) {
 			hmessage.setPublisher(transportOptions.getJid().getBareJID());
@@ -1009,13 +922,6 @@ public class HClient {
 			hmessage.setTimeout(options.getTimeout());
 		}
 
-		// since v0.5
-		// provided by the server at publishing time.
-		// A prefix could be set by the hAPI if a a value is set on timeout
-		// (cf. new command pattern : idFromhAPI#idFromhServer)
-		if (hmessage.getTimeout() > 0) {
-			// TODO prefix msgid.
-		}
 
 		if (transportOptions != null && transportOptions.getJid() != null) {
 			hmessage.setPublisher(transportOptions.getJid().getBareJID());
@@ -1063,13 +969,6 @@ public class HClient {
 			hmessage.setTimeout(options.getTimeout());
 		}
 
-		// since v0.5
-		// provided by the server at publishing time.
-		// A prefix could be set by the hAPI if a a value is set on timeout
-		// (cf. new command pattern : idFromhAPI#idFromhServer)
-		if (hmessage.getTimeout() > 0) {
-			// TODO prefix msgid.
-		}
 
 		if (transportOptions != null && transportOptions.getJid() != null) {
 			hmessage.setPublisher(transportOptions.getJid().getBareJID());
@@ -1573,7 +1472,6 @@ public class HClient {
 						try {
 							statusDelegate.onStatus(hstatus);
 						} catch (Exception e) {
-							// TODO: Add a message to message logger
 							e.printStackTrace();
 						}
 					}
@@ -1581,7 +1479,6 @@ public class HClient {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			// TODO: Add a message to message logger
 		}
 	}
 
@@ -1618,7 +1515,6 @@ public class HClient {
 							try {
 								messageDelegate.onMessage(message);
 							} catch (Exception e) {
-								// TODO: Add a message to message logger
 								e.printStackTrace();
 							}
 						}
@@ -1626,7 +1522,6 @@ public class HClient {
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				// TODO: Add a message to message logger
 			}
 		}
 	}
@@ -1649,18 +1544,15 @@ public class HClient {
 						try {
 							messageDelegate.onMessage(message);
 						} catch (Exception e) {
-							// TODO: Add a message to message logger
 							e.printStackTrace();
 						}
 					}
 				})).start();
 			} else {
-				// TODO: add a message to logger in debug mode to know which
 				// results are dropped
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			// TODO: Add a message to message logger
 		}
 	}
 
@@ -1683,7 +1575,6 @@ public class HClient {
 		hresult.setResult(obj);
 		hresult.setStatus(resultstatus);
 		HMessage message = new HMessage();
-		// TODO add mandatory params in hmessage.
 		message.setRef(ref);
 		message.setType("hResult");
 		message.setPayload(hresult);
@@ -1711,7 +1602,6 @@ public class HClient {
 		hresult.setResult(obj);
 		hresult.setStatus(resultstatus);
 		HMessage message = new HMessage();
-		// TODO add mandatory params in hmessage.
 		message.setRef(ref);
 		message.setType("hResult");
 		message.setPayload(hresult);
@@ -1737,13 +1627,13 @@ public class HClient {
 		 */
 		public void onData(String type, JSONObject jsonData) {
 			try {
-				System.out.println(">>>>"+jsonData.toString());
+				System.out.println("<<<<<" + jsonData.toString());
 				if (type.equalsIgnoreCase("hmessage")) {
 					notifyMessage(new HMessage(jsonData));
 				}
 
 			} catch (Exception e) {
-				System.out.println("erreur datacallBack");
+				System.out.println("erreur datacallBack : " + e.toString());
 			}
 		}
 	}

@@ -23,83 +23,87 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * @version 0.3
- * Describes a measure payload
+ * @version 0.3 Describes a measure payload
  */
 
-public class HMeasure implements HJsonObj{
+public class HMeasure extends JSONObject {
 
-	private JSONObject hmeasure = new JSONObject();
-		
-	public HMeasure() {};
-	
-	public HMeasure(JSONObject jsonObj){
-		fromJSON(jsonObj);
+	// private JSONObject hmeasure = new JSONObject();
+
+	public HMeasure() {
+		super();
+	};
+
+	public HMeasure(JSONObject jsonObj) throws JSONException {
+		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
-	
+
 	/* HJsonObj interface */
-	
-	public JSONObject toJSON() {
-		return hmeasure;
-	}
-	
-	public void fromJSON(JSONObject jsonObj) {
-		if(jsonObj != null) {
-			this.hmeasure = jsonObj; 
-		} else {
-			this.hmeasure = new JSONObject();
-		}
-	}
-	
-	public String getHType() {
-		return "hmeasure";
-	}
-	
-	@Override
-	public String toString() {
-		return hmeasure.toString();
-	}
-	
-	/**
-	 * Check are made on : value, unit. 
-	 * @param HMeasure 
-	 * @return Boolean
-	 */
-	public boolean equals(HMeasure obj) {
-		if(obj.getUnit() != this.getUnit())
-			return false;
-		if(obj.getValue() != this.getValue())
-			return false;
-		return true;
-	}
-	
-	@Override
-	public int hashCode() {
-		return hmeasure.hashCode();
-	}
-	
+//
+//	public JSONObject toJSON() {
+//		return hmeasure;
+//	}
+//
+//	public void fromJSON(JSONObject jsonObj) {
+//		if (jsonObj != null) {
+//			this.hmeasure = jsonObj;
+//		} else {
+//			this.hmeasure = new JSONObject();
+//		}
+//	}
+//
+//	public String getHType() {
+//		return "hmeasure";
+//	}
+//
+//	@Override
+//	public String toString() {
+//		return hmeasure.toString();
+//	}
+//
+//	/**
+//	 * Check are made on : value, unit.
+//	 * 
+//	 * @param HMeasure
+//	 * @return Boolean
+//	 */
+//	public boolean equals(HMeasure obj) {
+//		if (obj.getUnit() != this.getUnit())
+//			return false;
+//		if (obj.getValue() != this.getValue())
+//			return false;
+//		return true;
+//	}
+//
+//	@Override
+//	public int hashCode() {
+//		return hmeasure.hashCode();
+//	}
+
 	/* Getters & Setters */
-	
+
 	/**
-	 * Specifies the unit in which the measure is expressed, should be in lowercase. 
+	 * Specifies the unit in which the measure is expressed, should be in
+	 * lowercase.
+	 * 
 	 * @return unit. NULL if undefined
 	 */
 	public String getUnit() {
 		String unit;
 		try {
-			unit = hmeasure.getString("unit");
+			unit = this.getString("unit");
 		} catch (Exception e) {
-			unit = null;			
+			unit = null;
 		}
 		return unit;
 	}
 
 	public void setUnit(String unit) {
 		try {
-			if(unit == null) {
-				hmeasure.remove("unit");
+			if (unit == null) {
+				this.remove("unit");
 			} else {
-				hmeasure.put("unit", unit);
+				this.put("unit", unit);
 			}
 		} catch (JSONException e) {
 		}
@@ -107,26 +111,27 @@ public class HMeasure implements HJsonObj{
 
 	/**
 	 * Specify the value of the measure (ie : 31.2)
+	 * 
 	 * @return value. NULL if undefined
 	 */
 	public String getValue() {
 		String value;
 		try {
-			value = hmeasure.getString("value");
+			value = this.getString("value");
 		} catch (Exception e) {
-			value = null;			
+			value = null;
 		}
 		return value;
 	}
 
 	public void setValue(String value) {
 		try {
-			if(value == null) {
-				hmeasure.remove("value");
+			if (value == null) {
+				this.remove("value");
 			} else {
-				hmeasure.put("value", value);
+				this.put("value", value);
 			}
 		} catch (JSONException e) {
 		}
-	}	
+	}
 }

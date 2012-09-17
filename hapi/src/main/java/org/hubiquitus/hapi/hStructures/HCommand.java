@@ -26,11 +26,12 @@ import org.json.JSONObject;
  * @version 0.5 hAPI Command. For more info, see Hubiquitus reference
  */
 
-public class HCommand implements HJsonObj {
+public class HCommand extends JSONObject {
 
-	private JSONObject hcommand = new JSONObject();
+	// private JSONObject hcommand = new JSONObject();
 
 	public HCommand() {
+		super();
 	}
 
 	public HCommand(String cmd, JSONObject params) {
@@ -39,49 +40,49 @@ public class HCommand implements HJsonObj {
 		setParams(params);
 	}
 
-	public HCommand(JSONObject jsonObj) {
-		fromJSON(jsonObj);
+	public HCommand(JSONObject jsonObj) throws JSONException {
+		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
 
 	/* HJsonObj interface */
 
-	public JSONObject toJSON() {
-		return this.hcommand;
-	}
-
-	public void fromJSON(JSONObject jsonObj) {
-		if (jsonObj != null) {
-			this.hcommand = jsonObj;
-		} else {
-			this.hcommand = new JSONObject();
-		}
-	}
-
-	public String getHType() {
-		return "hcommand";
-	}
-
-	@Override
-	public String toString() {
-		return hcommand.toString();
-	}
-
-	/**
-	 * Check are made on : cmd.
-	 * 
-	 * @param HCommand
-	 * @return Boolean
-	 */
-	public boolean equals(HCommand obj) {
-		if (obj.getCmd() != this.getCmd())
-			return false;
-		return true;
-	}
-
-	@Override
-	public int hashCode() {
-		return hcommand.hashCode();
-	}
+//	public JSONObject toJSON() {
+//		return this.hcommand;
+//	}
+//
+//	public void fromJSON(JSONObject jsonObj) {
+//		if (jsonObj != null) {
+//			this.hcommand = jsonObj;
+//		} else {
+//			this.hcommand = new JSONObject();
+//		}
+//	}
+//
+//	public String getHType() {
+//		return "hcommand";
+//	}
+//
+//	@Override
+//	public String toString() {
+//		return hcommand.toString();
+//	}
+//
+//	/**
+//	 * Check are made on : cmd.
+//	 * 
+//	 * @param HCommand
+//	 * @return Boolean
+//	 */
+//	public boolean equals(HCommand obj) {
+//		if (obj.getCmd() != this.getCmd())
+//			return false;
+//		return true;
+//	}
+//
+//	@Override
+//	public int hashCode() {
+//		return hcommand.hashCode();
+//	}
 
 	/* Getters & Setters */
 
@@ -93,7 +94,7 @@ public class HCommand implements HJsonObj {
 	public String getCmd() {
 		String cmd;
 		try {
-			cmd = hcommand.getString("cmd");
+			cmd = this.getString("cmd");
 		} catch (JSONException e) {
 			cmd = null;
 		}
@@ -103,9 +104,9 @@ public class HCommand implements HJsonObj {
 	public void setCmd(String cmd) {
 		try {
 			if (cmd == null) {
-				hcommand.remove("cmd");
+				this.remove("cmd");
 			} else {
-				hcommand.put("cmd", cmd);
+				this.put("cmd", cmd);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -118,7 +119,7 @@ public class HCommand implements HJsonObj {
 	public JSONObject getParams() {
 		JSONObject params;
 		try {
-			params = hcommand.getJSONObject("params");
+			params = this.getJSONObject("params");
 		} catch (JSONException e) {
 			params = null;
 		}
@@ -128,9 +129,9 @@ public class HCommand implements HJsonObj {
 	public void setParams(JSONObject params) {
 		try {
 			if (params == null) {
-				hcommand.remove("params");
+				this.remove("params");
 			} else {
-				hcommand.put("params", params);
+				this.put("params", params);
 			}
 		} catch (JSONException e) {
 		}

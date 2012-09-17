@@ -28,55 +28,55 @@ import org.json.JSONObject;
  * Multiple hConvStates with the same convid can be published into a channel, specifying the evolution of the state of the thread during time.
  */
 
-public class HConvState implements HJsonObj{
+public class HConvState extends JSONObject{
 
-	private JSONObject hconvstate = new JSONObject();
+//	private JSONObject hconvstate = new JSONObject();
 		
-	public HConvState() {};
+	public HConvState() {super();};
 	
-	public HConvState(JSONObject jsonObj){
-		fromJSON(jsonObj);
+	public HConvState(JSONObject jsonObj) throws JSONException{
+		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
 	
 	/* HJsonObj interface */
 	
-	public JSONObject toJSON() {
-		return hconvstate;
-	}
-	
-	public void fromJSON(JSONObject jsonObj) {
-		if(jsonObj != null) {
-			this.hconvstate = jsonObj; 
-		} else {
-			this.hconvstate = new JSONObject();
-		}
-	}
-	
-	public String getHType() {
-		return "hconvstate";
-	}
-	
-	@Override
-	public String toString() {
-		return hconvstate.toString();
-	}
-	
-	/**
-	 * Check are made on : status. 
-	 * @param HConvState 
-	 * @return Boolean
-	 */
-	public boolean equals(HConvState obj) {
-		if(obj.getStatus() != this.getStatus()) {
-			return false;
-		}
-		return true;
-	}
-	
-	@Override
-	public int hashCode() {
-		return hconvstate.hashCode();
-	}
+//	public JSONObject toJSON() {
+//		return hconvstate;
+//	}
+//	
+//	public void fromJSON(JSONObject jsonObj) {
+//		if(jsonObj != null) {
+//			this.hconvstate = jsonObj; 
+//		} else {
+//			this.hconvstate = new JSONObject();
+//		}
+//	}
+//	
+//	public String getHType() {
+//		return "hconvstate";
+//	}
+//	
+//	@Override
+//	public String toString() {
+//		return hconvstate.toString();
+//	}
+//	
+//	/**
+//	 * Check are made on : status. 
+//	 * @param HConvState 
+//	 * @return Boolean
+//	 */
+//	public boolean equals(HConvState obj) {
+//		if(obj.getStatus() != this.getStatus()) {
+//			return false;
+//		}
+//		return true;
+//	}
+//	
+//	@Override
+//	public int hashCode() {
+//		return hconvstate.hashCode();
+//	}
 	
 	/* Getters & Setters */
 	
@@ -87,7 +87,7 @@ public class HConvState implements HJsonObj{
 	public String getStatus() {
 		String status;
 		try {
-			status = hconvstate.getString("status");
+			status = this.getString("status");
 		} catch (Exception e) {
 			status = null;			
 		}
@@ -97,9 +97,9 @@ public class HConvState implements HJsonObj{
 	public void setStatus(String status) {
 		try {
 			if(status == null) {
-				hconvstate.remove("status");
+				this.remove("status");
 			} else {
-				hconvstate.put("status", status);
+				this.put("status", status);
 			}
 		} catch (JSONException e) {
 		}

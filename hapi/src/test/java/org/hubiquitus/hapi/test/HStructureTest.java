@@ -81,7 +81,7 @@ public class HStructureTest {
 			HGeo pos = new HGeo(100,100);
 			location.setPos(pos);
 			location.setZip("79000");
-			jsonObj.put("location",location.toJSON());
+			jsonObj.put("location",location);
 			
 			String author = "Mysth";
 			jsonObj.put("author", author);
@@ -104,7 +104,7 @@ public class HStructureTest {
 			
 			HMessage hmessage =  new HMessage(jsonObj);
 			
-			jsonObj = hmessage.toJSON();
+			jsonObj = hmessage;
 			
 			Assert.assertEquals(hmessage.getAuthor(), author);
 			Assert.assertEquals(hmessage.getActor(), actor);
@@ -112,9 +112,9 @@ public class HStructureTest {
 			Assert.assertEquals(hmessage.getMsgid(), msgid);
 			Assert.assertEquals(hmessage.getPublisher(), publisher);
 			Assert.assertEquals(hmessage.getType(), type);
-			Assert.assertEquals(hmessage.getHeaders().toJSON().toString(), headers.toString());
+			Assert.assertEquals(hmessage.getHeaders().toString(), headers.toString());
 			Assert.assertEquals(hmessage.getLocation().toString(), location.toString());
-			Assert.assertEquals(hmessage.getPayloadAsHJsoObj().toString(), payloadResult.toString());
+			Assert.assertEquals(hmessage.getPayloadAsJSONObject().toString(), payloadResult.toString());
 			Assert.assertEquals(hmessage.getPriority(), HMessagePriority.INFO);
 			Assert.assertEquals(hmessage.getPublished(), date);
 			Assert.assertEquals(hmessage.getRelevance(), date);
@@ -154,11 +154,16 @@ public class HStructureTest {
 			
 			String publisher = "j.desousag";
 
-			HJsonDictionnary headers = new HJsonDictionnary();
-			headers.put("header1", "1");
-			headers.put("header2", "2");
+			JSONObject headers = new JSONObject();
+			try {
+				headers.put("header1", "1");
+				headers.put("header2", "2");
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
 			
-			HJsonDictionnary payload = new HJsonDictionnary();
+			
+			JSONObject payload = new JSONObject();
 			payload.put("payload", "payload");
 			
 			HMessage hmessage =  new HMessage();
@@ -176,7 +181,7 @@ public class HStructureTest {
 			hmessage.setPersistent(_persistent);
 			hmessage.setType(type);
 			
-			jsonObj = hmessage.toJSON();
+			jsonObj = hmessage;
 			
 			Assert.assertEquals(jsonObj.get("author"), author);
 			Assert.assertEquals(jsonObj.get("actor"), actor);
@@ -184,9 +189,9 @@ public class HStructureTest {
 			Assert.assertEquals(jsonObj.get("msgid"), msgid);
 			Assert.assertEquals(jsonObj.get("publisher"), publisher);
 			Assert.assertEquals(jsonObj.get("type"), type);
-			Assert.assertEquals(jsonObj.get("headers").toString(), headers.toJSON().toString());
+			Assert.assertEquals(jsonObj.get("headers").toString(), headers.toString());
 			Assert.assertEquals(jsonObj.get("location").toString(), location.toString());
-			Assert.assertEquals(jsonObj.get("payload"), payload.toJSON());
+			Assert.assertEquals(jsonObj.get("payload"), payload);
 			Assert.assertEquals(jsonObj.get("priority"), priority.value());
 			Assert.assertEquals(jsonObj.get("published"), dateIso);
 			Assert.assertEquals(jsonObj.get("relevance"), dateIso);
@@ -222,7 +227,7 @@ public class HStructureTest {
 			HConvState hconvstate = new HConvState();
 			hconvstate.setStatus(status);
 			
-			jsonObj = hconvstate.toJSON();
+			jsonObj = hconvstate;
 			
 			Assert.assertEquals(jsonObj.get("status"), status);
 		} catch (JSONException e) {
@@ -237,7 +242,7 @@ public class HStructureTest {
 		JSONObject jsonObj = new JSONObject();
 		try {
 			HGeo pos = new HGeo(100.0, 100.0);
-			jsonObj.put("pos", pos.toJSON());
+			jsonObj.put("pos", pos);
 			
 			String zip = "79000";
 			jsonObj.put("zip", zip);
@@ -272,7 +277,7 @@ public class HStructureTest {
 			
 			HLocation hlocation = new HLocation(jsonObj);
 
-			Assert.assertEquals(hlocation.getPos().toJSON(), pos.toJSON());
+			Assert.assertEquals(hlocation.getPos(), pos);
 			Assert.assertEquals(hlocation.getZip(), zip);
 			Assert.assertEquals(hlocation.getAddr(), addr);
 			Assert.assertEquals(hlocation.getCountryCode(), countryCode);
@@ -324,9 +329,9 @@ public class HStructureTest {
 			hlocation.setWay(way);
 			hlocation.setWayType(wayType);
 			hlocation.setZip(zip);
-			jsonObj = hlocation.toJSON();
+			jsonObj = hlocation;
 			
-			Assert.assertEquals(jsonObj.getJSONObject("pos").toString(), pos.toJSON().toString());
+			Assert.assertEquals(jsonObj.getJSONObject("pos").toString(), pos.toString());
 			Assert.assertEquals(jsonObj.get("floor"), floor);
 			Assert.assertEquals(jsonObj.get("building"), building);
 			Assert.assertEquals(jsonObj.get("way"), way);
@@ -369,7 +374,7 @@ public class HStructureTest {
 			HAck hack = new HAck();
 			hack.setAck(ack);
 			
-			jsonObj = hack.toJSON();
+			jsonObj = hack;
 			Assert.assertEquals(jsonObj.get("ack"), ack.value());
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -412,7 +417,7 @@ public class HStructureTest {
 			HCommand hcommand = new HCommand();
 			hcommand.setCmd(cmd);
 			
-			jsonObj = hcommand.toJSON();
+			jsonObj = hcommand;
 
 			Assert.assertEquals(jsonObj.get("cmd"), cmd);
 		} catch (JSONException e) {
@@ -447,7 +452,7 @@ public class HStructureTest {
 			HAlert halert = new HAlert();
 			halert.setAlert(alert);
 			
-			jsonObj = halert.toJSON();
+			jsonObj = halert;
 			
 			Assert.assertEquals(jsonObj.get("alert"), alert);
 		} catch (JSONException e) {
@@ -488,7 +493,7 @@ public class HStructureTest {
 			HMeasure hmeasure = new HMeasure();
 			hmeasure.setUnit(unit);
 			hmeasure.setValue(value);
-			jsonObj = hmeasure.toJSON();
+			jsonObj = hmeasure;
 
 			Assert.assertEquals(jsonObj.get("unit"), unit);
 			Assert.assertEquals(jsonObj.get("value"), value);
@@ -537,7 +542,7 @@ public class HStructureTest {
 			hstatus.setErrorCode(errorCode);
 			hstatus.setStatus(status);
 			hstatus.setErrorMsg(errorMsg);
-			jsonObj = hstatus.toJSON();
+			jsonObj = hstatus;
 
 			Assert.assertEquals(jsonObj.get("status"), status.value());
 			Assert.assertEquals(jsonObj.get("errorCode"), errorCode.value());
@@ -583,7 +588,7 @@ public class HStructureTest {
 			HResult hresult = new HResult();
 			hresult.setResult(result);
 			hresult.setStatus(status);
-			jsonObj = hresult.toJSON();
+			jsonObj = hresult;
 
 			Assert.assertEquals(jsonObj.get("status"), status.value());
 			Assert.assertEquals(jsonObj.get("result"), result.toJSON());

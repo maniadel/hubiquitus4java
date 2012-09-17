@@ -23,120 +23,122 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * @version 0.5
- * This structure describe the location
+ * @version 0.5 This structure describe the location
  */
 
-public class HLocation implements HJsonObj{
+public class HLocation extends JSONObject {
 
-	private JSONObject hlocation = new JSONObject();
-		
-	public HLocation() {};
-	
-	public HLocation(JSONObject jsonObj){
-		fromJSON(jsonObj);
+	// private JSONObject hlocation = new JSONObject();
+
+	public HLocation() {
+		super();
+	};
+
+	public HLocation(JSONObject jsonObj) throws JSONException {
+		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
-	
+
 	/* HJsonObj interface */
-	
-	public JSONObject toJSON() {
-		return hlocation;
-	}
-	
-	public void fromJSON(JSONObject jsonObj) {
-		if(jsonObj != null) {
-			this.hlocation = jsonObj; 
-		} else {
-			this.hlocation = new JSONObject();
-		}
-	}
-	
-	public String getHType() {
-		return "hlocation";
-	}
-	
-	@Override
-	public String toString() {
-		return hlocation.toString();
-	}
-	
-	/**
-	 * Check are made on : lng, lat, zip, num, building, floor, way, waytype, addr, city and countryCode. 
-	 * @param HLocation 
-	 * @return Boolean
-	 */
-	public boolean equals(HLocation obj) {
-		if(obj.getPos().equals(this.getPos()))
-			return false;
-		if(obj.getZip() != this.getZip())
-			return false;
-		if(obj.getNum() != this.getNum())
-			return false;
-		if(obj.getBuilding() != this.getBuilding())
-			return false;
-		if(obj.getFloor() != this.getFloor())
-			return false;
-		if(obj.getWay() != this.getWay())
-			return false;
-		if(obj.getWayType() != this.getWayType())
-			return false;
-		if(obj.getAddr() != this.getAddr())
-			return false;
-		if(obj.getCity() != this.getCity())
-			return false;
-		if(obj.getCountryCode() != this.getCountryCode())
-			return false;
-		return true;
-	}
-	
-	@Override
-	public int hashCode() {
-		return hlocation.hashCode();
-	}
-	
+
+//	public JSONObject toJSON() {
+//		return hlocation;
+//	}
+//
+//	public void fromJSON(JSONObject jsonObj) {
+//		if (jsonObj != null) {
+//			this.hlocation = jsonObj;
+//		} else {
+//			this.hlocation = new JSONObject();
+//		}
+//	}
+//
+//	public String getHType() {
+//		return "hlocation";
+//	}
+//
+//	@Override
+//	public String toString() {
+//		return hlocation.toString();
+//	}
+//
+//	/**
+//	 * Check are made on : lng, lat, zip, num, building, floor, way, waytype,
+//	 * addr, city and countryCode.
+//	 * 
+//	 * @param HLocation
+//	 * @return Boolean
+//	 */
+//	public boolean equals(HLocation obj) {
+//		if (obj.getPos().equals(this.getPos()))
+//			return false;
+//		if (obj.getZip() != this.getZip())
+//			return false;
+//		if (obj.getNum() != this.getNum())
+//			return false;
+//		if (obj.getBuilding() != this.getBuilding())
+//			return false;
+//		if (obj.getFloor() != this.getFloor())
+//			return false;
+//		if (obj.getWay() != this.getWay())
+//			return false;
+//		if (obj.getWayType() != this.getWayType())
+//			return false;
+//		if (obj.getAddr() != this.getAddr())
+//			return false;
+//		if (obj.getCity() != this.getCity())
+//			return false;
+//		if (obj.getCountryCode() != this.getCountryCode())
+//			return false;
+//		return true;
+//	}
+//
+//	@Override
+//	public int hashCode() {
+//		return hlocation.hashCode();
+//	}
+
 	/* Getters & Setters */
-	
 
 	public HGeo getPos() {
 		HGeo pos;
 		try {
-			pos = new HGeo(hlocation.getJSONObject("pos"));
+			pos = new HGeo(this.getJSONObject("pos"));
 		} catch (Exception e) {
-			pos = null;			
+			pos = null;
 		}
 		return pos;
 	}
 
 	public void setPos(HGeo pos) {
 		try {
-			if(pos == null) {
-				hlocation.remove("pos");
+			if (pos == null) {
+				this.remove("pos");
 			} else {
-				hlocation.put("pos", pos.toJSON());
+				this.put("pos", pos);
 			}
 		} catch (JSONException e) {
 		}
 	}
-	
+
 	/**
 	 * @return the zip code of the location. NULL if undefined
 	 */
 	public String getZip() {
 		String zip;
 		try {
-			zip = hlocation.getString("zip");
+			zip = this.getString("zip");
 		} catch (Exception e) {
-			zip = null;			
+			zip = null;
 		}
 		return zip;
 	}
 
 	public void setZip(String zip) {
 		try {
-			if(zip == null) {
-				hlocation.remove("zip");
+			if (zip == null) {
+				this.remove("zip");
 			} else {
-				hlocation.put("zip", zip);
+				this.put("zip", zip);
 			}
 		} catch (JSONException e) {
 		}
@@ -148,43 +150,43 @@ public class HLocation implements HJsonObj{
 	public String getNum() {
 		String num;
 		try {
-			num = hlocation.getString("num");
+			num = this.getString("num");
 		} catch (Exception e) {
-			num = null;			
+			num = null;
 		}
 		return num;
 	}
 
 	public void setNum(String num) {
 		try {
-			if(num == null) {
-				hlocation.remove("num");
+			if (num == null) {
+				this.remove("num");
 			} else {
-				hlocation.put("num", num);
+				this.put("num", num);
 			}
 		} catch (JSONException e) {
 		}
 	}
-	
+
 	/**
 	 * @return the type of the way of the location. NULL if undefined
 	 */
 	public String getWayType() {
 		String wayType;
 		try {
-			wayType = hlocation.getString("wayType");
+			wayType = this.getString("wayType");
 		} catch (Exception e) {
-			wayType = null;			
+			wayType = null;
 		}
 		return wayType;
 	}
 
 	public void setWayType(String wayType) {
 		try {
-			if(wayType == null) {
-				hlocation.remove("wayType");
+			if (wayType == null) {
+				this.remove("wayType");
 			} else {
-				hlocation.put("wayType", wayType);
+				this.put("wayType", wayType);
 			}
 		} catch (JSONException e) {
 		}
@@ -196,43 +198,43 @@ public class HLocation implements HJsonObj{
 	public String getWay() {
 		String way;
 		try {
-			way = hlocation.getString("way");
+			way = this.getString("way");
 		} catch (Exception e) {
-			way = null;			
+			way = null;
 		}
 		return way;
 	}
-	
+
 	public void setWay(String way) {
 		try {
-			if(way == null) {
-				hlocation.remove("way");
+			if (way == null) {
+				this.remove("way");
 			} else {
-				hlocation.put("way", way);
+				this.put("way", way);
 			}
 		} catch (JSONException e) {
 		}
 	}
-	
+
 	/**
 	 * @return the address complement of the location. NULL if undefined
 	 */
 	public String getAddr() {
 		String addr;
 		try {
-			addr = hlocation.getString("addr");
+			addr = this.getString("addr");
 		} catch (Exception e) {
-			addr = null;			
+			addr = null;
 		}
 		return addr;
 	}
-	
+
 	public void setAddr(String addr) {
 		try {
-			if(addr == null) {
-				hlocation.remove("addr");
+			if (addr == null) {
+				this.remove("addr");
 			} else {
-				hlocation.put("addr", addr);
+				this.put("addr", addr);
 			}
 		} catch (JSONException e) {
 		}
@@ -244,19 +246,19 @@ public class HLocation implements HJsonObj{
 	public String getFloor() {
 		String floor;
 		try {
-			floor = hlocation.getString("floor");
+			floor = this.getString("floor");
 		} catch (Exception e) {
-			floor = null;			
+			floor = null;
 		}
 		return floor;
 	}
-	
+
 	public void setFloor(String floor) {
 		try {
-			if(floor == null) {
-				hlocation.remove("floor");
+			if (floor == null) {
+				this.remove("floor");
 			} else {
-				hlocation.put("floor", floor);
+				this.put("floor", floor);
 			}
 		} catch (JSONException e) {
 		}
@@ -268,68 +270,67 @@ public class HLocation implements HJsonObj{
 	public String getBuilding() {
 		String building;
 		try {
-			building = hlocation.getString("building");
+			building = this.getString("building");
 		} catch (Exception e) {
-			building = null;			
+			building = null;
 		}
 		return building;
 	}
-	
+
 	public void setBuilding(String building) {
 		try {
-			if(building == null) {
-				hlocation.remove("building");
+			if (building == null) {
+				this.remove("building");
 			} else {
-				hlocation.put("building", building);
+				this.put("building", building);
 			}
 		} catch (JSONException e) {
 		}
 	}
 
-	
 	/**
 	 * @return city of the location. NULL if undefined
 	 */
 	public String getCity() {
 		String city;
 		try {
-			city = hlocation.getString("city");
+			city = this.getString("city");
 		} catch (Exception e) {
-			city = null;			
+			city = null;
 		}
 		return city;
 	}
 
 	public void setCity(String city) {
 		try {
-			if(city == null) {
-				hlocation.remove("city");
+			if (city == null) {
+				this.remove("city");
 			} else {
-				hlocation.put("city", city);
+				this.put("city", city);
 			}
 		} catch (JSONException e) {
 		}
 	}
-	
+
 	/**
 	 * @return countryCode of the location. NULL if undefined
 	 */
 	public String getCountryCode() {
 		String countryCode;
 		try {
-			countryCode = hlocation.getString("countryCode");
+			countryCode = this.getString("countryCode");
 		} catch (Exception e) {
-			countryCode = null;			
+			countryCode = null;
 		}
 		return countryCode;
 	}
 
 	public void setCountryCode(String countryCode) {
 		try {
-			if(countryCode == null) {
-				hlocation.remove("countryCode");
+			if (countryCode == null) {
+				this.remove("countryCode");
 			} else {
-				hlocation.put("countryCode", countryCode);
+				this.put("countryCode", countryCode);
 			}
 		} catch (JSONException e) {
 		}

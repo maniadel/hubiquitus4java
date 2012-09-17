@@ -135,7 +135,7 @@ public class HFilterTemplate implements HJsonObj{
 			if(template == null) {
 				hFilter.remove("template");
 			} else {
-				hFilter.put("template", template.toJSON());
+				hFilter.put("template", template);
 			}
 		} catch (JSONException e) {
 		}

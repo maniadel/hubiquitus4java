@@ -33,7 +33,8 @@ import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.hStructures.HMessageOptions;
 import org.hubiquitus.hapi.hStructures.HMessagePriority;
 import org.hubiquitus.hapi.util.DateISO8601;
-import org.hubiquitus.hapi.util.HJsonDictionnary;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -52,9 +53,14 @@ public class HBuilderTest {
 		hmessageOption.setAuthor("me");
 		hmessageOption.setConvid("convid:123456789");
 
-		HJsonDictionnary headers = new HJsonDictionnary();
-		headers.put("header1", "1");
-		headers.put("header2", "2");
+		JSONObject headers = new JSONObject();
+		try {
+			headers.put("header1", "1");
+			headers.put("header2", "2");
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		
 		hmessageOption.setHeaders(headers);
 
 		HLocation location = new HLocation();
@@ -68,8 +74,12 @@ public class HBuilderTest {
 
 		hmessageOption.setPersistent(false);
 
-		HJsonDictionnary payload = new HJsonDictionnary();
-		payload.put("test", "test");
+		JSONObject payload = new JSONObject();
+		try {
+			payload.put("test", "test");
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
 		HMessage hmessage = null;
 		try {
 			hmessage = hclient.buildMessage("chid:123456789", "string",
@@ -87,7 +97,7 @@ public class HBuilderTest {
 				headers.toString());
 		Assert.assertEquals(hmessage.getLocation().toString(),
 				location.toString());
-		Assert.assertEquals(hmessage.getPayloadAsHJsoObj().toString(),
+		Assert.assertEquals(hmessage.getPayloadAsJSONObject().toString(),
 				payload.toString());
 		Assert.assertEquals(hmessage.getPriority(), HMessagePriority.INFO);
 		Assert.assertEquals(hmessage.getPublished(), null);
@@ -104,9 +114,14 @@ public class HBuilderTest {
 
 		hmessageOption.setAuthor("me");
 
-		HJsonDictionnary headers = new HJsonDictionnary();
-		headers.put("header1", "1");
-		headers.put("header2", "2");
+		JSONObject headers = new JSONObject();
+		try {
+			headers.put("header1", "1");
+			headers.put("header2", "2");
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		
 		hmessageOption.setHeaders(headers);
 
 		HLocation location = new HLocation();
@@ -132,7 +147,7 @@ public class HBuilderTest {
 		hconvstate.setStatus("test status");
 
 		Assert.assertEquals(hmessage.getType(), "hConvState");
-		Assert.assertEquals(hmessage.getPayloadAsHJsoObj().toString(),
+		Assert.assertEquals(hmessage.getPayloadAsJSONObject().toString(),
 				hconvstate.toString());
 	}
 
@@ -145,9 +160,15 @@ public class HBuilderTest {
 		hmessageOption.setAuthor("me");
 		hmessageOption.setConvid("convid:123456789");
 
-		HJsonDictionnary headers = new HJsonDictionnary();
-		headers.put("header1", "1");
-		headers.put("header2", "2");
+		JSONObject headers = new JSONObject();
+		try {
+			headers.put("header1", "1");
+			headers.put("header2", "2");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		hmessageOption.setHeaders(headers);
 
 		HLocation location = new HLocation();
@@ -175,7 +196,7 @@ public class HBuilderTest {
 		hack.setAck(ackvalue);
 
 		Assert.assertEquals(hmessage.getType(), "hAck");
-		Assert.assertEquals(hmessage.getPayloadAsHJsoObj().toString(), hack.toString());
+		Assert.assertEquals(hmessage.getPayloadAsJSONObject().toString(), hack.toString());
 	}
 
 	@Test
@@ -187,9 +208,15 @@ public class HBuilderTest {
 		hmessageOption.setAuthor("me");
 		hmessageOption.setConvid("convid:123456789");
 
-		HJsonDictionnary headers = new HJsonDictionnary();
-		headers.put("header1", "1");
-		headers.put("header2", "2");
+		JSONObject headers = new JSONObject();
+		try {
+			headers.put("header1", "1");
+			headers.put("header2", "2");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		hmessageOption.setHeaders(headers);
 
 		HLocation location = new HLocation();
@@ -217,7 +244,7 @@ public class HBuilderTest {
 		halert.setAlert(alert);
 
 		Assert.assertEquals(hmessage.getType(), "hAlert");
-		Assert.assertEquals(hmessage.getPayloadAsHJsoObj().toString(), halert.toString());
+		Assert.assertEquals(hmessage.getPayloadAsJSONObject().toString(), halert.toString());
 	}
 
 	@Test
@@ -229,9 +256,15 @@ public class HBuilderTest {
 		hmessageOption.setAuthor("me");
 		hmessageOption.setConvid("convid:123456789");
 
-		HJsonDictionnary headers = new HJsonDictionnary();
-		headers.put("header1", "1");
-		headers.put("header2", "2");
+		JSONObject headers = new JSONObject();
+		try {
+			headers.put("header1", "1");
+			headers.put("header2", "2");
+		} catch (JSONException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		hmessageOption.setHeaders(headers);
 
 		HLocation location = new HLocation();
@@ -261,7 +294,7 @@ public class HBuilderTest {
 		hmeasure.setValue(value);
 
 		Assert.assertEquals(hmessage.getType(), "hMeasure");
-		Assert.assertEquals(hmessage.getPayloadAsHJsoObj().toString(),
+		Assert.assertEquals(hmessage.getPayloadAsJSONObject().toString(),
 				hmeasure.toString());
 	}
 }

@@ -28,56 +28,56 @@ import org.json.JSONObject;
  * @version 0.3 hAPI result. For more info, see Hubiquitus reference
  */
 
-public class HResult implements HJsonObj {
+public class HResult extends JSONObject {
 
-	private JSONObject hresult = new JSONObject();
+//	private JSONObject hresult = new JSONObject();
 
-	public HResult() {
+	public HResult() {super();
 	}
 
-	public HResult(JSONObject jsonObj) {
-		this.fromJSON(jsonObj);
+	public HResult(JSONObject jsonObj) throws JSONException {
+		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
 
 	/* HJsonObj interface */
 
-	public JSONObject toJSON() {
-		return this.hresult;
-	}
-
-	public String getHType() {
-		return "hresult";
-	}
-
-	public void fromJSON(JSONObject jsonObj) {
-		if (jsonObj != null) {
-			this.hresult = jsonObj;
-		} else {
-			this.hresult = new JSONObject();
-		}
-	}
-
-	@Override
-	public String toString() {
-		return hresult.toString();
-	}
-
-	/**
-	 * Check are made on : and status.
-	 * 
-	 * @param HResult
-	 * @return Boolean
-	 */
-	public boolean equals(HResult obj) {
-		if (obj.getStatus().value() != this.getStatus().value())
-			return false;
-		return true;
-	}
-
-	@Override
-	public int hashCode() {
-		return hresult.hashCode();
-	}
+//	public JSONObject toJSON() {
+//		return this.hresult;
+//	}
+//
+//	public String getHType() {
+//		return "hresult";
+//	}
+//
+//	public void fromJSON(JSONObject jsonObj) {
+//		if (jsonObj != null) {
+//			this.hresult = jsonObj;
+//		} else {
+//			this.hresult = new JSONObject();
+//		}
+//	}
+//
+//	@Override
+//	public String toString() {
+//		return hresult.toString();
+//	}
+//
+//	/**
+//	 * Check are made on : and status.
+//	 * 
+//	 * @param HResult
+//	 * @return Boolean
+//	 */
+//	public boolean equals(HResult obj) {
+//		if (obj.getStatus().value() != this.getStatus().value())
+//			return false;
+//		return true;
+//	}
+//
+//	@Override
+//	public int hashCode() {
+//		return hresult.hashCode();
+//	}
 
 	/* Getters & Setters */
 
@@ -89,7 +89,7 @@ public class HResult implements HJsonObj {
 	public ResultStatus getStatus() {
 		ResultStatus reqid;
 		try {
-			reqid = ResultStatus.constant(hresult.getInt("status"));
+			reqid = ResultStatus.constant(this.getInt("status"));
 		} catch (Exception e1) {
 			reqid = null;
 		}
@@ -99,9 +99,9 @@ public class HResult implements HJsonObj {
 	public void setStatus(ResultStatus status) {
 		try {
 			if (status == null) {
-				hresult.remove("status");
+				this.remove("status");
 			} else {
-				hresult.put("status", status.value());
+				this.put("status", status.value());
 			}
 		} catch (JSONException e) {
 		}
@@ -115,7 +115,7 @@ public class HResult implements HJsonObj {
 	public JSONObject getResultAsJSONObject() {
 		JSONObject result;
 		try {
-			result = hresult.getJSONObject("result");
+			result = this.getJSONObject("result");
 		} catch (JSONException e) {
 			result = null;
 		}
@@ -130,7 +130,7 @@ public class HResult implements HJsonObj {
 	public JSONArray getResultAsJSONArray() {
 		JSONArray result;
 		try {
-			result = hresult.getJSONArray("result");
+			result = this.getJSONArray("result");
 		} catch (JSONException e) {
 			result = null;
 		}
@@ -145,7 +145,7 @@ public class HResult implements HJsonObj {
 	public String getResultAsString() {
 		String result;
 		try {
-			result = hresult.getString("result");
+			result = this.getString("result");
 		} catch (JSONException e) {
 			result = null;
 		}
@@ -160,7 +160,7 @@ public class HResult implements HJsonObj {
 	public Boolean getResultAsBoolean() {
 		Boolean result;
 		try {
-			result = hresult.getBoolean("result");
+			result = this.getBoolean("result");
 		} catch (JSONException e) {
 			result = null;
 		}
@@ -175,7 +175,7 @@ public class HResult implements HJsonObj {
 	public Integer getResultAsInt() {
 		Integer result;
 		try {
-			result = hresult.getInt("result");
+			result = this.getInt("result");
 		} catch (JSONException e) {
 			result = null;
 		}
@@ -190,7 +190,7 @@ public class HResult implements HJsonObj {
 	public Double getResultAsDouble() {
 		Double result;
 		try {
-			result = hresult.getDouble("result");
+			result = this.getDouble("result");
 		} catch (JSONException e) {
 			result = null;
 		}
@@ -205,7 +205,7 @@ public class HResult implements HJsonObj {
 	public Long getResultAsLong() {
 		Long result;
 		try {
-			result = hresult.getLong("result");
+			result = this.getLong("result");
 		} catch (JSONException e) {
 			result = null;
 		}
@@ -220,9 +220,9 @@ public class HResult implements HJsonObj {
 	public void setResult(JSONObject result) {
 		try {
 			if (result == null) {
-				hresult.remove("result");
+				this.remove("result");
 			} else {
-				hresult.put("result", result);
+				this.put("result", result);
 			}
 		} catch (JSONException e) {
 		}
@@ -236,9 +236,9 @@ public class HResult implements HJsonObj {
 	public void setResult(JSONArray result) {
 		try {
 			if (result == null) {
-				hresult.remove("result");
+				this.remove("result");
 			} else {
-				hresult.put("result", result);
+				this.put("result", result);
 			}
 		} catch (JSONException e) {
 		}
@@ -252,9 +252,9 @@ public class HResult implements HJsonObj {
 	public void setResult(HJsonObj result) {
 		try {
 			if (result == null) {
-				hresult.remove("result");
+				this.remove("result");
 			} else {
-				hresult.put("result", result.toJSON());
+				this.put("result", result.toJSON());
 			}
 		} catch (JSONException e) {
 		}
@@ -268,9 +268,9 @@ public class HResult implements HJsonObj {
 	public void setResult(String result) {
 		try {
 			if (result == null) {
-				hresult.remove("result");
+				this.remove("result");
 			} else {
-				hresult.put("result", result);
+				this.put("result", result);
 			}
 		} catch (JSONException e) {
 		}
@@ -284,9 +284,9 @@ public class HResult implements HJsonObj {
 	public void setResult(Boolean result) {
 		try {
 			if (result == null) {
-				hresult.remove("result");
+				this.remove("result");
 			} else {
-				hresult.put("result", result);
+				this.put("result", result);
 			}
 		} catch (JSONException e) {
 		}
@@ -299,7 +299,7 @@ public class HResult implements HJsonObj {
 	 */
 	public void setResult(int result) {
 		try {
-			hresult.put("result", result);
+			this.put("result", result);
 		} catch (JSONException e) {
 		}
 	}
@@ -311,7 +311,7 @@ public class HResult implements HJsonObj {
 	 */
 	public void setResult(double result) {
 		try {
-			hresult.put("result", result);
+			this.put("result", result);
 		} catch (JSONException e) {
 		}
 	}
@@ -323,7 +323,7 @@ public class HResult implements HJsonObj {
 	 */
 	public void setResult(long result) {
 		try {
-			hresult.put("result", result);
+			this.put("result", result);
 		} catch (JSONException e) {
 		}
 	}

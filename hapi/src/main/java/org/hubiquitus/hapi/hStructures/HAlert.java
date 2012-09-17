@@ -23,82 +23,81 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * @version 0.3
- * Alert message payload
+ * @version 0.3 Alert message payload
  */
 
-public class HAlert implements HJsonObj{
+public class HAlert extends JSONObject {
 
-	private JSONObject halert = new JSONObject();
-		
-	public HAlert() {};
-	
-	public HAlert(JSONObject jsonObj){
-		fromJSON(jsonObj);
+	// private JSONObject halert = new JSONObject();
+
+	public HAlert() {
+		super();
+	};
+
+	public HAlert(JSONObject jsonObj) throws JSONException {
+		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
-	
+
 	/* HJsonObj interface */
-	
-	public JSONObject toJSON() {
-		return halert;
-	}
-	
-	public void fromJSON(JSONObject jsonObj) {
-		if(jsonObj != null) {
-			this.halert = jsonObj; 
-		} else {
-			this.halert = new JSONObject();
-		}
-	}
-	
-	public String getHType() {
-		return "halert";
-	}
-	
-	@Override
-	public String toString() {
-		return halert.toString();
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		return halert.equals(obj);
-	}
-	
-	@Override
-	public int hashCode() {
-		return halert.hashCode();
-	}
-	
+
+//	public JSONObject toJSON() {
+//		return halert;
+//	}
+//
+//	public void fromJSON(JSONObject jsonObj) {
+//		if (jsonObj != null) {
+//			this.halert = jsonObj;
+//		} else {
+//			this.halert = new JSONObject();
+//		}
+//	}
+//
+//	public String getHType() {
+//		return "halert";
+//	}
+//
+//	@Override
+//	public String toString() {
+//		return halert.toString();
+//	}
+//
+//	@Override
+//	public boolean equals(Object obj) {
+//		return halert.equals(obj);
+//	}
+//
+//	@Override
+//	public int hashCode() {
+//		return halert.hashCode();
+//	}
+
 	/* Getters & Setters */
-	
+
 	/**
-	 * The message provided by the author to describe the alert. (Eg : Power Failure) 
+	 * The message provided by the author to describe the alert. (Eg : Power
+	 * Failure)
+	 * 
 	 * @return alert message. NULL if undefined
 	 */
-	public String getAlert() 
-	{
+	public String getAlert() {
 		String alert;
 		try {
-			alert = halert.getString("alert");
-		} catch (Exception e) 
-		{
-			alert = null;			
+			alert = this.getString("alert");
+		} catch (Exception e) {
+			alert = null;
 		}
 		return alert;
 	}
 
-	public void setAlert(String alert) 
-	{
+	public void setAlert(String alert) {
 		try {
-			if(alert == null) 
-			{
-				halert.remove("alert");
-			} else 
-			{
-				halert.put("alert", alert);
-				}
-		} catch (JSONException e) { 	}
+			if (alert == null) {
+				this.remove("alert");
+			} else {
+				this.put("alert", alert);
+			}
+		} catch (JSONException e) {
+		}
 	}
-	
+
 }

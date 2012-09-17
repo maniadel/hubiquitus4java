@@ -173,7 +173,7 @@ public class HTransportSocketio implements HTransport, IOCallback {
 	/* Socket io  delegate callback*/
 	public void on(String type, IOAcknowledge arg1, Object... arg2) {
 		//switch for type
-		if (type.equals("hStatus") && arg2 != null && arg2[0].getClass() == JSONObject.class) {
+		if (type.equalsIgnoreCase("hStatus") && arg2 != null && arg2[0].getClass() == JSONObject.class) {
 			JSONObject data = (JSONObject)arg2[0];
 			try {
 				HStatus status = new HStatus(data);

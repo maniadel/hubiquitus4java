@@ -23,89 +23,90 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * @version 0.5
- *    hAPI allows to attach acknowledgements to each message.
- *     Acknowledgements are used to identify the participants that have received or not received, read or not read a message
- *     Note, when a hMessage contains a such kind of payload, the convid must be provided with the same value has the acknowledged hMessage.
+ * @version 0.5 hAPI allows to attach acknowledgements to each message.
+ *          Acknowledgements are used to identify the participants that have
+ *          received or not received, read or not read a message Note, when a
+ *          hMessage contains a such kind of payload, the convid must be
+ *          provided with the same value has the acknowledged hMessage.
  */
 
-public class HAck implements HJsonObj{
+public class HAck extends JSONObject {
 
-	private JSONObject hack = new JSONObject();
-		
-	public HAck() {};
-	
-	public HAck(JSONObject jsonObj){
-		fromJSON(jsonObj);
+	//private JSONObject hack = new JSONObject();
+
+	public HAck() {
+		super();
+	};
+
+	public HAck(JSONObject jsonObj) throws JSONException {
+		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
 	
 	/* HJsonObj interface */
+
+//	public JSONObject toJSON() {
+//		return hack;
+//	}
+
+//	public void fromJSON(JSONObject jsonObj) {
+//		if (jsonObj != null) {
+//			this.hack = jsonObj;
+//		} else {
+//			this.hack = new JSONObject();
+//		}
+//	}
+
 	
-	public JSONObject toJSON() {
-		return hack;
-	}
-	
-	public void fromJSON(JSONObject jsonObj) {
-		if(jsonObj != null) {
-			this.hack = jsonObj; 
-		} else {
-			this.hack = new JSONObject();
-		}
-	}
-	
-	public String getHType() {
-		return "hack";
-	}
-	
-	@Override
-	public String toString() {
-		return hack.toString();
-	}
-	
+//
+//	@Override
+//	public String toString() {
+//		return this.toString();
+//	}
+
 	/**
-	 * Check are made on : ackid, ack. 
-	 * @param HAck 
+	 * Check are made on : ackid, ack.
+	 * 
+	 * @param HAck
 	 * @return Boolean
 	 */
 	public boolean equals(HAck obj) {
-		if(obj.getAck() != this.getAck() ) {
+		if (obj.getAck() != this.getAck()) {
 			return false;
 		}
 		return true;
 	}
-	
-	@Override
-	public int hashCode() {
-		return hack.hashCode();
-	}
-	
+
+//	@Override
+//	public int hashCode() {
+//		return hack.hashCode();
+//	}
+
 	/* Getters & Setters */
-	
 
 	/**
 	 * The status of the acknowledgement.
+	 * 
 	 * @return acknowledgement status. NULL if undefined
 	 */
 	public HAckValue getAck() {
 		HAckValue ack;
 		try {
-			String ackString = hack.getString("ack");
+			String ackString = this.getString("ack");
 			ack = HAckValue.constant(ackString);
 		} catch (Exception e) {
-			ack = null;			
+			ack = null;
 		}
 		return ack;
 	}
 
 	public void setAck(HAckValue ack) {
 		try {
-			if(ack == null) {
-				hack.remove("ack");
+			if (ack == null) {
+				this.remove("ack");
 			} else {
-				hack.put("ack", ack.value());
+				this.put("ack", ack.value());
 			}
 		} catch (JSONException e) {
 		}
-	}	
+	}
 }
-

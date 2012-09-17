@@ -23,91 +23,95 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * @version 0.3
- * This structure describe the connection status
+ * @version 0.3 This structure describe the connection status
  */
 
-public class HStatus implements HJsonObj{
+public class HStatus extends JSONObject {
 
-	private JSONObject hstatus = new JSONObject();
-		
-	public HStatus() {};
-	
-	public HStatus(JSONObject jsonObj) {
-		fromJSON(jsonObj);
+	// private JSONObject hstatus = new JSONObject();
+
+	public HStatus() {
+		super();
+	};
+
+	public HStatus(JSONObject jsonObj) throws JSONException {
+		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
-	
-	public HStatus(ConnectionStatus status ,ConnectionError errorCode ,String errorMsg) {
+
+	public HStatus(ConnectionStatus status, ConnectionError errorCode,
+			String errorMsg) {
 		setStatus(status);
 		setErrorCode(errorCode);
 		setErrorMsg(errorMsg);
 	}
 
 	/* HJsonObj interface */
-	
-	public JSONObject toJSON() {
-		return hstatus;
-	}
-	
-	public void fromJSON(JSONObject jsonObj) {
-		if(jsonObj != null) {
-			this.hstatus = jsonObj; 
-		} else {
-			this.hstatus = new JSONObject();
-		}
-	}
-	
-	public String getHType() {
-		return "hstatus";
-	}
-	
-	@Override
-	public String toString() {
-		return hstatus.toString();
-	}
-	
-	/**
-	 * Check are made on : status, errorcode and errormsg. 
-	 * @param HStatus 
-	 * @return Boolean
-	 */
-	public boolean equals(HStatus obj) {
-		if(obj.getStatus().value() != this.getStatus().value())
-			return false;
-		if(obj.getErrorCode().value() != this.getErrorCode().value())
-			return false;
-		if(obj.getErrorMsg() != this.getErrorMsg())
-			return false;
-		return true;
-	}
-	
-	@Override
-	public int hashCode() {
-		return hstatus.hashCode();
-	}
-	
+
+	// public JSONObject toJSON() {
+	// return hstatus;
+	// }
+	//
+	// public void fromJSON(JSONObject jsonObj) {
+	// if (jsonObj != null) {
+	// this.hstatus = jsonObj;
+	// } else {
+	// this.hstatus = new JSONObject();
+	// }
+	// }
+	//
+	// public String getHType() {
+	// return "hstatus";
+	// }
+	//
+	// @Override
+	// public String toString() {
+	// return hstatus.toString();
+	// }
+	//
+	// /**
+	// * Check are made on : status, errorcode and errormsg.
+	// *
+	// * @param HStatus
+	// * @return Boolean
+	// */
+	// public boolean equals(HStatus obj) {
+	// if (obj.getStatus().value() != this.getStatus().value())
+	// return false;
+	// if (obj.getErrorCode().value() != this.getErrorCode().value())
+	// return false;
+	// if (obj.getErrorMsg() != this.getErrorMsg())
+	// return false;
+	// return true;
+	// }
+	//
+	// @Override
+	// public int hashCode() {
+	// return hstatus.hashCode();
+	// }
+
 	/* Getters & Setters */
-	
+
 	/**
 	 * Mandatory. Connection status.
+	 * 
 	 * @return status. NULL if undefined
 	 */
 	public ConnectionStatus getStatus() {
 		ConnectionStatus status;
 		try {
-			status = ConnectionStatus.constant(hstatus.getInt("status"));
+			status = ConnectionStatus.constant(this.getInt("status"));
 		} catch (Exception e) {
-			status = null;			
+			status = null;
 		}
 		return status;
 	}
 
 	public void setStatus(ConnectionStatus status) {
 		try {
-			if(status == null) {
-				hstatus.remove("status");
+			if (status == null) {
+				this.remove("status");
 			} else {
-				hstatus.put("status", status.value());
+				this.put("status", status.value());
 			}
 		} catch (JSONException e) {
 		}
@@ -115,39 +119,40 @@ public class HStatus implements HJsonObj{
 
 	/**
 	 * Mandatory. Valid only if status = error
+	 * 
 	 * @return error code. NULL if undefined
 	 */
 	public ConnectionError getErrorCode() {
 		ConnectionError errorCode;
 		try {
-			errorCode = ConnectionError.constant(hstatus.getInt("errorCode"));
+			errorCode = ConnectionError.constant(this.getInt("errorCode"));
 		} catch (Exception e) {
 			errorCode = null;
 		}
 		return errorCode;
 	}
 
-	
 	public void setErrorCode(ConnectionError errorCode) {
 		try {
-			if(errorCode == null) {
-				hstatus.remove("errorCode");
+			if (errorCode == null) {
+				this.remove("errorCode");
 			} else {
-				hstatus.put("errorCode", errorCode.value());
+				this.put("errorCode", errorCode.value());
 			}
 		} catch (JSONException e) {
 		}
 	}
-	
+
 	/**
-	 * Error message. Platform dependent (low level layer messages)
-	 * Should only be used for debug
+	 * Error message. Platform dependent (low level layer messages) Should only
+	 * be used for debug
+	 * 
 	 * @return error message. NULL if undefined
 	 */
 	public String getErrorMsg() {
 		String errorMsg;
 		try {
-			errorMsg = hstatus.getString("errorMsg");
+			errorMsg = this.getString("errorMsg");
 		} catch (JSONException e) {
 			errorMsg = null;
 		}
@@ -156,10 +161,10 @@ public class HStatus implements HJsonObj{
 
 	public void setErrorMsg(String errorMsg) {
 		try {
-			if(errorMsg == null) {
-				hstatus.remove("errorMsg");
+			if (errorMsg == null) {
+				this.remove("errorMsg");
 			} else {
-				hstatus.put("errorMsg", errorMsg);
+				this.put("errorMsg", errorMsg);
 			}
 		} catch (JSONException e) {
 		}

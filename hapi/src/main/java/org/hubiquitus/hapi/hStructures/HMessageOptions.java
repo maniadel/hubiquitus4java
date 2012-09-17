@@ -21,6 +21,8 @@ package org.hubiquitus.hapi.hStructures;
 
 import java.util.Calendar;
 
+import org.json.JSONObject;
+
 /**
  * @version 0.5
  * hAPI MessageOption. For more info, see Hubiquitus reference
@@ -35,7 +37,7 @@ public class HMessageOptions {
 	private Boolean _persistent = null;
 	private HLocation location = null;
 	private String author = null;
-	private HJsonObj headers = null;
+	private JSONObject headers = null;
 	private Calendar published = null;
 	private Integer timeout = null;
 	
@@ -118,10 +120,10 @@ public class HMessageOptions {
 	 * The list of headers attached to this message.
 	 * @return Headers. NULL if undefined
 	 */
-	public HJsonObj getHeaders() {
+	public JSONObject getHeaders() {
 		return headers;
 	}
-	public void setHeaders(HJsonObj headers) {
+	public void setHeaders(JSONObject headers) {
 		this.headers = headers;
 	}
 	
