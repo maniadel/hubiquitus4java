@@ -862,7 +862,7 @@ public class HClient {
 	private void notifyMessage(final HMessage message) {
 		try {
 			if (!this.messagesDelegates.isEmpty()
-					&& this.messagesDelegates.containsKey(message.getRef())) {
+					&& this.messagesDelegates.containsKey(HUtil.getApiRef(message.getRef()))) {
 				notifyMessage(message,
 						this.messagesDelegates.get(message.getRef()));
 				if (this.timeoutHashtable.contains(message.getRef())) {
