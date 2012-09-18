@@ -850,12 +850,13 @@ public class HClient {
 	 */
 	private void notifyMessage(final HMessage message) {
 		if (!this.messagesDelegates.isEmpty()
+				&& message.getRef() != null
 				&& this.messagesDelegates.containsKey(HUtil.getApiRef(message
 						.getRef()))) {
 			notifyMessage(message, this.messagesDelegates.get(HUtil
 					.getApiRef(message.getRef())));
-			if (this.timeoutHashtable
-					.containsKey(HUtil.getApiRef(message.getRef()))) {
+			if (this.timeoutHashtable.containsKey(HUtil.getApiRef(message
+					.getRef()))) {
 				Timer timeout = timeoutHashtable.get(HUtil.getApiRef(message
 						.getRef()));
 				if (timeout != null) {
@@ -864,7 +865,8 @@ public class HClient {
 				}
 			}
 
-		} else if(message.getType() != null && !message.getType().equalsIgnoreCase("hresult")){
+		} else if (message.getType() != null
+				&& !message.getType().equalsIgnoreCase("hresult")) {
 			try {
 				if (this.messageDelegate != null) {
 					// return message asynchronously
@@ -987,7 +989,8 @@ public class HClient {
 			try {
 				System.out.println("<<<<<" + jsonData.toString());
 				if (type.equalsIgnoreCase("hmessage")) {
-					notifyMessage(new HMessage(jsonData));
+					HMessage message = new HMessage(jsonData);
+					notifyMessage(message);
 				}
 
 			} catch (Exception e) {
