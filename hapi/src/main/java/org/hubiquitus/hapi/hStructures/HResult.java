@@ -159,11 +159,11 @@ public class HResult extends JSONObject {
 
 	
 	/**
-	 * if result type is JSONObject
+	 * The result type could be JSONObject, JSONArray, String, Boolean, Number.
 	 * 
 	 * @param result
 	 */
-	public void setResult(JSONObject result) {
+	public void setResult(Object result) {
 		try {
 			if (result == null) {
 				this.remove("result");
@@ -173,95 +173,5 @@ public class HResult extends JSONObject {
 		} catch (JSONException e) {
 		}
 	}
-
-	/**
-	 * if result type is JSONArray
-	 * 
-	 * @param result
-	 */
-	public void setResult(JSONArray result) {
-		try {
-			if (result == null) {
-				this.remove("result");
-			} else {
-				this.put("result", result);
-			}
-		} catch (JSONException e) {
-		}
-	}
-
-	/**
-	 * if result type is HJsonObj (i.e. HAlert, HAck ... )
-	 * 
-	 * @param result
-	 */
-	public void setResult(HJsonObj result) {
-		try {
-			if (result == null) {
-				this.remove("result");
-			} else {
-				this.put("result", result.toJSON());
-			}
-		} catch (JSONException e) {
-		}
-	}
-
-	/**
-	 * if result type is String
-	 * 
-	 * @param result
-	 */
-	public void setResult(String result) {
-		try {
-			if (result == null) {
-				this.remove("result");
-			} else {
-				this.put("result", result);
-			}
-		} catch (JSONException e) {
-		}
-	}
-
-	/**
-	 * if result type is Boolean
-	 * 
-	 * @param result
-	 */
-	public void setResult(Boolean result) {
-		try {
-			if (result == null) {
-				this.remove("result");
-			} else {
-				this.put("result", result);
-			}
-		} catch (JSONException e) {
-		}
-	}
-
-	/**
-	 * if result type is int
-	 * 
-	 * @param result
-	 */
-	public void setResult(int result) {
-		try {
-			this.put("result", result);
-		} catch (JSONException e) {
-		}
-	}
-
-	/**
-	 * if result type is double
-	 * 
-	 * @param result
-	 */
-	public void setResult(double result) {
-		try {
-			this.put("result", result);
-		} catch (JSONException e) {
-		}
-	}
-
-	
 
 }

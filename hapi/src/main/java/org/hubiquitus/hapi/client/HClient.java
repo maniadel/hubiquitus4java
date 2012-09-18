@@ -45,12 +45,11 @@ import org.hubiquitus.hapi.transport.HTransportDelegate;
 import org.hubiquitus.hapi.transport.HTransportOptions;
 import org.hubiquitus.hapi.transport.socketio.HTransportSocketio;
 import org.hubiquitus.hapi.util.HUtil;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * @version 0.3 Hubiquitus client, public api
+ * @version 0.5 Hubiquitus client, public api
  */
 
 public class HClient {
@@ -757,7 +756,7 @@ public class HClient {
 	}
 
 	/**
-	 * if result type is JSONObject
+	 * The result type could be JSONObject, JSONArray, String, Boolean, Number.
 	 * 
 	 * @param actor
 	 * @param ref
@@ -768,7 +767,7 @@ public class HClient {
 	 * @throws MissingAttrException
 	 */
 	public HMessage buildResult(String actor, String ref, ResultStatus status,
-			JSONObject result, HMessageOptions options)
+			Object result, HMessageOptions options)
 			throws MissingAttrException {
 		// check for required attributes
 		if (actor == null || actor.length() <= 0) {
@@ -784,10 +783,6 @@ public class HClient {
 			throw new MissingAttrException("status");
 		}
 
-		// check for required attributes
-		if (result == null) {
-			throw new MissingAttrException("result");
-		}
 		HResult hresult = new HResult();
 		hresult.setResult(result);
 		hresult.setStatus(status);
@@ -796,229 +791,7 @@ public class HClient {
 		return hmessage;
 	}
 
-	/**
-	 * if result type is a JSONArray
-	 * 
-	 * @param actor
-	 * @param ref
-	 * @param status
-	 * @param result
-	 * @param options
-	 * @return
-	 * @throws MissingAttrException
-	 */
-	public HMessage buildResult(String actor, String ref, ResultStatus status,
-			JSONArray result, HMessageOptions options)
-			throws MissingAttrException {
-		// check for required attributes
-		if (actor == null || actor.length() <= 0) {
-			throw new MissingAttrException("actor");
-		}
-		// check for required attributes
-		if (ref == null || ref.length() <= 0) {
-			throw new MissingAttrException("ref");
-		}
-
-		// check for required attributes
-		if (status == null) {
-			throw new MissingAttrException("status");
-		}
-
-		// check for required attributes
-		if (result == null) {
-			throw new MissingAttrException("result");
-		}
-		HResult hresult = new HResult();
-		hresult.setResult(result);
-		hresult.setStatus(status);
-		options.setRef(ref);
-		HMessage hmessage = buildMessage(actor, "hResult", hresult, options);
-		return hmessage;
-	}
-
-	/**
-	 * if result type is String
-	 * 
-	 * @param actor
-	 * @param ref
-	 * @param status
-	 * @param result
-	 * @param options
-	 * @return
-	 * @throws MissingAttrException
-	 */
-	public HMessage buildResult(String actor, String ref, ResultStatus status,
-			String result, HMessageOptions options) throws MissingAttrException {
-		// check for required attributes
-		if (actor == null || actor.length() <= 0) {
-			throw new MissingAttrException("actor");
-		}
-		// check for required attributes
-		if (ref == null || ref.length() <= 0) {
-			throw new MissingAttrException("ref");
-		}
-
-		// check for required attributes
-		if (status == null) {
-			throw new MissingAttrException("status");
-		}
-
-		// check for required attributes
-		if (result == null) {
-			throw new MissingAttrException("result");
-		}
-		HResult hresult = new HResult();
-		hresult.setResult(result);
-		hresult.setStatus(status);
-		options.setRef(ref);
-		HMessage hmessage = buildMessage(actor, "hResult", hresult, options);
-		return hmessage;
-	}
-
-	/**
-	 * if result type is Boolean
-	 * 
-	 * @param actor
-	 * @param ref
-	 * @param status
-	 * @param result
-	 * @param options
-	 * @return
-	 * @throws MissingAttrException
-	 */
-	public HMessage buildResult(String actor, String ref, ResultStatus status,
-			Boolean result, HMessageOptions options)
-			throws MissingAttrException {
-		// check for required attributes
-		if (actor == null || actor.length() <= 0) {
-			throw new MissingAttrException("actor");
-		}
-		// check for required attributes
-		if (ref == null || ref.length() <= 0) {
-			throw new MissingAttrException("ref");
-		}
-
-		// check for required attributes
-		if (status == null) {
-			throw new MissingAttrException("status");
-		}
-
-		// check for required attributes
-		if (result == null) {
-			throw new MissingAttrException("result");
-		}
-		HResult hresult = new HResult();
-		hresult.setResult(result);
-		hresult.setStatus(status);
-		options.setRef(ref);
-		HMessage hmessage = buildMessage(actor, "hResult", hresult, options);
-		return hmessage;
-	}
-
-	/**
-	 * if result type is int
-	 * 
-	 * @param actor
-	 * @param ref
-	 * @param status
-	 * @param result
-	 * @param options
-	 * @return
-	 * @throws MissingAttrException
-	 */
-	public HMessage buildResult(String actor, String ref, ResultStatus status,
-			int result, HMessageOptions options) throws MissingAttrException {
-		// check for required attributes
-		if (actor == null || actor.length() <= 0) {
-			throw new MissingAttrException("actor");
-		}
-		// check for required attributes
-		if (ref == null || ref.length() <= 0) {
-			throw new MissingAttrException("ref");
-		}
-
-		// check for required attributes
-		if (status == null) {
-			throw new MissingAttrException("status");
-		}
-
-		HResult hresult = new HResult();
-		hresult.setResult(result);
-		hresult.setStatus(status);
-		options.setRef(ref);
-		HMessage hmessage = buildMessage(actor, "hResult", hresult, options);
-		return hmessage;
-	}
-
-	/**
-	 * if result type is double
-	 * 
-	 * @param actor
-	 * @param ref
-	 * @param status
-	 * @param result
-	 * @param options
-	 * @return
-	 * @throws MissingAttrException
-	 */
-	public HMessage buildResult(String actor, String ref, ResultStatus status,
-			double result, HMessageOptions options) throws MissingAttrException {
-		// check for required attributes
-		if (actor == null || actor.length() <= 0) {
-			throw new MissingAttrException("actor");
-		}
-		// check for required attributes
-		if (ref == null || ref.length() <= 0) {
-			throw new MissingAttrException("ref");
-		}
-
-		// check for required attributes
-		if (status == null) {
-			throw new MissingAttrException("status");
-		}
-
-		HResult hresult = new HResult();
-		hresult.setResult(result);
-		hresult.setStatus(status);
-		options.setRef(ref);
-		HMessage hmessage = buildMessage(actor, "hResult", hresult, options);
-		return hmessage;
-	}
-
-	/**
-	 * if result type is long.
-	 * 
-	 * @param actor
-	 * @param ref
-	 * @param status
-	 * @param result
-	 * @param options
-	 * @return
-	 * @throws MissingAttrException
-	 */
-	public HMessage buildResult(String actor, String ref, ResultStatus status,
-			long result, HMessageOptions options) throws MissingAttrException {
-		// check for required attributes
-		if (actor == null || actor.length() <= 0) {
-			throw new MissingAttrException("actor");
-		}
-		// check for required attributes
-		if (ref == null || ref.length() <= 0) {
-			throw new MissingAttrException("ref");
-		}
-
-		// check for required attributes
-		if (status == null) {
-			throw new MissingAttrException("status");
-		}
-
-		HResult hresult = new HResult();
-		hresult.setResult(result);
-		hresult.setStatus(status);
-		options.setRef(ref);
-		HMessage hmessage = buildMessage(actor, "hResult", hresult, options);
-		return hmessage;
-	}
+	
 
 	/* HTransportCallback functions */
 
