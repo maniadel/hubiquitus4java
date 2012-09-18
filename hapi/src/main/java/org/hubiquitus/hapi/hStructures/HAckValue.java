@@ -17,29 +17,46 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package main;
 
-import javax.swing.JFrame;
+package org.hubiquitus.hapi.hStructures;
 
-/***
- * 
- * @author speed
- * @version 0.3
- * Example of a basic connection/disconnection application
+/**
+ * @version 0.5
+ * Enumeration of different message acknoledgements state.
+ * For more information see Hubiquitus reference
  */
 
-public class SimpleExample {
-
-	public static void main(String[] args) {
-		
-		JFrame window = new JFrame("test");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setSize(1150, 800);
-
-		MainPanel panel = new MainPanel();
-		window.setContentPane(panel);
-		window.setResizable(true);
-		window.setVisible(true);
+public enum HAckValue {
+	UNKNOWN(""),
+	RECV("recv"),
+	READ("read");
+	
+	private String value;
+	
+	private HAckValue(String value) {
+		this.value = value;
 	}
-
+	
+	/**
+	 * @return string equivalent.
+	 */
+	public String value() {
+		return value;
+	}
+	
+	/**
+	 * Get constant for value
+	 * @param value
+	 * @return
+	 */
+	public static HAckValue constant(String value) {
+		HAckValue [] _values = HAckValue.values();
+		HAckValue _value = HAckValue.UNKNOWN;
+		for (int i = 0; i < _values.length; i++) {
+			if (_values[i].value.equals(value)) {
+				_value = _values[i];
+			}
+		}
+		return _value;
+	}
 }

@@ -17,29 +17,38 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package main;
+package org.hubiquitus.hapi.transport;
 
-import javax.swing.JFrame;
+import org.json.JSONObject;
 
-/***
- * 
- * @author speed
- * @version 0.3
- * Example of a basic connection/disconnection application
+/**
+ * @cond internal
+ * @version 0.5
+ * Interface abstracting transport layer
  */
 
-public class SimpleExample {
+public interface HTransport {
 
-	public static void main(String[] args) {
-		
-		JFrame window = new JFrame("test");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setSize(1150, 800);
-
-		MainPanel panel = new MainPanel();
-		window.setContentPane(panel);
-		window.setResizable(true);
-		window.setVisible(true);
-	}
-
+	/**
+	 * transport layer connect
+	 * should connect asynchronously and catch all errors and return them through callback
+	 * @param callback
+	 * @param options
+	 */
+	public void connect(HTransportDelegate callback, HTransportOptions options);
+	
+	/**
+	 * transport layer disconnect
+	 */
+	public void disconnect();
+	
+	/**
+	 * transport the object to send it to the server
+	 * @param object
+	 */
+	public void sendObject(JSONObject object);
 }
+
+/**
+ * @endcond
+ */

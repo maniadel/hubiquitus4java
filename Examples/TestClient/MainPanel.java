@@ -37,76 +37,79 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import org.hubiquitus.hapi.client.HClient;
+import org.hubiquitus.hapi.client.HCommandDelegate;
 import org.hubiquitus.hapi.client.HMessageDelegate;
+import org.hubiquitus.hapi.client.HResultDelegate;
 import org.hubiquitus.hapi.client.HStatusDelegate;
 import org.hubiquitus.hapi.hStructures.ConnectionError;
+import org.hubiquitus.hapi.hStructures.HCommand;
+import org.hubiquitus.hapi.hStructures.HFilterTemplate;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.hStructures.HMessageOptions;
 import org.hubiquitus.hapi.hStructures.HOptions;
+import org.hubiquitus.hapi.hStructures.HResult;
 import org.hubiquitus.hapi.hStructures.HStatus;
 import org.hubiquitus.hapi.util.HJsonDictionnary;
-import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  * 
  * @author speed
- * @version 0.3 The panel for this example
+ * @version 0.3
+ * The panel for this example
  */
 
 @SuppressWarnings("serial")
-public class MainPanel extends JPanel implements HStatusDelegate,
-		HMessageDelegate {
+public class MainPanel extends JPanel implements HStatusDelegate, HMessageDelegate, HCommandDelegate, HResultDelegate  {
 	private HClient client;
 	final MainPanel outerClass = this;
 
 	private HOptions option = new HOptions();
 
-	private JTextField usernameField = new JTextField("u1@localhost");
-	private JTextField passwordField = new JTextField("u1");
-	private JTextField endPointField = new JTextField("http://localhost:8080");
-	private JTextField actorField = new JTextField("#test@localhost");
-	private JTextField messageField = new JTextField("test");
+	private JTextField usernameField = new JTextField("");
+	private JTextField passwordField = new JTextField("");
+	private JTextField endPointField = new JTextField("");
+	private JTextField serverPortField = new JTextField("");
+	private JTextField serverHostField = new JTextField("");
+	private JTextField chidField = new JTextField("test");
+	private JTextField messageField = new JTextField("");
 	private JTextField nbLastMessagesField = new JTextField("");
 	private JTextField convidField = new JTextField("");
 	private JTextField convstateField = new JTextField("");
-	private JTextField relevantField = new JTextField("");
-	private JTextField timeoutField = new JTextField("");
 	private JTextField filterNameField = new JTextField("");
 	private JTextField filterAttrField = new JTextField("");
 	private JTextField filterValueField = new JTextField("");
-
+	
 	private JButton connectButton = new JButton("Connect");
 	private JButton disconnectButton = new JButton("Disconnect");
-	private JButton sendButton = new JButton("send");
-	private JButton createChannelButton = new JButton("createChannel");
+	private JButton hcommandButton = new JButton("hEcho");
 	private JButton subscribeButton = new JButton("subscribe");
 	private JButton unsubscribeButton = new JButton("unsubscribe");
-	// private JButton publishButton = new JButton("publish");
+	private JButton publishButton = new JButton("publish");
 	private JButton getLastMessagesButton = new JButton("getLstMsg");
 	private JButton getSubscriptionsButton = new JButton("getSubs");
 	private JButton getThreadButton = new JButton("getThread");
 	private JButton getThreadsButton = new JButton("getThreads");
-	private JButton pubConvStateButton = new JButton("pubConvState");
+	private JButton pubConvStateButton = new JButton("pubConvState"); 
 	private JButton setFilterButton = new JButton("setFilter");
 	private JButton listFiltersButton = new JButton("listFilters");
-	private JButton unsetFilterButton = new JButton("unsetFilter");
-	private JButton getRelevantMessagesButton = new JButton(
-			"getRelevantMessages");
+	private JButton unsetFilterButton = new JButton("unsetFilter"); 
+	private JButton getRelevantMessagesButton = new JButton("getRelevantMessages"); 
 	private JButton cleanButton = new JButton("Clean");
-
-	// private JRadioButton xmppRadioButton = new JRadioButton("XMPP");
+	
+	
+	private JRadioButton xmppRadioButton = new JRadioButton("XMPP");
 	private JRadioButton socketRadioButton = new JRadioButton("Socket IO");
 	private ButtonGroup buttonGroup = new ButtonGroup();
-
-	private JRadioButton persistentRadioButton = new JRadioButton("persistent");
-	private JRadioButton notPersistentRadioButton = new JRadioButton(
-			"not persistent");
-	private ButtonGroup persistentGroup = new ButtonGroup();
-
-	private JTextArea logArea = new JTextArea(20, 100);
-	private JTextArea statusArea = new JTextArea(1, 90);
-
+	
+	private JRadioButton transientRadioButton = new JRadioButton("transient");
+	private JRadioButton notTransientRadioButton = new JRadioButton("not transient");
+	private ButtonGroup transientGroup = new ButtonGroup();
+	
+	private JTextArea logArea = new JTextArea(30,100);
+	private JTextArea statusArea = new JTextArea(1,90);
+	
 	public MainPanel() {
 		super();
 		initComponents();
@@ -122,15 +125,17 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 	public void initComponents() {
 		BorderLayout layout = new BorderLayout();
 		this.setLayout(layout);
-
+		
+		
+		buttonGroup.add(xmppRadioButton);
 		buttonGroup.add(socketRadioButton);
-		socketRadioButton.setSelected(true);
+		xmppRadioButton.setSelected(true);
+		
+		transientGroup.add(transientRadioButton);
+		transientGroup.add(notTransientRadioButton);
+		transientRadioButton.setSelected(true);
 
-		persistentGroup.add(persistentRadioButton);
-		persistentGroup.add(notPersistentRadioButton);
-		notPersistentRadioButton.setSelected(true);
-
-		// Initialization of Labels,TextFields and RadioButtons
+		//Initialization of Labels,TextFields and RadioButtons
 		JPanel paramsPanel = new JPanel();
 		GridLayout paramsLayout = new GridLayout(16, 2);
 		paramsPanel.setLayout(paramsLayout);
@@ -140,12 +145,12 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 		paramsPanel.add(passwordField);
 		paramsPanel.add(new JLabel("endPoint"));
 		paramsPanel.add(endPointField);
-		// paramsPanel.add(new JLabel("serverHost"));
-		// paramsPanel.add(serverHostField);
-		// paramsPanel.add(new JLabel("serverPort"));
-		// paramsPanel.add(serverPortField);
-		paramsPanel.add(new JLabel("Actor"));
-		paramsPanel.add(actorField);
+		paramsPanel.add(new JLabel("serverHost"));
+		paramsPanel.add(serverHostField);
+		paramsPanel.add(new JLabel("serverPort"));
+		paramsPanel.add(serverPortField);
+		paramsPanel.add(new JLabel("Channel id"));
+		paramsPanel.add(chidField);
 		paramsPanel.add(new JLabel("nbLastMessages"));
 		paramsPanel.add(nbLastMessagesField);
 		paramsPanel.add(new JLabel("Message"));
@@ -154,35 +159,30 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 		paramsPanel.add(convidField);
 		paramsPanel.add(new JLabel("status"));
 		paramsPanel.add(convstateField);
-		paramsPanel.add(new JLabel("relevant"));
-		paramsPanel.add(relevantField);
-		paramsPanel.add(new JLabel("timeout"));
-		paramsPanel.add(timeoutField);
 		paramsPanel.add(new JLabel("Filter Name"));
 		paramsPanel.add(filterNameField);
 		paramsPanel.add(new JLabel("Filter attr"));
 		paramsPanel.add(filterAttrField);
 		paramsPanel.add(new JLabel("Filter value"));
 		paramsPanel.add(filterValueField);
-		paramsPanel.add(persistentRadioButton);
-		paramsPanel.add(notPersistentRadioButton);
-		// paramsPanel.add(xmppRadioButton);
+		paramsPanel.add(transientRadioButton);
+		paramsPanel.add(notTransientRadioButton);
+		paramsPanel.add(xmppRadioButton);
 		paramsPanel.add(socketRadioButton);
-
+		
 		statusArea.setEditable(false);
 		paramsPanel.add(statusArea);
-
-		// Initialization of Buttons
+		
+		//Initialization of Buttons
 		JPanel controlsPanel = new JPanel();
-		GridLayout controlsLayout = new GridLayout(3, 7);
+		GridLayout controlsLayout = new GridLayout(3, 6);
 		controlsPanel.setLayout(controlsLayout);
 		controlsPanel.add(connectButton);
 		controlsPanel.add(disconnectButton);
-		controlsPanel.add(sendButton);
-		controlsPanel.add(createChannelButton);
+		controlsPanel.add(hcommandButton);
 		controlsPanel.add(subscribeButton);
 		controlsPanel.add(unsubscribeButton);
-		// controlsPanel.add(publishButton);
+		controlsPanel.add(publishButton);
 		controlsPanel.add(getLastMessagesButton);
 		controlsPanel.add(getSubscriptionsButton);
 		controlsPanel.add(getThreadButton);
@@ -193,77 +193,73 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 		controlsPanel.add(unsetFilterButton);
 		controlsPanel.add(getRelevantMessagesButton);
 		controlsPanel.add(cleanButton);
-
-		// Initialization of the TextArea
+		
+		
+		//Initialization of the TextArea
 		JPanel consolePanel = new JPanel();
 		logArea.setEditable(false);
 		consolePanel.add(logArea);
-		JScrollPane txtScrol = new JScrollPane(logArea);
+		JScrollPane txtScrol=new JScrollPane(logArea);
 		txtScrol.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		consolePanel.add(txtScrol);
 
-		// Add all in the layout
+		//Add all in the layout
 		this.add(paramsPanel, BorderLayout.NORTH);
 		this.add(controlsPanel, BorderLayout.CENTER);
 		this.add(consolePanel, BorderLayout.SOUTH);
 	}
 
 	/**
-	 * Initialization of the listeners
+	 * Initialization of the listeners 
 	 */
 	public void initListeners() {
 		connectButton.addMouseListener(new ConnectionButtonListener());
 		disconnectButton.addMouseListener(new DisconnectionButtonListener());
-		sendButton.addMouseListener(new SendButtonListener());
-		createChannelButton.addMouseListener(new CreateChannelButtonListener());
+		hcommandButton.addMouseListener(new HCommandButtonListener());
 		subscribeButton.addMouseListener(new SubscribeButtonListener());
 		unsubscribeButton.addMouseListener(new UnsubscribeButtonListener());
-		// publishButton.addMouseListener(new PublishButtonListener());
-		getLastMessagesButton
-				.addMouseListener(new GetLastMessagesButtonListener());
-		getSubscriptionsButton
-				.addMouseListener(new GetSubscriptionButtonListener());
+		publishButton.addMouseListener(new PublishButtonListener());
+		getLastMessagesButton.addMouseListener(new GetLastMessagesButtonListener());
+		getSubscriptionsButton.addMouseListener(new GetSubscriptionButtonListener());
 		getThreadButton.addMouseListener(new GetThreadButtonListener());
 		getThreadsButton.addMouseListener(new GetThreadsButtonListener());
 		pubConvStateButton.addMouseListener(new PubConvStateButtonListener());
 		setFilterButton.addMouseListener(new SetFilterListener());
 		listFiltersButton.addMouseListener(new ListFiltersListener());
 		unsetFilterButton.addMouseListener(new UnsetFilterListener());
-		getRelevantMessagesButton
-				.addMouseListener(new GetRelevantMessagesListener());
+		getRelevantMessagesButton.addMouseListener(new GetRelevantMessagesListener());
 		cleanButton.addMouseListener(new CleanButtonListener());
-
+		
 	}
-
+	
 	/**
 	 * Add a text to the TextArea
-	 * 
 	 * @param text
 	 */
 	public void addTextArea(String text) {
-		this.logArea.setText(text);
+		String tempTxt = this.logArea.getText() + "\n" + text;
+		this.logArea.setText(tempTxt);
 	}
-
+	
 	/**
 	 * Clean the TextArea
 	 */
 	public void cleanTextArea() {
 		this.logArea.setText("clean");
 	}
-
+	
 	/**
-	 * Change the status
-	 * 
+	 * Change the status 
 	 * @param text
 	 */
 	public void setStatusArea(String text) {
 		this.statusArea.setText(text);
 	}
-
+	
 	// Listener of button connection
 	class ConnectionButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
-
+			
 			String endpoint = endPointField.getText();
 			option.getEndpoints().clear();
 			if (endpoint == null || endpoint.equalsIgnoreCase("")) {
@@ -273,13 +269,20 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 				endpoints.add(endpoint);
 				option.setEndpoints(endpoints);
 			}
-
-			if (socketRadioButton.isSelected())
+			String serverHost = serverHostField.getText();
+			if(serverHost != null) {
+				option.setServerHost(serverHost);
+			}
+			String serverPort = serverPortField.getText();
+			if(serverPort != null) {
+				option.setServerPort(serverPort);
+			}
+			
+			if(socketRadioButton.isSelected())
 				option.setTransport("socketio");
 			else
 				option.setTransport("xmpp");
-			client.connect(usernameField.getText(), passwordField.getText(),
-					option);
+			client.connect(usernameField.getText(), passwordField.getText(), option);
 		}
 	}
 
@@ -291,258 +294,229 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 	}
 
 	// Listener of button hcommand
-	class SendButtonListener extends MouseAdapter {
+	class HCommandButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
 			HJsonDictionnary jsonObj = new HJsonDictionnary();
-
-			HMessageOptions msgOptions = new HMessageOptions();
-
-			if (persistentRadioButton.isSelected())
-				msgOptions.setPersistent(true);
-			else
-				msgOptions.setPersistent(false);
-			if (!relevantField.getText().isEmpty()) {
-				String temp = relevantField.getText();
-				int millisecond = Integer.parseInt(temp);
-				Calendar nowDate = new GregorianCalendar();
-				nowDate.add(Calendar.MILLISECOND, millisecond);
-				msgOptions.setRelevance(nowDate);
-			}
-			if (!timeoutField.getText().isEmpty()) {
-				String temp = timeoutField.getText();
-				int timeout = Integer.parseInt(temp);
-				msgOptions.setTimeout(timeout);
-			}
-
 			try {
-				jsonObj.put("text", messageField.getText());
-				HMessage message = client.buildMessage(actorField.getText(),
-						"text", messageField.getText(), msgOptions);
-				client.send(message, outerClass);
+				jsonObj.put("text",  messageField.getText());
+				HCommand cmd = new HCommand("hnode@hub.novediagroup.com","hecho",jsonObj);
+				client.command(cmd,outerClass);
 			} catch (Exception e) {
 				e.printStackTrace();
-			}
+			}	
 		}
 	}
-
-	class CreateChannelButtonListener extends MouseAdapter {
-		public void mouseClicked(MouseEvent event) {
-			JSONObject channelToCreate = new JSONObject();
-
-			try {
-				channelToCreate.put("type", "channel");
-				channelToCreate.put("actor", actorField.getText());
-				channelToCreate.put("owner", usernameField.getText());
-				JSONArray jsonArray = new JSONArray();
-				jsonArray.put(usernameField.getText());
-				channelToCreate.put("subscribers", jsonArray);
-				channelToCreate.put("active", true);
-				HMessage message = client.buildCommand("hnode@localhost",
-						"hcreateupdatechannel", channelToCreate, null);
-				client.send(message, outerClass);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
 	// Listener of button clean
 	class CleanButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
 			cleanTextArea();
 		}
 	}
-
+	
 	// Listener of button subscribe
 	class SubscribeButtonListener extends MouseAdapter {
-		
 		public void mouseClicked(MouseEvent event) {
-			client.subscribe(actorField.getText(), outerClass);
+			client.subscribe(chidField.getText(),outerClass);
 		}
 	}
-
+	
 	// Listener of button unsubscribe
 	class UnsubscribeButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
-			client.unsubscribe(actorField.getText(), outerClass);
+			client.unsubscribe(chidField.getText(),outerClass);
 		}
 	}
-
-	// // Listener of button publish
-	// class PublishButtonListener extends MouseAdapter {
-	// public void mouseClicked(MouseEvent event) {
-	// HMessage message = new HMessage();
-	// message.setPublisher(usernameField.getText());
-	// message.setActor(actorField.getText());
-	// message.setPublished(new GregorianCalendar());
-	// message.setType("obj");
-	//
-	// if (persistentRadioButton.isSelected())
-	// message.setPersistent(true);
-	// else
-	// message.setPersistent(false);
-	//
-	// HJsonDictionnary payload = new HJsonDictionnary();
-	// payload.put("text", messageField.getText());
-	// message.setPayload(payload);
-	// client.send(message, outerClass);
-	// }
-	// }
-
+	
+	// Listener of button publish
+	class PublishButtonListener extends MouseAdapter {
+		public void mouseClicked(MouseEvent event) {
+			HMessage message = new HMessage();
+			message.setPublisher(usernameField.getText());
+			message.setChid(chidField.getText());
+			message.setPublished(new GregorianCalendar());
+			message.setType("obj");
+			
+			if(transientRadioButton.isSelected())
+				message.setTransient(true);
+			else
+				message.setTransient(false);
+			
+			HJsonDictionnary payload = new HJsonDictionnary();
+			payload.put("text", messageField.getText());
+			message.setPayload(payload);
+			client.publish(message,outerClass);
+		}
+	}
+	
 	// Listener of button publish
 	class GetLastMessagesButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
-			String actor = actorField.getText();
+			String chid = chidField.getText();
 			try {
-				int nbLastMessage = Integer.parseInt(nbLastMessagesField
-						.getText());
-				if (nbLastMessage > 0) {
-					client.getLastMessages(actor, nbLastMessage, outerClass);
+				int nbLastMessage = Integer.parseInt(nbLastMessagesField.getText());
+				if(nbLastMessage > 0) {
+					client.getLastMessages(chid, nbLastMessage,outerClass);
 				} else {
-					client.getLastMessages(actor, outerClass);
+					client.getLastMessages(chid,outerClass);
 				}
 			} catch (Exception e) {
-				client.getLastMessages(actor, outerClass);
+				client.getLastMessages(chid,outerClass);
 			}
 		}
 	}
-
-	// Listener of button getsubscriptions
+	
+	//Listener of button getsubscriptions
 	class GetSubscriptionButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
 			client.getSubscriptions(outerClass);
 		}
 	}
+	
 
-	// Listener of button getThread
+	//Listener of button getThread
 	class GetThreadButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
-			String actor = actorField.getText();
+			String chid = chidField.getText();
 			String convid = convidField.getText();
-			try {
-				client.getThread(actor, convid, outerClass);
+			try{
+				client.getThread(chid, convid, outerClass);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
-
-	// Listener of button getThreads
+	
+	//Listener of button getThreads 
 	class GetThreadsButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
-			String actor = actorField.getText();
+			String chid = chidField.getText();
 			String status = convstateField.getText();
-			try {
-				client.getThreads(actor, status, outerClass);
+			try{
+				client.getThreads(chid, status, outerClass);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
-
-	// Listener of button pubConvState
+	
+	//Listener of button getsubscriptions
 	class PubConvStateButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
-			String actor = actorField.getText();
+			String chid = chidField.getText();
 			String convid = convidField.getText();
 			String status = convstateField.getText();
 			HMessageOptions msgOptions = new HMessageOptions();
 
-			if (persistentRadioButton.isSelected())
-				msgOptions.setPersistent(true);
+			if(transientRadioButton.isSelected())
+				msgOptions.setTransient(true);
 			else
-				msgOptions.setPersistent(false);
-
-			try {
-				HMessage pubMsg = client.buildConvState(actor, convid, status,
-						msgOptions);
-				client.send(pubMsg, outerClass);
+				msgOptions.setTransient(false);
+			
+			try{
+				HMessage pubMsg = client.buildConvState(chid, convid, status, msgOptions);
+				client.publish(pubMsg, outerClass);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
-
-	// Listener of button setFilter
+	
+	//Listener of button setFilter
 	class SetFilterListener extends MouseAdapter {
-		// public void mouseClicked(MouseEvent event) {
-		// String actor = actorField.getText();
-		// String filterName = filterNameField.getText();
-		// String filterAttr = filterAttrField.getText();
-		// String filterValue = filterValueField.getText();
-		//
-		// JSONObject jsonObj = new JSONObject();
-		// System.out.println("filter Attr : " + filterAttr + "filter valu : " +
-		// filterValue);
-		// try {
-		// jsonObj.put(filterAttr, filterValue);
-		// } catch (JSONException e) {
-		// e.printStackTrace();
-		// }
-		// HMessage template = new HMessage(jsonObj);
-		// HFilterTemplate filter = new HFilterTemplate();
-		// filter.setChid(actor);
-		// filter.setName(filterName);
-		// filter.setTemplate(template);
-		// client.setFilter(filter, outerClass);
-		// }
-	}
-
-	// Listener of button listerFilter
-	class ListFiltersListener extends MouseAdapter {
-		// public void mouseClicked(MouseEvent event) {
-		// String actor = chidField.getText();
-		// if(actor == "")
-		// client.listFilters(null, outerClass);
-		// else
-		// client.listFilters(actor, outerClass);
-		// }
-	}
-
-	// Listener of button unsetFilter
-	class UnsetFilterListener extends MouseAdapter {
-		// public void mouseClicked(MouseEvent event) {
-		// String actor = chidField.getText();
-		// String filterName = filterNameField.getText();
-		// client.unsetFilter(filterName,actor,outerClass);
-		// }
-	}
-
-	// Listener of button getRelevantMessages
-	class GetRelevantMessagesListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
-			String actor = actorField.getText();
-			client.getRelevantMessages(actor, outerClass);
+			String chid = chidField.getText();
+			String filterName = filterNameField.getText();
+			String filterAttr = filterAttrField.getText();
+			String filterValue = filterValueField.getText();
+			
+			JSONObject jsonObj = new JSONObject();
+			System.out.println("filter Attr : " + filterAttr + "filter valu : " + filterValue);
+			try {
+				jsonObj.put(filterAttr, filterValue);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			HMessage template = new HMessage(jsonObj);
+			HFilterTemplate filter = new HFilterTemplate();
+			filter.setChid(chid);
+			filter.setName(filterName);
+			filter.setTemplate(template);
+			client.setFilter(filter, outerClass);
 		}
 	}
-
+	
+	//Listener of button listerFilter
+	class ListFiltersListener extends MouseAdapter {
+		public void mouseClicked(MouseEvent event) {
+			String chid = chidField.getText();
+			if(chid  == "")
+				client.listFilters(null, outerClass);
+			else
+				client.listFilters(chid, outerClass);
+		}
+	}
+	
+	//Listener of button unsetFilter
+	class UnsetFilterListener extends MouseAdapter {
+		public void mouseClicked(MouseEvent event) {
+			String chid = chidField.getText();
+			String filterName = filterNameField.getText();
+			client.unsetFilter(filterName,chid,outerClass);
+		}
+	}
+	
+	//Listener of button getRelevantMessages
+	class GetRelevantMessagesListener extends MouseAdapter {
+		public void mouseClicked(MouseEvent event) {
+			String chid = chidField.getText();
+			client.getRelevantMessages(chid,outerClass);
+		}	
+	}
+	
+	
 	/* Override for Delegate */
+	
+	@Override
+	public void onResult(HResult result) {
+		this.addTextArea(result.toString());		
+	}
 
 	@Override
 	public void onMessage(HMessage message) {
-		String txtComplete = this.logArea.getText() + "\n" + message.toString();
-		if (message.getPayload() != null)
-			txtComplete += "\n" + "Payload >>>>>> "
-					+ message.getPayload().toString();
-		this.addTextArea(txtComplete);
+		Calendar date  = message.getPublished();
+		Calendar dateNow = new GregorianCalendar();
+		System.out.println("nowdate : " + dateNow.toString());
+		System.out.println("date : " + date.toString());
+		this.addTextArea(message.toString());	
 	}
 
 	@Override
 	public void onStatus(HStatus status) {
 		this.setStatusArea("hstatus");
 		this.addTextArea(status.toString());
-		if (status.getErrorCode() == ConnectionError.NO_ERROR
-				|| status.getErrorMsg() == null) {
+		if(status.getErrorCode() == ConnectionError.NO_ERROR || status.getErrorMsg() == null) {
 			this.setStatusArea(status.getStatus().toString());
 		} else {
-			this.setStatusArea(status.getStatus().toString() + " : "
-					+ status.getErrorMsg());
+			this.setStatusArea(status.getStatus().toString() + " : " + status.getErrorMsg() );
 		}
 	}
-
+	
+	@Override
+	public void onCommand(HCommand command) {
+		this.addTextArea(command.toString());
+	}
+	
+	
+	
+	
 	/* Getters & Setters */
-	public void setTextArea(String text) {
+	public void setTextArea(String text){
 		this.logArea.setText(text);
 	}
 
+	
+
+	
+	
+	
 }

@@ -17,29 +17,45 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package main;
+package org.hubiquitus.hapi.hStructures;
 
-import javax.swing.JFrame;
-
-/***
- * 
- * @author speed
- * @version 0.3
- * Example of a basic connection/disconnection application
+/**
+ * @version 0.5
+ * hResult status codes. Returned on all action
+ * For more information see Hubiquitus reference
  */
 
-public class SimpleExample {
-
-	public static void main(String[] args) {
-		
-		JFrame window = new JFrame("test");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setSize(1150, 800);
-
-		MainPanel panel = new MainPanel();
-		window.setContentPane(panel);
-		window.setResizable(true);
-		window.setVisible(true);
+public enum ResultStatus {
+	
+	NO_ERROR (0),
+	TECH_ERROR (1),
+	NOT_CONNECTED (3),
+	NOT_AUTHORIZED (5),
+	MISSING_ATTR (6),
+	INVALID_ATTR (7),
+	NOT_AVAILABLE (9),
+	EXEC_TIMEOUT (10);
+	
+	private int value;
+	
+	private ResultStatus(int value) {
+		this.value = value;
 	}
-
+	
+	/**
+	 * @return int equivalent.
+	 */
+	public int value() {
+		return value;
+	}
+	
+	/**
+	 * Get constant for value
+	 * @param value
+	 * @return
+	 */
+	public static ResultStatus constant(int value) {
+		ResultStatus [] _values = ResultStatus.values();
+		return _values[value];
+	}
 }

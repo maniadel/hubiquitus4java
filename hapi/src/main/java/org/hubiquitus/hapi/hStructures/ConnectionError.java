@@ -17,29 +17,46 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package main;
+package org.hubiquitus.hapi.hStructures;
 
-import javax.swing.JFrame;
-
-/***
- * 
- * @author speed
- * @version 0.3
- * Example of a basic connection/disconnection application
+/**
+ * @version 0.5
+ * Enumeration of different connection errors take by the client.
+ * For more information see Hubiquitus reference
  */
 
-public class SimpleExample {
-
-	public static void main(String[] args) {
-		
-		JFrame window = new JFrame("test");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setSize(1150, 800);
-
-		MainPanel panel = new MainPanel();
-		window.setContentPane(panel);
-		window.setResizable(true);
-		window.setVisible(true);
+public enum ConnectionError {
+	NO_ERROR(0),
+	JID_MALFORMAT(1),
+	CONN_TIMEOUT(2),
+	AUTH_FAILED(3),
+	ATTACH_FAILED(4),
+	ALREADY_CONNECTED(5),
+	TECH_ERROR(6),
+	NOT_CONNECTED(7),
+	CONN_PROGRESS(8);
+	
+	private int value;
+	
+	private ConnectionError(int value) {
+		this.value = value;
 	}
-
+	
+	/**
+	 * @return int equivalent.
+	 */
+	public int value() {
+		return value;
+	}
+	
+	/**
+	 * Get constant for value
+	 * @param value
+	 * @return
+	 */
+	public static ConnectionError constant(int value) {
+		ConnectionError [] _values = ConnectionError.values();
+		return _values[value];
+	}
+	
 }

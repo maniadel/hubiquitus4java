@@ -17,29 +17,35 @@
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package main;
+package org.hubiquitus.hapi.hStructures;
 
-import javax.swing.JFrame;
+import org.json.JSONObject;
 
-/***
- * 
- * @author speed
- * @version 0.3
- * Example of a basic connection/disconnection application
+/**
+ * @version 0.5
+ * JSON serializable interface for hstructures
+ * Should be implemented by all hstructures
  */
 
-public class SimpleExample {
-
-	public static void main(String[] args) {
-		
-		JFrame window = new JFrame("test");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setSize(1150, 800);
-
-		MainPanel panel = new MainPanel();
-		window.setContentPane(panel);
-		window.setResizable(true);
-		window.setVisible(true);
-	}
-
+public interface HJsonObj {
+	
+	/**	
+	 * @return Object serialize to JSon
+	 */
+	public JSONObject toJSON();
+	
+	/**
+	 * Deserialize object from Json
+	 * @param jsonObj
+	 */
+	public void fromJSON(JSONObject jsonObj);
+	
+	/**
+	 * @return Type of the HJsonObj
+	 */
+	public String getHType();
+	
+	public boolean equals(Object obj);
+	public int hashCode();
+	public String toString();
 }

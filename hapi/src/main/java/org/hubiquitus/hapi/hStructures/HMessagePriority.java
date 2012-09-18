@@ -16,30 +16,41 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Hubiquitus.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.hubiquitus.hapi.hStructures;
 
-package main;
-
-import javax.swing.JFrame;
-
-/***
- * 
- * @author speed
- * @version 0.3
- * Example of a basic connection/disconnection application
+/**
+ * @version 0.5
+ * Enumeration of different Message priority.
+ * For more information see Hubiquitus reference
  */
-
-public class SimpleExample {
-
-	public static void main(String[] args) {
-		
-		JFrame window = new JFrame("test");
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setSize(1150, 800);
-
-		MainPanel panel = new MainPanel();
-		window.setContentPane(panel);
-		window.setResizable(true);
-		window.setVisible(true);
+public enum HMessagePriority {
+	TRACE(0),
+	INFO(1),
+	WARNING(2),
+	ALERT(3),
+	CRITICAL(4),
+	PANIC(5);
+	
+	private int value;
+	
+	private HMessagePriority(int value) {
+		this.value = value;
 	}
-
+	
+	/**
+	 * @return int equivalent.
+	 */
+	public int value() {
+		return value;
+	}
+	
+	/**
+	 * Get constant for value
+	 * @param value
+	 * @return
+	 */
+	public static HMessagePriority constant(int value) {
+		HMessagePriority [] _values = HMessagePriority.values();
+		return _values[value];
+	}
 }
