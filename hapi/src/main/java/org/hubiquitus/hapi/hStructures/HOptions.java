@@ -69,7 +69,7 @@ public class HOptions implements Cloneable {
 	/* Getters & Setters */
 
 	/**
-	 * Transport layer used to connect to hNode (ie : xmpp, socketio)
+	 * Transport layer used to connect to hNode (ie : socketio)
 	 */
 	public String getTransport() {
 		return transport;
@@ -81,10 +81,7 @@ public class HOptions implements Cloneable {
 
 	}
 
-	/**
-	 * Only valid if transport = xmpp hNode gateway endpoints formated as
-	 * domain:port/path (by default : localhost:8080)
-	 */
+	
 	public List<String> getEndpoints() {
 		return new ArrayList<String>(this.endpoints);
 	}
