@@ -19,6 +19,7 @@
 
 package org.hubiquitus.hapi.client;
 
+import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.Random;
 import java.util.Timer;
@@ -81,6 +82,7 @@ public class HClient {
 	private Timer timeoutTimer = null;
 
 	public HClient() {
+		options = new HOptions();
 		transportOptions = new HTransportOptions();
 	}
 
@@ -267,6 +269,7 @@ public class HClient {
 				timeoutHashtable.put(message.getMsgid(), timeoutTimer);
 			}
 		}
+		message.setSent(GregorianCalendar.getInstance());
 		transport.sendObject(message);
 		System.out.println(">>>>" + message.toString());
 	}
@@ -290,6 +293,7 @@ public class HClient {
 		} catch (MissingAttrException e) {
 			e.printStackTrace();
 		}
+		cmdMessage.setTimeout(options.getTimeout());
 		send(cmdMessage, messageDelegate);
 	}
 
@@ -312,6 +316,7 @@ public class HClient {
 		} catch (MissingAttrException e) {
 			e.printStackTrace();
 		}
+		cmdMessage.setTimeout(options.getTimeout());
 		send(cmdMessage, messageDelegate);
 	}
 
@@ -349,6 +354,7 @@ public class HClient {
 		} catch (MissingAttrException e) {
 			e.printStackTrace();
 		}
+		cmdMessage.setTimeout(options.getTimeout());
 		send(cmdMessage, messageDelegate);
 	}
 
@@ -381,6 +387,7 @@ public class HClient {
 		} catch (MissingAttrException e) {
 			e.printStackTrace();
 		}
+		cmdMessage.setTimeout(options.getTimeout());
 		this.send(cmdMessage, messageDelegate);
 	}
 
@@ -422,13 +429,14 @@ public class HClient {
 			e.printStackTrace();
 		}
 
-		HMessage msgCommand = null;
+		HMessage cmdMessage = null;
 		try {
-			msgCommand = this.buildCommand(actor, cmdName, params, null);
+			cmdMessage = this.buildCommand(actor, cmdName, params, null);
 		} catch (MissingAttrException e) {
 			e.printStackTrace();
 		}
-		this.send(msgCommand, messageDelegate);
+		cmdMessage.setTimeout(options.getTimeout());
+		this.send(cmdMessage, messageDelegate);
 	}
 
 	/**
@@ -473,6 +481,7 @@ public class HClient {
 		} catch (MissingAttrException e) {
 			e.printStackTrace();
 		}
+		cmdMessage.setTimeout(options.getTimeout());
 		this.send(cmdMessage, messageDelegate);
 	}
 
@@ -505,6 +514,7 @@ public class HClient {
 		} catch (MissingAttrException e) {
 			e.printStackTrace();
 		}
+		cmdMessage.setTimeout(options.getTimeout());
 		this.send(cmdMessage, messageDelegate);
 	}
 
