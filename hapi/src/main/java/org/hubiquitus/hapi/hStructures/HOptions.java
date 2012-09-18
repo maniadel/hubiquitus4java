@@ -34,6 +34,7 @@ public class HOptions implements Cloneable {
 
 	private String transport = "socketio";
 	private List<String> endpoints = null;
+	private int timeout = 30000;
 
 	public HOptions() {
 		setEndpoints(null);
@@ -93,6 +94,14 @@ public class HOptions implements Cloneable {
 			this.endpoints = new ArrayList<String>();
 			this.endpoints.add("http://localhost:8080/");
 		}
+	}
+	
+	public int getTimeout(){
+		return this.timeout;
+	}
+	
+	public void setTimeout(int timeOut){
+		this.timeout = timeOut;
 	}
 
 

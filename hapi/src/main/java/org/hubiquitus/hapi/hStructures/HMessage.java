@@ -32,7 +32,6 @@ import org.json.JSONObject;
 
 public class HMessage extends JSONObject {
 
-
 	public HMessage() {
 		super();
 	}
@@ -516,9 +515,9 @@ public class HMessage extends JSONObject {
 		return payload;
 	}
 
-
 	/**
 	 * if payload type is HAlert. if not return null.
+	 * 
 	 * @return HAlert. NULL if undefined
 	 */
 	public HAlert getPayloadAsHAlert() {
@@ -533,9 +532,10 @@ public class HMessage extends JSONObject {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * if payload type is HAck, if not return null.
+	 * 
 	 * @return HAck. Null if undefined.
 	 */
 	public HAck getPayloadAsHAck() {
@@ -550,9 +550,10 @@ public class HMessage extends JSONObject {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * if payload is HMeasure, if not return null.
+	 * 
 	 * @return HMeasure. Null if undefined.
 	 */
 	public HMeasure getPayloadAsHmeasure() {
@@ -570,12 +571,14 @@ public class HMessage extends JSONObject {
 
 	/**
 	 * if payload is HConvState, if not return null.
+	 * 
 	 * @return HConvState. Null if undefined.
 	 */
 	public HConvState getPayloadAsHConvState() {
 		try {
 			if (this.getType().toLowerCase().equalsIgnoreCase("hconvstate")) {
-				HConvState hconvstate = new HConvState(this.getJSONObject("payload"));
+				HConvState hconvstate = new HConvState(
+						this.getJSONObject("payload"));
 				return hconvstate;
 			} else {
 				return null;
@@ -584,9 +587,10 @@ public class HMessage extends JSONObject {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * if payload is HResult, if not return null.
+	 * 
 	 * @return HResult. Null if undefined.
 	 */
 	public HResult getPayloadAsHResult() {
@@ -601,9 +605,10 @@ public class HMessage extends JSONObject {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * if payload is HCommand, if not return null.
+	 * 
 	 * @return HCommand. Null if undefined.
 	 */
 	public HCommand getPayloadAsHCommand() {
@@ -618,9 +623,6 @@ public class HMessage extends JSONObject {
 			return null;
 		}
 	}
-
-	
-	
 
 	/**
 	 * Payload type could be JSONObject, JSONArray, String, Boolean, Number
@@ -638,7 +640,6 @@ public class HMessage extends JSONObject {
 			e.printStackTrace();
 		}
 	}
-	
 
 	/**
 	 * Since v0.5
@@ -666,6 +667,39 @@ public class HMessage extends JSONObject {
 				this.remove("timeout");
 			} else {
 				this.put("timeout", timeout);
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Calendar getSent() {
+		Calendar sent;
+		try {
+			sent = (DateISO8601.toCalendar(this.getString("sent")));
+		} catch (JSONException e) {
+			sent = null;
+		}
+		return sent;
+	}
+
+	/**
+	 * Set by theAPI when sending the message. As the published attribute can
+	 * contain the original creation date of the information know by the author,
+	 * this attribute contains the creation datetime of the hMessage
+	 * 
+	 * @param sent
+	 */
+	public void setSent(Calendar sent) {
+		try {
+			if (sent == null) {
+				this.remove("sent");
+			} else {
+				this.put("sent", DateISO8601.fromCalendar(sent));
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
