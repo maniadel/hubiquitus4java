@@ -849,45 +849,39 @@ public class HClient {
 	 * @param message
 	 */
 	private void notifyMessage(final HMessage message) {
-		try {
-			if (!this.messagesDelegates.isEmpty()
-					&& this.messagesDelegates.containsKey(HUtil
-							.getApiRef(message.getRef()))) {
-				notifyMessage(message, this.messagesDelegates.get(HUtil
-						.getApiRef(message.getRef())));
-				if (this.timeoutHashtable.contains(HUtil.getApiRef(message
+		if (!this.messagesDelegates.isEmpty()
+				&& this.messagesDelegates.containsKey(HUtil.getApiRef(message
 						.getRef()))) {
-					Timer timeout = timeoutHashtable.get(HUtil
-							.getApiRef(message.getRef()));
-					if (timeout != null) {
-						timeout.cancel();
-						timeout = null;
-					}
-				}
-
-			} else {
-				try {
-					if (this.messageDelegate != null) {
-
-						// return message asynchronously
-						(new Thread(new Runnable() {
-							public void run() {
-								try {
-									messageDelegate.onMessage(message);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-						})).start();
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
+			notifyMessage(message, this.messagesDelegates.get(HUtil
+					.getApiRef(message.getRef())));
+			if (this.timeoutHashtable
+					.containsKey(HUtil.getApiRef(message.getRef()))) {
+				Timer timeout = timeoutHashtable.get(HUtil.getApiRef(message
+						.getRef()));
+				if (timeout != null) {
+					timeout.cancel();
+					timeout = null;
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
+		} else if(message.getType() != null && !message.getType().equalsIgnoreCase("hresult")){
+			try {
+				if (this.messageDelegate != null) {
+					// return message asynchronously
+					(new Thread(new Runnable() {
+						public void run() {
+							try {
+								messageDelegate.onMessage(message);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					})).start();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**

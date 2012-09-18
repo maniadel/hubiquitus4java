@@ -318,7 +318,7 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 				jsonObj.put("text", messageField.getText());
 				HMessage message = client.buildMessage(actorField.getText(),
 						"text", messageField.getText(), msgOptions);
-				client.send(message, outerClass);
+				client.send(message, null);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -456,6 +456,7 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 			try {
 				HMessage pubMsg = client.buildConvState(actor, convid, status,
 						msgOptions);
+				pubMsg.setTimeout(30000);
 				client.send(pubMsg, outerClass);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -520,7 +521,8 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 
 	@Override
 	public void onMessage(HMessage message) {
-		String txtComplete = this.logArea.getText() + "\n" + message.toString();
+		String txtComplete = this.logArea.getText() + "\n" +  "CallBack !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! \n";
+		txtComplete +=message.toString();
 		if (message.getPayload() != null)
 			txtComplete += "\n" + "Payload >>>>>> "
 					+ message.getPayload().toString();
