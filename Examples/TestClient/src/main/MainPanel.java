@@ -24,8 +24,6 @@ import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -45,6 +43,7 @@ import org.hubiquitus.hapi.hStructures.HMessageOptions;
 import org.hubiquitus.hapi.hStructures.HOptions;
 import org.hubiquitus.hapi.hStructures.HStatus;
 import org.hubiquitus.hapi.util.HJsonDictionnary;
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -304,8 +303,8 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 			if (!relevantField.getText().isEmpty()) {
 				String temp = relevantField.getText();
 				int millisecond = Integer.parseInt(temp);
-				Calendar nowDate = new GregorianCalendar();
-				nowDate.add(Calendar.MILLISECOND, millisecond);
+			    DateTime nowDate = new DateTime();
+				nowDate.plusMillis(millisecond);
 				msgOptions.setRelevance(nowDate);
 			}
 			if (!timeoutField.getText().isEmpty()) {

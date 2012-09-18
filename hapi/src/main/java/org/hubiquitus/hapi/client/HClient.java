@@ -19,7 +19,6 @@
 
 package org.hubiquitus.hapi.client;
 
-import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.Random;
 import java.util.Timer;
@@ -46,6 +45,7 @@ import org.hubiquitus.hapi.transport.HTransportDelegate;
 import org.hubiquitus.hapi.transport.HTransportOptions;
 import org.hubiquitus.hapi.transport.socketio.HTransportSocketio;
 import org.hubiquitus.hapi.util.HUtil;
+import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -269,7 +269,7 @@ public class HClient {
 				timeoutHashtable.put(message.getMsgid(), timeoutTimer);
 			}
 		}
-		message.setSent(GregorianCalendar.getInstance());
+		message.setSent(new DateTime());
 		transport.sendObject(message);
 		System.out.println(">>>>" + message.toString());
 	}

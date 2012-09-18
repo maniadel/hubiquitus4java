@@ -19,8 +19,6 @@
 
 package org.hubiquitus.hapi.test;
 
-import java.util.Calendar;
-
 import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hapi.exceptions.MissingAttrException;
 import org.hubiquitus.hapi.hStructures.HAck;
@@ -32,7 +30,7 @@ import org.hubiquitus.hapi.hStructures.HMeasure;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.hStructures.HMessageOptions;
 import org.hubiquitus.hapi.hStructures.HMessagePriority;
-import org.hubiquitus.hapi.util.DateISO8601;
+import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -68,8 +66,7 @@ public class HBuilderTest {
 
 		hmessageOption.setPriority(HMessagePriority.INFO);
 
-		String dateIso = DateISO8601.now();
-		Calendar date = DateISO8601.toCalendar(dateIso);
+		DateTime date = new DateTime();
 		hmessageOption.setRelevance(date);
 
 		hmessageOption.setPersistent(false);
@@ -88,6 +85,7 @@ public class HBuilderTest {
 			Assert.fail();
 		}
 
+		
 		Assert.assertEquals(hmessage.getAuthor(), "me");
 		Assert.assertEquals(hmessage.getActor(), "chid:123456789");
 		Assert.assertEquals(hmessage.getConvid(), "convid:123456789");
@@ -129,8 +127,7 @@ public class HBuilderTest {
 
 		hmessageOption.setPriority(HMessagePriority.INFO);
 
-		String dateIso = DateISO8601.now();
-		Calendar date = DateISO8601.toCalendar(dateIso);
+		DateTime date = new DateTime();
 		hmessageOption.setRelevance(date);
 
 		hmessageOption.setPersistent(false);
@@ -176,8 +173,7 @@ public class HBuilderTest {
 
 		hmessageOption.setPriority(HMessagePriority.INFO);
 
-		String dateIso = DateISO8601.now();
-		Calendar date = DateISO8601.toCalendar(dateIso);
+		DateTime date = new DateTime();
 		hmessageOption.setRelevance(date);
 
 		hmessageOption.setPersistent(false);
@@ -224,8 +220,7 @@ public class HBuilderTest {
 
 		hmessageOption.setPriority(HMessagePriority.INFO);
 
-		String dateIso = DateISO8601.now();
-		Calendar date = DateISO8601.toCalendar(dateIso);
+		DateTime date = new DateTime();
 		hmessageOption.setRelevance(date);
 
 		hmessageOption.setPersistent(false);
@@ -272,8 +267,7 @@ public class HBuilderTest {
 
 		hmessageOption.setPriority(HMessagePriority.INFO);
 
-		String dateIso = DateISO8601.now();
-		Calendar date = DateISO8601.toCalendar(dateIso);
+		DateTime date = new DateTime();
 		hmessageOption.setRelevance(date);
 
 		hmessageOption.setPersistent(false);

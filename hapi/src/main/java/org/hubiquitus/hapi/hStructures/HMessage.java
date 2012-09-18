@@ -19,9 +19,7 @@
 
 package org.hubiquitus.hapi.hStructures;
 
-import java.util.Calendar;
-
-import org.hubiquitus.hapi.util.DateISO8601;
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -221,10 +219,10 @@ public class HMessage extends JSONObject {
 	 * 
 	 * @return relevance. NULL if undefined
 	 */
-	public Calendar getRelevance() {
-		Calendar relevance;
+	public DateTime getRelevance() {
+		DateTime relevance;
 		try {
-			relevance = (DateISO8601.toCalendar(this.getString("relevance")));
+			relevance = DateTime.parse(this.getString("relevance"));
 			;
 		} catch (JSONException e) {
 			relevance = null;
@@ -232,12 +230,12 @@ public class HMessage extends JSONObject {
 		return relevance;
 	}
 
-	public void setRelevance(Calendar relevance) {
+	public void setRelevance(DateTime relevance) {
 		try {
 			if (relevance == null) {
 				this.remove("relevance");
 			} else {
-				this.put("relevance", DateISO8601.fromCalendar(relevance));
+				this.put("relevance", relevance);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -359,22 +357,22 @@ public class HMessage extends JSONObject {
 	 * 
 	 * @return published. NULL if undefined
 	 */
-	public Calendar getPublished() {
-		Calendar published;
+	public DateTime getPublished() {
+		DateTime published;
 		try {
-			published = (DateISO8601.toCalendar(this.getString("published")));
+			published =DateTime.parse(this.getString("published"));
 		} catch (JSONException e) {
 			published = null;
 		}
 		return published;
 	}
 
-	public void setPublished(Calendar published) {
+	public void setPublished(DateTime published) {
 		try {
 			if (published == null) {
 				this.remove("published");
 			} else {
-				this.put("published", DateISO8601.fromCalendar(published));
+				this.put("published", published);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -677,10 +675,10 @@ public class HMessage extends JSONObject {
 	 * 
 	 * @return
 	 */
-	public Calendar getSent() {
-		Calendar sent;
+	public DateTime getSent() {
+		DateTime sent;
 		try {
-			sent = (DateISO8601.toCalendar(this.getString("sent")));
+			sent =DateTime.parse(this.getString("sent"));
 		} catch (JSONException e) {
 			sent = null;
 		}
@@ -694,12 +692,12 @@ public class HMessage extends JSONObject {
 	 * 
 	 * @param sent
 	 */
-	public void setSent(Calendar sent) {
+	public void setSent(DateTime sent) {
 		try {
 			if (sent == null) {
 				this.remove("sent");
 			} else {
-				this.put("sent", DateISO8601.fromCalendar(sent));
+				this.put("sent", sent);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

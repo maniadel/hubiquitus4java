@@ -20,9 +20,8 @@
 
 package org.hubiquitus.hapi.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
-import java.util.Calendar;
 import org.hubiquitus.hapi.hStructures.ConnectionError;
 import org.hubiquitus.hapi.hStructures.ConnectionStatus;
 import org.hubiquitus.hapi.hStructures.HAck;
@@ -38,8 +37,8 @@ import org.hubiquitus.hapi.hStructures.HMessagePriority;
 import org.hubiquitus.hapi.hStructures.HResult;
 import org.hubiquitus.hapi.hStructures.HStatus;
 import org.hubiquitus.hapi.hStructures.ResultStatus;
-import org.hubiquitus.hapi.util.DateISO8601;
 import org.hubiquitus.hapi.util.HJsonDictionnary;
+import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -70,9 +69,8 @@ public class HStructureTest {
 			
 			jsonObj.put("priority", 1);
 			
-			String dateIso = DateISO8601.now();
-			Calendar date = DateISO8601.toCalendar(dateIso);
-			jsonObj.put("relevance", dateIso);
+			DateTime date = new DateTime();
+			jsonObj.put("relevance", date);
 			
 			Boolean _persistent = false;
 			jsonObj.put("persistent", _persistent);
@@ -89,7 +87,7 @@ public class HStructureTest {
 			String publisher = "j.desousag";
 			jsonObj.put("publisher", publisher);
 			
-			jsonObj.put("published", dateIso);
+			jsonObj.put("published", date);
 
 			JSONObject headers = new JSONObject();
 			headers.put("header1", "1");
@@ -98,7 +96,7 @@ public class HStructureTest {
 			
 			JSONObject payload = new JSONObject();
 			payload.put("payload", "payload");
-			HJsonDictionnary payloadResult = new HJsonDictionnary();
+			JSONObject payloadResult = new JSONObject();
 			payloadResult.put("payload", "payload");
 			jsonObj.put("payload", payload);
 			
@@ -116,8 +114,8 @@ public class HStructureTest {
 			Assert.assertEquals(hmessage.getLocation().toString(), location.toString());
 			Assert.assertEquals(hmessage.getPayloadAsJSONObject().toString(), payloadResult.toString());
 			Assert.assertEquals(hmessage.getPriority(), HMessagePriority.INFO);
-			Assert.assertEquals(hmessage.getPublished(), date);
-			Assert.assertEquals(hmessage.getRelevance(), date);
+			Assert.assertEquals(hmessage.getPublished().toString(), date.toString());
+			Assert.assertEquals(hmessage.getRelevance().toString(), date.toString());
 			Assert.assertEquals(hmessage.getPersistent(), _persistent);
 			
 		} catch (JSONException e) {
@@ -140,8 +138,7 @@ public class HStructureTest {
 			
 			HMessagePriority priority = HMessagePriority.INFO;
 			
-			String dateIso = DateISO8601.now();
-			Calendar date = DateISO8601.toCalendar(dateIso);
+			DateTime date = new DateTime();
 			
 			Boolean _persistent = false;
 			
@@ -183,6 +180,9 @@ public class HStructureTest {
 			
 			jsonObj = hmessage;
 			
+			System.out.println("-->get :  " + jsonObj.get("published"));
+			System.out.println("-->date : " + date.toString());
+			
 			Assert.assertEquals(jsonObj.get("author"), author);
 			Assert.assertEquals(jsonObj.get("actor"), actor);
 			Assert.assertEquals(jsonObj.get("convid"), convid);
@@ -193,8 +193,8 @@ public class HStructureTest {
 			Assert.assertEquals(jsonObj.get("location").toString(), location.toString());
 			Assert.assertEquals(jsonObj.get("payload"), payload);
 			Assert.assertEquals(jsonObj.get("priority"), priority.value());
-			Assert.assertEquals(jsonObj.get("published"), dateIso);
-			Assert.assertEquals(jsonObj.get("relevance"), dateIso);
+			Assert.assertEquals(jsonObj.get("published").toString(), date.toString());
+			Assert.assertEquals(jsonObj.get("relevance").toString(), date.toString());
 			Assert.assertEquals(jsonObj.get("persistent"), _persistent);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -277,7 +277,7 @@ public class HStructureTest {
 			
 			HLocation hlocation = new HLocation(jsonObj);
 
-			Assert.assertEquals(hlocation.getPos(), pos);
+			Assert.assertEquals(hlocation.getPos().toString(), pos.toString());
 			Assert.assertEquals(hlocation.getZip(), zip);
 			Assert.assertEquals(hlocation.getAddr(), addr);
 			Assert.assertEquals(hlocation.getCountryCode(), countryCode);
