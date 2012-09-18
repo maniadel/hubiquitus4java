@@ -216,77 +216,75 @@ public class HClient {
 
 	public void send(final HMessage message,
 			final HMessageDelegate messageDelegate) {
-		if (this.connectionStatus == ConnectionStatus.CONNECTED
-				&& message != null) {
-			// add msgid to hmessage
-			if (message.getMsgid() == null) {
-				message.setMsgid("javaMsgid: " + (new Random()).nextInt());
-			}
-			// add publiser to hmessage
-			if (message.getPublisher() == null) {
-				message.setPublisher(transportOptions.getJid().getFullJID());
-			}
-			// add convid to hmessage
-			if (message.getConvid() == null) {
-				message.setConvid(message.getMsgid());
-			}
-			if (message.getActor() != null) {
-				if (message.getTimeout() == null) {
-					if (messageDelegate != null) {
-						messagesDelegates.put(message.getMsgid(),
-								messageDelegate);
-					}
-				} else if (message.getTimeout() == 0) {
-					if (messageDelegate == null) {
-						// if value is equal to 0 and no callback is provided,
-						// this value is set by hAPI to -1. hAPI doesn’t plan
-						// correlation.
-						message.setTimeout(-1);
-					} else {
-						// if value is equal 0 with callback,hAPI will do
-						// correlation but no timeout will be sent. Only error
-						// responses should be sent.
-						messagesDelegates.put(message.getMsgid(),
-								messageDelegate);
-					}
-				} else if (message.getTimeout() > 0) {
-					// hAPI will do correlation. If no answer within the
-					// timeout, a timeout error will be sent.
-					if (messageDelegate != null) {
-						messagesDelegates.put(message.getMsgid(),
-								messageDelegate);
-						timeoutTimer = new Timer();
-						timeoutTimer.schedule(new TimerTask() {
-
-							@Override
-							public void run() {
-								notifyResultError(
-										message.getMsgid(),
-										ResultStatus.EXEC_TIMEOUT,
-										"The response of message: "
-												+ message.getMsgid()
-												+ "is time out!");
-								messagesDelegates.remove(message.getMsgid());
-							}
-						}, message.getTimeout());
-						timeoutHashtable.put(message.getMsgid(), timeoutTimer);
-					}
-				}
-				transport.sendObject(message);
-				System.out.println(">>>>" + message.toString());
-			} else {
-				notifyResultError(message.getMsgid(),
-						ResultStatus.MISSING_ATTR,
-						"Actor not found in message: " + message.getMsgid());
-			}
-		} else if (message == null) {
-			notifyResultError(null, ResultStatus.MISSING_ATTR,
-					"Provided message is null", messageDelegate);
-		} else {
+		if (this.connectionStatus != ConnectionStatus.CONNECTED) {
 			notifyResultError(message.getMsgid(), ResultStatus.NOT_CONNECTED,
 					null);
+			return;
 		}
+		if (message == null) {
+			notifyResultError(null, ResultStatus.MISSING_ATTR,
+					"Provided message is null", messageDelegate);
+			return;
+		}
+		if(message.getActor() == null) {
+			notifyResultError(message.getMsgid(), ResultStatus.MISSING_ATTR,
+					"Actor not found in message: " + message.getMsgid());
+			return;
+		}
+		// add msgid to hmessage
+		if (message.getMsgid() == null) {
+			message.setMsgid("javaMsgid: " + (new Random()).nextInt());
+		}
+		// add publiser to hmessage
+		if (message.getPublisher() == null) {
+			message.setPublisher(transportOptions.getJid().getFullJID());
+		}
+		// add convid to hmessage
+		if (message.getConvid() == null) {
+			message.setConvid(message.getMsgid());
+		}
+		if (message.getActor() != null) {
+			if (message.getTimeout() == null) {
+				if (messageDelegate != null) {
+					messagesDelegates.put(message.getMsgid(), messageDelegate);
+				}
+			} else if (message.getTimeout() == 0) {
+				if (messageDelegate == null) {
+					// if value is equal to 0 and no callback is provided,
+					// this value is set by hAPI to -1. hAPI doesn’t plan
+					// correlation.
+					message.setTimeout(-1);
+				} else {
+					// if value is equal 0 with callback,hAPI will do
+					// correlation but no timeout will be sent. Only error
+					// responses should be sent.
+					messagesDelegates.put(message.getMsgid(), messageDelegate);
+				}
+			} else if (message.getTimeout() > 0) {
+				// hAPI will do correlation. If no answer within the
+				// timeout, a timeout error will be sent.
+				if (messageDelegate != null) {
+					messagesDelegates.put(message.getMsgid(), messageDelegate);
+					timeoutTimer = new Timer();
+					timeoutTimer.schedule(new TimerTask() {
 
+						@Override
+						public void run() {
+							notifyResultError(
+									message.getMsgid(),
+									ResultStatus.EXEC_TIMEOUT,
+									"The response of message: "
+											+ message.getMsgid()
+											+ "is time out!");
+							messagesDelegates.remove(message.getMsgid());
+						}
+					}, message.getTimeout());
+					timeoutHashtable.put(message.getMsgid(), timeoutTimer);
+				}
+			}
+			transport.sendObject(message);
+			System.out.println(">>>>" + message.toString());
+		} 
 	}
 
 	/**
@@ -494,7 +492,6 @@ public class HClient {
 		this.send(cmdMessage, messageDelegate);
 	}
 
-
 	/**
 	 * Demands to the hserver the list of the available relevant message for a
 	 * dedicated channel.
@@ -530,7 +527,8 @@ public class HClient {
 	/* Builder */
 
 	/**
-	 * Helper to create hmessage. Payload type could be JSONObject, JSONArray, String, Boolean, Number
+	 * Helper to create hmessage. Payload type could be JSONObject, JSONArray,
+	 * String, Boolean, Number
 	 * 
 	 * @param actor
 	 * @param type
@@ -572,7 +570,7 @@ public class HClient {
 		hmessage.setPayload(payload);
 		return hmessage;
 	}
-	
+
 	/**
 	 * Helper to create hconvstate
 	 * 
@@ -746,8 +744,7 @@ public class HClient {
 	 * @throws MissingAttrException
 	 */
 	public HMessage buildResult(String actor, String ref, ResultStatus status,
-			Object result, HMessageOptions options)
-			throws MissingAttrException {
+			Object result, HMessageOptions options) throws MissingAttrException {
 		// check for required attributes
 		if (actor == null || actor.length() <= 0) {
 			throw new MissingAttrException("actor");
@@ -769,8 +766,6 @@ public class HClient {
 		HMessage hmessage = buildMessage(actor, "hResult", hresult, options);
 		return hmessage;
 	}
-
-	
 
 	/* HTransportCallback functions */
 
@@ -864,9 +859,9 @@ public class HClient {
 			if (!this.messagesDelegates.isEmpty()
 					&& this.messagesDelegates.containsKey(HUtil.getApiRef(message.getRef()))) {
 				notifyMessage(message,
-						this.messagesDelegates.get(message.getRef()));
-				if (this.timeoutHashtable.contains(message.getRef())) {
-					Timer timeout = timeoutHashtable.get(message.getRef());
+						this.messagesDelegates.get(HUtil.getApiRef(message.getRef())));
+				if (this.timeoutHashtable.contains(HUtil.getApiRef(message.getRef()))) {
+					Timer timeout = timeoutHashtable.get(HUtil.getApiRef(message.getRef()));
 					if (timeout != null) {
 						timeout.cancel();
 						timeout = null;
