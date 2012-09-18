@@ -39,7 +39,7 @@ public class HMessageOptions {
 	private String author = null;
 	private JSONObject headers = null;
 	private Calendar published = null;
-	private Integer timeout = null;
+	private Integer timeout = 0;
 	
 	/**
 	 * @return The msgid of the message refered to
