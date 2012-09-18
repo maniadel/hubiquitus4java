@@ -24,7 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * @author j.desousag
+ *
  * @version 0.5 hAPI result. For more info, see Hubiquitus reference
  */
 
@@ -157,21 +157,7 @@ public class HResult extends JSONObject {
 		return result;
 	}
 
-	/**
-	 * if result type is Long
-	 * 
-	 * @return
-	 */
-	public Long getResultAsLong() {
-		Long result;
-		try {
-			result = this.getLong("result");
-		} catch (JSONException e) {
-			result = null;
-		}
-		return result;
-	}
-
+	
 	/**
 	 * if result type is JSONObject
 	 * 
@@ -276,16 +262,6 @@ public class HResult extends JSONObject {
 		}
 	}
 
-	/**
-	 * if result type is long
-	 * 
-	 * @param result
-	 */
-	public void setResult(long result) {
-		try {
-			this.put("result", result);
-		} catch (JSONException e) {
-		}
-	}
+	
 
 }

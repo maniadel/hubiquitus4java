@@ -516,22 +516,6 @@ public class HMessage extends JSONObject {
 		return payload;
 	}
 
-	/**
-	 * if payload type is long
-	 * 
-	 * @return payload. Null if undefined.
-	 */
-	public Long getPayloadAsLong() {
-		Long payload;
-		try {
-			payload = this.getLong("payload");
-		} catch (JSONException e) {
-			payload = null;
-		}
-		return payload;
-	}
-
-	
 
 	/**
 	 * if payload type is HAlert. if not return null.
@@ -546,7 +530,6 @@ public class HMessage extends JSONObject {
 				return null;
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			return null;
 		}
 	}
@@ -735,19 +718,7 @@ public class HMessage extends JSONObject {
 		}
 	}
 
-	/**
-	 * if payload type is long
-	 * 
-	 * @param payload
-	 */
-	public void setPayload(long payload) {
-		try {
-			this.put("payload", payload);
-
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
+	
 
 	/**
 	 * Since v0.5
