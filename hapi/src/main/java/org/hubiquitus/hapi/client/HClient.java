@@ -302,15 +302,9 @@ public class HClient {
 	 *            be null
 	 */
 	public void subscribe(String actor, HMessageDelegate messageDelegate) {
-		JSONObject params = new JSONObject();
-		try {
-			params.put("actor", actor);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
 		HMessage cmdMessage = null;
 		try {
-			cmdMessage = buildCommand(actor, "hsubscribe", params, null);
+			cmdMessage = buildCommand(actor, "hsubscribe", null, null);
 		} catch (MissingAttrException e) {
 			e.printStackTrace();
 		}
@@ -330,15 +324,9 @@ public class HClient {
 	 *            be null
 	 */
 	public void unsubscribe(String actor, HMessageDelegate messageDelegate) {
-		JSONObject params = new JSONObject();
-		try {
-			params.put("actor", actor);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
 		HMessage cmdMessage = null;
 		try {
-			cmdMessage = buildCommand(actor, "hunsubscribe", params, null);
+			cmdMessage = buildCommand(actor, "hunsubscribe", null, null);
 		} catch (MissingAttrException e) {
 			e.printStackTrace();
 		}
@@ -367,7 +355,6 @@ public class HClient {
 			HMessageDelegate messageDelegate) {
 		JSONObject params = new JSONObject();
 		try {
-			params.put("actor", actor);
 			if (nbLastMsg > 0) {
 				params.put("nbLastMsg", nbLastMsg);
 			}
@@ -448,7 +435,6 @@ public class HClient {
 		}
 
 		try {
-			params.put("actor", actor);
 			params.put("convid", convid);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -495,7 +481,6 @@ public class HClient {
 		}
 
 		try {
-			params.put("actor", actor);
 			params.put("status", status);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -525,7 +510,6 @@ public class HClient {
 	 */
 	public void getRelevantMessages(String actor,
 			HMessageDelegate messageDelegate) {
-		JSONObject params = new JSONObject();
 
 		// check mandatory fields
 		if (actor == null) {
@@ -533,15 +517,10 @@ public class HClient {
 					"actor is missing", messageDelegate);
 			return;
 		}
-		try {
-			params.put("actor", actor);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
 
 		HMessage cmdMessage = null;
 		try {
-			cmdMessage = buildCommand(actor, "hRelevantMessages", params, null);
+			cmdMessage = buildCommand(actor, "hRelevantMessages", null, null);
 		} catch (MissingAttrException e) {
 			e.printStackTrace();
 		}
