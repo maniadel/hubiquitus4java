@@ -623,11 +623,11 @@ public class HMessage extends JSONObject {
 	
 
 	/**
-	 * if payload type is JSONObject.
+	 * Payload type could be JSONObject, JSONArray, String, Boolean, Number
 	 * 
 	 * @param payload
 	 */
-	public void setPayload(JSONObject payload) {
+	public void setPayload(Object payload) {
 		try {
 			if (payload == null) {
 				this.remove("payload");
@@ -638,86 +638,6 @@ public class HMessage extends JSONObject {
 			e.printStackTrace();
 		}
 	}
-
-	/**
-	 * if payload type is JSONArray.
-	 * 
-	 * @param payload
-	 */
-	public void setPayload(JSONArray payload) {
-		try {
-			if (payload == null) {
-				this.remove("payload");
-			} else {
-				this.put("payload", payload);
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * if payload type is String.
-	 * 
-	 * @param payload
-	 */
-	public void setPayload(String payload) {
-		try {
-			if (payload == null) {
-				this.remove("payload");
-			} else {
-				this.put("payload", payload);
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * if payload type is Boolean
-	 * 
-	 * @param payload
-	 */
-	public void setPayload(Boolean payload) {
-		try {
-			if (payload == null) {
-				this.remove("payload");
-			} else {
-				this.put("payload", payload);
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * if payload type is int
-	 * 
-	 * @param payload
-	 */
-	public void setPayload(int payload) {
-		try {
-			this.put("payload", payload);
-
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * if payload type is double.
-	 * 
-	 * @param payload
-	 */
-	public void setPayload(double payload) {
-		try {
-			this.put("payload", payload);
-
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
 	
 
 	/**
