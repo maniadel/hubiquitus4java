@@ -34,6 +34,8 @@ import org.hubiquitus.hapi.transport.HTransport;
 import org.hubiquitus.hapi.transport.HTransportDelegate;
 import org.hubiquitus.hapi.transport.HTransportOptions; 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @cond internal
@@ -43,6 +45,7 @@ import org.json.JSONObject;
 
 public class HTransportSocketio implements HTransport, IOCallback {
 
+	final Logger logger = LoggerFactory.getLogger(HTransportSocketio.class);
 	private HTransportDelegate callback = null;
 	private HTransportOptions options = null;
 	private SocketIO socketio = null;
@@ -166,7 +169,7 @@ public class HTransportSocketio implements HTransport, IOCallback {
 		if( connectionStatus == ConnectionStatus.CONNECTED) {
 			socketio.emit("hMessage",object);
 		} else {
-			System.out.println("Not connected");
+			logger.warn("message: Not connected");
 		}		
 	}
 	
@@ -270,12 +273,12 @@ public class HTransportSocketio implements HTransport, IOCallback {
 
 
 	public void onMessage(String arg0, IOAcknowledge arg1) {
-		System.out.println("socketio" + arg0);
+		logger.info("socketio" + arg0);
 	}
 
 
 	public void onMessage(JSONObject arg0, IOAcknowledge arg1) {
-		System.out.println("socketio" + arg0.toString());
+		logger.info("socketio" + arg0.toString());
 	}
 
 	public String toString() {
