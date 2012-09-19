@@ -613,17 +613,22 @@ public class HClient {
 	 * @return hmessage
 	 * @throws MissingAttrException
 	 */
-	public HMessage buildAck(String actor, HAckValue ack,
+	public HMessage buildAck(String actor, String ref, HAckValue ack,
 			HMessageOptions options) throws MissingAttrException {
 		// check for required attributes
 		if (actor == null || actor.length() <= 0) {
 			throw new MissingAttrException("actor");
 		}
 
+		if(ref==null||ref.length()<=0){
+			throw new MissingAttrException("ref");
+		}
 		// check for required attributes
 		if (ack == null) {
 			throw new MissingAttrException("ack");
 		}
+		
+		options.setRef(ref);
 
 		HAck hack = new HAck();
 		hack.setAck(ack);
