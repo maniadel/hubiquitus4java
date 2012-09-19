@@ -42,7 +42,9 @@ public class HLocation extends JSONObject {
 	}
 
 	/* Getters & Setters */
-
+	/**
+	 * @return hGeo which specifies the exacte longitude and latitude of the location. Null if undefined.
+	 */
 	public HGeo getPos() {
 		HGeo pos;
 		try {
