@@ -22,14 +22,17 @@ package org.hubiquitus.hapi.hStructures;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * @author j.desousag
+ *
  * @version 0.5 hAPI result. For more info, see Hubiquitus reference
  */
 
 public class HResult extends JSONObject {
 
+	final Logger logger = LoggerFactory.getLogger(HResult.class);
 
 	public HResult() {super();
 	}
@@ -64,6 +67,7 @@ public class HResult extends JSONObject {
 				this.put("status", status.value());
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -157,27 +161,13 @@ public class HResult extends JSONObject {
 		return result;
 	}
 
+	
 	/**
-	 * if result type is Long
-	 * 
-	 * @return
-	 */
-	public Long getResultAsLong() {
-		Long result;
-		try {
-			result = this.getLong("result");
-		} catch (JSONException e) {
-			result = null;
-		}
-		return result;
-	}
-
-	/**
-	 * if result type is JSONObject
+	 * The result type could be JSONObject, JSONArray, String, Boolean, Number.
 	 * 
 	 * @param result
 	 */
-	public void setResult(JSONObject result) {
+	public void setResult(Object result) {
 		try {
 			if (result == null) {
 				this.remove("result");
@@ -185,106 +175,7 @@ public class HResult extends JSONObject {
 				this.put("result", result);
 			}
 		} catch (JSONException e) {
-		}
-	}
-
-	/**
-	 * if result type is JSONArray
-	 * 
-	 * @param result
-	 */
-	public void setResult(JSONArray result) {
-		try {
-			if (result == null) {
-				this.remove("result");
-			} else {
-				this.put("result", result);
-			}
-		} catch (JSONException e) {
-		}
-	}
-
-	/**
-	 * if result type is HJsonObj (i.e. HAlert, HAck ... )
-	 * 
-	 * @param result
-	 */
-	public void setResult(HJsonObj result) {
-		try {
-			if (result == null) {
-				this.remove("result");
-			} else {
-				this.put("result", result.toJSON());
-			}
-		} catch (JSONException e) {
-		}
-	}
-
-	/**
-	 * if result type is String
-	 * 
-	 * @param result
-	 */
-	public void setResult(String result) {
-		try {
-			if (result == null) {
-				this.remove("result");
-			} else {
-				this.put("result", result);
-			}
-		} catch (JSONException e) {
-		}
-	}
-
-	/**
-	 * if result type is Boolean
-	 * 
-	 * @param result
-	 */
-	public void setResult(Boolean result) {
-		try {
-			if (result == null) {
-				this.remove("result");
-			} else {
-				this.put("result", result);
-			}
-		} catch (JSONException e) {
-		}
-	}
-
-	/**
-	 * if result type is int
-	 * 
-	 * @param result
-	 */
-	public void setResult(int result) {
-		try {
-			this.put("result", result);
-		} catch (JSONException e) {
-		}
-	}
-
-	/**
-	 * if result type is double
-	 * 
-	 * @param result
-	 */
-	public void setResult(double result) {
-		try {
-			this.put("result", result);
-		} catch (JSONException e) {
-		}
-	}
-
-	/**
-	 * if result type is long
-	 * 
-	 * @param result
-	 */
-	public void setResult(long result) {
-		try {
-			this.put("result", result);
-		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 

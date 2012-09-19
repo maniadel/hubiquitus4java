@@ -45,26 +45,24 @@ import org.hubiquitus.hapi.transport.HTransportDelegate;
 import org.hubiquitus.hapi.transport.HTransportOptions;
 import org.hubiquitus.hapi.transport.socketio.HTransportSocketio;
 import org.hubiquitus.hapi.util.HUtil;
-import org.json.JSONArray;
+import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * @version 0.3 Hubiquitus client, public api
+ * @version 0.5 Hubiquitus client, public api
  */
 
 public class HClient {
+	final Logger logger = LoggerFactory.getLogger(HClient.class);
+	
+	/**
+	 * only connecting , connected , diconnecting , disconnected
+	 */
+	private ConnectionStatus connectionStatus = ConnectionStatus.DISCONNECTED;
 
-	private ConnectionStatus connectionStatus = ConnectionStatus.DISCONNECTED; /*
-																				 * only
-																				 * connecting
-																				 * ,
-																				 * connected
-																				 * ,
-																				 * diconnecting
-																				 * ,
-																				 * disconnected
-																				 */
 	@SuppressWarnings("unused")
 	private HOptions options = null;
 	private HTransportOptions transportOptions = null;
@@ -82,6 +80,7 @@ public class HClient {
 	private Timer timeoutTimer = null;
 
 	public HClient() {
+		options = new HOptions();
 		transportOptions = new HTransportOptions();
 	}
 
@@ -217,77 +216,60 @@ public class HClient {
 
 	public void send(final HMessage message,
 			final HMessageDelegate messageDelegate) {
-		if (this.connectionStatus == ConnectionStatus.CONNECTED
-				&& message != null) {
-			// add msgid to hmessage
-			if (message.getMsgid() == null) {
-				message.setMsgid("javaMsgid: " + (new Random()).nextInt());
-			}
-			// add publiser to hmessage
-			if (message.getPublisher() == null) {
-				message.setPublisher(transportOptions.getJid().getFullJID());
-			}
-			// add convid to hmessage
-			if (message.getConvid() == null) {
-				message.setConvid(message.getMsgid());
-			}
-			if (message.getActor() != null) {
-				if (message.getTimeout() == null) {
-					if (messageDelegate != null) {
-						messagesDelegates.put(message.getMsgid(),
-								messageDelegate);
-					}
-				} else if (message.getTimeout() == 0) {
-					if (messageDelegate == null) {
-						// if value is equal to 0 and no callback is provided,
-						// this value is set by hAPI to -1. hAPI doesn’t plan
-						// correlation.
-						message.setTimeout(-1);
-					} else {
-						// if value is equal 0 with callback,hAPI will do
-						// correlation but no timeout will be sent. Only error
-						// responses should be sent.
-						messagesDelegates.put(message.getMsgid(),
-								messageDelegate);
-					}
-				} else if (message.getTimeout() > 0) {
-					// hAPI will do correlation. If no answer within the
-					// timeout, a timeout error will be sent.
-					if (messageDelegate != null) {
-						messagesDelegates.put(message.getMsgid(),
-								messageDelegate);
-						timeoutTimer = new Timer();
-						timeoutTimer.schedule(new TimerTask() {
-
-							@Override
-							public void run() {
-								notifyResultError(
-										message.getMsgid(),
-										ResultStatus.EXEC_TIMEOUT,
-										"The response of message: "
-												+ message.getMsgid()
-												+ "is time out!");
-								messagesDelegates.remove(message.getMsgid());
-							}
-						}, message.getTimeout());
-						timeoutHashtable.put(message.getMsgid(), timeoutTimer);
-					}
-				}
-				transport.sendObject(message);
-				System.out.println(">>>>" + message.toString());
-			} else {
-				notifyResultError(message.getMsgid(),
-						ResultStatus.MISSING_ATTR,
-						"Actor not found in message: " + message.getMsgid());
-			}
-		} else if (message == null) {
-			notifyResultError(null, ResultStatus.MISSING_ATTR,
-					"Provided message is null", messageDelegate);
-		} else {
+		if (this.connectionStatus != ConnectionStatus.CONNECTED) {
 			notifyResultError(message.getMsgid(), ResultStatus.NOT_CONNECTED,
 					null);
+			return;
 		}
+		if (message == null) {
+			notifyResultError(null, ResultStatus.MISSING_ATTR,
+					"Provided message is null", messageDelegate);
+			return;
+		}
+		if (message.getActor() == null) {
+			notifyResultError(message.getMsgid(), ResultStatus.MISSING_ATTR,
+					"Actor not found in message: " + message.getMsgid());
+			return;
+		}
+		// add msgid to hmessage
+		if (message.getMsgid() == null) {
+			message.setMsgid("javaMsgid: " + (new Random()).nextInt());
+		}
+		// add publiser to hmessage
+		if (message.getPublisher() == null) {
+			message.setPublisher(transportOptions.getJid().getFullJID());
+		}
+		// add convid to hmessage
+		if (message.getConvid() == null) {
+			message.setConvid(message.getMsgid());
+		}
+		if (message.getTimeout() == null) {
+			message.setTimeout(0);
+		}
+		if (message.getTimeout() > 0) {
+			// hAPI will do correlation. If no answer within the
+			// timeout, a timeout error will be sent.
+			if (messageDelegate != null) {
+				messagesDelegates.put(message.getMsgid(), messageDelegate);
+				timeoutTimer = new Timer();
+				timeoutTimer.schedule(new TimerTask() {
 
+					@Override
+					public void run() {
+						notifyResultError(
+								message.getMsgid(),
+								ResultStatus.EXEC_TIMEOUT,
+								"The response of message: "
+										+ message.getMsgid() + "is time out!");
+						messagesDelegates.remove(message.getMsgid());
+					}
+				}, message.getTimeout());
+				timeoutHashtable.put(message.getMsgid(), timeoutTimer);
+			}
+		}
+		message.setSent(new DateTime());
+		transport.sendObject(message);
+		System.out.println(">>>>" + message.toString());
 	}
 
 	/**
@@ -303,18 +285,13 @@ public class HClient {
 	 *            be null
 	 */
 	public void subscribe(String actor, HMessageDelegate messageDelegate) {
-		JSONObject params = new JSONObject();
-		try {
-			params.put("actor", actor);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
 		HMessage cmdMessage = null;
 		try {
-			cmdMessage = buildCommand(actor, "hsubscribe", params, null);
+			cmdMessage = buildCommand(actor, "hsubscribe", null, null);
 		} catch (MissingAttrException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
+		cmdMessage.setTimeout(options.getTimeout());
 		send(cmdMessage, messageDelegate);
 	}
 
@@ -331,18 +308,13 @@ public class HClient {
 	 *            be null
 	 */
 	public void unsubscribe(String actor, HMessageDelegate messageDelegate) {
-		JSONObject params = new JSONObject();
-		try {
-			params.put("actor", actor);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
 		HMessage cmdMessage = null;
 		try {
-			cmdMessage = buildCommand(actor, "hunsubscribe", params, null);
+			cmdMessage = buildCommand(actor, "hunsubscribe", null, null);
 		} catch (MissingAttrException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
+		cmdMessage.setTimeout(options.getTimeout());
 		send(cmdMessage, messageDelegate);
 	}
 
@@ -368,19 +340,19 @@ public class HClient {
 			HMessageDelegate messageDelegate) {
 		JSONObject params = new JSONObject();
 		try {
-			params.put("actor", actor);
 			if (nbLastMsg > 0) {
 				params.put("nbLastMsg", nbLastMsg);
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 		HMessage cmdMessage = null;
 		try {
 			cmdMessage = buildCommand(actor, "hgetlastmessages", params, null);
 		} catch (MissingAttrException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
+		cmdMessage.setTimeout(options.getTimeout());
 		send(cmdMessage, messageDelegate);
 	}
 
@@ -411,8 +383,9 @@ public class HClient {
 			cmdMessage = buildCommand(transportOptions.getHserverService(),
 					"hgetsubscriptions", null, null);
 		} catch (MissingAttrException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
+		cmdMessage.setTimeout(options.getTimeout());
 		this.send(cmdMessage, messageDelegate);
 	}
 
@@ -449,19 +422,19 @@ public class HClient {
 		}
 
 		try {
-			params.put("actor", actor);
 			params.put("convid", convid);
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 
-		HMessage msgCommand = null;
+		HMessage cmdMessage = null;
 		try {
-			msgCommand = this.buildCommand(actor, cmdName, params, null);
+			cmdMessage = this.buildCommand(actor, cmdName, params, null);
 		} catch (MissingAttrException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
-		this.send(msgCommand, messageDelegate);
+		cmdMessage.setTimeout(options.getTimeout());
+		this.send(cmdMessage, messageDelegate);
 	}
 
 	/**
@@ -496,118 +469,19 @@ public class HClient {
 		}
 
 		try {
-			params.put("actor", actor);
 			params.put("status", status);
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 		HMessage cmdMessage = null;
 		try {
 			cmdMessage = buildCommand(actor, "hgetthreads", params, null);
 		} catch (MissingAttrException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
+		cmdMessage.setTimeout(options.getTimeout());
 		this.send(cmdMessage, messageDelegate);
 	}
-
-	//
-	// /**
-	// * Sets a filter to be applied to upcoming messages at the session level
-	// for
-	// * a dedicated channel id.
-	// *
-	// * Nominal response : hResult where the status is 0.
-	// *
-	// * @param filter
-	// * - Mandatory
-	// * @param resultDelegate
-	// * - a delegate notified when the command result is issued. Can
-	// * be null
-	// */
-	// public void setFilter(HFilterTemplate filter, HResultDelegate
-	// resultDelegate) {
-	//
-	// String cmdName = "hSetFilter";
-	// // check mandatory fields
-	// if (filter == null) {
-	// notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR,
-	// "filter is missing", resultDelegate);
-	// return;
-	// }
-	//
-	// HCommand cmd = new HCommand(cmdName, filter.toJSON());
-	// this.command(cmd, resultDelegate);
-	// }
-	//
-	// /**
-	// * Fetches the list of filters set on the current session.
-	// *
-	// * Nominal response : hResult where the status is 0 and a array of
-	// * HFilterTemplate.
-	// *
-	// * @param actor
-	// * - Channel id.
-	// * @param resultDelegate
-	// * - a delegate notified when the command result is issued. Can
-	// * be null
-	// */
-	// public void listFilters(String actor, HResultDelegate resultDelegate) {
-	// JSONObject params = new JSONObject();
-	// String cmdName = "hListFilters";
-	//
-	// if (actor != null) {
-	// try {
-	// params.put("actor", actor);
-	// } catch (JSONException e) {
-	// e.printStackTrace();
-	// }
-	// }
-	//
-	// HCommand cmd = new HCommand(cmdName, params);
-	// this.command(cmd, resultDelegate);
-	// }
-	//
-	// /**
-	// * Unset a filter for a specified channel.
-	// *
-	// * Nominal response : hResult where the status is 0.
-	// *
-	// * @param name
-	// * - Filter's name. Mandatory
-	// * @param actor
-	// * - Channel id. Mandatory
-	// * @param resultDelegate
-	// * - a delegate notified when the command result is issued. Can
-	// * be null
-	// */
-	// public void unsetFilter(String name, String actor,
-	// HResultDelegate resultDelegate) {
-	// JSONObject params = new JSONObject();
-	// String cmdName = "hUnsetFilter";
-	//
-	// // check mandatory fields
-	// if (name == null) {
-	// notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR,
-	// "name is missing", resultDelegate);
-	// return;
-	// }
-	//
-	// if (actor == null) {
-	// notifyResultError(null, cmdName, ResultStatus.MISSING_ATTR,
-	// "actor is missing", resultDelegate);
-	// return;
-	// }
-	//
-	// try {
-	// params.put("name", name);
-	// params.put("actor", actor);
-	// } catch (JSONException e) {
-	// e.printStackTrace();
-	// }
-	//
-	// HCommand cmd = new HCommand(cmdName, params);
-	// this.command(cmd, resultDelegate);
-	// }
 
 	/**
 	 * Demands to the hserver the list of the available relevant message for a
@@ -624,7 +498,6 @@ public class HClient {
 	 */
 	public void getRelevantMessages(String actor,
 			HMessageDelegate messageDelegate) {
-		JSONObject params = new JSONObject();
 
 		// check mandatory fields
 		if (actor == null) {
@@ -632,25 +505,22 @@ public class HClient {
 					"actor is missing", messageDelegate);
 			return;
 		}
-		try {
-			params.put("actor", actor);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
 
 		HMessage cmdMessage = null;
 		try {
-			cmdMessage = buildCommand(actor, "hRelevantMessages", params, null);
+			cmdMessage = buildCommand(actor, "hRelevantMessages", null, null);
 		} catch (MissingAttrException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
+		cmdMessage.setTimeout(options.getTimeout());
 		this.send(cmdMessage, messageDelegate);
 	}
 
 	/* Builder */
 
 	/**
-	 * Helper to create hmessage. Payload type is JSONObject.
+	 * Helper to create hmessage. Payload type could be JSONObject, JSONArray,
+	 * String, Boolean, Number
 	 * 
 	 * @param actor
 	 * @param type
@@ -659,7 +529,7 @@ public class HClient {
 	 * @return
 	 * @throws MissingAttrException
 	 */
-	public HMessage buildMessage(String actor, String type, JSONObject payload,
+	public HMessage buildMessage(String actor, String type, Object payload,
 			HMessageOptions options) throws MissingAttrException {
 
 		// check for required attributes
@@ -689,285 +559,7 @@ public class HClient {
 		} else {
 			hmessage.setPublisher(null);
 		}
-
 		hmessage.setPayload(payload);
-
-		return hmessage;
-	}
-
-	/**
-	 * Helper to create hmessage Payload type is JSONArray.
-	 * 
-	 * @param actor
-	 * @param type
-	 * @param payload
-	 * @param options
-	 * @return
-	 * @throws MissingAttrException
-	 */
-	public HMessage buildMessage(String actor, String type, JSONArray payload,
-			HMessageOptions options) throws MissingAttrException {
-
-		// check for required attributes
-		if (actor == null || actor.length() <= 0) {
-			throw new MissingAttrException("actor");
-		}
-
-		// build the message
-		HMessage hmessage = new HMessage();
-
-		hmessage.setActor(actor);
-		hmessage.setType(type);
-		if (options != null) {
-			hmessage.setRef(options.getRef());
-			hmessage.setConvid(options.getConvid());
-			hmessage.setPriority(options.getPriority());
-			hmessage.setRelevance(options.getRelevance());
-			hmessage.setPersistent(options.getPersistent());
-			hmessage.setLocation(options.getLocation());
-			hmessage.setAuthor(options.getAuthor());
-			hmessage.setHeaders(options.getHeaders());
-			hmessage.setTimeout(options.getTimeout());
-		}
-
-		if (transportOptions != null && transportOptions.getJid() != null) {
-			hmessage.setPublisher(transportOptions.getJid().getBareJID());
-		} else {
-			hmessage.setPublisher(null);
-		}
-
-		hmessage.setPayload(payload);
-
-		return hmessage;
-	}
-
-	/**
-	 * Helper to create hmessage. Payload type is String
-	 * 
-	 * @param actor
-	 * @param type
-	 * @param payload
-	 * @param options
-	 * @return
-	 * @throws MissingAttrException
-	 */
-	public HMessage buildMessage(String actor, String type, String payload,
-			HMessageOptions options) throws MissingAttrException {
-
-		// check for required attributes
-		if (actor == null || actor.length() <= 0) {
-			throw new MissingAttrException("actor");
-		}
-
-		// build the message
-		HMessage hmessage = new HMessage();
-
-		hmessage.setActor(actor);
-		hmessage.setType(type);
-		if (options != null) {
-			hmessage.setRef(options.getRef());
-			hmessage.setConvid(options.getConvid());
-			hmessage.setPriority(options.getPriority());
-			hmessage.setRelevance(options.getRelevance());
-			hmessage.setPersistent(options.getPersistent());
-			hmessage.setLocation(options.getLocation());
-			hmessage.setAuthor(options.getAuthor());
-			hmessage.setHeaders(options.getHeaders());
-			hmessage.setTimeout(options.getTimeout());
-		}
-
-		if (transportOptions != null && transportOptions.getJid() != null) {
-			hmessage.setPublisher(transportOptions.getJid().getBareJID());
-		} else {
-			hmessage.setPublisher(null);
-		}
-
-		hmessage.setPayload(payload);
-
-		return hmessage;
-	}
-
-	/**
-	 * Helper to create hmessage. Payload type is Boolean.
-	 * 
-	 * @param actor
-	 * @param type
-	 * @param payload
-	 * @param options
-	 * @return
-	 * @throws MissingAttrException
-	 */
-	public HMessage buildMessage(String actor, String type, Boolean payload,
-			HMessageOptions options) throws MissingAttrException {
-
-		// check for required attributes
-		if (actor == null || actor.length() <= 0) {
-			throw new MissingAttrException("actor");
-		}
-
-		// build the message
-		HMessage hmessage = new HMessage();
-
-		hmessage.setActor(actor);
-		hmessage.setType(type);
-		if (options != null) {
-			hmessage.setRef(options.getRef());
-			hmessage.setConvid(options.getConvid());
-			hmessage.setPriority(options.getPriority());
-			hmessage.setRelevance(options.getRelevance());
-			hmessage.setPersistent(options.getPersistent());
-			hmessage.setLocation(options.getLocation());
-			hmessage.setAuthor(options.getAuthor());
-			hmessage.setHeaders(options.getHeaders());
-			hmessage.setTimeout(options.getTimeout());
-		}
-
-		if (transportOptions != null && transportOptions.getJid() != null) {
-			hmessage.setPublisher(transportOptions.getJid().getBareJID());
-		} else {
-			hmessage.setPublisher(null);
-		}
-
-		hmessage.setPayload(payload);
-
-		return hmessage;
-	}
-
-	/**
-	 * Helper to create hmessage. Payload type is int.
-	 * 
-	 * @param actor
-	 * @param type
-	 * @param payload
-	 * @param options
-	 * @return
-	 * @throws MissingAttrException
-	 */
-	public HMessage buildMessage(String actor, String type, int payload,
-			HMessageOptions options) throws MissingAttrException {
-
-		// check for required attributes
-		if (actor == null || actor.length() <= 0) {
-			throw new MissingAttrException("actor");
-		}
-
-		// build the message
-		HMessage hmessage = new HMessage();
-
-		hmessage.setActor(actor);
-		hmessage.setType(type);
-		if (options != null) {
-			hmessage.setRef(options.getRef());
-			hmessage.setConvid(options.getConvid());
-			hmessage.setPriority(options.getPriority());
-			hmessage.setRelevance(options.getRelevance());
-			hmessage.setPersistent(options.getPersistent());
-			hmessage.setLocation(options.getLocation());
-			hmessage.setAuthor(options.getAuthor());
-			hmessage.setHeaders(options.getHeaders());
-			hmessage.setTimeout(options.getTimeout());
-		}
-
-		if (transportOptions != null && transportOptions.getJid() != null) {
-			hmessage.setPublisher(transportOptions.getJid().getBareJID());
-		} else {
-			hmessage.setPublisher(null);
-		}
-
-		hmessage.setPayload(payload);
-
-		return hmessage;
-	}
-
-	/**
-	 * Helper to create hmessage. Payload type is double.
-	 * 
-	 * @param actor
-	 * @param type
-	 * @param payload
-	 * @param options
-	 * @return
-	 * @throws MissingAttrException
-	 */
-	public HMessage buildMessage(String actor, String type, double payload,
-			HMessageOptions options) throws MissingAttrException {
-
-		// check for required attributes
-		if (actor == null || actor.length() <= 0) {
-			throw new MissingAttrException("actor");
-		}
-
-		// build the message
-		HMessage hmessage = new HMessage();
-
-		hmessage.setActor(actor);
-		hmessage.setType(type);
-		if (options != null) {
-			hmessage.setRef(options.getRef());
-			hmessage.setConvid(options.getConvid());
-			hmessage.setPriority(options.getPriority());
-			hmessage.setRelevance(options.getRelevance());
-			hmessage.setPersistent(options.getPersistent());
-			hmessage.setLocation(options.getLocation());
-			hmessage.setAuthor(options.getAuthor());
-			hmessage.setHeaders(options.getHeaders());
-			hmessage.setTimeout(options.getTimeout());
-		}
-
-		if (transportOptions != null && transportOptions.getJid() != null) {
-			hmessage.setPublisher(transportOptions.getJid().getBareJID());
-		} else {
-			hmessage.setPublisher(null);
-		}
-
-		hmessage.setPayload(payload);
-
-		return hmessage;
-	}
-
-	/**
-	 * Helper to create hmessage. Payload type is long.
-	 * 
-	 * @param actor
-	 * @param type
-	 * @param payload
-	 * @param options
-	 * @return
-	 * @throws MissingAttrException
-	 */
-	public HMessage buildMessage(String actor, String type, long payload,
-			HMessageOptions options) throws MissingAttrException {
-
-		// check for required attributes
-		if (actor == null || actor.length() <= 0) {
-			throw new MissingAttrException("actor");
-		}
-
-		// build the message
-		HMessage hmessage = new HMessage();
-
-		hmessage.setActor(actor);
-		hmessage.setType(type);
-		if (options != null) {
-			hmessage.setRef(options.getRef());
-			hmessage.setConvid(options.getConvid());
-			hmessage.setPriority(options.getPriority());
-			hmessage.setRelevance(options.getRelevance());
-			hmessage.setPersistent(options.getPersistent());
-			hmessage.setLocation(options.getLocation());
-			hmessage.setAuthor(options.getAuthor());
-			hmessage.setHeaders(options.getHeaders());
-			hmessage.setTimeout(options.getTimeout());
-		}
-
-		if (transportOptions != null && transportOptions.getJid() != null) {
-			hmessage.setPublisher(transportOptions.getJid().getBareJID());
-		} else {
-			hmessage.setPublisher(null);
-		}
-
-		hmessage.setPayload(payload);
-
 		return hmessage;
 	}
 
@@ -1021,17 +613,22 @@ public class HClient {
 	 * @return hmessage
 	 * @throws MissingAttrException
 	 */
-	public HMessage buildAck(String actor, HAckValue ack,
+	public HMessage buildAck(String actor, String ref, HAckValue ack,
 			HMessageOptions options) throws MissingAttrException {
 		// check for required attributes
 		if (actor == null || actor.length() <= 0) {
 			throw new MissingAttrException("actor");
 		}
 
+		if(ref==null||ref.length()<=0){
+			throw new MissingAttrException("ref");
+		}
 		// check for required attributes
 		if (ack == null) {
 			throw new MissingAttrException("ack");
 		}
+		
+		options.setRef(ref);
 
 		HAck hack = new HAck();
 		hack.setAck(ack);
@@ -1133,7 +730,7 @@ public class HClient {
 	}
 
 	/**
-	 * if result type is JSONObject
+	 * The result type could be JSONObject, JSONArray, String, Boolean, Number.
 	 * 
 	 * @param actor
 	 * @param ref
@@ -1144,236 +741,7 @@ public class HClient {
 	 * @throws MissingAttrException
 	 */
 	public HMessage buildResult(String actor, String ref, ResultStatus status,
-			JSONObject result, HMessageOptions options)
-			throws MissingAttrException {
-		// check for required attributes
-		if (actor == null || actor.length() <= 0) {
-			throw new MissingAttrException("actor");
-		}
-		// check for required attributes
-		if (ref == null || ref.length() <= 0) {
-			throw new MissingAttrException("ref");
-		}
-
-		// check for required attributes
-		if (status == null) {
-			throw new MissingAttrException("status");
-		}
-
-		// check for required attributes
-		if (result == null) {
-			throw new MissingAttrException("result");
-		}
-		HResult hresult = new HResult();
-		hresult.setResult(result);
-		hresult.setStatus(status);
-		options.setRef(ref);
-		HMessage hmessage = buildMessage(actor, "hResult", hresult, options);
-		return hmessage;
-	}
-
-	/**
-	 * if result type is a JSONArray
-	 * 
-	 * @param actor
-	 * @param ref
-	 * @param status
-	 * @param result
-	 * @param options
-	 * @return
-	 * @throws MissingAttrException
-	 */
-	public HMessage buildResult(String actor, String ref, ResultStatus status,
-			JSONArray result, HMessageOptions options)
-			throws MissingAttrException {
-		// check for required attributes
-		if (actor == null || actor.length() <= 0) {
-			throw new MissingAttrException("actor");
-		}
-		// check for required attributes
-		if (ref == null || ref.length() <= 0) {
-			throw new MissingAttrException("ref");
-		}
-
-		// check for required attributes
-		if (status == null) {
-			throw new MissingAttrException("status");
-		}
-
-		// check for required attributes
-		if (result == null) {
-			throw new MissingAttrException("result");
-		}
-		HResult hresult = new HResult();
-		hresult.setResult(result);
-		hresult.setStatus(status);
-		options.setRef(ref);
-		HMessage hmessage = buildMessage(actor, "hResult", hresult, options);
-		return hmessage;
-	}
-
-	/**
-	 * if result type is String
-	 * 
-	 * @param actor
-	 * @param ref
-	 * @param status
-	 * @param result
-	 * @param options
-	 * @return
-	 * @throws MissingAttrException
-	 */
-	public HMessage buildResult(String actor, String ref, ResultStatus status,
-			String result, HMessageOptions options) throws MissingAttrException {
-		// check for required attributes
-		if (actor == null || actor.length() <= 0) {
-			throw new MissingAttrException("actor");
-		}
-		// check for required attributes
-		if (ref == null || ref.length() <= 0) {
-			throw new MissingAttrException("ref");
-		}
-
-		// check for required attributes
-		if (status == null) {
-			throw new MissingAttrException("status");
-		}
-
-		// check for required attributes
-		if (result == null) {
-			throw new MissingAttrException("result");
-		}
-		HResult hresult = new HResult();
-		hresult.setResult(result);
-		hresult.setStatus(status);
-		options.setRef(ref);
-		HMessage hmessage = buildMessage(actor, "hResult", hresult, options);
-		return hmessage;
-	}
-
-	/**
-	 * if result type is Boolean
-	 * 
-	 * @param actor
-	 * @param ref
-	 * @param status
-	 * @param result
-	 * @param options
-	 * @return
-	 * @throws MissingAttrException
-	 */
-	public HMessage buildResult(String actor, String ref, ResultStatus status,
-			Boolean result, HMessageOptions options)
-			throws MissingAttrException {
-		// check for required attributes
-		if (actor == null || actor.length() <= 0) {
-			throw new MissingAttrException("actor");
-		}
-		// check for required attributes
-		if (ref == null || ref.length() <= 0) {
-			throw new MissingAttrException("ref");
-		}
-
-		// check for required attributes
-		if (status == null) {
-			throw new MissingAttrException("status");
-		}
-
-		// check for required attributes
-		if (result == null) {
-			throw new MissingAttrException("result");
-		}
-		HResult hresult = new HResult();
-		hresult.setResult(result);
-		hresult.setStatus(status);
-		options.setRef(ref);
-		HMessage hmessage = buildMessage(actor, "hResult", hresult, options);
-		return hmessage;
-	}
-
-	/**
-	 * if result type is int
-	 * 
-	 * @param actor
-	 * @param ref
-	 * @param status
-	 * @param result
-	 * @param options
-	 * @return
-	 * @throws MissingAttrException
-	 */
-	public HMessage buildResult(String actor, String ref, ResultStatus status,
-			int result, HMessageOptions options) throws MissingAttrException {
-		// check for required attributes
-		if (actor == null || actor.length() <= 0) {
-			throw new MissingAttrException("actor");
-		}
-		// check for required attributes
-		if (ref == null || ref.length() <= 0) {
-			throw new MissingAttrException("ref");
-		}
-
-		// check for required attributes
-		if (status == null) {
-			throw new MissingAttrException("status");
-		}
-
-		HResult hresult = new HResult();
-		hresult.setResult(result);
-		hresult.setStatus(status);
-		options.setRef(ref);
-		HMessage hmessage = buildMessage(actor, "hResult", hresult, options);
-		return hmessage;
-	}
-
-	/**
-	 * if result type is double
-	 * 
-	 * @param actor
-	 * @param ref
-	 * @param status
-	 * @param result
-	 * @param options
-	 * @return
-	 * @throws MissingAttrException
-	 */
-	public HMessage buildResult(String actor, String ref, ResultStatus status,
-			double result, HMessageOptions options) throws MissingAttrException {
-		// check for required attributes
-		if (actor == null || actor.length() <= 0) {
-			throw new MissingAttrException("actor");
-		}
-		// check for required attributes
-		if (ref == null || ref.length() <= 0) {
-			throw new MissingAttrException("ref");
-		}
-
-		// check for required attributes
-		if (status == null) {
-			throw new MissingAttrException("status");
-		}
-
-		HResult hresult = new HResult();
-		hresult.setResult(result);
-		hresult.setStatus(status);
-		options.setRef(ref);
-		HMessage hmessage = buildMessage(actor, "hResult", hresult, options);
-		return hmessage;
-	}
-
-	/**
-	 * if result type is long.
-	 * 
-	 * @param actor
-	 * @param ref
-	 * @param status
-	 * @param result
-	 * @param options
-	 * @return
-	 * @throws MissingAttrException
-	 */
-	public HMessage buildResult(String actor, String ref, ResultStatus status,
-			long result, HMessageOptions options) throws MissingAttrException {
+			Object result, HMessageOptions options) throws MissingAttrException {
 		// check for required attributes
 		if (actor == null || actor.length() <= 0) {
 			throw new MissingAttrException("actor");
@@ -1462,13 +830,13 @@ public class HClient {
 						try {
 							statusDelegate.onStatus(hstatus);
 						} catch (Exception e) {
-							e.printStackTrace();
+							logger.error("message: ", e);
 						}
 					}
 				})).start();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("message", e);
 		}
 	}
 
@@ -1484,42 +852,41 @@ public class HClient {
 	 * @param message
 	 */
 	private void notifyMessage(final HMessage message) {
-		try {
-			if (!this.messagesDelegates.isEmpty()
-					&& this.messagesDelegates.containsKey(message.getRef())) {
-				notifyMessage(message,
-						this.messagesDelegates.get(message.getRef()));
-				if (this.timeoutHashtable.contains(message.getRef())) {
-					Timer timeout = timeoutHashtable.get(message.getRef());
-					if (timeout != null) {
-						timeout.cancel();
-						timeout = null;
-					}
-				}
-
-			} else {
-				try {
-					if (this.messageDelegate != null) {
-
-						// return message asynchronously
-						(new Thread(new Runnable() {
-							public void run() {
-								try {
-									messageDelegate.onMessage(message);
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-						})).start();
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
+		if (!this.messagesDelegates.isEmpty()
+				&& message.getRef() != null
+				&& this.messagesDelegates.containsKey(HUtil.getApiRef(message
+						.getRef()))) {
+			notifyMessage(message, this.messagesDelegates.get(HUtil
+					.getApiRef(message.getRef())));
+			if (this.timeoutHashtable.containsKey(HUtil.getApiRef(message
+					.getRef()))) {
+				Timer timeout = timeoutHashtable.get(HUtil.getApiRef(message
+						.getRef()));
+				if (timeout != null) {
+					timeout.cancel();
+					timeout = null;
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
+		} else if (message.getType() != null
+				&& !message.getType().equalsIgnoreCase("hresult")) {
+			try {
+				if (this.messageDelegate != null) {
+					// return message asynchronously
+					(new Thread(new Runnable() {
+						public void run() {
+							try {
+								messageDelegate.onMessage(message);
+							} catch (Exception e) {
+								logger.error("message: ", e);
+							}
+						}
+					})).start();
+				}
+			} catch (Exception e) {
+				logger.error("message: ", e);
+			}
+		}
 	}
 
 	/**
@@ -1540,7 +907,7 @@ public class HClient {
 						try {
 							messageDelegate.onMessage(message);
 						} catch (Exception e) {
-							e.printStackTrace();
+							logger.error("message: ", e);
 						}
 					}
 				})).start();
@@ -1548,7 +915,7 @@ public class HClient {
 				// results are dropped
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 	}
 
@@ -1565,7 +932,7 @@ public class HClient {
 		try {
 			obj.put("errorMsg", errorMsg);
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 		HResult hresult = new HResult();
 		hresult.setResult(obj);
@@ -1592,7 +959,7 @@ public class HClient {
 		try {
 			obj.put("errorMsg", errorMsg);
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 		HResult hresult = new HResult();
 		hresult.setResult(obj);
@@ -1625,10 +992,12 @@ public class HClient {
 			try {
 				System.out.println("<<<<<" + jsonData.toString());
 				if (type.equalsIgnoreCase("hmessage")) {
-					notifyMessage(new HMessage(jsonData));
+					HMessage message = new HMessage(jsonData);
+					notifyMessage(message);
 				}
 
 			} catch (Exception e) {
+				logger.error("message: ", e);
 				System.out.println("erreur datacallBack : " + e.toString());
 			}
 		}

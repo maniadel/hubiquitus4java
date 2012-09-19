@@ -25,15 +25,20 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @version 0.5 hAPI options. For more info, see Hubiquitus reference
  */
 
 public class HOptions implements Cloneable {
+	
+	final Logger logger = LoggerFactory.getLogger(HOptions.class);
 
 	private String transport = "socketio";
 	private List<String> endpoints = null;
+	private int timeout = 30000;
 
 	public HOptions() {
 		setEndpoints(null);
@@ -57,7 +62,7 @@ public class HOptions implements Cloneable {
 			}
 
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ",e);
 		}
 	}
 
@@ -69,7 +74,7 @@ public class HOptions implements Cloneable {
 	/* Getters & Setters */
 
 	/**
-	 * Transport layer used to connect to hNode (ie : xmpp, socketio)
+	 * Transport layer used to connect to hNode (ie : socketio)
 	 */
 	public String getTransport() {
 		return transport;
@@ -81,10 +86,7 @@ public class HOptions implements Cloneable {
 
 	}
 
-	/**
-	 * Only valid if transport = xmpp hNode gateway endpoints formated as
-	 * domain:port/path (by default : localhost:8080)
-	 */
+	
 	public List<String> getEndpoints() {
 		return new ArrayList<String>(this.endpoints);
 	}
@@ -96,6 +98,14 @@ public class HOptions implements Cloneable {
 			this.endpoints = new ArrayList<String>();
 			this.endpoints.add("http://localhost:8080/");
 		}
+	}
+	
+	public int getTimeout(){
+		return this.timeout;
+	}
+	
+	public void setTimeout(int timeOut){
+		this.timeout = timeOut;
 	}
 
 

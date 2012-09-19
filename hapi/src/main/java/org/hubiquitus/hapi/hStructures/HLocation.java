@@ -21,6 +21,8 @@ package org.hubiquitus.hapi.hStructures;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @version 0.5 This structure describe the location
@@ -28,6 +30,7 @@ import org.json.JSONObject;
 
 public class HLocation extends JSONObject {
 
+	final Logger logger = LoggerFactory.getLogger(HLocation.class);
 
 	public HLocation() {
 		super();
@@ -36,7 +39,6 @@ public class HLocation extends JSONObject {
 	public HLocation(JSONObject jsonObj) throws JSONException {
 		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
-
 
 	/* Getters & Setters */
 
@@ -58,6 +60,7 @@ public class HLocation extends JSONObject {
 				this.put("pos", pos);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -82,6 +85,7 @@ public class HLocation extends JSONObject {
 				this.put("zip", zip);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -106,6 +110,7 @@ public class HLocation extends JSONObject {
 				this.put("num", num);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -130,6 +135,7 @@ public class HLocation extends JSONObject {
 				this.put("wayType", wayType);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -154,6 +160,7 @@ public class HLocation extends JSONObject {
 				this.put("way", way);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -178,6 +185,7 @@ public class HLocation extends JSONObject {
 				this.put("addr", addr);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -202,6 +210,7 @@ public class HLocation extends JSONObject {
 				this.put("floor", floor);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -226,6 +235,7 @@ public class HLocation extends JSONObject {
 				this.put("building", building);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -250,6 +260,7 @@ public class HLocation extends JSONObject {
 				this.put("city", city);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -274,6 +285,7 @@ public class HLocation extends JSONObject {
 				this.put("countryCode", countryCode);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 }

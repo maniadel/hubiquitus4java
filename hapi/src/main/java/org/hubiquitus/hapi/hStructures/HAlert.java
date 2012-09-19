@@ -21,6 +21,8 @@ package org.hubiquitus.hapi.hStructures;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @version 0.5 Alert message payload
@@ -28,7 +30,7 @@ import org.json.JSONObject;
 
 public class HAlert extends JSONObject {
 
-	// private JSONObject halert = new JSONObject();
+	final Logger logger = LoggerFactory.getLogger(HAlert.class);
 
 	public HAlert() {
 		super();
@@ -66,6 +68,7 @@ public class HAlert extends JSONObject {
 				this.put("alert", alert);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 

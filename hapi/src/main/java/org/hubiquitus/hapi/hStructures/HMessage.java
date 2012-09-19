@@ -19,19 +19,20 @@
 
 package org.hubiquitus.hapi.hStructures;
 
-import java.util.Calendar;
-
-import org.hubiquitus.hapi.util.DateISO8601;
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 /**
  * @version 0.5 hAPI Command. For more info, see Hubiquitus reference
  */
 
 public class HMessage extends JSONObject {
-
+	
+	final Logger logger = LoggerFactory.getLogger(HMessage.class);
 
 	public HMessage() {
 		super();
@@ -66,6 +67,7 @@ public class HMessage extends JSONObject {
 				this.put("msgid", msgid);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -99,6 +101,7 @@ public class HMessage extends JSONObject {
 				this.put("actor", actor);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -125,6 +128,7 @@ public class HMessage extends JSONObject {
 				this.put("convid", convid);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -158,6 +162,7 @@ public class HMessage extends JSONObject {
 				this.put("ref", ref);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 
 	}
@@ -183,6 +188,7 @@ public class HMessage extends JSONObject {
 				this.put("type", type);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -214,6 +220,7 @@ public class HMessage extends JSONObject {
 				this.put("priority", priority.value());
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -222,10 +229,10 @@ public class HMessage extends JSONObject {
 	 * 
 	 * @return relevance. NULL if undefined
 	 */
-	public Calendar getRelevance() {
-		Calendar relevance;
+	public DateTime getRelevance() {
+		DateTime relevance;
 		try {
-			relevance = (DateISO8601.toCalendar(this.getString("relevance")));
+			relevance = DateTime.parse(this.getString("relevance"));
 			;
 		} catch (JSONException e) {
 			relevance = null;
@@ -233,15 +240,15 @@ public class HMessage extends JSONObject {
 		return relevance;
 	}
 
-	public void setRelevance(Calendar relevance) {
+	public void setRelevance(DateTime relevance) {
 		try {
 			if (relevance == null) {
 				this.remove("relevance");
 			} else {
-				this.put("relevance", DateISO8601.fromCalendar(relevance));
+				this.put("relevance", relevance);
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 	}
 
@@ -275,6 +282,7 @@ public class HMessage extends JSONObject {
 				this.put("persistent", _persistent);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -301,7 +309,7 @@ public class HMessage extends JSONObject {
 				this.put("location", location);
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 	}
 
@@ -326,6 +334,7 @@ public class HMessage extends JSONObject {
 				this.put("author", author);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -352,6 +361,7 @@ public class HMessage extends JSONObject {
 				this.put("publisher", publisher);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -360,25 +370,25 @@ public class HMessage extends JSONObject {
 	 * 
 	 * @return published. NULL if undefined
 	 */
-	public Calendar getPublished() {
-		Calendar published;
+	public DateTime getPublished() {
+		DateTime published;
 		try {
-			published = (DateISO8601.toCalendar(this.getString("published")));
+			published =DateTime.parse(this.getString("published"));
 		} catch (JSONException e) {
 			published = null;
 		}
 		return published;
 	}
 
-	public void setPublished(Calendar published) {
+	public void setPublished(DateTime published) {
 		try {
 			if (published == null) {
 				this.remove("published");
 			} else {
-				this.put("published", DateISO8601.fromCalendar(published));
+				this.put("published", published);
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: " , e);
 		}
 	}
 
@@ -406,14 +416,14 @@ public class HMessage extends JSONObject {
 				this.put("headers", headers);
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 	}
 
 	/**
-	 * When we don't know the type of payload. It will return an object.
+	 * When we don't know the type of payload. It will return an object. 
 	 * 
-	 * @return payload. NULL if undefined
+	 * @return payload reference. NULL if undefined
 	 */
 	public Object getPayload() {
 		Object payload;
@@ -428,7 +438,7 @@ public class HMessage extends JSONObject {
 	/**
 	 * if payload type is JSONObject
 	 * 
-	 * @return payload. NULL if undefined
+	 * @return payload reference. NULL if undefined
 	 */
 
 	public JSONObject getPayloadAsJSONObject() {
@@ -444,7 +454,7 @@ public class HMessage extends JSONObject {
 	/**
 	 * if payload type is JSONArray
 	 * 
-	 * @return payload. NULL if undefined
+	 * @return payload reference. NULL if undefined
 	 */
 	public JSONArray getPayloadAsJSONArray() {
 		JSONArray payload;
@@ -459,7 +469,7 @@ public class HMessage extends JSONObject {
 	/**
 	 * if payload type is String
 	 * 
-	 * @return payload. NULL if undefined
+	 * @return payload reference. NULL if undefined
 	 */
 	public String getPayloadAsString() {
 		String payload;
@@ -474,7 +484,7 @@ public class HMessage extends JSONObject {
 	/**
 	 * if payload type is Boolean
 	 * 
-	 * @return payload. Null if undefined
+	 * @return payload reference. Null if undefined
 	 */
 	public Boolean getPayloadAsBoolean() {
 		Boolean payload;
@@ -489,7 +499,7 @@ public class HMessage extends JSONObject {
 	/**
 	 * if payload type is Integer
 	 * 
-	 * @return payload. Null if undefined.
+	 * @return payload reference. Null if undefined.
 	 */
 	public Integer getPayloadAsInt() {
 		Integer payload;
@@ -504,7 +514,7 @@ public class HMessage extends JSONObject {
 	/**
 	 * if payload type is Double
 	 * 
-	 * @return payload, Null if undefined.
+	 * @return payload reference, Null if undefined.
 	 */
 	public Double getPayloadAsDouble() {
 		Double payload;
@@ -517,25 +527,9 @@ public class HMessage extends JSONObject {
 	}
 
 	/**
-	 * if payload type is long
-	 * 
-	 * @return payload. Null if undefined.
-	 */
-	public Long getPayloadAsLong() {
-		Long payload;
-		try {
-			payload = this.getLong("payload");
-		} catch (JSONException e) {
-			payload = null;
-		}
-		return payload;
-	}
-
-	
-
-	/**
 	 * if payload type is HAlert. if not return null.
-	 * @return HAlert. NULL if undefined
+	 * 
+	 * @return HAlert copy. NULL if undefined
 	 */
 	public HAlert getPayloadAsHAlert() {
 		try {
@@ -546,14 +540,14 @@ public class HMessage extends JSONObject {
 				return null;
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			return null;
 		}
 	}
-	
+
 	/**
 	 * if payload type is HAck, if not return null.
-	 * @return HAck. Null if undefined.
+	 * 
+	 * @return HAck copy. Null if undefined.
 	 */
 	public HAck getPayloadAsHAck() {
 		try {
@@ -567,10 +561,11 @@ public class HMessage extends JSONObject {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * if payload is HMeasure, if not return null.
-	 * @return HMeasure. Null if undefined.
+	 * 
+	 * @return HMeasure copy. Null if undefined.
 	 */
 	public HMeasure getPayloadAsHmeasure() {
 		try {
@@ -587,12 +582,14 @@ public class HMessage extends JSONObject {
 
 	/**
 	 * if payload is HConvState, if not return null.
-	 * @return HConvState. Null if undefined.
+	 * 
+	 * @return HConvState copy. Null if undefined.
 	 */
 	public HConvState getPayloadAsHConvState() {
 		try {
 			if (this.getType().toLowerCase().equalsIgnoreCase("hconvstate")) {
-				HConvState hconvstate = new HConvState(this.getJSONObject("payload"));
+				HConvState hconvstate = new HConvState(
+						this.getJSONObject("payload"));
 				return hconvstate;
 			} else {
 				return null;
@@ -601,10 +598,11 @@ public class HMessage extends JSONObject {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * if payload is HResult, if not return null.
-	 * @return HResult. Null if undefined.
+	 * 
+	 * @return HResult copy. Null if undefined.
 	 */
 	public HResult getPayloadAsHResult() {
 		try {
@@ -618,10 +616,11 @@ public class HMessage extends JSONObject {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * if payload is HCommand, if not return null.
-	 * @return HCommand. Null if undefined.
+	 * 
+	 * @return HCommand copy. Null if undefined.
 	 */
 	public HCommand getPayloadAsHCommand() {
 		try {
@@ -636,15 +635,12 @@ public class HMessage extends JSONObject {
 		}
 	}
 
-	
-	
-
 	/**
-	 * if payload type is JSONObject.
+	 * Payload type could be JSONObject, JSONArray, String, Boolean, Number
 	 * 
 	 * @param payload
 	 */
-	public void setPayload(JSONObject payload) {
+	public void setPayload(Object payload) {
 		try {
 			if (payload == null) {
 				this.remove("payload");
@@ -652,100 +648,7 @@ public class HMessage extends JSONObject {
 				this.put("payload", payload);
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * if payload type is JSONArray.
-	 * 
-	 * @param payload
-	 */
-	public void setPayload(JSONArray payload) {
-		try {
-			if (payload == null) {
-				this.remove("payload");
-			} else {
-				this.put("payload", payload);
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * if payload type is String.
-	 * 
-	 * @param payload
-	 */
-	public void setPayload(String payload) {
-		try {
-			if (payload == null) {
-				this.remove("payload");
-			} else {
-				this.put("payload", payload);
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * if payload type is Boolean
-	 * 
-	 * @param payload
-	 */
-	public void setPayload(Boolean payload) {
-		try {
-			if (payload == null) {
-				this.remove("payload");
-			} else {
-				this.put("payload", payload);
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * if payload type is int
-	 * 
-	 * @param payload
-	 */
-	public void setPayload(int payload) {
-		try {
-			this.put("payload", payload);
-
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * if payload type is double.
-	 * 
-	 * @param payload
-	 */
-	public void setPayload(double payload) {
-		try {
-			this.put("payload", payload);
-
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * if payload type is long
-	 * 
-	 * @param payload
-	 */
-	public void setPayload(long payload) {
-		try {
-			this.put("payload", payload);
-
-		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 	}
 
@@ -777,7 +680,40 @@ public class HMessage extends JSONObject {
 				this.put("timeout", timeout);
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
+		}
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public DateTime getSent() {
+		DateTime sent;
+		try {
+			sent =DateTime.parse(this.getString("sent"));
+		} catch (JSONException e) {
+			sent = null;
+		}
+		return sent;
+	}
+
+	/**
+	 * Set by theAPI when sending the message. As the published attribute can
+	 * contain the original creation date of the information know by the author,
+	 * this attribute contains the creation datetime of the hMessage
+	 * 
+	 * @param sent
+	 */
+	public void setSent(DateTime sent) {
+		try {
+			if (sent == null) {
+				this.remove("sent");
+			} else {
+				this.put("sent", sent);
+			}
+		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 }

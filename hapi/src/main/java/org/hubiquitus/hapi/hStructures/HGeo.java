@@ -2,6 +2,8 @@ package org.hubiquitus.hapi.hStructures;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * since v0.5 Specifies the exact longitude and latitude of the location
@@ -12,6 +14,7 @@ import org.json.JSONObject;
  */
 public class HGeo extends JSONObject {
 
+	final Logger logger = LoggerFactory.getLogger(HGeo.class);
 
 	public HGeo() {
 		super();
@@ -26,7 +29,6 @@ public class HGeo extends JSONObject {
 		setLng(lng);
 		setLat(lat);
 	}
-
 
 	/* Setter & Getter */
 
@@ -44,6 +46,7 @@ public class HGeo extends JSONObject {
 		try {
 			this.put("lng", lng);
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -61,6 +64,7 @@ public class HGeo extends JSONObject {
 		try {
 			this.put("lat", lat);
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 }

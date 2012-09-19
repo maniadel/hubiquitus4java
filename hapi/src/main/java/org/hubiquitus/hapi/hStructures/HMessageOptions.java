@@ -19,8 +19,7 @@
 
 package org.hubiquitus.hapi.hStructures;
 
-import java.util.Calendar;
-
+import org.joda.time.DateTime;
 import org.json.JSONObject;
 
 /**
@@ -33,13 +32,13 @@ public class HMessageOptions {
 	private String ref = null;
 	private String convid = null;
 	private HMessagePriority priority = null;
-	private Calendar relevance = null;
+	private DateTime relevance = null;
 	private Boolean _persistent = null;
 	private HLocation location = null;
 	private String author = null;
 	private JSONObject headers = null;
-	private Calendar published = null;
-	private Integer timeout = null;
+	private DateTime published = null;
+	private Integer timeout = 0;
 	
 	/**
 	 * @return The msgid of the message refered to
@@ -77,10 +76,10 @@ public class HMessageOptions {
 	 * Date-time until which the message is considered as relevant.
 	 * @return relevance. NULL if undefined
 	 */
-	public Calendar getRelevance() {
+	public DateTime getRelevance() {
 		return relevance;
 	}
-	public void setRelevance(Calendar relevance) {
+	public void setRelevance(DateTime relevance) {
 		this.relevance = relevance;
 	}
 	
@@ -131,10 +130,10 @@ public class HMessageOptions {
 	 * Date-time when the message is publish
 	 * @return relevance. NULL if undefined
 	 */
-	public Calendar getPublished() {
+	public DateTime getPublished() {
 		return published;
 	}
-	public void setPublished(Calendar published) {
+	public void setPublished(DateTime published) {
 		this.published = published;
 	}
 	

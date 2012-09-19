@@ -21,6 +21,8 @@ package org.hubiquitus.hapi.hStructures;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @version 0.5 hAPI allows to attach acknowledgements to each message.
@@ -32,8 +34,7 @@ import org.json.JSONObject;
 
 public class HAck extends JSONObject {
 
-	//private JSONObject hack = new JSONObject();
-
+	final Logger logger = LoggerFactory.getLogger(HAck.class);
 	public HAck() {
 		super();
 	};
@@ -68,6 +69,7 @@ public class HAck extends JSONObject {
 				this.put("ack", ack.value());
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 }
