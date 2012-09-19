@@ -23,7 +23,6 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -532,8 +531,6 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 		this.addTextArea(status.toString());
 		if (status.getErrorCode() == ConnectionError.NO_ERROR
 				|| status.getErrorMsg() == null) {
-			System.out.println("--->1. : " + status);
-			System.out.println("--->2. : " + status.getStatus());
 			this.setStatusArea(status.getStatus().toString());
 		} else {
 			this.setStatusArea(status.getStatus().toString() + " : "

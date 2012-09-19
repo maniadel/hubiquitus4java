@@ -868,7 +868,6 @@ public class HClient {
 		 */
 		public void onData(String type, JSONObject jsonData) {
 			try {
-				System.out.println("<<<<<" + jsonData.toString());
 				if (type.equalsIgnoreCase("hmessage")) {
 					HMessage message = new HMessage(jsonData);
 					notifyMessage(message);
@@ -876,7 +875,6 @@ public class HClient {
 
 			} catch (Exception e) {
 				logger.error("message: ", e);
-				System.out.println("erreur datacallBack : " + e.toString());
 			}
 		}
 	}
