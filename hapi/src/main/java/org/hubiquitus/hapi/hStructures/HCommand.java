@@ -25,7 +25,8 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 /**
- * @version 0.5 hAPI Command. For more info, see Hubiquitus reference
+ * @version 0.5 
+ * hAPI Command. For more info, see Hubiquitus reference
  */
 
 public class HCommand extends JSONObject {
@@ -48,8 +49,6 @@ public class HCommand extends JSONObject {
 	/* Getters & Setters */
 
 	/**
-	 * Mandatory.
-	 * 
 	 * @return command. NULL if undefined
 	 */
 	public String getCmd() {

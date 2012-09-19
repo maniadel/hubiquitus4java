@@ -25,7 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @version 0.5 This structure describe the location
+ * @version 0.5 
+ * This structure describe the location
  */
 
 public class HLocation extends JSONObject {

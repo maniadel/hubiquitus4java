@@ -25,11 +25,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @version 0.5 hAPI allows to attach acknowledgements to each message.
- *          Acknowledgements are used to identify the participants that have
- *          received or not received, read or not read a message Note, when a
- *          hMessage contains a such kind of payload, the convid must be
- *          provided with the same value has the acknowledged hMessage.
+ * @version 0.5 
+ * hAPI allows to attach acknowledgements to each message.
+ * Acknowledgements are used to identify the participants that have received or not received, read or not read a message Note, 
+ * when a hMessage contains a such kind of payload, the convid must be provided with the same value has the acknowledged hMessage.
  */
 
 public class HAck extends JSONObject {
@@ -47,7 +46,6 @@ public class HAck extends JSONObject {
 
 	/**
 	 * The status of the acknowledgement.
-	 * 
 	 * @return acknowledgement status. NULL if undefined
 	 */
 	public HAckValue getAck() {

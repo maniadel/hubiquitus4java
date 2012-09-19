@@ -124,8 +124,7 @@ public class HOptions implements Cloneable {
 
 	@Override
 	public String toString() {
-		return "HOptions [transport=" + transport + ", endpoints="
-				+ endpoints + "]";
+		return "HOptions [transport=" + transport + ", endpoints=" + endpoints + "]";
 	}
 
 	@Override

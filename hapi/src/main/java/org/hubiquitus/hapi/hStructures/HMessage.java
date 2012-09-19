@@ -27,7 +27,8 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 /**
- * @version 0.5 hAPI Command. For more info, see Hubiquitus reference
+ * @version 0.5 
+ * hAPI Command. For more info, see Hubiquitus reference
  */
 
 public class HMessage extends JSONObject {
@@ -46,7 +47,6 @@ public class HMessage extends JSONObject {
 
 	/**
 	 * Mandatory. Filled by the hApi.
-	 * 
 	 * @return message id. NULL if undefined
 	 */
 	public String getMsgid() {
@@ -72,15 +72,9 @@ public class HMessage extends JSONObject {
 	}
 
 	/**
-	 * Mandatory The unique ID of the channel through which the message is
-	 * published.
-	 * 
-	 * The JID through which the message is published. The JID can be that of a
-	 * channel (beginning with #) or a user.
-	 * 
-	 * A special actor called ‘session’ indicates that the HServer should handle
-	 * the hMessage.
-	 * 
+	 * Mandatory The unique ID of the channel through which the message is published.
+	 * The JID through which the message is published. The JID can be that of a channel (beginning with #) or a user.
+	 * A special actor called ‘session’ indicates that the HServer should handle the hMessage.
 	 * @return actor. NULL if undefined
 	 */
 	public String getActor() {
@@ -107,7 +101,6 @@ public class HMessage extends JSONObject {
 
 	/**
 	 * Mandatory. Filled by the hApi if empty.
-	 * 
 	 * @return conversation id. NULL if undefined
 	 */
 	public String getConvid() {
@@ -133,8 +126,6 @@ public class HMessage extends JSONObject {
 	}
 
 	/**
-	 * Since v0.5
-	 * 
 	 * @return reference to another hMessage msgid. NULL if undefined.
 	 */
 	public String getRef() {
@@ -147,13 +138,6 @@ public class HMessage extends JSONObject {
 		return ref;
 	}
 
-	/**
-	 * Since v0.5 Refers to another hMessage msgid. Provide a mechanism to do
-	 * correlation between messages. For example, it is used by the command
-	 * pattern and the acknowledgement (see. hAck)
-	 * 
-	 * @param ref
-	 */
 	public void setRef(String ref) {
 		try {
 			if (ref == null) {
@@ -193,9 +177,7 @@ public class HMessage extends JSONObject {
 	}
 
 	/**
-	 * If UNDEFINED, priority lower to 0.
-	 * 
-	 * @return priority.
+	 * @return Priority.If UNDEFINED, priority lower to 0.
 	 */
 	public HMessagePriority getPriority() {
 		HMessagePriority priority;
@@ -226,7 +208,6 @@ public class HMessage extends JSONObject {
 
 	/**
 	 * Date-time until which the message is considered as relevant.
-	 * 
 	 * @return relevance. NULL if undefined
 	 */
 	public DateTime getRelevance() {
@@ -253,8 +234,6 @@ public class HMessage extends JSONObject {
 	}
 
 	/**
-	 * Since v0.5
-	 * 
 	 * @return persist message or not. NULL if undefined
 	 */
 	public Boolean getPersistent() {
@@ -267,13 +246,6 @@ public class HMessage extends JSONObject {
 		return _persistent;
 	}
 
-	/**
-	 * Since v0.5 Possible values are : true : indicates if the message MUST be
-	 * persisted by the middleware false: indicates that the message is volatile
-	 * and will not be persisted by the middleware. Defaults to true if omitted.
-	 * 
-	 * @param _persistent
-	 */
 	public void setPersistent(Boolean _persistent) {
 		try {
 			if (_persistent == null) {
@@ -288,7 +260,6 @@ public class HMessage extends JSONObject {
 
 	/**
 	 * The geographical location to which the message refer.
-	 * 
 	 * @return location. NULL if undefined
 	 */
 	public HLocation getLocation() {
@@ -339,8 +310,6 @@ public class HMessage extends JSONObject {
 	}
 
 	/**
-	 * Mandatory
-	 * 
 	 * @return publisher of this message. NULL if undefined
 	 */
 	public String getPublisher() {
@@ -366,8 +335,6 @@ public class HMessage extends JSONObject {
 	}
 
 	/**
-	 * Mandatory. The date and time at which the message has been published.
-	 * 
 	 * @return published. NULL if undefined
 	 */
 	public DateTime getPublished() {
@@ -394,7 +361,6 @@ public class HMessage extends JSONObject {
 
 	/**
 	 * The list of headers attached to this message.
-	 * 
 	 * @return Headers. NULL if undefined
 	 */
 	public JSONObject getHeaders() {
@@ -422,7 +388,6 @@ public class HMessage extends JSONObject {
 
 	/**
 	 * When we don't know the type of payload. It will return an object. 
-	 * 
 	 * @return payload reference. NULL if undefined
 	 */
 	public Object getPayload() {
@@ -437,7 +402,6 @@ public class HMessage extends JSONObject {
 
 	/**
 	 * if payload type is JSONObject
-	 * 
 	 * @return payload reference. NULL if undefined
 	 */
 
@@ -453,7 +417,6 @@ public class HMessage extends JSONObject {
 
 	/**
 	 * if payload type is JSONArray
-	 * 
 	 * @return payload reference. NULL if undefined
 	 */
 	public JSONArray getPayloadAsJSONArray() {
@@ -468,7 +431,6 @@ public class HMessage extends JSONObject {
 
 	/**
 	 * if payload type is String
-	 * 
 	 * @return payload reference. NULL if undefined
 	 */
 	public String getPayloadAsString() {
@@ -483,7 +445,6 @@ public class HMessage extends JSONObject {
 
 	/**
 	 * if payload type is Boolean
-	 * 
 	 * @return payload reference. Null if undefined
 	 */
 	public Boolean getPayloadAsBoolean() {
@@ -498,7 +459,6 @@ public class HMessage extends JSONObject {
 
 	/**
 	 * if payload type is Integer
-	 * 
 	 * @return payload reference. Null if undefined.
 	 */
 	public Integer getPayloadAsInt() {
@@ -513,7 +473,6 @@ public class HMessage extends JSONObject {
 
 	/**
 	 * if payload type is Double
-	 * 
 	 * @return payload reference, Null if undefined.
 	 */
 	public Double getPayloadAsDouble() {
@@ -528,7 +487,6 @@ public class HMessage extends JSONObject {
 
 	/**
 	 * if payload type is HAlert. if not return null.
-	 * 
 	 * @return HAlert copy. NULL if undefined
 	 */
 	public HAlert getPayloadAsHAlert() {
@@ -546,7 +504,6 @@ public class HMessage extends JSONObject {
 
 	/**
 	 * if payload type is HAck, if not return null.
-	 * 
 	 * @return HAck copy. Null if undefined.
 	 */
 	public HAck getPayloadAsHAck() {
@@ -564,7 +521,6 @@ public class HMessage extends JSONObject {
 
 	/**
 	 * if payload is HMeasure, if not return null.
-	 * 
 	 * @return HMeasure copy. Null if undefined.
 	 */
 	public HMeasure getPayloadAsHmeasure() {
@@ -582,7 +538,6 @@ public class HMessage extends JSONObject {
 
 	/**
 	 * if payload is HConvState, if not return null.
-	 * 
 	 * @return HConvState copy. Null if undefined.
 	 */
 	public HConvState getPayloadAsHConvState() {
@@ -601,7 +556,6 @@ public class HMessage extends JSONObject {
 
 	/**
 	 * if payload is HResult, if not return null.
-	 * 
 	 * @return HResult copy. Null if undefined.
 	 */
 	public HResult getPayloadAsHResult() {
@@ -619,7 +573,6 @@ public class HMessage extends JSONObject {
 
 	/**
 	 * if payload is HCommand, if not return null.
-	 * 
 	 * @return HCommand copy. Null if undefined.
 	 */
 	public HCommand getPayloadAsHCommand() {
@@ -637,7 +590,6 @@ public class HMessage extends JSONObject {
 
 	/**
 	 * Payload type could be JSONObject, JSONArray, String, Boolean, Number
-	 * 
 	 * @param payload
 	 */
 	public void setPayload(Object payload) {
@@ -653,8 +605,6 @@ public class HMessage extends JSONObject {
 	}
 
 	/**
-	 * Since v0.5
-	 * 
 	 * @return timeout. 0 if undefined.
 	 */
 	public Integer getTimeout() {
@@ -667,11 +617,6 @@ public class HMessage extends JSONObject {
 		return timeout;
 	}
 
-	/**
-	 * Since v0.5 Define the timeout in ms to get an answer to the hMessage.
-	 * 
-	 * @param timeout
-	 */
 	public void setTimeout(Integer timeout) {
 		try {
 			if (timeout == null) {
@@ -685,8 +630,7 @@ public class HMessage extends JSONObject {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return sent. Null if undefined.
 	 */
 	public DateTime getSent() {
 		DateTime sent;
@@ -698,13 +642,6 @@ public class HMessage extends JSONObject {
 		return sent;
 	}
 
-	/**
-	 * Set by theAPI when sending the message. As the published attribute can
-	 * contain the original creation date of the information know by the author,
-	 * this attribute contains the creation datetime of the hMessage
-	 * 
-	 * @param sent
-	 */
 	public void setSent(DateTime sent) {
 		try {
 			if (sent == null) {

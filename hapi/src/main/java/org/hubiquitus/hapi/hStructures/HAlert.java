@@ -25,7 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @version 0.5 Alert message payload
+ * @version 0.5 
+ * Alert message payload
  */
 
 public class HAlert extends JSONObject {
@@ -47,7 +48,6 @@ public class HAlert extends JSONObject {
 	/**
 	 * The message provided by the author to describe the alert. (Eg : Power
 	 * Failure)
-	 * 
 	 * @return alert message. NULL if undefined
 	 */
 	public String getAlert() {

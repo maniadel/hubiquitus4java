@@ -25,7 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @version 0.5 This structure describe the connection status
+ * @version 0.5 
+ * This structure describe the connection status
  */
 
 public class HStatus extends JSONObject {
@@ -51,7 +52,6 @@ public class HStatus extends JSONObject {
 
 	/**
 	 * Mandatory. Connection status.
-	 * 
 	 * @return status. NULL if undefined
 	 */
 	public ConnectionStatus getStatus() {
@@ -78,7 +78,6 @@ public class HStatus extends JSONObject {
 
 	/**
 	 * Mandatory. Valid only if status = error
-	 * 
 	 * @return error code. NULL if undefined
 	 */
 	public ConnectionError getErrorCode() {
@@ -104,9 +103,7 @@ public class HStatus extends JSONObject {
 	}
 
 	/**
-	 * Error message. Platform dependent (low level layer messages) Should only
-	 * be used for debug
-	 * 
+	 * Error message. Platform dependent (low level layer messages) Should only be used for debug
 	 * @return error message. NULL if undefined
 	 */
 	public String getErrorMsg() {

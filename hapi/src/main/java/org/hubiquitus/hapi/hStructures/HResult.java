@@ -26,8 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
- * @version 0.5 hAPI result. For more info, see Hubiquitus reference
+ * @version 0.5 
+ * hAPI result. For more info, see Hubiquitus reference
  */
 
 public class HResult extends JSONObject {
@@ -46,7 +46,6 @@ public class HResult extends JSONObject {
 
 	/**
 	 * Mandatory. Execution status.
-	 * 
 	 * @return status. NULL if undefined
 	 */
 	public ResultStatus getStatus() {
@@ -73,7 +72,6 @@ public class HResult extends JSONObject {
 
 	/**
 	 * if result type is a JSONObject
-	 * 
 	 * @return result of a command operation or a subscriptions operation.
 	 */
 	public JSONObject getResultAsJSONObject() {
@@ -88,8 +86,6 @@ public class HResult extends JSONObject {
 
 	/**
 	 * if result type is a JSONArray
-	 * 
-	 * @return
 	 */
 	public JSONArray getResultAsJSONArray() {
 		JSONArray result;
@@ -103,7 +99,6 @@ public class HResult extends JSONObject {
 
 	/**
 	 * if result type is a String
-	 * 
 	 * @return result of a command operation or a subscriptions operation.
 	 */
 	public String getResultAsString() {
@@ -118,8 +113,6 @@ public class HResult extends JSONObject {
 
 	/**
 	 * if result type is Boolean
-	 * 
-	 * @return
 	 */
 	public Boolean getResultAsBoolean() {
 		Boolean result;
@@ -133,8 +126,6 @@ public class HResult extends JSONObject {
 
 	/**
 	 * if result type is Integer
-	 * 
-	 * @return
 	 */
 	public Integer getResultAsInt() {
 		Integer result;
@@ -148,8 +139,6 @@ public class HResult extends JSONObject {
 
 	/**
 	 * if result type is Double
-	 * 
-	 * @return
 	 */
 	public Double getResultAsDouble() {
 		Double result;
@@ -164,7 +153,6 @@ public class HResult extends JSONObject {
 	
 	/**
 	 * The result type could be JSONObject, JSONArray, String, Boolean, Number.
-	 * 
 	 * @param result
 	 */
 	public void setResult(Object result) {

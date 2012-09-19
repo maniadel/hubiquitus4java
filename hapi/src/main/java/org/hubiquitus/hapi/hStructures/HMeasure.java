@@ -25,7 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @version 0.5 Describes a measure payload
+ * @version 0.5 
+ * Describes a measure payload
  */
 
 public class HMeasure extends JSONObject {
@@ -46,7 +47,6 @@ public class HMeasure extends JSONObject {
 	/**
 	 * Specifies the unit in which the measure is expressed, should be in
 	 * lowercase.
-	 * 
 	 * @return unit. NULL if undefined
 	 */
 	public String getUnit() {
@@ -73,7 +73,6 @@ public class HMeasure extends JSONObject {
 
 	/**
 	 * Specify the value of the measure (ie : 31.2)
-	 * 
 	 * @return value. NULL if undefined
 	 */
 	public String getValue() {
