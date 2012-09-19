@@ -421,9 +421,9 @@ public class HMessage extends JSONObject {
 	}
 
 	/**
-	 * When we don't know the type of payload. It will return an object.
+	 * When we don't know the type of payload. It will return an object. 
 	 * 
-	 * @return payload. NULL if undefined
+	 * @return payload reference. NULL if undefined
 	 */
 	public Object getPayload() {
 		Object payload;
@@ -438,7 +438,7 @@ public class HMessage extends JSONObject {
 	/**
 	 * if payload type is JSONObject
 	 * 
-	 * @return payload. NULL if undefined
+	 * @return payload reference. NULL if undefined
 	 */
 
 	public JSONObject getPayloadAsJSONObject() {
@@ -454,7 +454,7 @@ public class HMessage extends JSONObject {
 	/**
 	 * if payload type is JSONArray
 	 * 
-	 * @return payload. NULL if undefined
+	 * @return payload reference. NULL if undefined
 	 */
 	public JSONArray getPayloadAsJSONArray() {
 		JSONArray payload;
@@ -469,7 +469,7 @@ public class HMessage extends JSONObject {
 	/**
 	 * if payload type is String
 	 * 
-	 * @return payload. NULL if undefined
+	 * @return payload reference. NULL if undefined
 	 */
 	public String getPayloadAsString() {
 		String payload;
@@ -484,7 +484,7 @@ public class HMessage extends JSONObject {
 	/**
 	 * if payload type is Boolean
 	 * 
-	 * @return payload. Null if undefined
+	 * @return payload reference. Null if undefined
 	 */
 	public Boolean getPayloadAsBoolean() {
 		Boolean payload;
@@ -499,7 +499,7 @@ public class HMessage extends JSONObject {
 	/**
 	 * if payload type is Integer
 	 * 
-	 * @return payload. Null if undefined.
+	 * @return payload reference. Null if undefined.
 	 */
 	public Integer getPayloadAsInt() {
 		Integer payload;
@@ -514,7 +514,7 @@ public class HMessage extends JSONObject {
 	/**
 	 * if payload type is Double
 	 * 
-	 * @return payload, Null if undefined.
+	 * @return payload reference, Null if undefined.
 	 */
 	public Double getPayloadAsDouble() {
 		Double payload;
@@ -529,7 +529,7 @@ public class HMessage extends JSONObject {
 	/**
 	 * if payload type is HAlert. if not return null.
 	 * 
-	 * @return HAlert. NULL if undefined
+	 * @return HAlert copy. NULL if undefined
 	 */
 	public HAlert getPayloadAsHAlert() {
 		try {
@@ -547,7 +547,7 @@ public class HMessage extends JSONObject {
 	/**
 	 * if payload type is HAck, if not return null.
 	 * 
-	 * @return HAck. Null if undefined.
+	 * @return HAck copy. Null if undefined.
 	 */
 	public HAck getPayloadAsHAck() {
 		try {
@@ -565,7 +565,7 @@ public class HMessage extends JSONObject {
 	/**
 	 * if payload is HMeasure, if not return null.
 	 * 
-	 * @return HMeasure. Null if undefined.
+	 * @return HMeasure copy. Null if undefined.
 	 */
 	public HMeasure getPayloadAsHmeasure() {
 		try {
@@ -583,7 +583,7 @@ public class HMessage extends JSONObject {
 	/**
 	 * if payload is HConvState, if not return null.
 	 * 
-	 * @return HConvState. Null if undefined.
+	 * @return HConvState copy. Null if undefined.
 	 */
 	public HConvState getPayloadAsHConvState() {
 		try {
@@ -602,7 +602,7 @@ public class HMessage extends JSONObject {
 	/**
 	 * if payload is HResult, if not return null.
 	 * 
-	 * @return HResult. Null if undefined.
+	 * @return HResult copy. Null if undefined.
 	 */
 	public HResult getPayloadAsHResult() {
 		try {
@@ -620,7 +620,7 @@ public class HMessage extends JSONObject {
 	/**
 	 * if payload is HCommand, if not return null.
 	 * 
-	 * @return HCommand. Null if undefined.
+	 * @return HCommand copy. Null if undefined.
 	 */
 	public HCommand getPayloadAsHCommand() {
 		try {
