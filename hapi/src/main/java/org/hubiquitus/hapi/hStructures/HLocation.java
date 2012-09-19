@@ -63,7 +63,7 @@ public class HLocation extends JSONObject {
 				this.put("pos", pos);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -88,7 +88,7 @@ public class HLocation extends JSONObject {
 				this.put("zip", zip);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -113,7 +113,7 @@ public class HLocation extends JSONObject {
 				this.put("num", num);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -138,7 +138,7 @@ public class HLocation extends JSONObject {
 				this.put("wayType", wayType);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -163,7 +163,7 @@ public class HLocation extends JSONObject {
 				this.put("way", way);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -188,7 +188,7 @@ public class HLocation extends JSONObject {
 				this.put("addr", addr);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -213,7 +213,7 @@ public class HLocation extends JSONObject {
 				this.put("floor", floor);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -238,7 +238,7 @@ public class HLocation extends JSONObject {
 				this.put("building", building);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -263,7 +263,7 @@ public class HLocation extends JSONObject {
 				this.put("city", city);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -288,7 +288,7 @@ public class HLocation extends JSONObject {
 				this.put("countryCode", countryCode);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 }

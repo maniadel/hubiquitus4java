@@ -68,7 +68,7 @@ public class HAlert extends JSONObject {
 				this.put("alert", alert);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 

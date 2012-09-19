@@ -67,7 +67,7 @@ public class HConvState extends JSONObject {
 				this.put("status", status);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 

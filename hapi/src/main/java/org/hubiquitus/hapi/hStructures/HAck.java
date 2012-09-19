@@ -67,7 +67,7 @@ public class HAck extends JSONObject {
 				this.put("ack", ack.value());
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 }

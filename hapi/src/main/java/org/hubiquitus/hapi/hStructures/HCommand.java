@@ -69,7 +69,7 @@ public class HCommand extends JSONObject {
 				this.put("cmd", cmd);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -94,7 +94,7 @@ public class HCommand extends JSONObject {
 				this.put("params", params);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 

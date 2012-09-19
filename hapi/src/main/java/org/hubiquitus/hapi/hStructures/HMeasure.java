@@ -67,7 +67,7 @@ public class HMeasure extends JSONObject {
 				this.put("unit", unit);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -93,7 +93,7 @@ public class HMeasure extends JSONObject {
 				this.put("value", value);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 }

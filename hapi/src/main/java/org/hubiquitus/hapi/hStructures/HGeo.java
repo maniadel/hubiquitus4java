@@ -49,7 +49,7 @@ public class HGeo extends JSONObject {
 		try {
 			this.put("lng", lng);
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -74,7 +74,7 @@ public class HGeo extends JSONObject {
 		try {
 			this.put("lat", lat);
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 }

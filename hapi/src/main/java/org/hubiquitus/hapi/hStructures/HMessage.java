@@ -67,7 +67,7 @@ public class HMessage extends JSONObject {
 				this.put("msgid", msgid);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -95,7 +95,7 @@ public class HMessage extends JSONObject {
 				this.put("actor", actor);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -121,7 +121,7 @@ public class HMessage extends JSONObject {
 				this.put("convid", convid);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -146,7 +146,7 @@ public class HMessage extends JSONObject {
 				this.put("ref", ref);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 
 	}
@@ -172,7 +172,7 @@ public class HMessage extends JSONObject {
 				this.put("type", type);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -202,7 +202,7 @@ public class HMessage extends JSONObject {
 				this.put("priority", priority.value());
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -213,8 +213,7 @@ public class HMessage extends JSONObject {
 	public DateTime getRelevance() {
 		DateTime relevance;
 		try {
-			relevance = DateTime.parse(this.getString("relevance"));
-			;
+			relevance = DateTime.parse(this.getString("relevance").toString());
 		} catch (JSONException e) {
 			relevance = null;
 		}
@@ -229,7 +228,7 @@ public class HMessage extends JSONObject {
 				this.put("relevance", relevance);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -237,24 +236,24 @@ public class HMessage extends JSONObject {
 	 * @return persist message or not. NULL if undefined
 	 */
 	public Boolean getPersistent() {
-		Boolean _persistent;
+		Boolean persistent;
 		try {
-			_persistent = this.getBoolean("persistent");
+			persistent = this.getBoolean("persistent");
 		} catch (JSONException e) {
-			_persistent = null;
+			persistent = null;
 		}
-		return _persistent;
+		return persistent;
 	}
 
-	public void setPersistent(Boolean _persistent) {
+	public void setPersistent(Boolean persistent) {
 		try {
-			if (_persistent == null) {
+			if (persistent == null) {
 				this.remove("persistent");
 			} else {
-				this.put("persistent", _persistent);
+				this.put("persistent", persistent);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -280,7 +279,7 @@ public class HMessage extends JSONObject {
 				this.put("location", location);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -305,7 +304,7 @@ public class HMessage extends JSONObject {
 				this.put("author", author);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -330,7 +329,7 @@ public class HMessage extends JSONObject {
 				this.put("publisher", publisher);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -340,7 +339,7 @@ public class HMessage extends JSONObject {
 	public DateTime getPublished() {
 		DateTime published;
 		try {
-			published =DateTime.parse(this.getString("published"));
+			published =DateTime.parse(this.getString("published").toString());
 		} catch (JSONException e) {
 			published = null;
 		}
@@ -355,7 +354,7 @@ public class HMessage extends JSONObject {
 				this.put("published", published);
 			}
 		} catch (JSONException e) {
-			logger.error("message: " , e);
+			logger.warn("message: " , e);
 		}
 	}
 
@@ -382,7 +381,7 @@ public class HMessage extends JSONObject {
 				this.put("headers", headers);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -600,7 +599,7 @@ public class HMessage extends JSONObject {
 				this.put("payload", payload);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 	
@@ -612,7 +611,7 @@ public class HMessage extends JSONObject {
 				this.put("payload", payload);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 	
@@ -624,7 +623,7 @@ public class HMessage extends JSONObject {
 				this.put("payload", payload);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 	
@@ -636,7 +635,7 @@ public class HMessage extends JSONObject {
 				this.put("payload", payload);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 	
@@ -648,7 +647,7 @@ public class HMessage extends JSONObject {
 				this.put("payload", payload);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -660,7 +659,7 @@ public class HMessage extends JSONObject {
 				this.put("payload", payload);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 	
@@ -672,7 +671,7 @@ public class HMessage extends JSONObject {
 				this.put("payload", payload);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 	
@@ -684,7 +683,7 @@ public class HMessage extends JSONObject {
 				this.put("payload", payload);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 	
@@ -696,7 +695,7 @@ public class HMessage extends JSONObject {
 				this.put("payload", payload);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 	
@@ -708,7 +707,7 @@ public class HMessage extends JSONObject {
 				this.put("payload", payload);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 	
@@ -720,7 +719,7 @@ public class HMessage extends JSONObject {
 				this.put("payload", payload);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 	
@@ -732,7 +731,7 @@ public class HMessage extends JSONObject {
 				this.put("payload", payload);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 	/**
@@ -756,7 +755,7 @@ public class HMessage extends JSONObject {
 				this.put("timeout", timeout);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -766,7 +765,7 @@ public class HMessage extends JSONObject {
 	public DateTime getSent() {
 		DateTime sent;
 		try {
-			sent =DateTime.parse(this.getString("sent"));
+			sent =DateTime.parse(this.getString("sent").toString());
 		} catch (JSONException e) {
 			sent = null;
 		}
@@ -781,7 +780,7 @@ public class HMessage extends JSONObject {
 				this.put("sent", sent);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 }
