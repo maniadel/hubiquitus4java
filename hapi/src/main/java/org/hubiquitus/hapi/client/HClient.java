@@ -222,14 +222,11 @@ public class HClient {
 			notifyResultError(message.getMsgid(), ResultStatus.MISSING_ATTR, "Actor not found in message: " + message.getMsgid());
 			return;
 		}
-		// add msgid to hmessage
-		if (message.getMsgid() == null) {
-			message.setMsgid("javaMsgid: " + (new Random()).nextInt());
-		}
-		// add publiser to hmessage
-		if (message.getPublisher() == null) {
-			message.setPublisher(transportOptions.getJid().getFullJID());
-		}
+
+		message.setSent(new DateTime());
+		message.setMsgid("javaMsgid: " + (new Random()).nextInt());
+		message.setPublisher(transportOptions.getJid().getFullJID());
+	
 		// add convid to hmessage
 		if (message.getConvid() == null) {
 			message.setConvid(message.getMsgid());
@@ -247,16 +244,19 @@ public class HClient {
 
 					@Override
 					public void run() {
-						notifyResultError(message.getMsgid(), ResultStatus.EXEC_TIMEOUT, "The response of message: " + message.getMsgid() + "is time out!");
 						messagesDelegates.remove(message.getMsgid());
+						notifyResultError(message.getMsgid(), ResultStatus.EXEC_TIMEOUT, "The response of message: " + message.getMsgid() + "is time out!");
 					}
 				}, message.getTimeout());
 				timeoutHashtable.put(message.getMsgid(), timeoutTimer);
 			}
 		}
-		message.setSent(new DateTime());
-		transport.sendObject(message);
-		System.out.println(">>>>" + message.toString());
+		try {
+			transport.sendObject(message);
+		} catch (Exception e) {
+			logger.error("message: ", e);
+		}
+		
 	}
 
 	/**
