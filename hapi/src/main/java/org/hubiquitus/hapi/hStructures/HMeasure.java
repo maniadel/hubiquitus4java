@@ -21,12 +21,16 @@ package org.hubiquitus.hapi.hStructures;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @version 0.5 Describes a measure payload
  */
 
 public class HMeasure extends JSONObject {
+	
+	final Logger logger = LoggerFactory.getLogger(HMeasure.class);
 
 	public HMeasure() {
 		super();
@@ -63,6 +67,7 @@ public class HMeasure extends JSONObject {
 				this.put("unit", unit);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -89,6 +94,7 @@ public class HMeasure extends JSONObject {
 				this.put("value", value);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 }

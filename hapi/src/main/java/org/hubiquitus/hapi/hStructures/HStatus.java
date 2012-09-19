@@ -21,6 +21,8 @@ package org.hubiquitus.hapi.hStructures;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @version 0.5 This structure describe the connection status
@@ -28,6 +30,7 @@ import org.json.JSONObject;
 
 public class HStatus extends JSONObject {
 
+	final Logger logger = LoggerFactory.getLogger(HStatus.class);
 
 	public HStatus() {
 		super();
@@ -43,7 +46,6 @@ public class HStatus extends JSONObject {
 		setErrorCode(errorCode);
 		setErrorMsg(errorMsg);
 	}
-
 
 	/* Getters & Setters */
 
@@ -70,6 +72,7 @@ public class HStatus extends JSONObject {
 				this.put("status", status.value());
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -96,6 +99,7 @@ public class HStatus extends JSONObject {
 				this.put("errorCode", errorCode.value());
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -123,6 +127,7 @@ public class HStatus extends JSONObject {
 				this.put("errorMsg", errorMsg);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 }

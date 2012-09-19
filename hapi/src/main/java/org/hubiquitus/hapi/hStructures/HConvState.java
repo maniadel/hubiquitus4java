@@ -21,27 +21,33 @@ package org.hubiquitus.hapi.hStructures;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * @version 0.5
- * This kind of payload is used to describe the status of a thread of correlated messages identified by its convid.
- * Multiple hConvStates with the same convid can be published into a channel, specifying the evolution of the state of the thread during time.
+ * @version 0.5 This kind of payload is used to describe the status of a thread
+ *          of correlated messages identified by its convid. Multiple
+ *          hConvStates with the same convid can be published into a channel,
+ *          specifying the evolution of the state of the thread during time.
  */
 
-public class HConvState extends JSONObject{
+public class HConvState extends JSONObject {
 
-		
-	public HConvState() {super();};
-	
-	public HConvState(JSONObject jsonObj) throws JSONException{
+	final Logger logger = LoggerFactory.getLogger(HConvState.class);
+
+	public HConvState() {
+		super();
+	};
+
+	public HConvState(JSONObject jsonObj) throws JSONException {
 		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
-	
-	
+
 	/* Getters & Setters */
-	
+
 	/**
 	 * The status of the thread
+	 * 
 	 * @return topic description. NULL if undefined
 	 */
 	public String getStatus() {
@@ -49,21 +55,21 @@ public class HConvState extends JSONObject{
 		try {
 			status = this.getString("status");
 		} catch (Exception e) {
-			status = null;			
+			status = null;
 		}
 		return status;
 	}
 
 	public void setStatus(String status) {
 		try {
-			if(status == null) {
+			if (status == null) {
 				this.remove("status");
 			} else {
 				this.put("status", status);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
-	
-}
 
+}

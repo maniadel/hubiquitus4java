@@ -48,23 +48,21 @@ import org.hubiquitus.hapi.util.HUtil;
 import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @version 0.5 Hubiquitus client, public api
  */
 
 public class HClient {
+	final Logger logger = LoggerFactory.getLogger(HClient.class);
+	
+	/**
+	 * only connecting , connected , diconnecting , disconnected
+	 */
+	private ConnectionStatus connectionStatus = ConnectionStatus.DISCONNECTED;
 
-	private ConnectionStatus connectionStatus = ConnectionStatus.DISCONNECTED; /*
-																				 * only
-																				 * connecting
-																				 * ,
-																				 * connected
-																				 * ,
-																				 * diconnecting
-																				 * ,
-																				 * disconnected
-																				 */
 	@SuppressWarnings("unused")
 	private HOptions options = null;
 	private HTransportOptions transportOptions = null;
@@ -291,7 +289,7 @@ public class HClient {
 		try {
 			cmdMessage = buildCommand(actor, "hsubscribe", null, null);
 		} catch (MissingAttrException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 		cmdMessage.setTimeout(options.getTimeout());
 		send(cmdMessage, messageDelegate);
@@ -314,7 +312,7 @@ public class HClient {
 		try {
 			cmdMessage = buildCommand(actor, "hunsubscribe", null, null);
 		} catch (MissingAttrException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 		cmdMessage.setTimeout(options.getTimeout());
 		send(cmdMessage, messageDelegate);
@@ -346,13 +344,13 @@ public class HClient {
 				params.put("nbLastMsg", nbLastMsg);
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 		HMessage cmdMessage = null;
 		try {
 			cmdMessage = buildCommand(actor, "hgetlastmessages", params, null);
 		} catch (MissingAttrException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 		cmdMessage.setTimeout(options.getTimeout());
 		send(cmdMessage, messageDelegate);
@@ -385,7 +383,7 @@ public class HClient {
 			cmdMessage = buildCommand(transportOptions.getHserverService(),
 					"hgetsubscriptions", null, null);
 		} catch (MissingAttrException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 		cmdMessage.setTimeout(options.getTimeout());
 		this.send(cmdMessage, messageDelegate);
@@ -426,14 +424,14 @@ public class HClient {
 		try {
 			params.put("convid", convid);
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 
 		HMessage cmdMessage = null;
 		try {
 			cmdMessage = this.buildCommand(actor, cmdName, params, null);
 		} catch (MissingAttrException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 		cmdMessage.setTimeout(options.getTimeout());
 		this.send(cmdMessage, messageDelegate);
@@ -473,13 +471,13 @@ public class HClient {
 		try {
 			params.put("status", status);
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 		HMessage cmdMessage = null;
 		try {
 			cmdMessage = buildCommand(actor, "hgetthreads", params, null);
 		} catch (MissingAttrException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 		cmdMessage.setTimeout(options.getTimeout());
 		this.send(cmdMessage, messageDelegate);
@@ -512,7 +510,7 @@ public class HClient {
 		try {
 			cmdMessage = buildCommand(actor, "hRelevantMessages", null, null);
 		} catch (MissingAttrException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 		cmdMessage.setTimeout(options.getTimeout());
 		this.send(cmdMessage, messageDelegate);
@@ -827,13 +825,13 @@ public class HClient {
 						try {
 							statusDelegate.onStatus(hstatus);
 						} catch (Exception e) {
-							e.printStackTrace();
+							logger.error("message: ", e);
 						}
 					}
 				})).start();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("message", e);
 		}
 	}
 
@@ -875,13 +873,13 @@ public class HClient {
 							try {
 								messageDelegate.onMessage(message);
 							} catch (Exception e) {
-								e.printStackTrace();
+								logger.error("message: ", e);
 							}
 						}
 					})).start();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("message: ", e);
 			}
 		}
 	}
@@ -904,7 +902,7 @@ public class HClient {
 						try {
 							messageDelegate.onMessage(message);
 						} catch (Exception e) {
-							e.printStackTrace();
+							logger.error("message: ", e);
 						}
 					}
 				})).start();
@@ -912,7 +910,7 @@ public class HClient {
 				// results are dropped
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 	}
 
@@ -929,7 +927,7 @@ public class HClient {
 		try {
 			obj.put("errorMsg", errorMsg);
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 		HResult hresult = new HResult();
 		hresult.setResult(obj);
@@ -956,7 +954,7 @@ public class HClient {
 		try {
 			obj.put("errorMsg", errorMsg);
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 		HResult hresult = new HResult();
 		hresult.setResult(obj);
@@ -994,6 +992,7 @@ public class HClient {
 				}
 
 			} catch (Exception e) {
+				logger.error("message: ", e);
 				System.out.println("erreur datacallBack : " + e.toString());
 			}
 		}

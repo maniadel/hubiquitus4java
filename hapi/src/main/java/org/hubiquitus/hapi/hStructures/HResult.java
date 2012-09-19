@@ -22,6 +22,8 @@ package org.hubiquitus.hapi.hStructures;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -30,6 +32,7 @@ import org.json.JSONObject;
 
 public class HResult extends JSONObject {
 
+	final Logger logger = LoggerFactory.getLogger(HResult.class);
 
 	public HResult() {super();
 	}
@@ -64,6 +67,7 @@ public class HResult extends JSONObject {
 				this.put("status", status.value());
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -171,6 +175,7 @@ public class HResult extends JSONObject {
 				this.put("result", result);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 

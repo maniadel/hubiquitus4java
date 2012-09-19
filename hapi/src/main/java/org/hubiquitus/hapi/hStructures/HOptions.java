@@ -25,12 +25,16 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @version 0.5 hAPI options. For more info, see Hubiquitus reference
  */
 
 public class HOptions implements Cloneable {
+	
+	final Logger logger = LoggerFactory.getLogger(HOptions.class);
 
 	private String transport = "socketio";
 	private List<String> endpoints = null;
@@ -58,7 +62,7 @@ public class HOptions implements Cloneable {
 			}
 
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ",e);
 		}
 	}
 

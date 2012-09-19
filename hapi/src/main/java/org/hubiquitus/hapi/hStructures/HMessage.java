@@ -23,12 +23,16 @@ import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 /**
  * @version 0.5 hAPI Command. For more info, see Hubiquitus reference
  */
 
 public class HMessage extends JSONObject {
+	
+	final Logger logger = LoggerFactory.getLogger(HMessage.class);
 
 	public HMessage() {
 		super();
@@ -63,6 +67,7 @@ public class HMessage extends JSONObject {
 				this.put("msgid", msgid);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -96,6 +101,7 @@ public class HMessage extends JSONObject {
 				this.put("actor", actor);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -122,6 +128,7 @@ public class HMessage extends JSONObject {
 				this.put("convid", convid);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -155,6 +162,7 @@ public class HMessage extends JSONObject {
 				this.put("ref", ref);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 
 	}
@@ -180,6 +188,7 @@ public class HMessage extends JSONObject {
 				this.put("type", type);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -211,6 +220,7 @@ public class HMessage extends JSONObject {
 				this.put("priority", priority.value());
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -238,7 +248,7 @@ public class HMessage extends JSONObject {
 				this.put("relevance", relevance);
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 	}
 
@@ -272,6 +282,7 @@ public class HMessage extends JSONObject {
 				this.put("persistent", _persistent);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -298,7 +309,7 @@ public class HMessage extends JSONObject {
 				this.put("location", location);
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 	}
 
@@ -323,6 +334,7 @@ public class HMessage extends JSONObject {
 				this.put("author", author);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -349,6 +361,7 @@ public class HMessage extends JSONObject {
 				this.put("publisher", publisher);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
@@ -375,7 +388,7 @@ public class HMessage extends JSONObject {
 				this.put("published", published);
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: " , e);
 		}
 	}
 
@@ -403,7 +416,7 @@ public class HMessage extends JSONObject {
 				this.put("headers", headers);
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 	}
 
@@ -635,7 +648,7 @@ public class HMessage extends JSONObject {
 				this.put("payload", payload);
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 	}
 
@@ -667,7 +680,7 @@ public class HMessage extends JSONObject {
 				this.put("timeout", timeout);
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 	}
 
@@ -700,7 +713,7 @@ public class HMessage extends JSONObject {
 				this.put("sent", sent);
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 	}
 }

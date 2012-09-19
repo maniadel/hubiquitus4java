@@ -21,13 +21,15 @@ package org.hubiquitus.hapi.hStructures;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 /**
  * @version 0.5 hAPI Command. For more info, see Hubiquitus reference
  */
 
 public class HCommand extends JSONObject {
-
+	final Logger logger = LoggerFactory.getLogger(HCommand.class);
 
 	public HCommand() {
 		super();
@@ -42,7 +44,6 @@ public class HCommand extends JSONObject {
 	public HCommand(JSONObject jsonObj) throws JSONException {
 		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
-
 
 	/* Getters & Setters */
 
@@ -69,7 +70,7 @@ public class HCommand extends JSONObject {
 				this.put("cmd", cmd);
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
+			logger.error("message: ", e);
 		}
 	}
 
@@ -94,6 +95,7 @@ public class HCommand extends JSONObject {
 				this.put("params", params);
 			}
 		} catch (JSONException e) {
+			logger.error("message: ", e);
 		}
 	}
 
