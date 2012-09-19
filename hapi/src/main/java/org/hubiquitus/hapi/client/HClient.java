@@ -20,9 +20,9 @@
 package org.hubiquitus.hapi.client;
 
 import java.util.Hashtable;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
 import org.hubiquitus.hapi.exceptions.MissingAttrException;
 import org.hubiquitus.hapi.hStructures.ConnectionError;
@@ -224,7 +224,7 @@ public class HClient {
 		}
 
 		message.setSent(new DateTime());
-		message.setMsgid("javaMsgid: " + (new Random()).nextInt());
+		message.setMsgid(UUID.randomUUID().toString());
 		message.setPublisher(transportOptions.getJid().getFullJID());
 	
 		// add convid to hmessage
