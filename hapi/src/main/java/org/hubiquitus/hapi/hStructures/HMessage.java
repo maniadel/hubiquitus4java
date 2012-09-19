@@ -213,7 +213,7 @@ public class HMessage extends JSONObject {
 	public DateTime getRelevance() {
 		DateTime relevance;
 		try {
-			relevance = DateTime.parse(this.getString("relevance").toString());
+			relevance = DateTime.parse(this.getString("relevance"));
 		} catch (JSONException e) {
 			relevance = null;
 		}
@@ -225,7 +225,7 @@ public class HMessage extends JSONObject {
 			if (relevance == null) {
 				this.remove("relevance");
 			} else {
-				this.put("relevance", relevance);
+				this.put("relevance", relevance.toString());
 			}
 		} catch (JSONException e) {
 			logger.warn("message: ", e);
@@ -339,7 +339,7 @@ public class HMessage extends JSONObject {
 	public DateTime getPublished() {
 		DateTime published;
 		try {
-			published =DateTime.parse(this.getString("published").toString());
+			published =DateTime.parse(this.getString("published"));
 		} catch (JSONException e) {
 			published = null;
 		}
@@ -351,7 +351,7 @@ public class HMessage extends JSONObject {
 			if (published == null) {
 				this.remove("published");
 			} else {
-				this.put("published", published);
+				this.put("published", published.toString());
 			}
 		} catch (JSONException e) {
 			logger.warn("message: " , e);
@@ -765,7 +765,7 @@ public class HMessage extends JSONObject {
 	public DateTime getSent() {
 		DateTime sent;
 		try {
-			sent =DateTime.parse(this.getString("sent").toString());
+			sent =DateTime.parse(this.getString("sent"));
 		} catch (JSONException e) {
 			sent = null;
 		}
@@ -777,7 +777,7 @@ public class HMessage extends JSONObject {
 			if (sent == null) {
 				this.remove("sent");
 			} else {
-				this.put("sent", sent);
+				this.put("sent", sent.toString());
 			}
 		} catch (JSONException e) {
 			logger.warn("message: ", e);

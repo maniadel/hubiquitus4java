@@ -264,12 +264,11 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 		public void mouseClicked(MouseEvent event) {
 
 			String endpoint = endPointField.getText();
-			option.getEndpoints().clear();
 			if (endpoint == null || endpoint.equalsIgnoreCase("")) {
 				option.setEndpoints(null);
 			} else {
-				ArrayList<String> endpoints = new ArrayList<String>();
-				endpoints.add(endpoint);
+				JSONArray endpoints = new JSONArray();
+				endpoints.put(endpoint);
 				option.setEndpoints(endpoints);
 			}
 
@@ -304,8 +303,7 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 				String temp = relevantField.getText();
 				int millisecond = Integer.parseInt(temp);
 			    DateTime nowDate = new DateTime();
-				nowDate.plusMillis(millisecond);
-				msgOptions.setRelevance(nowDate);
+				msgOptions.setRelevance(nowDate.plusMillis(millisecond));
 			}
 			if (!timeoutField.getText().isEmpty()) {
 				String temp = timeoutField.getText();
@@ -534,6 +532,8 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 		this.addTextArea(status.toString());
 		if (status.getErrorCode() == ConnectionError.NO_ERROR
 				|| status.getErrorMsg() == null) {
+			System.out.println("--->1. : " + status);
+			System.out.println("--->2. : " + status.getStatus());
 			this.setStatusArea(status.getStatus().toString());
 		} else {
 			this.setStatusArea(status.getStatus().toString() + " : "
