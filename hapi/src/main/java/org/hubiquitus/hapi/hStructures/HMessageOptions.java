@@ -33,7 +33,7 @@ public class HMessageOptions {
 	private String convid = null;
 	private HMessagePriority priority = null;
 	private DateTime relevance = null;
-	private Boolean _persistent = null;
+	private Boolean persistent = null;
 	private HLocation location = null;
 	private String author = null;
 	private JSONObject headers = null;
@@ -88,10 +88,10 @@ public class HMessageOptions {
 	 * @return persist message or not. NULL if undefined
 	 */
 	public Boolean getPersistent() {
-		return _persistent;
+		return persistent;
 	}
-	public void setPersistent(Boolean _persistent) {
-		this._persistent = _persistent;
+	public void setPersistent(Boolean persistent) {
+		this.persistent = persistent;
 	}
 	
 	/**

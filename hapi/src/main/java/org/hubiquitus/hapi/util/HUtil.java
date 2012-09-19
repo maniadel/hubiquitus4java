@@ -30,7 +30,6 @@ public class HUtil {
 
 	/**
 	 * Pick the index of a random element in a list
-	 * 
 	 * @param list
 	 * @return one number
 	 */
@@ -44,7 +43,6 @@ public class HUtil {
 
 	/**
 	 * get host fragment from an endpoint
-	 * 
 	 * @param endpoint
 	 * @return host in the
 	 */
@@ -63,7 +61,6 @@ public class HUtil {
 
 	/**
 	 * get port fragment from an endpoint
-	 * 
 	 * @param endpoint
 	 * @return
 	 */
@@ -82,7 +79,6 @@ public class HUtil {
 
 	/**
 	 * get path from an endpoint
-	 * 
 	 * @param endpoint
 	 * @return
 	 */
@@ -110,7 +106,6 @@ public class HUtil {
 
 	/**
 	 * Help to get the hApi part of a ref in hmessage.
-	 * 
 	 * @param ref
 	 * @return
 	 */

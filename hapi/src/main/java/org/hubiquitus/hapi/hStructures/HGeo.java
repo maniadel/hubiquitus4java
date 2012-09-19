@@ -6,11 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * since v0.5 Specifies the exact longitude and latitude of the location
- * 
- * @version v0.5
- * @author hnode
- * 
+ *  @version v0.5
+ *  Specifies the exact longitude and latitude of the location
  */
 public class HGeo extends JSONObject {
 
@@ -31,7 +28,9 @@ public class HGeo extends JSONObject {
 	}
 
 	/* Setter & Getter */
-
+/**
+ * @return Longitude of the location. Null if undefined.
+ */
 	public Double getLng() {
 		Double lng;
 		try {
@@ -42,14 +41,21 @@ public class HGeo extends JSONObject {
 		return lng;
 	}
 
+	/**
+	 * Set the longitude of the location.
+	 * @param lng
+	 */
 	public void setLng(double lng) {
 		try {
 			this.put("lng", lng);
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
+	/**
+	 * @return Latitude of the location. Null if undefined.
+	 */
 	public Double getLat() {
 		Double lat;
 		try {
@@ -60,11 +66,15 @@ public class HGeo extends JSONObject {
 		return lat;
 	}
 
+	/**
+	 * Set the latitude of the location.
+	 * @param lat
+	 */
 	public void setLat(double lat) {
 		try {
 			this.put("lat", lat);
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 }

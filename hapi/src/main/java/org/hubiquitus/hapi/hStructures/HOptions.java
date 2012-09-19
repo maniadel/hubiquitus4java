@@ -38,7 +38,7 @@ public class HOptions implements Cloneable {
 
 	private String transport = "socketio";
 	private List<String> endpoints = null;
-	private int timeout = 30000;
+	private Integer timeout = 30000;
 
 	public HOptions() {
 		setEndpoints(null);
@@ -60,6 +60,9 @@ public class HOptions implements Cloneable {
 				}
 				setEndpoints(arrayEndpoints);
 			}
+			if(jsonObj.has("timeout")){
+				setTimeout(jsonObj.getInt("timeout"));
+			}
 
 		} catch (JSONException e) {
 			logger.error("message: ",e);
@@ -69,6 +72,7 @@ public class HOptions implements Cloneable {
 	public HOptions(HOptions options) {
 		this.setEndpoints(options.getEndpoints());
 		this.setTransport(options.getTransport());
+		this.setTimeout(options.getTimeout());
 	}
 
 	/* Getters & Setters */
@@ -115,17 +119,15 @@ public class HOptions implements Cloneable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((endpoints == null) ? 0 : endpoints.hashCode());
-		result = prime * result
-				+ ((transport == null) ? 0 : transport.hashCode());
+		result = prime * result + ((endpoints == null) ? 0 : endpoints.hashCode());
+		result = prime * result + ((transport == null) ? 0 : transport.hashCode());
+		result = prime * result + ((timeout == null) ? 0 : timeout.hashCode());
 		return result;
 	}
 
 	@Override
 	public String toString() {
-		return "HOptions [transport=" + transport + ", endpoints="
-				+ endpoints + "]";
+		return "HOptions [transport=" + transport + ", endpoints=" + endpoints + ", timeout=" + timeout + "]";
 	}
 
 	@Override
@@ -147,6 +149,12 @@ public class HOptions implements Cloneable {
 				return false;
 		} else if (!transport.equals(other.transport))
 			return false;
+		if (timeout == null) {
+			if(other.timeout != null)
+				return false;
+		}else if(!timeout.equals(other.timeout)){
+			return false;
+		}
 		return true;
 	}
 }

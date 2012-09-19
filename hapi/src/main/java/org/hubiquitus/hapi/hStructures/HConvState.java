@@ -25,10 +25,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @version 0.5 This kind of payload is used to describe the status of a thread
- *          of correlated messages identified by its convid. Multiple
- *          hConvStates with the same convid can be published into a channel,
- *          specifying the evolution of the state of the thread during time.
+ * @version 0.5 
+ * This kind of payload is used to describe the status of a thread of correlated messages identified by its convid. 
+ * Multiple hConvStates with the same convid can be published into a channel, specifying the evolution of the state of the thread during time.
  */
 
 public class HConvState extends JSONObject {
@@ -68,7 +67,7 @@ public class HConvState extends JSONObject {
 				this.put("status", status);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 

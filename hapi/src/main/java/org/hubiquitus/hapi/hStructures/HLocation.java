@@ -25,7 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @version 0.5 This structure describe the location
+ * @version 0.5 
+ * This structure describe the location
  */
 
 public class HLocation extends JSONObject {
@@ -41,7 +42,9 @@ public class HLocation extends JSONObject {
 	}
 
 	/* Getters & Setters */
-
+	/**
+	 * @return hGeo which specifies the exacte longitude and latitude of the location. Null if undefined.
+	 */
 	public HGeo getPos() {
 		HGeo pos;
 		try {
@@ -60,7 +63,7 @@ public class HLocation extends JSONObject {
 				this.put("pos", pos);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -85,7 +88,7 @@ public class HLocation extends JSONObject {
 				this.put("zip", zip);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -110,7 +113,7 @@ public class HLocation extends JSONObject {
 				this.put("num", num);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -135,7 +138,7 @@ public class HLocation extends JSONObject {
 				this.put("wayType", wayType);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -160,7 +163,7 @@ public class HLocation extends JSONObject {
 				this.put("way", way);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -185,7 +188,7 @@ public class HLocation extends JSONObject {
 				this.put("addr", addr);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -210,7 +213,7 @@ public class HLocation extends JSONObject {
 				this.put("floor", floor);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -235,7 +238,7 @@ public class HLocation extends JSONObject {
 				this.put("building", building);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -260,7 +263,7 @@ public class HLocation extends JSONObject {
 				this.put("city", city);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -285,7 +288,7 @@ public class HLocation extends JSONObject {
 				this.put("countryCode", countryCode);
 			}
 		} catch (JSONException e) {
-			logger.error("message: ", e);
+			logger.warn("message: ", e);
 		}
 	}
 }
