@@ -166,5 +166,77 @@ public class HResult extends JSONObject {
 			logger.error("message: ", e);
 		}
 	}
+	
+	public void setResultAsJSONObject(JSONObject result) {
+		try {
+			if (result == null) {
+				this.remove("result");
+			} else {
+				this.put("result", result);
+			}
+		} catch (JSONException e) {
+			logger.error("message: ", e);
+		}
+	}
+	
+	public void setResultASJSONArray(JSONArray result) {
+		try {
+			if (result == null) {
+				this.remove("result");
+			} else {
+				this.put("result", result);
+			}
+		} catch (JSONException e) {
+			logger.error("message: ", e);
+		}
+	}
+	
+	public void setResultAsString(String result) {
+		try {
+			if (result == null) {
+				this.remove("result");
+			} else {
+				this.put("result", result);
+			}
+		} catch (JSONException e) {
+			logger.error("message: ", e);
+		}
+	}
+	
+	public void setResultAsBoolean(Boolean result) {
+		try {
+			if (result == null) {
+				this.remove("result");
+			} else {
+				this.put("result", result);
+			}
+		} catch (JSONException e) {
+			logger.error("message: ", e);
+		}
+	}
+	
+	public void setResultAsInt(Integer result) {
+		try {
+			if (result == null) {
+				this.remove("result");
+			} else {
+				this.put("result", result);
+			}
+		} catch (JSONException e) {
+			logger.error("message: ", e);
+		}
+	}
+	
+	public void setResultAsDouble(Double result) {
+		try {
+			if (result == null) {
+				this.remove("result");
+			} else {
+				this.put("result", result);
+			}
+		} catch (JSONException e) {
+			logger.error("message: ", e);
+		}
+	}
 
 }

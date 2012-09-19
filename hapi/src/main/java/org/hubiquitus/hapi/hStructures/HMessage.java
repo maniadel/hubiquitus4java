@@ -589,7 +589,7 @@ public class HMessage extends JSONObject {
 	}
 
 	/**
-	 * Payload type could be JSONObject, JSONArray, String, Boolean, Number
+	 * Payload type could be instance of JSONObject(HAlert, HAck ...), JSONArray, String, Boolean, Number
 	 * @param payload
 	 */
 	public void setPayload(Object payload) {
@@ -603,7 +603,138 @@ public class HMessage extends JSONObject {
 			logger.error("message: ", e);
 		}
 	}
+	
+	public void setPayloadAsJSONObject(JSONObject payload) {
+		try {
+			if (payload == null) {
+				this.remove("payload");
+			} else {
+				this.put("payload", payload);
+			}
+		} catch (JSONException e) {
+			logger.error("message: ", e);
+		}
+	}
+	
+	public void setPayloadAsJSONArray(JSONArray payload) {
+		try {
+			if (payload == null) {
+				this.remove("payload");
+			} else {
+				this.put("payload", payload);
+			}
+		} catch (JSONException e) {
+			logger.error("message: ", e);
+		}
+	}
+	
+	public void setPayloadAsString(String payload) {
+		try {
+			if (payload == null) {
+				this.remove("payload");
+			} else {
+				this.put("payload", payload);
+			}
+		} catch (JSONException e) {
+			logger.error("message: ", e);
+		}
+	}
+	
+	public void setPayloadAsBoolean(Boolean payload) {
+		try {
+			if (payload == null) {
+				this.remove("payload");
+			} else {
+				this.put("payload", payload);
+			}
+		} catch (JSONException e) {
+			logger.error("message: ", e);
+		}
+	}
 
+	public void setPayloadAsInt(Integer payload) {
+		try {
+			if (payload == null) {
+				this.remove("payload");
+			} else {
+				this.put("payload", payload);
+			}
+		} catch (JSONException e) {
+			logger.error("message: ", e);
+		}
+	}
+	
+	public void setPayloadAsDouble(Double payload) {
+		try {
+			if (payload == null) {
+				this.remove("payload");
+			} else {
+				this.put("payload", payload);
+			}
+		} catch (JSONException e) {
+			logger.error("message: ", e);
+		}
+	}
+	
+	public void setPayloadAsHAlert(HAlert payload) {
+		try {
+			if (payload == null) {
+				this.remove("payload");
+			} else {
+				this.put("payload", payload);
+			}
+		} catch (JSONException e) {
+			logger.error("message: ", e);
+		}
+	}
+	
+	public void setPayloadAsHAck(HAck payload) {
+		try {
+			if (payload == null) {
+				this.remove("payload");
+			} else {
+				this.put("payload", payload);
+			}
+		} catch (JSONException e) {
+			logger.error("message: ", e);
+		}
+	}
+	
+	public void setPayloadAsHConvState(HConvState payload) {
+		try {
+			if (payload == null) {
+				this.remove("payload");
+			} else {
+				this.put("payload", payload);
+			}
+		} catch (JSONException e) {
+			logger.error("message: ", e);
+		}
+	}
+	
+	public void setPayloadAsHResult(HResult payload) {
+		try {
+			if (payload == null) {
+				this.remove("payload");
+			} else {
+				this.put("payload", payload);
+			}
+		} catch (JSONException e) {
+			logger.error("message: ", e);
+		}
+	}
+	
+	public void setPayloadAsHCommand(HCommand payload) {
+		try {
+			if (payload == null) {
+				this.remove("payload");
+			} else {
+				this.put("payload", payload);
+			}
+		} catch (JSONException e) {
+			logger.error("message: ", e);
+		}
+	}
 	/**
 	 * @return timeout. 0 if undefined.
 	 */
