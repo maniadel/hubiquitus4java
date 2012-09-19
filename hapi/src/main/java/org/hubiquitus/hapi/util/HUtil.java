@@ -20,7 +20,8 @@
 package org.hubiquitus.hapi.util;
 
 import java.net.URI;
-import java.util.List;
+
+import org.json.JSONArray;
 
 /**
  * @cond internal
@@ -33,10 +34,10 @@ public class HUtil {
 	 * @param list
 	 * @return one number
 	 */
-	public static <T> int pickIndex(List<T> list) {
+	public static  int pickIndex(JSONArray jsonArray) {
 		int index = 0;
 
-		int size = list.size();
+		int size = jsonArray.length();
 		index = (int) (Math.random() * size);
 		return index;
 	}

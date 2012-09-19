@@ -225,7 +225,7 @@ public class HClient {
 
 		message.setSent(new DateTime());
 		message.setMsgid(UUID.randomUUID().toString());
-		message.setPublisher(transportOptions.getJid().getFullJID());
+		message.setPublisher(transportOptions.getJid().getBareJID());
 	
 		// add convid to hmessage
 		if (message.getConvid() == null) {
@@ -479,7 +479,6 @@ public class HClient {
 			hmessage.setHeaders(options.getHeaders());
 			hmessage.setTimeout(options.getTimeout());
 		}
-
 		if (transportOptions != null && transportOptions.getJid() != null) {
 			hmessage.setPublisher(transportOptions.getJid().getBareJID());
 		} else {
@@ -691,13 +690,17 @@ public class HClient {
 		// by default we user server host rather than publish host if defined
 
 		// for endpoints, pick one randomly and fill htransport options
-		if (options.getEndpoints().size() > 0) {
+		if (options.getEndpoints().length() > 0) {
 			int endpointIndex = HUtil.pickIndex(options.getEndpoints());
-			String endpoint = options.getEndpoints().get(endpointIndex);
-
-			this.transportOptions.setEndpointHost(HUtil.getHost(endpoint));
-			this.transportOptions.setEndpointPort(HUtil.getPort(endpoint));
-			this.transportOptions.setEndpointPath(HUtil.getPath(endpoint));
+			try {
+				String endpoint = options.getEndpoints().getString(endpointIndex);
+				this.transportOptions.setEndpointHost(HUtil.getHost(endpoint));
+				this.transportOptions.setEndpointPort(HUtil.getPort(endpoint));
+				this.transportOptions.setEndpointPath(HUtil.getPath(endpoint));
+			} catch (JSONException e) {
+				logger.error("message: ", e);
+			}
+			
 		} else {
 			this.transportOptions.setEndpointHost(null);
 			this.transportOptions.setEndpointPort(0);

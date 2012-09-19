@@ -19,9 +19,6 @@
 
 package org.hubiquitus.hapi.hStructures;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,41 +29,16 @@ import org.slf4j.LoggerFactory;
  * @version 0.5 hAPI options. For more info, see Hubiquitus reference
  */
 
-public class HOptions implements Cloneable {
+public class HOptions extends JSONObject {
 	
 	final Logger logger = LoggerFactory.getLogger(HOptions.class);
 
-	private String transport = "socketio";
-	private List<String> endpoints = null;
-	private Integer timeout = 30000;
-
 	public HOptions() {
-		setEndpoints(null);
+		super();
 	}
 
-	public HOptions(JSONObject jsonObj) {
-		setEndpoints(null);
-		try {
-
-			if (jsonObj.has("transport")) {
-				setTransport(jsonObj.getString("transport"));
-			}
-
-			if (jsonObj.has("endpoints")) {
-				JSONArray jsonEndpoints = jsonObj.getJSONArray("endpoints");
-				ArrayList<String> arrayEndpoints = new ArrayList<String>();
-				for (int i = 0; i < jsonEndpoints.length(); i++) {
-					arrayEndpoints.add(jsonEndpoints.getString(i));
-				}
-				setEndpoints(arrayEndpoints);
-			}
-			if(jsonObj.has("timeout")){
-				setTimeout(jsonObj.getInt("timeout"));
-			}
-
-		} catch (JSONException e) {
-			logger.error("message: ",e);
-		}
+	public HOptions(JSONObject jsonObj) throws JSONException {
+		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
 
 	public HOptions(HOptions options) {
@@ -81,80 +53,75 @@ public class HOptions implements Cloneable {
 	 * Transport layer used to connect to hNode (ie : socketio)
 	 */
 	public String getTransport() {
+		String transport;
+		try {
+			transport = this.getString("transport");
+		} catch (Exception e) {
+			transport = "socketio";
+		}
 		return transport;
 	}
 
 	public void setTransport(String transport) {
 
-		this.transport = transport;
+		try {
+			if(transport != null){
+				this.put("transport", transport);
+			}else{
+				this.put("transport", "socketio");
+			}
+		} catch (JSONException e) {
+			logger.warn("message: ", e);
+		}
 
 	}
 
 	
-	public List<String> getEndpoints() {
-		return new ArrayList<String>(this.endpoints);
+	public JSONArray getEndpoints() {
+		JSONArray endpoints;
+		try {
+			endpoints = this.getJSONArray("endpoints");
+		} catch (Exception e) {
+			endpoints = null;
+		}
+		return endpoints;
 	}
 
-	public void setEndpoints(List<String> endpoints) {
-		if (endpoints != null && endpoints.size() > 0)
-			this.endpoints = new ArrayList<String>(endpoints);
-		else {
-			this.endpoints = new ArrayList<String>();
-			this.endpoints.add("http://localhost:8080/");
+	public void setEndpoints(JSONArray endpoints) {
+		try {
+			if (endpoints != null && endpoints.length() > 0){
+				this.put("endpoints", endpoints);
+			}else{
+				JSONArray jsonArray = new JSONArray();
+				jsonArray.put("http://localhost:8080/");
+				this.put("endpoints", jsonArray);
+			}
+		} catch (JSONException e) {
+			logger.warn("message: ", e);
 		}
 	}
 	
 	public int getTimeout(){
-		return this.timeout;
+		int timeout;
+		try {
+			timeout = this.getInt("timeout");
+		} catch (Exception e) {
+			timeout = 30000;
+		}
+		return timeout;
 	}
 	
-	public void setTimeout(int timeOut){
-		this.timeout = timeOut;
-	}
-
-
-	/* overrides */
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((endpoints == null) ? 0 : endpoints.hashCode());
-		result = prime * result + ((transport == null) ? 0 : transport.hashCode());
-		result = prime * result + ((timeout == null) ? 0 : timeout.hashCode());
-		return result;
-	}
-
-	@Override
-	public String toString() {
-		return "HOptions [transport=" + transport + ", endpoints=" + endpoints + ", timeout=" + timeout + "]";
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		HOptions other = (HOptions) obj;
-		if (endpoints == null) {
-			if (other.endpoints != null)
-				return false;
-		} else if (!endpoints.equals(other.endpoints))
-			return false;
-		if (transport == null) {
-			if (other.transport != null)
-				return false;
-		} else if (!transport.equals(other.transport))
-			return false;
-		if (timeout == null) {
-			if(other.timeout != null)
-				return false;
-		}else if(!timeout.equals(other.timeout)){
-			return false;
+	public void setTimeout(int timeout){
+		try {
+			if(timeout >= 0){
+				this.put("timeout", timeout);
+			}else{
+				this.put("timeout", 30000);
+			}
+		} catch (Exception e) {
+			logger.warn("message: ", e);
 		}
-		return true;
 	}
+
+
 }

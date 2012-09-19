@@ -53,6 +53,12 @@ public enum ConnectionStatus {
 	 */
 	public static ConnectionStatus constant(int value) {
 		ConnectionStatus [] _values = ConnectionStatus.values();
-		return _values[value];
+		ConnectionStatus _value = ConnectionStatus.UNKNOWN;
+		for (int i = 0; i < _values.length; i++) {
+			if(_values[i].value == value){
+				_value = _values[i];
+			}
+		}
+		return _value;
 	}
 }
