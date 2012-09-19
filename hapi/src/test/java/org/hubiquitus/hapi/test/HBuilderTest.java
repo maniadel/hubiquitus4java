@@ -182,7 +182,7 @@ public class HBuilderTest {
 
 		HMessage hmessage = null;
 		try {
-			hmessage = hclient.buildAck("chid:123456789", ackvalue,
+			hmessage = hclient.buildAck("chid:123456789", "chid:123456789", ackvalue,
 					hmessageOption);
 		} catch (MissingAttrException e) {
 			Assert.fail();
