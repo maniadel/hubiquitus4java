@@ -71,6 +71,20 @@ public class HResult extends JSONObject {
 	}
 
 	/**
+	 * if we don't know the result type.
+	 * @return result of a command operation or a subscriptions operation.
+	 */
+	public Object getResult() {
+		Object result;
+		try {
+			result = this.get("result");
+		} catch (JSONException e) {
+			result = null;
+		}
+		return result;
+	}
+	
+	/**
 	 * if result type is a JSONObject
 	 * @return result of a command operation or a subscriptions operation.
 	 */
