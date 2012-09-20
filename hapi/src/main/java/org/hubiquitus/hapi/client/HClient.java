@@ -262,7 +262,10 @@ public class HClient {
 	 * @param actor : The channel id to subscribe to. (ie : #test@domain”). Mandatory.
 	 * @param messageDelegate : A delegate notified when the result is sent by server. Mandatory.
 	 */
-	public void subscribe(String actor, HMessageDelegate messageDelegate) {
+	public void subscribe(String actor, HMessageDelegate messageDelegate) throws MissingAttrException {
+		if(messageDelegate == null){
+			throw new MissingAttrException("messageDelegate");
+		}
 		HMessage cmdMessage = null;
 		try {
 			cmdMessage = buildCommand(actor, "hsubscribe", null, null);
@@ -279,8 +282,12 @@ public class HClient {
 	 * Nominal response : an hMessage with an hResult where the status 0.
 	 * @param actor : The channel to unsubscribe from. Mandatory.
 	 * @param messageDelegate : A delegate notified when the result is sent by server. Mandatory.
+	 * @throws MissingAttrException 
 	 */
-	public void unsubscribe(String actor, HMessageDelegate messageDelegate) {
+	public void unsubscribe(String actor, HMessageDelegate messageDelegate) throws MissingAttrException {
+		if(messageDelegate == null){
+			throw new MissingAttrException("messageDelegate");
+		}
 		HMessage cmdMessage = null;
 		try {
 			cmdMessage = buildCommand(actor, "hunsubscribe", null, null);
@@ -299,8 +306,12 @@ public class HClient {
 	 * @param actor : The channel id of the messages. Mandatory.
 	 * @param nbLastMsg : The maximum number of messages to retrieve.If this value is not provided, the default value found in the channel header will be used and as callback a default value of 10. Not mandatory.
 	 * @param messageDelegate : A delegate notified when the result is sent by server. Mandatory.
+	 * @throws MissingAttrException 
 	 */
-	public void getLastMessages(String actor, int nbLastMsg, HMessageDelegate messageDelegate) {
+	public void getLastMessages(String actor, int nbLastMsg, HMessageDelegate messageDelegate) throws MissingAttrException {
+		if(messageDelegate == null){
+			throw new MissingAttrException("messageDelegate");
+		}
 		JSONObject params = new JSONObject();
 		try {
 			if (nbLastMsg > 0) {
@@ -323,8 +334,9 @@ public class HClient {
 	 * @see getLastMessages(String actor, int nbLastMsg)
 	 * @param actor : The channel id of the messages. Mandatory.
 	 * @param messageDelegate : A delegate notified when the result is sent by server. Mandatory.
+	 * @throws MissingAttrException 
 	 */
-	public void getLastMessages(String actor, HMessageDelegate messageDelegate) {
+	public void getLastMessages(String actor, HMessageDelegate messageDelegate) throws MissingAttrException {
 		this.getLastMessages(actor, -1, messageDelegate);
 	}
 
@@ -332,8 +344,12 @@ public class HClient {
 	 * Demands the server a list of the publisher’s subscriptions.
 	 * Nominal response : a hMessage with a hResult payload contains an array of channel id which are all active.
 	 * @param messageDelegate : A delegate notified when the result is sent by server. Mandatory.
+	 * @throws MissingAttrException 
 	 */
-	public void getSubscriptions(HMessageDelegate messageDelegate) {
+	public void getSubscriptions(HMessageDelegate messageDelegate) throws MissingAttrException {
+		if(messageDelegate == null){
+			throw new MissingAttrException("messageDelegate");
+		}
 		HMessage cmdMessage = null;
 		try {
 			cmdMessage = buildCommand(transportOptions.getHserverService(), "hgetsubscriptions", null, null);
@@ -350,8 +366,12 @@ public class HClient {
 	 * @param actor : The channel id where the conversations are searched. Mandatory
 	 * @param convid : Conversation id. Mandatory
 	 * @param messageDelegate : A delegate notified when the result is sent by server. Mandatory.
+	 * @throws MissingAttrException 
 	 */
-	public void getThread(String actor, String convid, HMessageDelegate messageDelegate) {
+	public void getThread(String actor, String convid, HMessageDelegate messageDelegate) throws MissingAttrException {
+		if(messageDelegate == null){
+			throw new MissingAttrException("messageDelegate");
+		}
 		JSONObject params = new JSONObject();
 		String cmdName = "hgetthread";
 
@@ -388,10 +408,13 @@ public class HClient {
 	 * @param actor : The channel id where the conversations are searched. Mandatory
 	 * @param status : The status searched. Mandatory
 	 * @param messageDelegate : A delegate notified when the command result is issued. Mandatory.
+	 * @throws MissingAttrException 
 	 */
-	public void getThreads(String actor, String status, HMessageDelegate messageDelegate) {
+	public void getThreads(String actor, String status, HMessageDelegate messageDelegate) throws MissingAttrException {
+		if(messageDelegate == null){
+			throw new MissingAttrException("messageDelegate");
+		}
 		JSONObject params = new JSONObject();
-
 		// check mandatory fields
 		if (actor == null || actor.length() <= 0) {
 			notifyResultError(null, ResultStatus.MISSING_ATTR, "Actor is missing", messageDelegate);
@@ -423,11 +446,14 @@ public class HClient {
 	 * Nominal response : hResult where the status is 0 and a array of HMessage.
 	 * @param actor : The channel where the relevant messages are searched. Mandatory.
 	 * @param resultDelegate : a delegate notified when the command result is issued. Mandatory.
+	 * @throws MissingAttrException 
 	 */
-	public void getRelevantMessages(String actor, HMessageDelegate messageDelegate) {
-
+	public void getRelevantMessages(String actor, HMessageDelegate messageDelegate) throws MissingAttrException {
+		if(messageDelegate == null){
+			throw new MissingAttrException("messageDelegate");
+		}
 		// check mandatory fields
-		if (actor == null) {
+		if (actor == null || actor.length() <= 0) {
 			notifyResultError(null, ResultStatus.MISSING_ATTR, "actor is missing", messageDelegate);
 			return;
 		}
