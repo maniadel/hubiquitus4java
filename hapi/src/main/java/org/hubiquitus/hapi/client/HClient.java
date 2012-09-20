@@ -80,7 +80,6 @@ public class HClient {
 	private Timer timeoutTimer = null;
 
 	public HClient() {
-		options = new HOptions();
 		transportOptions = new HTransportOptions();
 	}
 
@@ -94,6 +93,7 @@ public class HClient {
 		boolean shouldConnect = false;
 		boolean connInProgress = false;
 		boolean disconInProgress = false;
+		this.options = new HOptions(options);
 
 		// synchronize connection status updates to make sure, we have one
 		// connect at a time
@@ -218,7 +218,7 @@ public class HClient {
 			return;
 		}
 		if (message.getActor() == null) {
-			notifyResultError(message.getMsgid(), ResultStatus.MISSING_ATTR, "Actor not found in message: " + message.getMsgid());
+			notifyResultError(message.getMsgid(), ResultStatus.MISSING_ATTR, "Actor not found in message");
 			return;
 		}
 
@@ -237,7 +237,7 @@ public class HClient {
 
 					@Override
 					public void run() {
-						notifyResultError(message.getMsgid(), ResultStatus.EXEC_TIMEOUT, "The response of message: " + message.getMsgid() + "is time out!");
+						notifyResultError(message.getMsgid(), ResultStatus.EXEC_TIMEOUT, "The response of message is time out!");
 						messagesDelegates.remove(message.getMsgid());
 					}
 				}, message.getTimeout());
