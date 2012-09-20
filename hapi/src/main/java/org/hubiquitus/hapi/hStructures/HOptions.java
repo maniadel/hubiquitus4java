@@ -82,7 +82,9 @@ public class HOptions extends JSONObject {
 		try {
 			endpoints = this.getJSONArray("endpoints");
 		} catch (Exception e) {
-			endpoints = null;
+			logger.warn("message: endpoints is null or empty while it is mandatory. so an endpoints with http://localhost:8080 is returned");
+			endpoints = new JSONArray();
+			endpoints.put("http://localhost:8080");
 		}
 		return endpoints;
 	}
@@ -92,9 +94,7 @@ public class HOptions extends JSONObject {
 			if (endpoints != null && endpoints.length() > 0){
 				this.put("endpoints", endpoints);
 			}else{
-				JSONArray jsonArray = new JSONArray();
-				jsonArray.put("http://localhost:8080/");
-				this.put("endpoints", jsonArray);
+				logger.warn("message: endpoints in HOptions is mandatory. It can not be null or empty");
 			}
 		} catch (JSONException e) {
 			logger.warn("message: ", e);

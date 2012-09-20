@@ -208,10 +208,9 @@ public class HClient {
 	 * @param message : The message to send. Mandatory.
 	 * @param messageDelegate : If provided, called by the hAPI when the first message refering to current message arrive . Not mandatory.
 	 */
-	public void send(final HMessage message,
-			final HMessageDelegate messageDelegate) {
+	public void send(final HMessage message, final HMessageDelegate messageDelegate) {
 		if (this.connectionStatus != ConnectionStatus.CONNECTED) {
-			notifyResultError(message.getMsgid(), ResultStatus.NOT_CONNECTED, null);
+			notifyResultError(message.getMsgid(), ResultStatus.NOT_CONNECTED, "Not conncected.");
 			return;
 		}
 		if (message == null) {
@@ -224,31 +223,28 @@ public class HClient {
 		}
 
 		message.setSent(new DateTime());
-		message.setMsgid(UUID.randomUUID().toString());
 		message.setPublisher(transportOptions.getJid().getBareJID());
 	
-		// add convid to hmessage
-		if (message.getConvid() == null) {
-			message.setConvid(message.getMsgid());
-		}
-		if (message.getTimeout() == null) {
-			message.setTimeout(0);
-		}
+		
 		if (message.getTimeout() > 0) {
 			// hAPI will do correlation. If no answer within the
 			// timeout, a timeout error will be sent.
 			if (messageDelegate != null) {
+				message.setMsgid(UUID.randomUUID().toString());
 				messagesDelegates.put(message.getMsgid(), messageDelegate);
 				timeoutTimer = new Timer();
 				timeoutTimer.schedule(new TimerTask() {
 
 					@Override
 					public void run() {
-						messagesDelegates.remove(message.getMsgid());
 						notifyResultError(message.getMsgid(), ResultStatus.EXEC_TIMEOUT, "The response of message: " + message.getMsgid() + "is time out!");
+						messagesDelegates.remove(message.getMsgid());
 					}
 				}, message.getTimeout());
 				timeoutHashtable.put(message.getMsgid(), timeoutTimer);
+			}else{
+				//when there is no callback, timeout has no sense. delete timeout.
+				message.setTimeout(null);
 			}
 		}
 		try {
@@ -260,7 +256,7 @@ public class HClient {
 	}
 
 	/**
-	 * Demands the server a subscription to the channel id. The hAPI performs a hCommand of type hsubscribe. 
+	 * Demands the server a subscription to the channel id. The hAPI performs a hMessage with a hCommand of type hsubscribe. 
 	 * The server will check if not already subscribed and if authorized and subscribe him. 
 	 * Nominal response : a hMessage with an hResult payload with status 0.
 	 * @param actor : The channel id to subscribe to. (ie : #test@domain”). Mandatory.
@@ -747,7 +743,6 @@ public class HClient {
 	 */
 	private void notifyMessage(final HMessage message) {
 		if (!this.messagesDelegates.isEmpty() && message.getRef() != null && this.messagesDelegates.containsKey(HUtil.getApiRef(message.getRef()))) {
-			notifyMessage(message, this.messagesDelegates.get(HUtil.getApiRef(message.getRef())));
 			if (this.timeoutHashtable.containsKey(HUtil.getApiRef(message.getRef()))) {
 				Timer timeout = timeoutHashtable.get(HUtil.getApiRef(message.getRef()));
 				if (timeout != null) {
@@ -755,8 +750,8 @@ public class HClient {
 					timeout = null;
 				}
 			}
-
-		} else if (message.getType() != null && !message.getType().equalsIgnoreCase("hresult")) {
+			notifyMessage(message, this.messagesDelegates.get(HUtil.getApiRef(message.getRef())));
+		} else if (!("hresult").equalsIgnoreCase(message.getType())) {
 			try {
 				if (this.messageDelegate != null) {
 					// return message asynchronously
