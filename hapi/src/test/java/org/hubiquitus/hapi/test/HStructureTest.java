@@ -27,7 +27,9 @@ import org.hubiquitus.hapi.hStructures.ConnectionStatus;
 import org.hubiquitus.hapi.hStructures.HAck;
 import org.hubiquitus.hapi.hStructures.HAckValue;
 import org.hubiquitus.hapi.hStructures.HAlert;
+import org.hubiquitus.hapi.hStructures.HArrayOfValue;
 import org.hubiquitus.hapi.hStructures.HCommand;
+import org.hubiquitus.hapi.hStructures.HCondition;
 import org.hubiquitus.hapi.hStructures.HConvState;
 import org.hubiquitus.hapi.hStructures.HGeo;
 import org.hubiquitus.hapi.hStructures.HLocation;
@@ -36,9 +38,12 @@ import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.hStructures.HMessagePriority;
 import org.hubiquitus.hapi.hStructures.HResult;
 import org.hubiquitus.hapi.hStructures.HStatus;
+import org.hubiquitus.hapi.hStructures.HValue;
+import org.hubiquitus.hapi.hStructures.OperandNames;
 import org.hubiquitus.hapi.hStructures.ResultStatus;
 import org.hubiquitus.hapi.util.HJsonDictionnary;
 import org.joda.time.DateTime;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -596,6 +601,38 @@ public class HStructureTest {
 			e.printStackTrace();
 			fail("fail");
 		}
+	}
+	
+	@Test
+	public void HConditionTest(){
+		HCondition condition = new HCondition();
+		System.out.println("--> condition vide : " + condition);
+		HValue value = new HValue();
+		value.setName("auther");
+		value.setValue("u1@localhost");
+		condition.setValue(OperandNames.EQ, value);
+		HArrayOfValue values = new HArrayOfValue();
+		JSONArray jsonArray = new JSONArray();
+		jsonArray.put("u1@localhost");
+		jsonArray.put("u2@localhost");
+		values.setName("auther");
+		values.setValues(jsonArray);
+		condition.setValueArray(OperandNames.IN, values);
+		HCondition cond = new HCondition();
+		cond.setValue(OperandNames.NE, value);
+		cond.setValueArray(OperandNames.NIN, values);
+		condition.setCondtion(OperandNames.NOT, cond);
+		JSONArray conditionArray = new JSONArray();
+		conditionArray.put(cond);
+		conditionArray.put(cond);
+		conditionArray.put(cond);
+		condition.setConditionArray(OperandNames.AND, conditionArray);
+		System.out.println("--> :\n" + condition.toString());
+		Assert.assertEquals(condition.getValue(OperandNames.EQ).toString(), value.toString());
+		Assert.assertEquals(condition.getArrayOfValue(OperandNames.IN).toString(), values.toString());
+		Assert.assertEquals(condition.getCondition(OperandNames.NOT).toString(), cond.toString());
+		Assert.assertEquals(condition.getCondtionArray(OperandNames.AND).toString(), conditionArray.toString());
+		
 	}
 	
 	
