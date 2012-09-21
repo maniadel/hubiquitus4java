@@ -699,6 +699,18 @@ public class HMessage extends JSONObject {
 		}
 	}
 	
+	public void setPayloadAsHMeasure(HMeasure payload) {
+		try {
+			if (payload == null) {
+				this.remove("payload");
+			} else {
+				this.put("payload", payload);
+			}
+		} catch (JSONException e) {
+			logger.warn("message: ", e);
+		}
+	}
+	
 	public void setPayloadAsHConvState(HConvState payload) {
 		try {
 			if (payload == null) {

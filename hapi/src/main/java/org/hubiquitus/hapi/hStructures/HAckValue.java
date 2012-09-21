@@ -27,7 +27,6 @@ package org.hubiquitus.hapi.hStructures;
  */
 
 public enum HAckValue {
-	UNKNOWN(""),
 	RECV("recv"),
 	READ("read");
 	
@@ -51,7 +50,7 @@ public enum HAckValue {
 	 */
 	public static HAckValue constant(String value) {
 		HAckValue [] _values = HAckValue.values();
-		HAckValue _value = HAckValue.UNKNOWN;
+		HAckValue _value = HAckValue.READ;
 		for (int i = 0; i < _values.length; i++) {
 			if (_values[i].value.equals(value)) {
 				_value = _values[i];

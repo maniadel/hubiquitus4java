@@ -23,6 +23,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.logging.Logger;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -36,6 +37,7 @@ import javax.swing.JTextField;
 import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hapi.client.HMessageDelegate;
 import org.hubiquitus.hapi.client.HStatusDelegate;
+import org.hubiquitus.hapi.exceptions.MissingAttrException;
 import org.hubiquitus.hapi.hStructures.ConnectionError;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.hStructures.HMessageOptions;
@@ -353,14 +355,24 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 	class SubscribeButtonListener extends MouseAdapter {
 		
 		public void mouseClicked(MouseEvent event) {
-			client.subscribe(actorField.getText(), outerClass);
+			try {
+				client.subscribe(actorField.getText(), outerClass);
+			} catch (MissingAttrException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
 	// Listener of button unsubscribe
 	class UnsubscribeButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
-			client.unsubscribe(actorField.getText(), outerClass);
+			try {
+				client.unsubscribe(actorField.getText(), outerClass);
+			} catch (MissingAttrException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -398,7 +410,11 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 					client.getLastMessages(actor, outerClass);
 				}
 			} catch (Exception e) {
-				client.getLastMessages(actor, outerClass);
+				try {
+					client.getLastMessages(actor, outerClass);
+				} catch (MissingAttrException e1) {
+					
+				}
 			}
 		}
 	}
@@ -406,7 +422,12 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 	// Listener of button getsubscriptions
 	class GetSubscriptionButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
-			client.getSubscriptions(outerClass);
+			try {
+				client.getSubscriptions(outerClass);
+			} catch (MissingAttrException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -509,7 +530,12 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 	class GetRelevantMessagesListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
 			String actor = actorField.getText();
-			client.getRelevantMessages(actor, outerClass);
+			try {
+				client.getRelevantMessages(actor, outerClass);
+			} catch (MissingAttrException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
