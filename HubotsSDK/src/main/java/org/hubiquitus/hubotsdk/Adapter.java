@@ -24,11 +24,11 @@ import java.util.Map;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.log4j.Logger;
 import org.hubiquitus.hapi.client.HClient;
-import org.hubiquitus.hapi.client.HResultDelegate;
-import org.hubiquitus.hapi.hStructures.HResult;
+import org.hubiquitus.hapi.client.HMessageDelegate;
+import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.hStructures.ResultStatus;
 
-public abstract class Adapter implements HResultDelegate{
+public abstract class Adapter implements HMessageDelegate{
 	private static Logger logger = Logger.getLogger(Adapter.class);
 	
 	protected HClient hclient;
@@ -81,8 +81,8 @@ public abstract class Adapter implements HResultDelegate{
 	}
 	
 	@Override
-	public void onResult(HResult result) {
-		if(result.getStatus() != ResultStatus.NO_ERROR) 
-			logger.error(("Erreur lors de la commande : " + result));
+	public void onMessage(HMessage message) {
+		if(message.getPayloadAsHResult().getStatus() != ResultStatus.NO_ERROR) 
+			logger.error(("Erreur lors de la commande : " + message.getPayloadAsHResult()));
 	}
 }
