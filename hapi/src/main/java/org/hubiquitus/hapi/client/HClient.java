@@ -19,7 +19,6 @@
 
 package org.hubiquitus.hapi.client;
 
-import java.security.MessageDigest;
 import java.util.Hashtable;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -79,11 +78,10 @@ public class HClient {
 
 	private TransportDelegate transportDelegate = new TransportDelegate();
 
-	private Timer timeoutTimer = null;
-
-	public HClient() {
+    public HClient() {
 		transportOptions = new HTransportOptions();
 	}
+
 
 	/**
 	 * Establishes a connection to hNode to allow the reception and sending of messages and commands.
@@ -91,6 +89,7 @@ public class HClient {
 	 * @param password : Mandatory.
 	 * @param options : Complementary values used for the connection to the server. Not mandatory.
 	 */
+    @SuppressWarnings("unused")
 	public void connect(String publisher, String password, HOptions options) {
 		boolean shouldConnect = false;
 		boolean connInProgress = false;
@@ -154,6 +153,7 @@ public class HClient {
 	/**
 	 * Disconnect the user from the current working session.
 	 */
+    @SuppressWarnings("unused")
 	public void disconnect() {
 		boolean shouldDisconnect = false;
 		boolean connectInProgress = false;
@@ -180,22 +180,24 @@ public class HClient {
 
 	/**
 	 * Status delegate receive all connection status events.
-	 * @param statusDelgate
+	 * @param statusDelegate the delegate to call when the status changes
 	 */
-	public void onStatus(HStatusDelegate statusDelgate) {
-		this.statusDelegate = statusDelgate;
+    @SuppressWarnings("unused")
+	public void onStatus(HStatusDelegate statusDelegate) {
+		this.statusDelegate = statusDelegate;
 	}
 
 	/**
-	 * Message delegate receive all incoming HMessage
-	 * @param messageDelegate
+	 * @param messageDelegate Message delegate receive all incoming HMessage
 	 */
+    @SuppressWarnings("unused")
 	public void onMessage(HMessageDelegate messageDelegate) {
 		this.messageDelegate = messageDelegate;
 	}
 
 	/**
 	 * Get current connection status
+     * @return the current connection status
 	 */
 	public ConnectionStatus status() {
 		return this.connectionStatus;
@@ -234,7 +236,8 @@ public class HClient {
 			if (messageDelegate != null) {
 				message.setMsgid(UUID.randomUUID().toString());
 				messagesDelegates.put(message.getMsgid(), messageDelegate);
-				timeoutTimer = new Timer();
+
+                Timer timeoutTimer = new Timer();
 				timeoutTimer.schedule(new TimerTask() {
 
 					@Override
@@ -263,17 +266,14 @@ public class HClient {
 	 * Nominal response : a hMessage with an hResult payload with status 0.
 	 * @param actor : The channel id to subscribe to. (ie : #test@domain”). Mandatory.
 	 * @param messageDelegate : A delegate notified when the result is sent by server. Mandatory.
+     * @throws MissingAttrException raised if a mandatory attribute is not well provided
 	 */
+    @SuppressWarnings("unused")
 	public void subscribe(String actor, HMessageDelegate messageDelegate) throws MissingAttrException {
 		if(messageDelegate == null){
 			throw new MissingAttrException("messageDelegate");
 		}
-		HMessage cmdMessage = null;
-		try {
-			cmdMessage = buildCommand(actor, "hsubscribe", null, null);
-		} catch (MissingAttrException e) {
-			logger.error("message: ", e);
-		}
+		HMessage cmdMessage = buildCommand(actor, "hsubscribe", null, null);
 		cmdMessage.setTimeout(options.getTimeout());
 		send(cmdMessage, messageDelegate);
 	}
@@ -284,18 +284,14 @@ public class HClient {
 	 * Nominal response : an hMessage with an hResult where the status 0.
 	 * @param actor : The channel to unsubscribe from. Mandatory.
 	 * @param messageDelegate : A delegate notified when the result is sent by server. Mandatory.
-	 * @throws MissingAttrException 
+	 * @throws MissingAttrException  raised if a mandatory attribute is not well provided
 	 */
+    @SuppressWarnings("unused")
 	public void unsubscribe(String actor, HMessageDelegate messageDelegate) throws MissingAttrException {
 		if(messageDelegate == null){
 			throw new MissingAttrException("messageDelegate");
 		}
-		HMessage cmdMessage = null;
-		try {
-			cmdMessage = buildCommand(actor, "hunsubscribe", null, null);
-		} catch (MissingAttrException e) {
-			logger.error("message: ", e);
-		}
+		HMessage cmdMessage = buildCommand(actor, "hunsubscribe", null, null);
 		cmdMessage.setTimeout(options.getTimeout());
 		send(cmdMessage, messageDelegate);
 	}
@@ -308,7 +304,7 @@ public class HClient {
 	 * @param actor : The channel id of the messages. Mandatory.
 	 * @param nbLastMsg : The maximum number of messages to retrieve.If this value is not provided, the default value found in the channel header will be used and as callback a default value of 10. Not mandatory.
 	 * @param messageDelegate : A delegate notified when the result is sent by server. Mandatory.
-	 * @throws MissingAttrException 
+	 * @throws MissingAttrException raised if a mandatory attribute is not well provided
 	 */
 	public void getLastMessages(String actor, int nbLastMsg, HMessageDelegate messageDelegate) throws MissingAttrException {
 		if(messageDelegate == null){
@@ -322,12 +318,7 @@ public class HClient {
 		} catch (JSONException e) {
 			logger.error("message: ", e);
 		}
-		HMessage cmdMessage = null;
-		try {
-			cmdMessage = buildCommand(actor, "hgetlastmessages", params, null);
-		} catch (MissingAttrException e) {
-			logger.error("message: ", e);
-		}
+		HMessage cmdMessage = buildCommand(actor, "hgetlastmessages", params, null);
 		cmdMessage.setTimeout(options.getTimeout());
 		send(cmdMessage, messageDelegate);
 	}
@@ -336,8 +327,9 @@ public class HClient {
 	 * @see public void getLastMessages(String actor, int nbLastMsg, HMessageDelegate messageDelegate) throws MissingAttrException
 	 * @param actor : The channel id of the messages. Mandatory.
 	 * @param messageDelegate : A delegate notified when the result is sent by server. Mandatory.
-	 * @throws MissingAttrException 
+	 * @throws MissingAttrException raised if a mandatory attribute is not well provided
 	 */
+    @SuppressWarnings("unused")
 	public void getLastMessages(String actor, HMessageDelegate messageDelegate) throws MissingAttrException {
 		this.getLastMessages(actor, -1, messageDelegate);
 	}
@@ -346,18 +338,14 @@ public class HClient {
 	 * Demands the server a list of the publisher’s subscriptions.
 	 * Nominal response : a hMessage with a hResult payload contains an array of channel id which are all active.
 	 * @param messageDelegate : A delegate notified when the result is sent by server. Mandatory.
-	 * @throws MissingAttrException 
+	 * @throws MissingAttrException raised if a mandatory attribute is not well provided
 	 */
+    @SuppressWarnings("unused")
 	public void getSubscriptions(HMessageDelegate messageDelegate) throws MissingAttrException {
 		if(messageDelegate == null){
 			throw new MissingAttrException("messageDelegate");
 		}
-		HMessage cmdMessage = null;
-		try {
-			cmdMessage = buildCommand(transportOptions.getHserverService(), "hgetsubscriptions", null, null);
-		} catch (MissingAttrException e) {
-			logger.error("message: ", e);
-		}
+		HMessage cmdMessage = buildCommand(transportOptions.getHserverService(), "hgetsubscriptions", null, null);
 		cmdMessage.setTimeout(options.getTimeout());
 		this.send(cmdMessage, messageDelegate);
 	}
@@ -368,8 +356,9 @@ public class HClient {
 	 * @param actor : The channel id where the conversations are searched. Mandatory
 	 * @param convid : Conversation id. Mandatory
 	 * @param messageDelegate : A delegate notified when the result is sent by server. Mandatory.
-	 * @throws MissingAttrException 
+	 * @throws MissingAttrException raised if a mandatory attribute is not well provided
 	 */
+    @SuppressWarnings("unused")
 	public void getThread(String actor, String convid, HMessageDelegate messageDelegate) throws MissingAttrException {
 		if(messageDelegate == null){
 			throw new MissingAttrException("messageDelegate");
@@ -394,12 +383,7 @@ public class HClient {
 			logger.error("message: ", e);
 		}
 
-		HMessage cmdMessage = null;
-		try {
-			cmdMessage = this.buildCommand(actor, cmdName, params, null);
-		} catch (MissingAttrException e) {
-			logger.error("message: ", e);
-		}
+		HMessage cmdMessage = this.buildCommand(actor, cmdName, params, null);
 		cmdMessage.setTimeout(options.getTimeout());
 		this.send(cmdMessage, messageDelegate);
 	}
@@ -410,8 +394,9 @@ public class HClient {
 	 * @param actor : The channel id where the conversations are searched. Mandatory
 	 * @param status : The status searched. Mandatory
 	 * @param messageDelegate : A delegate notified when the command result is issued. Mandatory.
-	 * @throws MissingAttrException 
+	 * @throws MissingAttrException raised if a mandatory attribute is not well provided
 	 */
+    @SuppressWarnings("unused")
 	public void getThreads(String actor, String status, HMessageDelegate messageDelegate) throws MissingAttrException {
 		if(messageDelegate == null){
 			throw new MissingAttrException("messageDelegate");
@@ -433,12 +418,7 @@ public class HClient {
 		} catch (JSONException e) {
 			logger.error("message: ", e);
 		}
-		HMessage cmdMessage = null;
-		try {
-			cmdMessage = buildCommand(actor, "hgetthreads", params, null);
-		} catch (MissingAttrException e) {
-			logger.error("message: ", e);
-		}
+		HMessage cmdMessage = buildCommand(actor, "hgetthreads", params, null);
 		cmdMessage.setTimeout(options.getTimeout());
 		this.send(cmdMessage, messageDelegate);
 	}
@@ -448,8 +428,9 @@ public class HClient {
 	 * Nominal response : hResult where the status is 0 and a array of HMessage.
 	 * @param actor : The channel where the relevant messages are searched. Mandatory.
 	 * @param messageDelegate : a delegate notified when the command result is issued. Mandatory.
-	 * @throws MissingAttrException 
+	 * @throws MissingAttrException raised if a mandatory attribute is not well provided
 	 */
+    @SuppressWarnings("unused")
 	public void getRelevantMessages(String actor, HMessageDelegate messageDelegate) throws MissingAttrException {
 		if(messageDelegate == null){
 			throw new MissingAttrException("messageDelegate");
@@ -460,33 +441,24 @@ public class HClient {
 			return;
 		}
 
-		HMessage cmdMessage = null;
-		try {
-			cmdMessage = buildCommand(actor, "hRelevantMessages", null, null);
-		} catch (MissingAttrException e) {
-			logger.error("message: ", e);
-		}
+		HMessage cmdMessage = buildCommand(actor, "hRelevantMessages", null, null);
 		cmdMessage.setTimeout(options.getTimeout());
 		this.send(cmdMessage, messageDelegate);
 	}
 	
 	/**
 	 * Set a filter to be applied to upcoming messages at the session level 
-	 * @param filter
-	 * @param messageDelegate
-	 * @throws MissingAttrException
+	 * @param filter the filter to apply on the current session managed on the hnode side for this actor
+     * @param messageDelegate a delegate notified when the command result is issued. Mandatory.
+	 * @throws MissingAttrException raised if a mandatory attribute is not well provided
 	 */
+    @SuppressWarnings("unused")
 	public void setFilter(HCondition filter, HMessageDelegate messageDelegate) throws MissingAttrException{
 		if(messageDelegate == null){
 			throw new MissingAttrException("messageDelegate");
 		}
-		HMessage cmdMessage = null;
-		try {
-			//TODO to ask if the actor = "session"
-			cmdMessage = buildCommand("session", "hsetfilter", filter, null);
-		} catch (Exception e) {
-			logger.error("message: ", e);
-		}
+        //TODO to ask if the actor = "session"
+		HMessage cmdMessage = buildCommand("session", "hsetfilter", filter, null);
 		cmdMessage.setTimeout(options.getTimeout());
 		this.send(cmdMessage, messageDelegate);
 	}
@@ -499,7 +471,8 @@ public class HClient {
 	 * @param type : The type of the hMessage. Not mandatory.
 	 * @param payload : The payload for the hMessage. Not mandatory.
 	 * @param options : The options if any to use for the creation of the hMessage. Not mandatory.
-	 * @throws MissingAttrException
+	 * @throws MissingAttrException raised if a mandatory attribute is not well provided
+     * @return a hMessage which can be used with the send method
 	 */
 	public HMessage buildMessage(String actor, String type, Object payload, HMessageOptions options) throws MissingAttrException {
 
@@ -540,7 +513,7 @@ public class HClient {
 	 * @param status : Status of the conversation. Mandatory.
 	 * @param options : The options to use if any for the creation of the hMessage. Not mandatory.
 	 * @return A hMessage with a hConvState payload.
-	 * @throws MissingAttrException
+	 * @throws MissingAttrException raised if a mandatory attribute is not well provided
 	 */
 	public HMessage buildConvState(String actor, String convid, String status, HMessageOptions options) throws MissingAttrException {
 
@@ -576,7 +549,7 @@ public class HClient {
 	 * Mandatory.
 	 * @param options : The options to use if any for the creation of the hMessage. Not mandatory.
 	 * @return A hMessage with a hAck payload.
-	 * @throws MissingAttrException
+	 * @throws MissingAttrException raised if a mandatory attribute is not well provided
 	 */
 	public HMessage buildAck(String actor, String ref, HAckValue ack, HMessageOptions options) throws MissingAttrException {
 		// check for required attributes
@@ -596,8 +569,7 @@ public class HClient {
 
 		HAck hack = new HAck();
 		hack.setAck(ack);
-		HMessage hmessage = buildMessage(actor, "hAck", hack, options);
-		return hmessage;
+		return buildMessage(actor, "hAck", hack, options);
 	}
 
 	/**
@@ -606,7 +578,7 @@ public class HClient {
 	 * @param alert : The alert message. Mandatory.
 	 * @param options : The options to use if any for the creation of the hMessage. Not mandatory.
 	 * @return A hMessage with a hAlert payload.
-	 * @throws MissingAttrException
+	 * @throws MissingAttrException raised if a mandatory attribute is not well provided
 	 */
 	public HMessage buildAlert(String actor, String alert, HMessageOptions options) throws MissingAttrException {
 		// check for required attributes
@@ -621,8 +593,7 @@ public class HClient {
 
 		HAlert halert = new HAlert();
 		halert.setAlert(alert);
-		HMessage hmessage = buildMessage(actor, "hAlert", halert, options);
-		return hmessage;
+		return buildMessage(actor, "hAlert", halert, options);
 	}
 
 	/**
@@ -632,7 +603,7 @@ public class HClient {
 	 * @param unit : The unit of the measure. Mandatory
 	 * @param options : The options to use if any for the creation of the hMessage. Not Mandatory.
 	 * @return A hMessage with a hMeasure payload. 
-	 * @throws MissingAttrException
+	 * @throws MissingAttrException raised if a mandatory attribute is not well provided
 	 */
 	public HMessage buildMeasure(String actor, String value, String unit, HMessageOptions options) throws MissingAttrException {
 		// check for required attributes
@@ -653,9 +624,7 @@ public class HClient {
 		HMeasure hmeasure = new HMeasure();
 		hmeasure.setValue(value);
 		hmeasure.setUnit(unit);
-		HMessage hmessage = buildMessage(actor, "hMeasure", hmeasure, options);
-
-		return hmessage;
+		return buildMessage(actor, "hMeasure", hmeasure, options);
 	}
 
 	/**
@@ -665,7 +634,7 @@ public class HClient {
 	 * @param params : Parameters of the command. Not mandatory.
 	 * @param options : The options to use if any for the creation of the hMessage. Not mandatory.
 	 * @return A hMessage with a hCommand payload.
-	 * @throws MissingAttrException
+	 * @throws MissingAttrException raised if a mandatory attribute is not well provided
 	 */
 	public HMessage buildCommand(String actor, String cmd, JSONObject params, HMessageOptions options) throws MissingAttrException {
 		// check for required attributes
@@ -679,9 +648,7 @@ public class HClient {
 		}
 
 		HCommand hcommand = new HCommand(cmd, params);
-		HMessage hmessage = buildMessage(actor, "hCommand", hcommand, options);
-		return hmessage;
-
+		return buildMessage(actor, "hCommand", hcommand, options);
 	}
 
 	/**
@@ -692,7 +659,7 @@ public class HClient {
 	 * @param result : The result of a command. Possible types: JSONObject, JSONArray, String, Boolean, Number. Not mandatory.
 	 * @param options : The options to use if any for the creation of the hMessage. Not mandatory.
 	 * @return A hMessage with a hResult payload.
-	 * @throws MissingAttrException
+	 * @throws MissingAttrException raised if a mandatory attribute is not well provided
 	 */
 	public HMessage buildResult(String actor, String ref, ResultStatus status, Object result, HMessageOptions options) throws MissingAttrException {
 		// check for required attributes
@@ -713,17 +680,16 @@ public class HClient {
 		hresult.setResult(result);
 		hresult.setStatus(status);
 		options.setRef(ref);
-		HMessage hmessage = buildMessage(actor, "hResult", hresult, options);
-		return hmessage;
+		return buildMessage(actor, "hResult", hresult, options);
 	}
 
 	/* HTransportCallback functions */
 
 	/**
-	 * @internal fill htransport, randomly pick an endpoint from availables endpoints. By default it uses options server host to fill serverhost field and as fallback jid domain
+	 * fill htransport, randomly pick an endpoint from availables endpoints. By default it uses options server host to fill serverhost field and as fallback jid domain
 	 * @param publisher : publisher as jid format (my_user@serverhost.com/my_resource)
-	 * @param password
-	 * @param options
+	 * @param password the password to open the a session with the hnode
+	 * @param options options to open a session
 	 * @throws Exception : in case jid is malformatted, it throws an exception
 	 */
 	private void fillHTransportOptions(String publisher, String password, HOptions options) throws Exception {
@@ -754,7 +720,7 @@ public class HClient {
 	}
 
 	/**
-	 * @internal change current status and notify delegate through callback
+	 * change current status and notify delegate through callback
 	 * @param status : connection status
 	 * @param error : error code
 	 * @param errorMsg : a low level description of the error
@@ -786,9 +752,9 @@ public class HClient {
 	}
 
 	/**
-	 *@internal  Notify message delegate of an incoming hmessage. If the callback is not set, it will call onMessage. 
-	 *If the callback is set in the service functions, it will call the callback function instead of onMessage
-	 * @param message
+	 * Notify message delegate of an incoming hmessage. If the callback is not set, it will call onMessage.
+	 * If the callback is set in the service functions, it will call the callback function instead of onMessage
+	 * @param message the received message
 	 */
 	private void notifyMessage(final HMessage message) {
 		if (!this.messagesDelegates.isEmpty() && message.getRef() != null && this.messagesDelegates.containsKey(HUtil.getApiRef(message.getRef()))) {
@@ -796,7 +762,6 @@ public class HClient {
 				Timer timeout = timeoutHashtable.get(HUtil.getApiRef(message.getRef()));
 				if (timeout != null) {
 					timeout.cancel();
-					timeout = null;
 				}
 			}
 			notifyMessage(message, this.messagesDelegates.get(HUtil.getApiRef(message.getRef())));
@@ -821,9 +786,9 @@ public class HClient {
 	}
 
 	/**
-	 * @internal  Notify message delegate of an incoming hmessage. Run the message delegate.
-	 * @param message
-	 * @param messageDelegate
+	 * Notify message delegate of an incoming hmessage. Run the message delegate.
+	 * @param message the message received
+	 * @param messageDelegate the delegate to call
 	 */
 	private void notifyMessage(final HMessage message, final HMessageDelegate messageDelegate) {
 		try {
@@ -847,13 +812,15 @@ public class HClient {
 	}
 
 	/**
-	 * @internal Helper function to return a hmessage with hresult error
-	 * @param ref
-	 * @param resultstatus
-	 * @param errorMsg
+	 * Helper function to return a hmessage with hresult error
+	 * @param ref used to update the hMessage sent as a result to the client
+	 * @param resultstatus the status of the error
+	 * @param errorMsg the error messsage
 	 */
 	private void notifyResultError(String ref, ResultStatus resultstatus, String errorMsg) {
-		JSONObject obj = new JSONObject();
+		// TODO must call build result
+
+        JSONObject obj = new JSONObject();
 		try {
 			obj.put("errorMsg", errorMsg);
 		} catch (JSONException e) {
@@ -871,11 +838,11 @@ public class HClient {
 	}
 
 	/**
-	 *@internal  Helper function to return a hmessage with hresult error
-	 * @param ref
-	 * @param resultstatus
-	 * @param errorMsg
-	 * @param messageDelegate
+	 * Helper function to return a hmessage with hresult error
+     * @param ref used to update the hMessage sent as a result to the client
+     * @param resultstatus the status of the error
+     * @param errorMsg the error messsage
+	 * @param messageDelegate the delegate used to notify the error
 	 */
 	private void notifyResultError(String ref, ResultStatus resultstatus, String errorMsg, HMessageDelegate messageDelegate) {
 		JSONObject obj = new JSONObject();
@@ -896,19 +863,19 @@ public class HClient {
 	}
 
 	/**
-	 * @internal Class used to get callbacks from transport layer.
+	 * Class used to get callbacks from transport layer.
 	 */
 	private class TransportDelegate implements HTransportDelegate {
 
 		/**
-		 * @internal see HTransportDelegate for more informations
+		 * see HTransportDelegate for more informations
 		 */
 		public void onStatus(ConnectionStatus status, ConnectionError error, String errorMsg) {
 			notifyStatus(status, error, errorMsg);
 		}
 
 		/**
-		 * @internal see HTransportDelegate for more information
+		 * see HTransportDelegate for more information
 		 */
 		public void onData(String type, JSONObject jsonData) {
 			try {
