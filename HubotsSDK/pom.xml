@@ -24,7 +24,7 @@
 
   <groupId>org.hubiquitus.hubiquitus4j</groupId>
   <artifactId>HubotsSDK</artifactId>
-  <version>0.3.11</version>
+  <version>0.5.0</version>
   <build>
         <plugins>
             <plugin>
@@ -41,6 +41,11 @@
 
 
   <dependencies>
+	<dependency>
+        <groupId>org.hubiquitus.hubiquitus4j</groupId>
+        <artifactId>hAPI</artifactId>
+        <version>0.5.0</version>
+    </dependency>
   	<dependency>
 	    <groupId>org.quartz-scheduler</groupId>
 	    <artifactId>quartz</artifactId>
@@ -116,37 +121,7 @@
                 <scope>system</scope>
                 <systemPath>${basedir}/lib/json-org.jar</systemPath>
         </dependency>
-        <dependency>
-                <groupId>org.jivesoftware.smack</groupId>
-                <artifactId>smack</artifactId>
-                <version>0.0.0</version>
-                <scope>system</scope>
-                <systemPath>${basedir}/lib/smack.jar</systemPath>
-        </dependency>
-
-<dependency>
-                <groupId>org.jivesoftware.smack</groupId>
-                <artifactId>smackx</artifactId>
-                <version>0.0.0</version>
-                <scope>system</scope>
-                <systemPath>${basedir}/lib/smackx.jar</systemPath>
-        </dependency>
-
-<dependency>
-                <groupId>org.jivesoftware.smack</groupId>
-                <artifactId>smackx-debug</artifactId>
-                <version>0.0.0</version>
-                <scope>system</scope>
-                <systemPath>${basedir}/lib/smackx-debug.jar</systemPath>
-        </dependency>
-
-<dependency>
-                <groupId>org.jivesoftware.smack</groupId>
-                <artifactId>smackx-jingle</artifactId>
-                <version>0.0.0</version>
-                <scope>system</scope>
-                <systemPath>${basedir}/lib/smackx-jingle.jar</systemPath>
-        </dependency>
+       
 
 	<dependency>
                 <groupId>org.socket.io</groupId>

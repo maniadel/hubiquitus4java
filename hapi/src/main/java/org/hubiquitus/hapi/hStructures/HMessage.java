@@ -213,8 +213,8 @@ public class HMessage extends JSONObject {
 	public DateTime getRelevance() {
 		DateTime relevance;
 		try {
-			relevance = DateTime.parse(this.getString("relevance"));
-		} catch (JSONException e) {
+			relevance = (DateTime)this.get("relevance");
+		} catch (Exception e) {
 			relevance = null;
 		}
 		return relevance;
@@ -225,7 +225,7 @@ public class HMessage extends JSONObject {
 			if (relevance == null) {
 				this.remove("relevance");
 			} else {
-				this.put("relevance", relevance.toString());
+				this.put("relevance", relevance);
 			}
 		} catch (JSONException e) {
 			logger.warn("message: ", e);
@@ -264,8 +264,12 @@ public class HMessage extends JSONObject {
 	public HLocation getLocation() {
 		HLocation location;
 		try {
-			location = new HLocation(this.getJSONObject("location"));
-		} catch (JSONException e) {
+			if(this.getJSONObject("location").length() > 0){
+				location = new HLocation(this.getJSONObject("location"));
+			}else{
+				location = new HLocation();
+			}
+		} catch (Exception e) {
 			location = null;
 		}
 		return location;
@@ -339,7 +343,7 @@ public class HMessage extends JSONObject {
 	public DateTime getPublished() {
 		DateTime published;
 		try {
-			published =DateTime.parse(this.getString("published"));
+			published = (DateTime) this.get("published");
 		} catch (JSONException e) {
 			published = null;
 		}
@@ -351,7 +355,7 @@ public class HMessage extends JSONObject {
 			if (published == null) {
 				this.remove("published");
 			} else {
-				this.put("published", published.toString());
+				this.put("published", published);
 			}
 		} catch (JSONException e) {
 			logger.warn("message: " , e);
@@ -777,8 +781,8 @@ public class HMessage extends JSONObject {
 	public DateTime getSent() {
 		DateTime sent;
 		try {
-			sent =DateTime.parse(this.getString("sent"));
-		} catch (JSONException e) {
+			sent = (DateTime) this.get("sent");
+		} catch (Exception e) {
 			sent = null;
 		}
 		return sent;
@@ -789,7 +793,7 @@ public class HMessage extends JSONObject {
 			if (sent == null) {
 				this.remove("sent");
 			} else {
-				this.put("sent", sent.toString());
+				this.put("sent", sent);
 			}
 		} catch (JSONException e) {
 			logger.warn("message: ", e);

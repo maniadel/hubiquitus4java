@@ -25,6 +25,7 @@ import org.hubiquitus.hapi.hStructures.HAck;
 import org.hubiquitus.hapi.hStructures.HAckValue;
 import org.hubiquitus.hapi.hStructures.HAlert;
 import org.hubiquitus.hapi.hStructures.HConvState;
+import org.hubiquitus.hapi.hStructures.HGeo;
 import org.hubiquitus.hapi.hStructures.HLocation;
 import org.hubiquitus.hapi.hStructures.HMeasure;
 import org.hubiquitus.hapi.hStructures.HMessage;
@@ -62,6 +63,8 @@ public class HBuilderTest {
 		hmessageOption.setHeaders(headers);
 
 		HLocation location = new HLocation();
+		HGeo pos = new HGeo(12.32,56.23);
+		location.setPos(pos);
 		hmessageOption.setLocation(location);
 
 		hmessageOption.setPriority(HMessagePriority.INFO);
@@ -93,8 +96,9 @@ public class HBuilderTest {
 		Assert.assertEquals(hmessage.getType(), "string");
 		Assert.assertEquals(hmessage.getHeaders().toString(),
 				headers.toString());
-//		Assert.assertEquals(hmessage.getLocation().toString(),
-//				location.toString());
+		Assert.assertEquals(hmessage.getLocation().toString(),
+				location.toString());
+		
 		Assert.assertEquals(hmessage.getPayloadAsJSONObject().toString(),
 				payload.toString());
 		Assert.assertEquals(hmessage.getPriority(), HMessagePriority.INFO);
