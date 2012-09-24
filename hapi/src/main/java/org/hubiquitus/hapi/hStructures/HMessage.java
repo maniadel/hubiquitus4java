@@ -213,8 +213,8 @@ public class HMessage extends JSONObject {
 	public DateTime getRelevance() {
 		DateTime relevance;
 		try {
-			relevance = DateTime.parse(this.getString("relevance"));
-		} catch (JSONException e) {
+			relevance = (DateTime) this.get("relevance");
+		} catch (Exception e) {
 			relevance = null;
 		}
 		return relevance;
@@ -225,7 +225,7 @@ public class HMessage extends JSONObject {
 			if (relevance == null) {
 				this.remove("relevance");
 			} else {
-				this.put("relevance", relevance.toString());
+				this.put("relevance", relevance);
 			}
 		} catch (JSONException e) {
 			logger.warn("message: ", e);
