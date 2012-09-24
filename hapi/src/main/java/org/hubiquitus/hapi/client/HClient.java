@@ -19,6 +19,7 @@
 
 package org.hubiquitus.hapi.client;
 
+import java.security.MessageDigest;
 import java.util.Hashtable;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -31,6 +32,7 @@ import org.hubiquitus.hapi.hStructures.HAck;
 import org.hubiquitus.hapi.hStructures.HAckValue;
 import org.hubiquitus.hapi.hStructures.HAlert;
 import org.hubiquitus.hapi.hStructures.HCommand;
+import org.hubiquitus.hapi.hStructures.HCondition;
 import org.hubiquitus.hapi.hStructures.HConvState;
 import org.hubiquitus.hapi.hStructures.HMeasure;
 import org.hubiquitus.hapi.hStructures.HMessage;
@@ -462,6 +464,27 @@ public class HClient {
 		try {
 			cmdMessage = buildCommand(actor, "hRelevantMessages", null, null);
 		} catch (MissingAttrException e) {
+			logger.error("message: ", e);
+		}
+		cmdMessage.setTimeout(options.getTimeout());
+		this.send(cmdMessage, messageDelegate);
+	}
+	
+	/**
+	 * Set a filter to be applied to upcoming messages at the session level 
+	 * @param filter
+	 * @param messageDelegate
+	 * @throws MissingAttrException
+	 */
+	public void setFilter(HCondition filter, HMessageDelegate messageDelegate) throws MissingAttrException{
+		if(messageDelegate == null){
+			throw new MissingAttrException("messageDelegate");
+		}
+		HMessage cmdMessage = null;
+		try {
+			//TODO to ask if the actor = "session"
+			cmdMessage = buildCommand("session", "hsetfilter", filter, null);
+		} catch (Exception e) {
 			logger.error("message: ", e);
 		}
 		cmdMessage.setTimeout(options.getTimeout());
