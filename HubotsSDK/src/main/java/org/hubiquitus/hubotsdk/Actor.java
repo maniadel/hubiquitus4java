@@ -23,16 +23,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.log4j.Logger;
-
 
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.JndiRegistry;
+import org.apache.log4j.Logger;
 import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hapi.client.HStatusDelegate;
 import org.hubiquitus.hapi.hStructures.ConnectionStatus;
 import org.hubiquitus.hapi.hStructures.HCommand;
-import org.hubiquitus.hapi.hStructures.HJsonObj;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.hStructures.HOptions;
 import org.hubiquitus.hapi.hStructures.HStatus;
@@ -41,8 +39,11 @@ import org.hubiquitus.hubotsdk.adapters.HubotAdapterOutbox;
 import org.hubiquitus.util.ActorStatus;
 import org.hubiquitus.util.ConfigActor;
 import org.hubiquitus.util.ConfigActor.AdapterConfig;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import com.fasterxml.jackson.databind.ObjectMapper;            
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class Actor {
 
@@ -92,8 +93,8 @@ public abstract class Actor {
 			//Connecting to HNode
 			HOptions options = new HOptions();
 			options.setTransport("socketio");
-			ArrayList<String> endpoints = new ArrayList<String>();
-			endpoints.add(endpoint);
+			JSONArray endpoints = new JSONArray();
+			endpoints.put(endpoint);
 			options.setEndpoints(endpoints);
 			hClient.onStatus(statusDelegate);
 			hClient.connect(jid, pwd , options);
@@ -275,11 +276,13 @@ public abstract class Actor {
 	/**
 	 *  Send an object to a specified adapter outbox. Only HMessage and HCommand supported 
 	 */
-	protected final void put(String adapterName, HJsonObj hjson) {
-		if(hjson.getHType().equalsIgnoreCase("hcommand")) {
-			put(adapterName, new HCommand(hjson.toJSON()));
-		} else if (hjson.getHType().equalsIgnoreCase("hmessage")){
-			put(adapterName, new HMessage(hjson.toJSON()));
+	protected final void put(String adapterName, JSONObject jsonObj) {
+		if (jsonObj instanceof HMessage){
+			try {
+				put(adapterName, new HMessage(jsonObj));
+			} catch (JSONException e) {
+				logger.warn("message: ", e);
+			}
 		} else {
 			logger.error("Not supported");
 		}
