@@ -116,6 +116,37 @@
                 <scope>system</scope>
                 <systemPath>${basedir}/lib/json-org.jar</systemPath>
         </dependency>
+        <dependency>
+                <groupId>org.jivesoftware.smack</groupId>
+                <artifactId>smack</artifactId>
+                <version>0.0.0</version>
+                <scope>system</scope>
+                <systemPath>${basedir}/lib/smack.jar</systemPath>
+        </dependency>
+
+<dependency>
+                <groupId>org.jivesoftware.smack</groupId>
+                <artifactId>smackx</artifactId>
+                <version>0.0.0</version>
+                <scope>system</scope>
+                <systemPath>${basedir}/lib/smackx.jar</systemPath>
+        </dependency>
+
+<dependency>
+                <groupId>org.jivesoftware.smack</groupId>
+                <artifactId>smackx-debug</artifactId>
+                <version>0.0.0</version>
+                <scope>system</scope>
+                <systemPath>${basedir}/lib/smackx-debug.jar</systemPath>
+        </dependency>
+
+<dependency>
+                <groupId>org.jivesoftware.smack</groupId>
+                <artifactId>smackx-jingle</artifactId>
+                <version>0.0.0</version>
+                <scope>system</scope>
+                <systemPath>${basedir}/lib/smackx-jingle.jar</systemPath>
+        </dependency>
 
 	<dependency>
                 <groupId>org.socket.io</groupId>
@@ -125,12 +156,6 @@
                 <systemPath>${basedir}/lib/socketio.jar</systemPath>
         </dependency>
 
-	<dependency>
-                <groupId>org.hubiquitus.hapi</groupId>
-                <artifactId>hapi</artifactId>
-                <version>0.4.10</version>
-                <scope>system</scope>
-                <systemPath>${basedir}/lib/hapi-0.4.10.jar</systemPath>
-        </dependency>
+	
   </dependencies> 
 </project>
