@@ -21,12 +21,29 @@ package org.hubiquitus.hubotsdk.adapters;
 
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+import org.hubiquitus.hapi.client.HMessageDelegate;
+import org.hubiquitus.hapi.exceptions.MissingAttrException;
+import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterInbox;
 
-public class HChannelAdapterInbox extends AdapterInbox{
-	
+public class HChannelAdapterInbox extends AdapterInbox {
+
+    private static Logger log = Logger.getLogger(HChannelAdapterInbox.class);
 	private String chid;
 
+    /** local delegate class to support subscribe and unsubscribe messages */
+    private class MyLocalDelegate implements HMessageDelegate {
+
+        @Override
+        public void onMessage(HMessage hMessage) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+    }
+    
+    /** local delegate instance */
+    private MyLocalDelegate localDelegate = new MyLocalDelegate();
+    
 	public HChannelAdapterInbox() {}
 	
 	public HChannelAdapterInbox(String name) {
@@ -35,12 +52,20 @@ public class HChannelAdapterInbox extends AdapterInbox{
 
 	@Override
 	public void start() {
-		hclient.subscribe(chid, this);
-	}
+        try {
+		    hclient.subscribe(chid, localDelegate);
+        } catch (MissingAttrException e) {
+            log.warn("error while starting : ",e);
+        }
+    }
 
 	@Override
 	public void stop() {
-		hclient.unsubscribe(chid, this);
+        try {
+		    hclient.unsubscribe(chid, localDelegate);
+        } catch (MissingAttrException e) {
+            log.warn("error while stopping : ",e);
+        }
 	}
 
 
@@ -101,6 +126,6 @@ public class HChannelAdapterInbox extends AdapterInbox{
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
-	}	
-	
+	}
+
 }

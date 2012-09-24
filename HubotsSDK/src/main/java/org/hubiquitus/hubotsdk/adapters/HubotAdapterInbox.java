@@ -21,13 +21,11 @@ package org.hubiquitus.hubotsdk.adapters;
 
 import java.util.Map;
 
-import org.hubiquitus.hapi.client.HCommandDelegate;
 import org.hubiquitus.hapi.client.HMessageDelegate;
-import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterInbox;
 
-public class HubotAdapterInbox extends AdapterInbox implements HMessageDelegate,HCommandDelegate{
+public class HubotAdapterInbox extends AdapterInbox implements HMessageDelegate {
 	
 	private String jid;
 	private String endpoint;
@@ -47,7 +45,6 @@ public class HubotAdapterInbox extends AdapterInbox implements HMessageDelegate,
 	@Override
 	public void start() {
 		hclient.onMessage(this);
-		hclient.onCommand(this);
 	}
 
 	@Override
@@ -58,17 +55,18 @@ public class HubotAdapterInbox extends AdapterInbox implements HMessageDelegate,
 		if(!message.getPublisher().equals(jid))
 			put(message);		
 	}
-	
-	public void onCommand(HCommand command) {
-		if(!command.getSender().equals(jid))
-			put(command);			
-	}
-	
-	/* Getters and Setters */
+
+    /**
+     * get the Jid
+     * @return the jid of the current client actor
+     */
 	public String getJid() {
 		return jid;
 	}
 
+    /**
+      * @return the endpoint used for the connection with the hNode
+     */
 	public String getEndpoint() {
 		return endpoint;
 	}

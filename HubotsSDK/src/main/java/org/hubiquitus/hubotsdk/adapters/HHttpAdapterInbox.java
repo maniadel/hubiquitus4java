@@ -21,11 +21,11 @@ package org.hubiquitus.hubotsdk.adapters;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.activation.DataHandler;
+import org.joda.time.DateTime;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.camel.Exchange;
@@ -120,7 +120,7 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 			}
 		}
 		
-		message.setPublished(Calendar.getInstance());
+		message.setPublished(new DateTime());
 		
 		message.setType("hHttpData");
 		//create payload

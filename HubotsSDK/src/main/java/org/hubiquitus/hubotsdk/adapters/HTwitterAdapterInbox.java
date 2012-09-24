@@ -4,6 +4,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Map;
 
+import org.joda.time.DateTime;
+import org.hubiquitus.hapi.hStructures.HGeo;
 import org.hubiquitus.hapi.hStructures.HLocation;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.apache.log4j.Logger;
@@ -20,6 +22,10 @@ import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
+/**
+ * the HTwitterAdapterInbox allow you to fetch some tweets from the
+ * twitter streaming api
+ */
 public class HTwitterAdapterInbox extends AdapterInbox{
 
 	private static Logger log = Logger.getLogger(HTwitterAdapterInbox.class);
@@ -70,10 +76,6 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		log.info("Stopped.");
 	}
 
-	public HTwitterAdapterInbox() {
-		super();
-	}
-
 	/**
 	 * Function for tweet Streaming
 	 */
@@ -120,8 +122,8 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 
 	/**
 	 * Function for transforming Tweet to HMessage
-	 * @param tweet
-	 * @return
+	 * @param tweet from twitter4j
+	 * @return HMessage of type hTweet
 	 */
 	private HMessage transformtweet(Status tweet){
 		HMessage message = new HMessage();
@@ -132,8 +134,10 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		//Construct the location 
 		HLocation location = new HLocation();
 		if(tweet.getGeoLocation() != null ) {
-			location.setLat(tweet.getGeoLocation().getLatitude());
-			location.setLng(tweet.getGeoLocation().getLongitude());
+            HGeo geo = new HGeo();
+            geo.setLat(tweet.getGeoLocation().getLatitude());
+            geo.setLng(tweet.getGeoLocation().getLongitude());
+			location.setPos(geo);
 			message.setLocation(location);
 		}
 
@@ -156,7 +160,7 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		Calendar createdAtAuthor = new GregorianCalendar();
 		createdAt.setTime(tweet.getCreatedAt());
 		createdAtAuthor.setTime(tweet.getUser().getCreatedAt());
-		message.setPublished(createdAt);	
+		message.setPublished(new DateTime(createdAt));
 
 		//Construct the Authortweet JSONObject
 
@@ -194,18 +198,19 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 
 
 	/* Getters & Setters */
-	public String getConsumerKey() {
+
+	/*public String getConsumerKey() {
 		return consumerKey;
-	}
+	}*/
 
 
 	public void setConsumerKey(String consumerKey) {
 		this.consumerKey = consumerKey;
 	}
 
-	public String getTags() {
+	/*public String getTags() {
 		return tags;
-	}
+	}*/
 
 	public void setTags(String tags) {
 		this.tags = tags;
@@ -215,33 +220,34 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 	}
 
 
+	/*
 	public String getConsumerSecret() {
 		return consumerSecret;
-	}
+	}*/
 
 	public void setConsumerSecret(String consumerSecret) {
 		this.consumerSecret = consumerSecret;
 	}
 
-	public String getTwitterAccessToken() {
+	/*public String getTwitterAccessToken() {
 		return twitterAccessToken;
-	}
+	}*/
 
 	public void setTwitterAccessToken(String twitterAccessToken) {
 		this.twitterAccessToken = twitterAccessToken;
 	}
 
-	public String getTwitterAccessTokenSecret() {
+	/*public String getTwitterAccessTokenSecret() {
 		return twitterAccessTokenSecret;
-	}
+	}*/
 
 	public void setTwitterAccessTokenSecret(String twitterAccessTokenSecret) {
 		this.twitterAccessTokenSecret = twitterAccessTokenSecret;
 	}
 
-	public String getLangFilter() {
+	/*public String getLangFilter() {
 		return langFilter;
-	}
+	}*/
 
 	public void setLangFilter(String langFilter) {
 		this.langFilter = langFilter;

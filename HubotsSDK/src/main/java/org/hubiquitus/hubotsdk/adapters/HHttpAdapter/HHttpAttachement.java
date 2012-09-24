@@ -21,9 +21,9 @@ package org.hubiquitus.hubotsdk.adapters.HHttpAdapter;
 
 import java.util.Arrays;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.hubiquitus.hapi.hStructures.HJsonObj;
-import org.jivesoftware.smack.util.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,7 +47,7 @@ public class HHttpAttachement implements HJsonObj {
 		try {
 			jsonObj.put("name", getName());
 			jsonObj.put("contentType", getContentType());
-			jsonObj.put("data", Base64.encodeBytes(getData()));
+			jsonObj.put("data", Base64.encodeBase64(getData()));
 		} catch (JSONException e) {
 			logger.error(e.toString());
 		}
@@ -72,7 +72,7 @@ public class HHttpAttachement implements HJsonObj {
 			try {
 				String dataEncoded = jsonObj.getString("data");
 				if (dataEncoded != null) {
-					setData(Base64.decode(dataEncoded));
+					setData(Base64.decodeBase64(dataEncoded));
 				} else {
 					setData(null);
 				}
