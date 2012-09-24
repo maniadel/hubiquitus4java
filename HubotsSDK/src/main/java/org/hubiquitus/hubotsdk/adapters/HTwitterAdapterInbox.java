@@ -94,7 +94,7 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 			public void onStatus(Status tweet) {
 				String lang = tweet.getUser().getLang();
 				//Set the filter for the language
-				if( lang != null && lang.equalsIgnoreCase(langFilter)) {
+				if ((langFilter == null) || (lang != null && lang.equalsIgnoreCase(langFilter))) {
 					HMessage message = transformtweet(tweet);
 					put(message);
 				}

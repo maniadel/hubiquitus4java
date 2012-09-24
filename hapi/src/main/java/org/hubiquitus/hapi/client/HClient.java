@@ -447,7 +447,7 @@ public class HClient {
 	 * Demands to the hserver the list of the available relevant message for a dedicated channel.
 	 * Nominal response : hResult where the status is 0 and a array of HMessage.
 	 * @param actor : The channel where the relevant messages are searched. Mandatory.
-	 * @param resultDelegate : a delegate notified when the command result is issued. Mandatory.
+	 * @param messageDelegate : a delegate notified when the command result is issued. Mandatory.
 	 * @throws MissingAttrException 
 	 */
 	public void getRelevantMessages(String actor, HMessageDelegate messageDelegate) throws MissingAttrException {
