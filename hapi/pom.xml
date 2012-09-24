@@ -57,7 +57,7 @@
                 <artifactId>json-lib</artifactId>
                 <version>0.0.0</version>
                 <scope>system</scope>
-                <systemPath>${basedir}/lib/json-org.jar</systemPath>
+                <systemPath>${basedir}/../external-libs/json-org.jar</systemPath>
         </dependency>
 
 	<dependency>
@@ -65,7 +65,7 @@
                 <artifactId>socket.io</artifactId>
                 <version>0.0.0</version>
                 <scope>system</scope>
-                <systemPath>${basedir}/lib/socketio.jar</systemPath>
+                <systemPath>${basedir}/../external-libs/socketio.jar</systemPath>
         </dependency>
 	<dependency>
 		<groupId>joda-time</groupId>
