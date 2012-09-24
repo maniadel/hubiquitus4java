@@ -333,7 +333,7 @@ public class HClient {
 	}
 
 	/**
-	 * @see getLastMessages(String actor, int nbLastMsg)
+	 * @see public void getLastMessages(String actor, int nbLastMsg, HMessageDelegate messageDelegate) throws MissingAttrException
 	 * @param actor : The channel id of the messages. Mandatory.
 	 * @param messageDelegate : A delegate notified when the result is sent by server. Mandatory.
 	 * @throws MissingAttrException 

@@ -34,16 +34,10 @@ public class HubotAdapterOutbox extends AdapterOutbox {
 	public HubotAdapterOutbox(String name) {
 		this.name = name;
 	}
-	
-	@Override
-	public void sendCommand(HCommand command) {
-		
-		hclient.command(command, this);
-	}
 
 	@Override
 	public void sendMessage(HMessage message) {
-		hclient.publish(message, this);
+		hclient.send(message, null);
 	}
 
 
