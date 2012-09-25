@@ -56,7 +56,7 @@ public class HHttpData extends JSONObject {
 		JSONObject jsonAttachments = new JSONObject();
 		for (String key : attachments.keySet()) {
 			try {
-				jsonAttachments.put(key, attachments.get(key).toJSON());
+				jsonAttachments.put(key, attachments.get(key));
 			} catch (JSONException e) {
 				logger.debug(e.toString());
 			}

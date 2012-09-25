@@ -19,137 +19,119 @@
 
 package org.hubiquitus.hubotsdk.adapters.HHttpAdapter;
 
-import java.util.Arrays;
-
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @version v 0.5
+ */
 public class HHttpAttachement extends JSONObject {
 
 	final Logger logger = LoggerFactory.getLogger(HHttpAttachement.class);
 	
-	private String name = null;
-	private byte[] data = null;
-	private String contentType = null;
-
-	public HHttpAttachement() {};
 	
-	public HHttpAttachement(JSONObject jsonObj){
-		fromJSON(jsonObj);
+	public HHttpAttachement() {
+		super();
 	}
 	
-	/* HJsonObj interface */
-	public JSONObject toJSON() {
-		JSONObject jsonObj = new JSONObject();
-		try {
-			jsonObj.put("name", getName());
-			jsonObj.put("contentType", getContentType());
-			jsonObj.put("data", Base64.encodeBase64(getData()));
-		} catch (JSONException e) {
-			logger.error(e.toString());
-		}
-		
-		return jsonObj;
-	}
-	
-	public void fromJSON(JSONObject jsonObj) {
-		if (jsonObj != null) {
-			try {
-				setName(jsonObj.getString("name"));
-			} catch (JSONException e) {
-				logger.error(e.toString());
-			}
-			
-			try {
-				setContentType(jsonObj.getString("contentType"));
-			} catch (JSONException e) {
-				logger.error(e.toString());
-			}
-			
-			try {
-				String dataEncoded = jsonObj.getString("data");
-				if (dataEncoded != null) {
-					setData(Base64.decodeBase64(dataEncoded));
-				} else {
-					setData(null);
-				}
-			} catch (JSONException e) {
-				logger.error(e.toString());
-			}
-		}
-	}
-	
-	public String getHType() {
-		return "hhttpattachement";
+	public HHttpAttachement(JSONObject jsonObj) throws JSONException{
+		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
 	
 	/* getters and setters */
+	/**
+	 * @return Name of the attachment.
+	 */
 	public String getName() {
+		String name;
+		try {
+			name = this.getString("name");
+		} catch (Exception e) {
+			name = null;
+			logger.warn("message: ", e);
+		}
 		return name;
 	}
-
+	
+	/**
+	 * Set the name of the attachment.
+	 * @param name
+	 */
 	public void setName(String name) {
-		this.name = name;
+		try {
+			if(name == null){
+				logger.error("message: name in hHttpAttacheme is mandatory.");
+				return;
+			}else{
+				this.put("name",name);
+			}
+		} catch (JSONException e) {
+			logger.warn("message: ", e);
+		}
 	}
 
+	/**
+	 * @return Data raw bytes encoded in Base64 for JSONObject.
+	 */
 	public byte[] getData() {
+		byte[] data;
+		try {
+			data = Base64.decodeBase64(this.getString("data"));
+		} catch (Exception e) {
+			data = null;
+			logger.warn("message: ", e);
+		}
 		return data;
 	}
 
+	/**
+	 * Set the data raw bytes.
+	 * @param data
+	 */
 	public void setData(byte[] data) {
-		this.data = data;
+		try {
+			if(data == null){
+				logger.error("message: in hHttpAttacheme is mandatory.");
+			}else{
+				this.put("data", Base64.encodeBase64(data));
+			}
+		} catch (JSONException e) {
+			logger.warn("message: ", e);
+		}
 	}
 
+	/**
+	 * @return Type of content. eg : application/Octet-stream
+	 */
 	public String getContentType() {
+		String contentType;
+		try {
+			contentType = this.getString("contentType");
+		} catch (Exception e) {
+			contentType = null;
+			logger.warn("message: ", e);
+		}
 		return contentType;
 	}
 
+	/**
+	 * Set the type of content.
+	 * @param contentType
+	 */
 	public void setContentType(String contentType) {
-		this.contentType = contentType;
-	}
-
-	@Override
-	public String toString() {
-		return "HHttpAttachement [name=" + name + ", data="
-				+ Arrays.toString(data) + ", contentType=" + contentType + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((contentType == null) ? 0 : contentType.hashCode());
-		result = prime * result + Arrays.hashCode(data);
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		HHttpAttachement other = (HHttpAttachement) obj;
-		if (contentType == null) {
-			if (other.contentType != null)
-				return false;
-		} else if (!contentType.equals(other.contentType))
-			return false;
-		if (!Arrays.equals(data, other.data))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		return true;
+		try {
+			if(contentType == null){
+				logger.error("message: contentType in hHttpAttacheme is mandatory");
+				return;
+			}else{
+				this.put("contentType", contentType);
+			}
+		} catch (JSONException e) {
+			logger.warn("message: ", e);
+		}
 	}
 	
 }
