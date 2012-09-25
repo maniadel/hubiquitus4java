@@ -19,10 +19,8 @@
 
 package org.hubiquitus.hubotsdk.adapters;
 
-import java.util.GregorianCalendar;
 import java.util.Map;
 
-import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterOutbox;
 
