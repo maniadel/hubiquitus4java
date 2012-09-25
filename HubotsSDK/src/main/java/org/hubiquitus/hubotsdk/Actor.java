@@ -329,8 +329,8 @@ public abstract class Actor {
 	
 	/**
 	 * Update a specified inboxAdapter's properties
-	 * @param String : adapterName
-	 * @param Map<String,String> : params - params for update properties
+	 * @param adapterName : adapterName
+	 * @param params<String,String> : params - params for update properties
 	 */
 	protected void updateInboxAdapterProperties(String adapterName, Map<String, String> params) {
 		Adapter updatedAdapter = adapterInstances.get(adapterName + "Inbox");
@@ -339,8 +339,8 @@ public abstract class Actor {
 	
 	/**
 	 * Update a specified outboxAdapter's properties
-	 * @param String : adapterName
-	 * @param Map<String,String> : params - params for update properties
+	 * @param adapterName : adapterName
+	 * @param params<String,String> : params - params for update properties
 	 */
 	protected void updateOutboxAdapterProperties(String adapterName, Map<String, String> params) {
 		Adapter updatedAdapter = adapterInstances.get(adapterName + "Outbox");

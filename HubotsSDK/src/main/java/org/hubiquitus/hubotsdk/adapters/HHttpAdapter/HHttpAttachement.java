@@ -23,11 +23,10 @@ import java.util.Arrays;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
-import org.hubiquitus.hapi.hStructures.HJsonObj;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class HHttpAttachement implements HJsonObj {
+public class HHttpAttachement extends JSONObject {
 
 	private static Logger logger = Logger.getLogger(HHttpAttachement.class);
 	

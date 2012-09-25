@@ -26,11 +26,10 @@ import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
-import org.hubiquitus.hapi.hStructures.HJsonObj;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class HHttpData implements HJsonObj {
+public class HHttpData extends JSONObject {
 	
 	private static Logger logger = Logger.getLogger(HHttpData.class);
 	

@@ -41,7 +41,6 @@ import org.hubiquitus.hapi.hStructures.HStatus;
 import org.hubiquitus.hapi.hStructures.HValue;
 import org.hubiquitus.hapi.hStructures.OperandNames;
 import org.hubiquitus.hapi.hStructures.ResultStatus;
-import org.hubiquitus.hapi.util.HJsonDictionnary;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -261,7 +260,7 @@ public class HStructureTest {
 			String city = "Paris";
 			jsonObj.put("city", city);
 			
-			HJsonDictionnary extra = new HJsonDictionnary();
+			JSONObject extra = new JSONObject();
 			extra.put("test", "temp");
 			
 			String num = "24";
@@ -565,15 +564,15 @@ public class HStructureTest {
 		try {
 			ResultStatus status = ResultStatus.NO_ERROR;
 			jsonObj.put("status", status.value());
-			
-			HJsonDictionnary result = new HJsonDictionnary();
+
+            JSONObject result = new JSONObject();
 			result.put("test", "test");
-			jsonObj.put("result", result.toJSON());
+			jsonObj.put("result", result);
 						
 			HResult hresult = new HResult(jsonObj);
 
 			Assert.assertEquals(hresult.getStatus(), status);
-			Assert.assertEquals(hresult.getResultAsJSONObject(), result.toJSON());
+			Assert.assertEquals(hresult.getResultAsJSONObject(), result);
 		} catch (JSONException e) {
 			e.printStackTrace();
 			fail("fail");
@@ -585,9 +584,9 @@ public class HStructureTest {
 		JSONObject jsonObj = new JSONObject();
 		try {
 			ResultStatus status = ResultStatus.NO_ERROR;
-			
-			
-			HJsonDictionnary result = new HJsonDictionnary();
+
+
+            JSONObject result = new JSONObject();
 			result.put("test", "test");
 						
 			HResult hresult = new HResult();
@@ -596,7 +595,7 @@ public class HStructureTest {
 			jsonObj = hresult;
 
 			Assert.assertEquals(jsonObj.get("status"), status.value());
-			Assert.assertEquals(jsonObj.get("result"), result.toJSON());
+			Assert.assertEquals(jsonObj.get("result"), result);
 		} catch (JSONException e) {
 			e.printStackTrace();
 			fail("fail");
