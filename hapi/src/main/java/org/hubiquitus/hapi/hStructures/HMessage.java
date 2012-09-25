@@ -758,7 +758,7 @@ public class HMessage extends JSONObject {
 		try {
 			timeout = this.getInt("timeout");
 		} catch (Exception e) {
-			timeout = null;
+			timeout = 0;
 		}
 		return timeout;
 	}

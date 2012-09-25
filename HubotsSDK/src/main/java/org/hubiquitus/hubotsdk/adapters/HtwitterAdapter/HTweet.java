@@ -27,7 +27,6 @@ package org.hubiquitus.hubotsdk.adapters.HtwitterAdapter;
 import java.util.Calendar;
 
 import org.apache.log4j.Logger;
-import org.hubiquitus.hapi.hStructures.HJsonObj;
 import org.hubiquitus.hapi.util.DateISO8601;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,7 +36,7 @@ import org.json.JSONObject;
  * @version 0.3
  * Describes a twitter payload
  */
-public class HTweet implements HJsonObj{
+public class HTweet extends JSONObject{
 
 	private JSONObject htweet= new JSONObject();
 	private static Logger log = Logger.getLogger(HTweet.class);

@@ -28,7 +28,6 @@ import java.net.URL;
 import java.util.Calendar;
 
 import org.apache.log4j.Logger;
-import org.hubiquitus.hapi.hStructures.HJsonObj;
 import org.hubiquitus.hapi.util.DateISO8601;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +37,7 @@ import org.json.JSONObject;
  * @version 0.3
  * Describes a twitter payload
  */
-public class HAuthorTweet implements HJsonObj{
+public class HAuthorTweet extends JSONObject {
 
 	private JSONObject hauthortweet= new JSONObject();
 	private static Logger log = Logger.getLogger(HAuthorTweet.class);
