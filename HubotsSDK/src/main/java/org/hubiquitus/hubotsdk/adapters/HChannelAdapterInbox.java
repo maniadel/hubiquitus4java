@@ -21,22 +21,24 @@ package org.hubiquitus.hubotsdk.adapters;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.hubiquitus.hapi.client.HMessageDelegate;
 import org.hubiquitus.hapi.exceptions.MissingAttrException;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterInbox;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HChannelAdapterInbox extends AdapterInbox {
 
-    private static Logger log = Logger.getLogger(HChannelAdapterInbox.class);
-	private String chid;
+    final Logger log = LoggerFactory.getLogger(HChannelAdapterInbox.class);
+	private String actor;
 
     /** local delegate class to support subscribe and unsubscribe messages */
     private class MyLocalDelegate implements HMessageDelegate {
 
         @Override
         public void onMessage(HMessage hMessage) {
+        	//TODO
             //To change body of implemented methods use File | Settings | File Templates.
         }
     }
@@ -53,7 +55,7 @@ public class HChannelAdapterInbox extends AdapterInbox {
 	@Override
 	public void start() {
         try {
-		    hclient.subscribe(chid, localDelegate);
+		    hclient.subscribe(actor, localDelegate);
         } catch (MissingAttrException e) {
             log.warn("error while starting : ",e);
         }
@@ -62,7 +64,7 @@ public class HChannelAdapterInbox extends AdapterInbox {
 	@Override
 	public void stop() {
         try {
-		    hclient.unsubscribe(chid, localDelegate);
+		    hclient.unsubscribe(actor, localDelegate);
         } catch (MissingAttrException e) {
             log.warn("error while stopping : ",e);
         }
@@ -72,30 +74,30 @@ public class HChannelAdapterInbox extends AdapterInbox {
 	@Override
 	public void setProperties(Map<String,String> params) {	
 		if(params.get("chid") != null) 
-			setChid(params.get("chid"));
+			setActor(params.get("chid"));
 	}
 
 	/* Getters and Setters */
-	public String getChid() {
-		return chid;
+	public String getActor() {
+		return actor;
 	}
 
 
-	public void setChid(String chid) {
-		this.chid = chid;
+	public void setActor(String actor) {
+		this.actor = actor;
 	}
 
 
 	@Override
 	public String toString() {
-		return "HubotAdapter [name=" + name + ", chid" + chid + "]";
+		return "HubotAdapter [name=" + name + ", chid" + actor + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((chid == null) ? 0 : chid.hashCode());
+		result = prime * result + ((actor == null) ? 0 : actor.hashCode());
 		result = prime * result + ((hclient == null) ? 0 : hclient.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
@@ -110,10 +112,10 @@ public class HChannelAdapterInbox extends AdapterInbox {
 		if (getClass() != obj.getClass())
 			return false;
 		HChannelAdapterInbox other = (HChannelAdapterInbox) obj;
-		if (chid == null) {
-			if (other.chid != null)
+		if (actor == null) {
+			if (other.actor != null)
 				return false;
-		} else if (!chid.equals(other.chid))
+		} else if (!actor.equals(other.actor))
 			return false;
 		if (hclient == null) {
 			if (other.hclient != null)

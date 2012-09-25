@@ -25,13 +25,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HHttpData extends JSONObject {
 	
-	private static Logger logger = Logger.getLogger(HHttpData.class);
+	final Logger logger = LoggerFactory.getLogger(HHttpData.class);
 	
 	private Map<String, HHttpAttachement> attachments = null;
 

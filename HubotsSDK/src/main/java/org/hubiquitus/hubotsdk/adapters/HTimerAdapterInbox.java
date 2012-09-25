@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.apache.log4j.Logger;
 import org.hubiquitus.hapi.hStructures.HAlert;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterInbox;
@@ -36,6 +35,8 @@ import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
 import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.quartz.TriggerBuilder.*;
 import static org.quartz.CronScheduleBuilder.*;
@@ -43,7 +44,7 @@ import static org.quartz.JobBuilder.newJob;
 
 public class HTimerAdapterInbox extends AdapterInbox{
 
-	private static Logger logger = Logger.getLogger(HTimerAdapterInbox.class);
+	final static Logger logger = LoggerFactory.getLogger(HTimerAdapterInbox.class);
 	
 	private String mode;
 	private String crontab;
@@ -93,7 +94,7 @@ public class HTimerAdapterInbox extends AdapterInbox{
 				// Tell quartz to schedule the job using our trigger
 				scheduler.scheduleJob(job, trigger);
 			} catch (Exception e) {
-				logger.equals(e.toString());
+				logger.error(e.toString());
 			}
 		}
 	}

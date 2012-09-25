@@ -22,13 +22,14 @@ package org.hubiquitus.hubotsdk.adapters.HHttpAdapter;
 import java.util.Arrays;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HHttpAttachement extends JSONObject {
 
-	private static Logger logger = Logger.getLogger(HHttpAttachement.class);
+	final Logger logger = LoggerFactory.getLogger(HHttpAttachement.class);
 	
 	private String name = null;
 	private byte[] data = null;

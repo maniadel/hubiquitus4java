@@ -19,20 +19,21 @@
 
 package org.hubiquitus.hubotsdk;
 
-import org.apache.log4j.Logger;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AdapterOutbox extends Adapter {
 	
-	private static Logger logger = Logger.getLogger(AdapterOutbox.class);
+	final Logger logger = LoggerFactory.getLogger(AdapterOutbox.class);
 	
 	// Method for output message and command
     @SuppressWarnings("unused")
-	public final void onOutGoing(JSONObject hjson) {
+	public final void onOutGoing(JSONObject jsonObj) {
         try {
-			sendMessage(new HMessage(hjson));
+			sendMessage(new HMessage(jsonObj));
         } catch (JSONException e) {
             logger.error("can not convert the JSON to hMessage", e);
         }

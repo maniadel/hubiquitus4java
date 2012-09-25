@@ -26,11 +26,9 @@ import java.util.Map;
 
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.JndiRegistry;
-import org.apache.log4j.Logger;
 import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hapi.client.HStatusDelegate;
 import org.hubiquitus.hapi.hStructures.ConnectionStatus;
-import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.hStructures.HOptions;
 import org.hubiquitus.hapi.hStructures.HStatus;
@@ -42,12 +40,14 @@ import org.hubiquitus.util.ConfigActor.AdapterConfig;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class Actor {
 
-	private static Logger logger = Logger.getLogger(Actor.class);
+	final Logger logger = LoggerFactory.getLogger(Actor.class);
 	
 	private static final String HUBOT_ADAPTER_OUTBOX = "hubotAdapterOutbox";
 	private static final String HUBOT_ADAPTER_INBOX = "hubotAdapterInbox";
@@ -263,15 +263,11 @@ public abstract class Actor {
 				if (obj instanceof HMessage) {
 					inProcessMessage((HMessage)obj);
 				}
-				if (obj instanceof HCommand) {
-					inProcessCommand((HCommand)obj);
-				}
 			}		
 		}
 	}
 	
 	protected abstract void inProcessMessage(HMessage incomingMessage);
-	protected abstract void inProcessCommand(HCommand incomingCommand);
 
 	/**
 	 *  Send an object to a specified adapter outbox. Only HMessage and HCommand supported 
@@ -298,15 +294,7 @@ public abstract class Actor {
 		ProducerTemplateSingleton.getProducerTemplate().sendBody(route,msg);		
 	}
 
-	/**
-	 * Send an HCommand to a specified adapter outbox.
-	 * @param adapterName
-	 * @param cmd
-	 */
-	protected final void put(String adapterName, HCommand cmd) {
-		String route = "seda:" + adapterName + "Outbox";
-		ProducerTemplateSingleton.getProducerTemplate().sendBody(route,cmd);		
-	}
+	
 
 	/**
 	 * Check if the hClient is connect and if connected, set the status to STARTED 
