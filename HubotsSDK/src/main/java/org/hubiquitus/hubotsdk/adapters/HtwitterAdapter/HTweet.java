@@ -24,79 +24,56 @@ package org.hubiquitus.hubotsdk.adapters.HtwitterAdapter;
  * 
  */
 
-import java.util.Calendar;
-
-import org.apache.log4j.Logger;
-import org.hubiquitus.hapi.util.DateISO8601;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
- * @version 0.3
+ * @version 0.5
  * Describes a twitter payload
  */
 public class HTweet extends JSONObject{
 
-	private JSONObject htweet= new JSONObject();
-	private static Logger log = Logger.getLogger(HTweet.class);
+	final Logger log = LoggerFactory.getLogger(HTweet.class);
 
-	public HTweet() {};
+	public HTweet() {
+		super();
+	};
 
-	public HTweet(JSONObject jsonObj){
-		fromJSON(jsonObj);
+	public HTweet(JSONObject jsonObj) throws JSONException{
+		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
 
-	/* HJsonObj interface */
-
-	public JSONObject toJSON() {
-		return htweet;
-	}
-
-	public void fromJSON(JSONObject jsonObj) {
-		if(jsonObj != null) {
-			this.htweet = jsonObj; 
-		} else {
-			this.htweet = new JSONObject();
-		}
-	}
-
-	public String getHType() {
-		return "htweet";
-	}
-
-	@Override
-	public String toString() {
-		return htweet.toString();
-	}
-
-
-	@Override
-	public int hashCode() {
-		return htweet.hashCode();
-	}
-	
 
 	/* Getters & Setters */
 	
 	
-
+	/**
+	 * @return The text of the tweet 
+	 */
 	public String getText() {
 		String text;
 		try {
-			text = htweet.getString("text");
+			text = this.getString("text");
 		} catch (Exception e) {
-			text = null;			
+			text = null;
 		}
 		return text;
 	}
 
+	/**
+	 * Set the text of the tweet.
+	 * @param text
+	 */
 	public void setText(String text) {
 		try {
 			if(text == null & text.length()== 0) {
-				htweet.remove("text");
+				log.error("message: the text attribut is mandatory.");
+				return;
 			} else {
-				htweet.put("text", text);
+				this.put("text", text);
 			}
 		} catch (JSONException e) {
 			log.error("Can't update the text attribut",e);
@@ -107,26 +84,30 @@ public class HTweet extends JSONObject{
 	
 	
 	/**
-	 * The Application source
-	 * @return
+	 * @return The source of the tweet, i.e. an html link to the application used to generate the tweet
 	 */
 
 	public String getSource() {
 		String source;
 		try {
-			source = htweet.getString("source");
+			source = this.getString("source");
 		} catch (Exception e) {
 			source = null;			
 		}
 		return source;
 	}
 
+	/**
+	 * Set the source of the tweet.
+	 * @param source
+	 */
 	public void setSource(String source) {
 		try {
 			if(source == null & source.length()== 0 ) {
-				htweet.remove("source");
+				log.error("message: source attribute is mandatory.");
+				return;
 			} else {
-				htweet.put("source", source);
+				this.put("source", source);
 			}
 		} catch (JSONException e) {
 			log.error("Can't update the source attribut",e);
@@ -136,84 +117,67 @@ public class HTweet extends JSONObject{
 	}
 	
 	/**
-	 * The Object Author Tweet 
-	 * @return
+	 * @return The author of the tweet. a copy.
 	 */
 	
-	public JSONObject getAuthortwt() {
-		JSONObject authortweet;
+	public JSONObject getAuthor() {
+		JSONObject jsonObj;
+		HTweetAuthor tweetAuthor = null;
 		try {
-			authortweet  = htweet.getJSONObject("authortweet");
+			jsonObj  = this.getJSONObject("author");
+			if(jsonObj != null){
+				tweetAuthor = new HTweetAuthor(jsonObj);
+			}
 		} catch (JSONException e) {
-			authortweet = null;
+			log.debug(e.toString());
 		}
-		return authortweet;
+		return tweetAuthor;
 	}
 
 		
-	
-	public void setAuthortwt(JSONObject authortweet) {
+	/**
+	 * Set the author of the tweet.
+	 * @param tweetAuthor
+	 */
+	public void setAuthor(HTweetAuthor tweetAuthor) {
 		try {
-			if(authortweet == null) {
-				htweet.remove("authortweet");
+			if(tweetAuthor == null) {
+				log.error("message: the author attribute is mandatory.");
 			} else {
-				htweet.put("authortweet", authortweet);
+				this.put("author", tweetAuthor);
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
+			log.error("Can't update the author attribute",e);
 		}
 	}
 	
 
-	/**
-	 * The date of tweet creation 
-	 * @return
-	 */
-	public Calendar getPublish() {
-		Calendar publish;
-		try {
-			publish = (DateISO8601.toCalendar(htweet.getString("publish")));;
-		} catch (JSONException e) {
-			publish = null;
-		}
-		return publish;
-	}
-
-	public void setPublish(Calendar publish) {
-		try {
-			if(publish == null ) {
-				htweet.remove("publish");
-			} else {
-				htweet.put("publish", DateISO8601.fromCalendar(publish));
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-			log.error("Can't update the publish attribut",e);
-		}
-	}
 	
 	
 	
 	/**
-	 * The Idtweet
-	 * @return
+	 * @return The id of the tweet in twitter’s domain
 	 */
-	public long getIdTweet() {
+	public long getId() {
 		long id;
 		try {
-			id = htweet.getLong("Id");
+			id = this.getLong("Id");
 		} catch (Exception e) {
 			id = 0;			
 		}
 		return id;
 	}
 	
+	/**
+	 * Set the id of the tweet if twitter's domain.
+	 * @param id
+	 */
 	public void setId(long id) {
 		try {
 			if(id == 0) {
-				htweet.remove("Id");
+				this.remove("Id");
 			} else {
-				htweet.put("Id", id);
+				this.put("Id", id);
 			}
 		} catch (JSONException e) {
 			log.error("Can't update the Id Tweet  attribut",e);

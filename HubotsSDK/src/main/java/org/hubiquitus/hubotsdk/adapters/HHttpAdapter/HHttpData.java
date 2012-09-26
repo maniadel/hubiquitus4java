@@ -20,7 +20,6 @@
 
 package org.hubiquitus.hubotsdk.adapters.HHttpAdapter;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,29 +29,62 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @version v 0.5
+ */
 public class HHttpData extends JSONObject {
 	
 	final Logger logger = LoggerFactory.getLogger(HHttpData.class);
 	
-	private Map<String, HHttpAttachement> attachments = null;
-
-	private byte[] rawBody = null;
-	private String method = null;
-	private String queryArgs = null;
-	private String queryPath = null;
-	private String serverName = null;
-	private Integer serverPort = null;
 	
-	public HHttpData() {};
+	public HHttpData() {
+		super();
+	};
 	
-	public HHttpData(JSONObject jsonObj){
-		fromJSON(jsonObj);
+	public HHttpData(JSONObject jsonObj) throws JSONException{
+		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
-	
-	/* HJsonObj interface */
-	public JSONObject toJSON() {
-		JSONObject jsonObj = new JSONObject();
-		
+
+	/* getters and setters */
+	/**
+	 * @return Post attachments sent with the query.
+	 */
+	public Map<String, HHttpAttachement> getAttachments() {
+			JSONObject jsonAttachements = null;
+			Map<String, HHttpAttachement> attachments = null;
+			try {
+				jsonAttachements = this.getJSONObject("attachments");
+			} catch (JSONException e) {
+				logger.debug(e.toString());
+			}
+			
+			if (jsonAttachements != null) {
+				String[] keys = JSONObject.getNames(jsonAttachements);
+				if (keys != null) {
+					attachments = new HashMap<String, HHttpAttachement>();
+					for (int i = 0; i < keys.length; i++) {
+						HHttpAttachement hattachement;
+						try {
+							hattachement = new HHttpAttachement(jsonAttachements.getJSONObject(keys[i]));
+							attachments.put(keys[i], hattachement);
+						} catch (JSONException e) {
+							logger.debug(e.toString());
+						}	
+					}
+				}
+			}
+		return attachments;
+	}
+
+	public void setAttachments(Map<String, HHttpAttachement> attachments) {
+		if(attachments == null || attachments.isEmpty()){
+			try {
+				this.remove("attachments");
+			} catch (Exception e) {
+				logger.debug(e.toString());
+			}
+			return;
+		}
 		JSONObject jsonAttachments = new JSONObject();
 		for (String key : attachments.keySet()) {
 			try {
@@ -63,251 +95,191 @@ public class HHttpData extends JSONObject {
 		}
 		
 		try {
-			jsonObj.put("attachments", jsonAttachments);
+			this.put("attachments", jsonAttachments);
 		} catch (JSONException e) {
 			logger.debug(e.toString());
-		}
-		
-		if (this.rawBody != null) {
-			try {
-				jsonObj.put("rawBody", Base64.encodeBase64String(this.rawBody));
-			} catch (JSONException e) {
-				logger.debug(e.toString());
-			}
-		}
-		
-		try {
-			jsonObj.put("method", method);
-		} catch (JSONException e) {
-			logger.debug(e.toString());
-		}
-		
-		try {
-			jsonObj.put("queryArgs", queryArgs);
-		} catch (JSONException e) {
-			logger.debug(e.toString());
-		}
-		
-		try {
-			jsonObj.put("queryPath", queryPath);
-		} catch (JSONException e) {
-			logger.debug(e.toString());
-		}
-		
-		try {
-			jsonObj.put("serverName", serverName);
-		} catch (JSONException e) {
-			logger.debug(e.toString());
-		}
-		
-		try {
-			jsonObj.put("serverPort", serverPort);
-		} catch (JSONException e) {
-			logger.debug(e.toString());
-		}
-		
-		return jsonObj;
-	}
-	
-	public void fromJSON(JSONObject jsonObj) {
-		if (jsonObj != null) {
-			try {
-				this.method = jsonObj.getString("method");
-			} catch (JSONException e) {
-				logger.debug(e.toString());
-			}
-
-			try {
-				this.queryArgs = jsonObj.getString("queryArgs");
-			} catch (JSONException e) {
-				logger.debug(e.toString());
-			}
-
-			try {
-				this.queryPath = jsonObj.getString("queryPath");
-			} catch (JSONException e) {
-				logger.debug(e.toString());
-			}
-			
-			try {
-				this.serverName = jsonObj.getString("serverName");
-			} catch (JSONException e) {
-				logger.debug(e.toString());
-			}
-			
-			try {
-				this.serverPort = jsonObj.getInt("serverPort");
-			} catch (JSONException e) {
-				logger.debug(e.toString());
-			}
-			
-			String encodedRawBody;
-			try {
-				encodedRawBody = jsonObj.getString("rawBody");
-				if (encodedRawBody != null) {
-					this.rawBody = Base64.decodeBase64(encodedRawBody);
-				}
-			} catch (JSONException e) {
-				logger.debug(e.toString());
-			}
-
-			JSONObject jsonAttachements = null;
-			try {
-				jsonAttachements = jsonObj.getJSONObject("attachments");
-			} catch (JSONException e) {
-				logger.debug(e.toString());
-			}
-			
-			if (jsonAttachements != null) {
-				String[] keys = JSONObject.getNames(jsonAttachements);
-				if (keys != null) {
-					this.attachments = new HashMap<String, HHttpAttachement>();
-					for (int i = 0; i < keys.length; i++) {
-						HHttpAttachement hattachement;
-						try {
-							hattachement = new HHttpAttachement(jsonAttachements.getJSONObject(keys[i]));
-							this.attachments.put(keys[i], hattachement);
-						} catch (JSONException e) {
-							logger.debug(e.toString());
-						}	
-					}
-				}
-			}
 		}
 	}
-	
-	public String getHType() {
-		return "hhttpdata";
-	}
-	
-	/* getters and setters */
-	public Map<String, HHttpAttachement> getAttachments() {
-		return attachments;
-	}
 
-	public void setAttachments(Map<String, HHttpAttachement> attachments) {
-		this.attachments = attachments;
-	}
-
+	/**
+	 * @return Body content as raw bytes encoded in Base64 for json.
+	 */
 	public byte[] getRawBody() {
+		String encodedRawBody;
+		byte[] rawBody = null;
+		try {
+			encodedRawBody = this.getString("rawBody");
+			if (encodedRawBody != null) {
+				rawBody = Base64.decodeBase64(encodedRawBody);
+			}
+		} catch (JSONException e) {
+			logger.debug(e.toString());
+		}
 		return rawBody;
 	}
 
+	/**
+	 * Set body content.
+	 * @param rawBody
+	 */
 	public void setRawBody(byte[] rawBody) {
-		this.rawBody = rawBody;
+		try {
+			if(rawBody == null){
+				this.remove("rawBody");
+			}else{
+				this.put("rawBody", Base64.encodeBase64String(rawBody));
+			}
+		} catch (JSONException e) {
+			logger.debug(e.toString());
+		}
+		
 	}
 
+	/**
+	 * @return The method of the data. Possible values : get, post, put, delete
+	 */
 	public String getMethod() {
+		String method = null;
+		try {
+			method = this.getString("method");
+		} catch (Exception e) {
+			logger.debug(e.toString());
+		}
 		return method;
 	}
 
+	/**
+	 * Define the method of the data. Possible values : get, post, put, delete
+	 * @param method
+	 */
 	public void setMethod(String method) {
-		this.method = method;
+		try {
+			if(method == null){
+				logger.error("message: method in hHttpData is mandatory.");
+				return;
+			}else{
+				this.put("method", method);
+			}
+		} catch (JSONException e) {
+			logger.debug(e.toString());
+		}
 	}
 
+	/**
+	 * @return Parameters applied to the URI. eg : “?a=2”
+	 */
 	public String getQueryArgs() {
+		String queryArgs = null;
+		try {
+			queryArgs = this.getString("queryArgs");
+		} catch (Exception e) {
+			logger.debug(e.toString());
+		}
 		return queryArgs;
 	}
 
+	/**
+	 * Set the parameters applied to the URI. eg : “?a=2”
+	 * @param queryArgs
+	 */
 	public void setQueryArgs(String queryArgs) {
-		this.queryArgs = queryArgs;
+		try {
+			if(queryArgs == null){
+				this.remove("queryArgs");
+			}else{
+				this.put("queryArgs", queryArgs);
+			}
+		} catch (JSONException e) {
+			logger.debug(e.toString());
+		}
 	}
 
+	/**
+	 * @return Path to the resource. eg : “/path” 
+	 */
 	public String getQueryPath() {
+		String queryPath = null;
+		try {
+			queryPath = this.getString("queryPath");
+		} catch (Exception e) {
+			logger.debug(e.toString());
+		}
 		return queryPath;
 	}
 
+	/**
+	 * Set path to the resource. eg : "/path"
+	 * @param queryPath
+	 */
 	public void setQueryPath(String queryPath) {
-		this.queryPath = queryPath;
+		try {
+			if(queryPath == null){
+				this.remove("queryPath");
+			}else{
+				this.put("queryPath", queryPath);
+			}
+		} catch (JSONException e) {
+			logger.debug(e.toString());
+		}
 	}
 
+	/**
+	 * @return Host name used to do the query. eg : “localhost”
+	 */
 	public String getServerName() {
+		String serverName = null;
+		try {
+			serverName = this.getString("serverName");
+		} catch (Exception e) {
+			logger.debug(e.toString());
+		}
 		return serverName;
 	}
 
+	/**
+	 * Set the host name used to do the query. eg : "localhost"
+	 * @param serverName
+	 */
 	public void setServerName(String serverName) {
-		this.serverName = serverName;
+		try {
+			if(serverName == null){
+				logger.error("message: serverName in hHttpData is mandatory.");
+				return;
+			}else{
+				this.put("serverName", serverName);
+			}
+		} catch (JSONException e) {
+			logger.debug(e.toString());
+		}
 	}
 
+	/**
+	 * @return Port used to do the query. eg : 8080
+	 */
 	public Integer getServerPort() {
+		Integer serverPort = null;
+		try {
+			serverPort = this.getInt("serverPort");
+		} catch (Exception e) {
+			logger.debug(e.toString());
+		}
 		return serverPort;
 	}
 
+	/**
+	 * Set port used to do the query. eg : 8080
+	 * @param serverPort
+	 */
 	public void setServerPort(Integer serverPort) {
-		this.serverPort = serverPort;
+		try {
+			if(serverPort == null){
+				logger.error("message: serverPort in hHttpData is mandatory.");
+				return;
+			}else{
+				this.put("serverPort", serverPort);
+			}
+		} catch (JSONException e) {
+			logger.debug(e.toString());
+		}
 	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((attachments == null) ? 0 : attachments.hashCode());
-		result = prime * result + ((method == null) ? 0 : method.hashCode());
-		result = prime * result
-				+ ((queryArgs == null) ? 0 : queryArgs.hashCode());
-		result = prime * result
-				+ ((queryPath == null) ? 0 : queryPath.hashCode());
-		result = prime * result + Arrays.hashCode(rawBody);
-		result = prime * result
-				+ ((serverName == null) ? 0 : serverName.hashCode());
-		result = prime * result
-				+ ((serverPort == null) ? 0 : serverPort.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		HHttpData other = (HHttpData) obj;
-		if (attachments == null) {
-			if (other.attachments != null)
-				return false;
-		} else if (!attachments.equals(other.attachments))
-			return false;
-		if (method == null) {
-			if (other.method != null)
-				return false;
-		} else if (!method.equals(other.method))
-			return false;
-		if (queryArgs == null) {
-			if (other.queryArgs != null)
-				return false;
-		} else if (!queryArgs.equals(other.queryArgs))
-			return false;
-		if (queryPath == null) {
-			if (other.queryPath != null)
-				return false;
-		} else if (!queryPath.equals(other.queryPath))
-			return false;
-		if (!Arrays.equals(rawBody, other.rawBody))
-			return false;
-		if (serverName == null) {
-			if (other.serverName != null)
-				return false;
-		} else if (!serverName.equals(other.serverName))
-			return false;
-		if (serverPort == null) {
-			if (other.serverPort != null)
-				return false;
-		} else if (!serverPort.equals(other.serverPort))
-			return false;
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "HHttpData [attachments=" + attachments + ", rawBody="
-				+ Arrays.toString(rawBody) + ", method=" + method
-				+ ", queryArgs=" + queryArgs + ", queryPath=" + queryPath
-				+ ", serverName=" + serverName + ", serverPort=" + serverPort
-				+ "]";
-	}
-
-
 }

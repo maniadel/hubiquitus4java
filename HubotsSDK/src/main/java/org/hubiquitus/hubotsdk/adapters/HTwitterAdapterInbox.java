@@ -1,19 +1,16 @@
 package org.hubiquitus.hubotsdk.adapters;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Map;
 
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.hubiquitus.hapi.hStructures.HGeo;
 import org.hubiquitus.hapi.hStructures.HLocation;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterInbox;
-import org.hubiquitus.hubotsdk.adapters.HtwitterAdapter.HAuthorTweet;
 import org.hubiquitus.hubotsdk.adapters.HtwitterAdapter.HTweet;
-
+import org.hubiquitus.hubotsdk.adapters.HtwitterAdapter.HTweetAuthor;
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import twitter4j.FilterQuery;
 import twitter4j.Status;
@@ -130,7 +127,7 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		HMessage message = new HMessage();
 
 		HTweet htweet = new HTweet();
-		HAuthorTweet hauthortweet = new HAuthorTweet();
+		HTweetAuthor hauthortweet = new HTweetAuthor();
 
 		//Construct the location 
 		HLocation location = new HLocation();
@@ -157,10 +154,8 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 
 		// Init The date
 		tweet.getCreatedAt().getTime();
-		Calendar createdAt = new GregorianCalendar();
-		Calendar createdAtAuthor = new GregorianCalendar();
-		createdAt.setTime(tweet.getCreatedAt());
-		createdAtAuthor.setTime(tweet.getUser().getCreatedAt());
+		DateTime createdAt = new DateTime(tweet.getCreatedAt());
+		DateTime createdAtAuthor = new DateTime(tweet.getUser().getCreatedAt());
 		message.setPublished(new DateTime(createdAt));
 
 		//Construct the Authortweet JSONObject
@@ -184,7 +179,7 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		htweet.setId(tweet.getId());
 		htweet.setSource(tweet.getSource());
 		htweet.setText(tweet.getText());
-		htweet.setAuthortwt(hauthortweet.toJSON());
+		htweet.setAuthor(hauthortweet);
 
 		message.setPayload(htweet);
 		message.setType("hTweet");
