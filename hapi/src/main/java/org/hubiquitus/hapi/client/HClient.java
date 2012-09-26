@@ -458,7 +458,14 @@ public class HClient {
 			throw new MissingAttrException("messageDelegate");
 		}
         //TODO to ask if the actor = "session"
-		HMessage cmdMessage = buildCommand("session", "hsetfilter", filter, null);
+		JSONObject params = new JSONObject();
+		try {
+			params.put("actor", "#test@localhost");
+			params.put("filter", filter);
+		} catch (JSONException e) {
+			logger.warn("messag: ", e);
+		}
+		HMessage cmdMessage = buildCommand("hnode@localhost", "hSetFilter", params, null);
 		cmdMessage.setTimeout(options.getTimeout());
 		this.send(cmdMessage, messageDelegate);
 	}
