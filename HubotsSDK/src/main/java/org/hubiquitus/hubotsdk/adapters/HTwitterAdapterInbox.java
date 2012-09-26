@@ -5,10 +5,11 @@ import java.util.GregorianCalendar;
 import java.util.Map;
 
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.hubiquitus.hapi.hStructures.HGeo;
 import org.hubiquitus.hapi.hStructures.HLocation;
 import org.hubiquitus.hapi.hStructures.HMessage;
-import org.apache.log4j.Logger;
 import org.hubiquitus.hubotsdk.AdapterInbox;
 import org.hubiquitus.hubotsdk.adapters.HtwitterAdapter.HAuthorTweet;
 import org.hubiquitus.hubotsdk.adapters.HtwitterAdapter.HTweet;
@@ -28,7 +29,7 @@ import twitter4j.conf.ConfigurationBuilder;
  */
 public class HTwitterAdapterInbox extends AdapterInbox{
 
-	private static Logger log = Logger.getLogger(HTwitterAdapterInbox.class);
+	final Logger log = LoggerFactory.getLogger(HTwitterAdapterInbox.class);
 
 	private String consumerKey ;
 	private String consumerSecret;

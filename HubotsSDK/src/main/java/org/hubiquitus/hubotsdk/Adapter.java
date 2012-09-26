@@ -22,14 +22,14 @@ package org.hubiquitus.hubotsdk;
 import java.util.Map;
 
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.log4j.Logger;
 import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hapi.client.HMessageDelegate;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.hStructures.ResultStatus;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 public abstract class Adapter implements HMessageDelegate{
-	private static Logger logger = Logger.getLogger(Adapter.class);
+	final Logger logger = LoggerFactory.getLogger(Adapter.class);
 	
 	protected HClient hclient;
 	protected String name;
