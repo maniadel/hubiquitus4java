@@ -51,7 +51,7 @@ public class HTransportSocketio implements HTransport, IOCallback {
 	private SocketIO socketio = null;
 	private ConnectionStatus connectionStatus = ConnectionStatus.DISCONNECTED;
 	private Timer timeoutTimer = null;
-	private Timer autoReconnectTimer = null;
+	private Timer autoReconnectTimer = new Timer();
 	private ReconnectTask autoReconnectTask = null;
 	
 	private class ReconnectTask extends TimerTask{
@@ -72,9 +72,6 @@ public class HTransportSocketio implements HTransport, IOCallback {
 	 * @param options - transport options
 	 */
 	public void connect(HTransportDelegate callback, HTransportOptions options){	
-		if(autoReconnectTimer == null){
-			autoReconnectTimer = new Timer();
-		}
 		this.connectionStatus = ConnectionStatus.CONNECTING;
 		
 		this.callback = callback;
@@ -147,8 +144,10 @@ public class HTransportSocketio implements HTransport, IOCallback {
 	 */
 	public void disconnect() {
 		this.connectionStatus = ConnectionStatus.DISCONNECTING;
-		autoReconnectTask.cancel();
-		autoReconnectTask = null;
+		if(autoReconnectTask != null){
+			autoReconnectTask.cancel();
+			autoReconnectTask = null;
+		}
 		try {
 			socketio.disconnect();
 		} catch (Exception e) {
@@ -303,10 +302,10 @@ public class HTransportSocketio implements HTransport, IOCallback {
 				+ connectionStatus + ", timeoutTimer=" + timeoutTimer + "]";
 	}
 	
+	/**
+	 * Called in onError. try to reconnect in 5s. if socketio can't connect, it will be called every 5s. 
+	 */
 	public void reconnect(){
-		if (socketio != null && socketio.isConnected()) {
-			socketio.disconnect();
-		}
 		updateStatus(connectionStatus, ConnectionError.NOT_CONNECTED, "Lose connection, try to reconnect in 5s.");
 		if(autoReconnectTask != null){
 			autoReconnectTask.cancel();
