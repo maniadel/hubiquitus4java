@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public abstract class Actor {
+public abstract class Actor extends HActor {
 
 	final Logger logger = LoggerFactory.getLogger(Actor.class);
 	
@@ -270,7 +270,7 @@ public abstract class Actor {
 	protected abstract void inProcessMessage(HMessage incomingMessage);
 
 	/**
-	 *  Send an object to a specified adapter outbox. Only HMessage and HCommand supported 
+	 *  Send an object to a specified adapter outbox. Only HMessage supported 
 	 */
 	protected final void put(String adapterName, JSONObject jsonObj) {
 		if (jsonObj instanceof HMessage){
