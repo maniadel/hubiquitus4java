@@ -71,7 +71,7 @@ public class HTweetAuthor extends JSONObject {
 	 */
 	public void setScrName(String scrName) {
 		try {
-			if(scrName == null & scrName.length()== 0) {
+			if(scrName == null || scrName.length()== 0) {
 				log.error("message: scrName attibute is mandatoty;");
 				return;
 			} else {
@@ -163,7 +163,7 @@ public class HTweetAuthor extends JSONObject {
 	 */
 	public void setName(String name) {
 		try {
-			if(name == null & name.length()== 0) {
+			if(name == null || name.length()== 0) {
 				this.remove("name");
 			} else {
 				this.put("name", name);
@@ -225,7 +225,7 @@ public class HTweetAuthor extends JSONObject {
 	 */
 	public void setLocation(String location) {
 		try {
-			if(location == null & location.length()== 0) {
+			if(location == null|| location.length()== 0) {
 				this.remove("location");
 			} else {
 				this.put("location", location);
@@ -258,7 +258,7 @@ public class HTweetAuthor extends JSONObject {
 	 */
 	public void setDescription(String description) {
 		try {
-			if(description == null & description.length()==0 ) {
+			if(description == null|| description.length()==0 ) {
 				this.remove("description");
 			} else {
 				this.put("description", description);
@@ -287,7 +287,7 @@ public class HTweetAuthor extends JSONObject {
 	 */
 	public void setProfileImg(String profileImg) {
 		try {
-			if(profileImg == null & profileImg.length()== 0) {
+			if(profileImg == null|| profileImg.length()== 0) {
 				this.remove("profileImg");
 			} else {
 				this.put("profileImg", profileImg);
