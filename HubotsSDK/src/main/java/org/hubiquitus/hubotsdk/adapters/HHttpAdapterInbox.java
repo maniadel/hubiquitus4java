@@ -21,11 +21,9 @@ package org.hubiquitus.hubotsdk.adapters;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.activation.DataHandler;
-import org.joda.time.DateTime;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.camel.Exchange;
@@ -36,11 +34,16 @@ import org.hubiquitus.hubotsdk.AdapterInbox;
 import org.hubiquitus.hubotsdk.adapters.HHttpAdapter.HHttpAdapterRouteBuilder;
 import org.hubiquitus.hubotsdk.adapters.HHttpAdapter.HHttpAttachement;
 import org.hubiquitus.hubotsdk.adapters.HHttpAdapter.HHttpData;
+import org.joda.time.DateTime;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 
+	final Logger logger = LoggerFactory.getLogger(HHttpAdapterInbox.class);
 	private String host = "0.0.0.0";
 	private int port = 80;
 	private String path = "";
@@ -133,7 +136,7 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 		httpData.setRawBody(rawBody);
 		
 		//create attachements
-		Map<String, HHttpAttachement> hattachements = new HashMap<String, HHttpAttachement>();
+		JSONObject hattachements = new JSONObject();
 		for (String key : attachments.keySet()) {
 			DataHandler attachement = attachments.get(key);
 			if(attachement != null) {
@@ -151,9 +154,13 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 					byteOutputStream.write(buffer, 0, bytesRead);
 				}
 				hattachement.setData(byteOutputStream.toByteArray());
-				hattachements.put(key, hattachement);
+				try {
+					hattachements.put(key, hattachement);
+				} catch (JSONException e) {
+					logger.debug(e.toString());
+				}
 			} else {
-				hattachements.put(key, null);
+				//if attachment is null, do not put the key in hattachments.
 			}
 		}
 		

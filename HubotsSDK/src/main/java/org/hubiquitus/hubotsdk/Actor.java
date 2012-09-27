@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public abstract class Actor extends HActor {
+public abstract class Actor{
 
 	final Logger logger = LoggerFactory.getLogger(Actor.class);
 	

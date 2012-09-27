@@ -1,4 +1,4 @@
-package org.hubiquitus.hubotsdk;
+package org.hubiquitus.hubotsdk.topology;
 
 import org.hubiquitus.hapi.hStructures.HCondition;
 import org.json.JSONException;
