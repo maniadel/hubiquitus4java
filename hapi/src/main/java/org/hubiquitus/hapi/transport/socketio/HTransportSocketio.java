@@ -306,7 +306,7 @@ public class HTransportSocketio implements HTransport, IOCallback {
 	 * Called in onError. try to reconnect in 5s. if socketio can't connect, it will be called every 5s. 
 	 */
 	public void reconnect(){
-		updateStatus(connectionStatus, ConnectionError.NOT_CONNECTED, "Lose connection, try to reconnect in 5s.");
+		updateStatus(connectionStatus, ConnectionError.NOT_CONNECTED, "Lost connection, try to reconnect in 5s.");
 		if(autoReconnectTask != null){
 			autoReconnectTask.cancel();
 		}
