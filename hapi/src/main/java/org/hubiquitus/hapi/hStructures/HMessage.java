@@ -607,7 +607,7 @@ public class HMessage extends JSONObject {
 		}
 	}
 	
-	public void setPayloadAsJSONObject(JSONObject payload) {
+	public void setPayload(JSONObject payload) {
 		try {
 			if (payload == null) {
 				this.remove("payload");
@@ -619,7 +619,7 @@ public class HMessage extends JSONObject {
 		}
 	}
 	
-	public void setPayloadAsJSONArray(JSONArray payload) {
+	public void setPayload(JSONArray payload) {
 		try {
 			if (payload == null) {
 				this.remove("payload");
@@ -631,7 +631,7 @@ public class HMessage extends JSONObject {
 		}
 	}
 	
-	public void setPayloadAsString(String payload) {
+	public void setPayload(String payload) {
 		try {
 			if (payload == null) {
 				this.remove("payload");
@@ -643,7 +643,7 @@ public class HMessage extends JSONObject {
 		}
 	}
 	
-	public void setPayloadAsBoolean(Boolean payload) {
+	public void setPayload(Boolean payload) {
 		try {
 			if (payload == null) {
 				this.remove("payload");
@@ -655,7 +655,7 @@ public class HMessage extends JSONObject {
 		}
 	}
 
-	public void setPayloadAsInt(Integer payload) {
+	public void setPayload(Integer payload) {
 		try {
 			if (payload == null) {
 				this.remove("payload");
@@ -667,7 +667,7 @@ public class HMessage extends JSONObject {
 		}
 	}
 	
-	public void setPayloadAsDouble(Double payload) {
+	public void setPayload(Double payload) {
 		try {
 			if (payload == null) {
 				this.remove("payload");
@@ -679,7 +679,7 @@ public class HMessage extends JSONObject {
 		}
 	}
 	
-	public void setPayloadAsHAlert(HAlert payload) {
+	public void setPayload(HAlert payload) {
 		try {
 			if (payload == null) {
 				this.remove("payload");
@@ -691,7 +691,7 @@ public class HMessage extends JSONObject {
 		}
 	}
 	
-	public void setPayloadAsHAck(HAck payload) {
+	public void setPayload(HAck payload) {
 		try {
 			if (payload == null) {
 				this.remove("payload");
@@ -703,7 +703,7 @@ public class HMessage extends JSONObject {
 		}
 	}
 	
-	public void setPayloadAsHMeasure(HMeasure payload) {
+	public void setPayload(HMeasure payload) {
 		try {
 			if (payload == null) {
 				this.remove("payload");
@@ -715,7 +715,7 @@ public class HMessage extends JSONObject {
 		}
 	}
 	
-	public void setPayloadAsHConvState(HConvState payload) {
+	public void setPayload(HConvState payload) {
 		try {
 			if (payload == null) {
 				this.remove("payload");
@@ -727,7 +727,7 @@ public class HMessage extends JSONObject {
 		}
 	}
 	
-	public void setPayloadAsHResult(HResult payload) {
+	public void setPayload(HResult payload) {
 		try {
 			if (payload == null) {
 				this.remove("payload");
@@ -739,7 +739,7 @@ public class HMessage extends JSONObject {
 		}
 	}
 	
-	public void setPayloadAsHCommand(HCommand payload) {
+	public void setPayload(HCommand payload) {
 		try {
 			if (payload == null) {
 				this.remove("payload");

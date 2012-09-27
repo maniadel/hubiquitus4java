@@ -69,7 +69,7 @@ public class HTweet extends JSONObject{
 	 */
 	public void setText(String text) {
 		try {
-			if(text == null & text.length()== 0) {
+			if(text == null || text.length()== 0) {
 				log.error("message: the text attribut is mandatory.");
 				return;
 			} else {
@@ -103,7 +103,7 @@ public class HTweet extends JSONObject{
 	 */
 	public void setSource(String source) {
 		try {
-			if(source == null & source.length()== 0 ) {
+			if(source == null || source.length()== 0 ) {
 				log.error("message: source attribute is mandatory.");
 				return;
 			} else {

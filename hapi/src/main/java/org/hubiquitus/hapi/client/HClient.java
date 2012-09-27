@@ -837,7 +837,7 @@ public class HClient {
 		}
 		HMessage resultMsg = null;
 		try {
-			resultMsg = buildResult("Error msg from hAPI", ref, resultstatus, obj, null);
+			resultMsg = buildResult(transportOptions.getJid().getBareJID(), ref, resultstatus, obj, null);
 		} catch (MissingAttrException e) {
 			logger.warn("message: ",e);
 		}
