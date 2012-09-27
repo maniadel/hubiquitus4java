@@ -25,9 +25,8 @@ package org.hubiquitus.hubotsdk.adapters.HtwitterAdapter;
  */
 
 import java.net.URL;
-import java.util.Calendar;
 
-import org.hubiquitus.hapi.util.DateISO8601;
+import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -36,67 +35,47 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @version 0.5
- * Describes a twitter payload
+ * Describes a twitter author
  */
-public class HAuthorTweet extends JSONObject {
+public class HTweetAuthor extends JSONObject {
 
-	private JSONObject hauthortweet= new JSONObject();
-	final Logger log = LoggerFactory.getLogger(HAuthorTweet.class);
+	final Logger log = LoggerFactory.getLogger(HTweetAuthor.class);
 
-	public HAuthorTweet() {};
+	public HTweetAuthor() {
+		super();
+	};
 
-	public HAuthorTweet(JSONObject jsonObj){
-		fromJSON(jsonObj);
+	public HTweetAuthor(JSONObject jsonObj) throws JSONException{
+		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
 
-	/* HJsonObj interface */
-
-	public JSONObject toJSON() {
-		return hauthortweet;
-	}
-
-	public void fromJSON(JSONObject jsonObj) {
-		if(jsonObj != null) {
-			this.hauthortweet = jsonObj; 
-		} else {
-			this.hauthortweet = new JSONObject();
-		}
-	}
-
-	public String getHType() {
-		return "hauthortweet";
-	}
-
-	@Override
-	public String toString() {
-		return hauthortweet.toString();
-	}
-
-
-	@Override
-	public int hashCode() {
-		return hauthortweet.hashCode();
-	}
-
+	
 	/* Getters & Setters */
 	
-	
+	/**
+	 * @return The twitter name of the author. 
+	 */
 	public String getScrName() {
 		String scrName;
 		try {
-			scrName = hauthortweet.getString("scrName");
+			scrName = this.getString("scrName");
 		} catch (Exception e) {
 			scrName = null;			
 		}
 		return scrName;
 	}
 
+	/**
+	 * Set the twitter name of the author.
+	 * @param scrName
+	 */
 	public void setScrName(String scrName) {
 		try {
 			if(scrName == null & scrName.length()== 0) {
-				hauthortweet.remove("scrName");
+				log.error("message: scrName attibute is mandatoty;");
+				return;
 			} else {
-				hauthortweet.put("scrName", scrName);
+				this.put("scrName", scrName);
 			}
 		} catch (JSONException e) {
 			log.error("Can't update the scrName attribut",e);
@@ -105,25 +84,28 @@ public class HAuthorTweet extends JSONObject {
 	
 	
 	/**
-	 * The Status counter
-	 * @return
+	 * @return The number of tweet the author has sent. 0 if not provided.
 	 */
 	public int getStatus() {
 		int status;
 		try {
-			status = hauthortweet.getInt("status");
+			status = this.getInt("status");
 		} catch (Exception e) {
 			status = 0;			
 		}
 		return status;
 	}
 	
+	/**
+	 * Set the number of tweet the author has sent. Not provided if 0.
+	 * @param status
+	 */
 	public void setStatus(int status) {
 		try {
 			if(status == 0) {
-				hauthortweet.remove("status");
+				this.remove("status");
 			} else {
-				hauthortweet.put("status", status);
+				this.put("status", status);
 			}
 		} catch (JSONException e) {
 			log.error("Can't update the status attribut",e);
@@ -131,25 +113,28 @@ public class HAuthorTweet extends JSONObject {
 	}
 	
 	/**
-	 * The number of followers
-	 * @return
+	 * @return The number of followers of the author. 0 if not provided.
 	 */
 	public int getFollowers() {
 		int followers;
 		try {
-			followers = hauthortweet.getInt("followers");
+			followers = this.getInt("followers");
 		} catch (Exception e) {
 			followers = 0;		
 		}
 		return followers;
 	}
 
+	/**
+	 * Set the number of followers of the author. Not provided if 0.
+	 * @param followers
+	 */
 	public void setFollowers(int followers) {
 		try {
 			if(followers== 0) {
-				hauthortweet.remove("followers");
+				this.remove("followers");
 			} else {
-				hauthortweet.put("followers", followers);
+				this.put("followers", followers);
 			}
 		} catch (JSONException e) {
 			log.error("Can't update the followers attribut",e);
@@ -160,25 +145,28 @@ public class HAuthorTweet extends JSONObject {
 	
 	
 	/** 
-	 * The screen name of the user : see TwitterApi
-	 * @return
+	 * @return The name of the author. Null if not provided.
 	 */
 	public String getName() {
 		String name;
 		try {
-			name = hauthortweet.getString("name");
+			name = this.getString("name");
 		} catch (Exception e) {
 			name = null;			
 		}
 		return name;
 	}
 
+	/**
+	 * Set the name of the author. Not provided if empty
+	 * @param name
+	 */
 	public void setName(String name) {
 		try {
 			if(name == null & name.length()== 0) {
-				hauthortweet.remove("name");
+				this.remove("name");
 			} else {
-				hauthortweet.put("name", name);
+				this.put("name", name);
 			}
 		} catch (JSONException e) {
 			log.error("Can't update the name attribut",e);
@@ -187,25 +175,28 @@ public class HAuthorTweet extends JSONObject {
 	
 	
 	/**
-	 * The friends Count
-	 * @return
+	 * @return The number of account followed by the author. O if not provided. 
 	 */
 	public int 	getFriends() {
 		int friends;
 		try {
-			friends = hauthortweet.getInt("friends");
+			friends = this.getInt("friends");
 		} catch (Exception e) {
 			friends = 0;			
 		}
 		return friends;
 	}
 	
+	/**
+	 * Set the number of account followed by the author. Not provided if 0
+	 * @param friends
+	 */
 	public void setFriends(int friends) {
 		try {
 			if(friends == 0 ) {
-				hauthortweet.remove("friends");
+				this.remove("friends");
 			} else {
-				hauthortweet.put("friends", friends);
+				this.put("friends", friends);
 			}
 		} catch (JSONException e) {
 			log.error("Can't update the friends attribut",e);
@@ -216,25 +207,28 @@ public class HAuthorTweet extends JSONObject {
 	
 
 	/**
-	 * The location that this tweet refers to if available
-	 * @return
+	 * @return The location provided by the author in its profile. Null if not provided.
 	 */
 	public String getLocation() {
 		String location;
 		try {
-			location = hauthortweet.getString("location");
+			location = this.getString("location");
 		} catch (Exception e) {
 			location = null;		
 		}
 		return location;
 	}
 
+	/**
+	 * Set the location provided by the author in its profile. Not provided if empty.
+	 * @param location
+	 */
 	public void setLocation(String location) {
 		try {
 			if(location == null & location.length()== 0) {
-				hauthortweet.remove("location");
+				this.remove("location");
 			} else {
-				hauthortweet.put("location", location);
+				this.put("location", location);
 			}
 		} catch (JSONException e) {
 			log.error("Can't update the location attribut",e);
@@ -246,25 +240,28 @@ public class HAuthorTweet extends JSONObject {
 	
 	
 	/**
-	 * The Descritpion
-	 * @return
+	 * @return The author’s description provided in its profile. Null if not provided.
 	 */
 	public String getDescription() {
 		String description;
 		try {
-			description = hauthortweet.getString("description");
+			description = this.getString("description");
 		} catch (Exception e) {
 			description = null;			
 		}
 		return description;
 	}
 	
+	/**
+	 * Set the author’s description. Not provided if empty.
+	 * @param description
+	 */
 	public void setDescription(String description) {
 		try {
 			if(description == null & description.length()==0 ) {
-				hauthortweet.remove("description");
+				this.remove("description");
 			} else {
-				hauthortweet.put("description", description);
+				this.put("description", description);
 			}
 		} catch (JSONException e) {
 			log.error("Can't update the description attribut",e);
@@ -273,25 +270,27 @@ public class HAuthorTweet extends JSONObject {
 	
 	
 	/**
-	 * The Profile Image
-	 * @return
+	 * @return The http url of the author’s profile avatar. Null if not provided.
 	 */
 	public String getProfileImg() {
 		String profileImg;
 		try {
-			profileImg = hauthortweet.getString("profileImg");
+			profileImg = this.getString("profileImg");
 		} catch (Exception e) {
 			profileImg = null;			
 		}
 		return profileImg;
 	}
-	
+	/**
+	 * Set the http url of the authoer's profile avatar.
+	 * @param profileImg
+	 */
 	public void setProfileImg(String profileImg) {
 		try {
 			if(profileImg == null & profileImg.length()== 0) {
-				hauthortweet.remove("profileImg");
+				this.remove("profileImg");
 			} else {
-				hauthortweet.put("profileImg", profileImg);
+				this.put("profileImg", profileImg);
 			}
 		} catch (JSONException e) {
 			log.error("Can't update the profile Image attribut",e);
@@ -301,24 +300,28 @@ public class HAuthorTweet extends JSONObject {
 	
 	/**
 	 * The URL
-	 * @return
+	 * @return The http url of the author’s web site. Null if not provided.
 	 */
 	public String getURL() {
 		String url;
 		try {
-			url = hauthortweet.getString("url").toString();
+			url = this.getString("url").toString();
 		} catch (Exception e) {
 			url = null;			
 		}
 		return url;
 	}
 	
+	/**
+	 * Set the http url of the author's web site.
+	 * @param url
+	 */
 	public void setUrl(URL url) {
 		try {
 			if(url == null  ) {
-				hauthortweet.remove("url");
+				this.remove("url");
 			} else {
-				hauthortweet.put("url", url);
+				this.put("url", url);
 			}
 		} catch (JSONException e) {
 			log.error("Can't update the url attribut",e);
@@ -328,53 +331,58 @@ public class HAuthorTweet extends JSONObject {
 	
 	
 	/**
-	 * The date of profile creation 
-	 * @return
+	 * @return The date of profile creation.
 	 */
-	public Calendar getCreatedAt() {
-		Calendar createdAt;
+	public DateTime getCreatedAt() {
+		DateTime createdAt;
 		try {
-			createdAt = (DateISO8601.toCalendar(hauthortweet.getString("createdAt")));;
+			createdAt = (DateTime) this.get("createdAt");;
 		} catch (JSONException e) {
 			createdAt = null;
 		}
 		return createdAt;
 	}
 
-	public void setCreatedAt(Calendar createdAt) {
+	/**
+	 * Set the date of profile creation.
+	 * @param createdAt
+	 */
+	public void setCreatedAt(DateTime createdAt) {
 		try {
 			if(createdAt == null ) {
-				hauthortweet.remove("createdAt");
+				log.error("message: createdAt attribute is mandatory.");
 			} else {
-				hauthortweet.put("createdAt", DateISO8601.fromCalendar(createdAt));
+				this.put("createdAt", createdAt);
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
 			log.error("Can't update the createdAt  attribut",e);
 		}
 	}
 	
 	
 	/**
-	 * The language of tweet
-	 * @return
+	 * @return The preferred language code defined by the author in its profile. Null if not provided.
 	 */	
 	public String getLang() {
 		String lang;
 		try {
-			lang = hauthortweet.getString("lang");
+			lang = this.getString("lang");
 		} catch (Exception e) {
 			lang = null;		
 		}
 		return lang;
 	}
 
+	/**
+	 * Set the preferred language code defined by the author in its profile.
+	 * @param lang
+	 */
 	public void setLang(String lang) {
 		try {
 			if(lang == null) {
-				hauthortweet.remove("lang");
+				this.remove("lang");
 			} else {
-				hauthortweet.put("lang", lang);
+				this.put("lang", lang);
 			}
 		} catch (JSONException e) {
 			log.error("Can't update the languge attribut",e);
@@ -383,25 +391,28 @@ public class HAuthorTweet extends JSONObject {
 	
 	
 	/**
-	 * The Geo Location
-	 * @return
+	 * @return True means the author may use the geolocalisation. False if not provided.
 	 */	
 	public boolean getGeo() {
 		boolean geo;
 		try {
-			geo = hauthortweet.getBoolean("geo");
+			geo = this.getBoolean("geo");
 		} catch (Exception e) {
 			geo = false;		
 		}
 		return geo;
 	}
 
+	/**
+	 * True means the author may use the geolocalisation. Not provided if false.
+	 * @param geo
+	 */
 	public void setGeo(boolean geo) {
 		try {
 			if(geo == false) {
-				hauthortweet.remove("geo");
+				this.remove("geo");
 			} else {
-				hauthortweet.put("geo", geo);
+				this.put("geo", geo);
 			}
 		} catch (JSONException e) {
 			log.error("Can't update the Geolocation attribut",e);
@@ -411,25 +422,28 @@ public class HAuthorTweet extends JSONObject {
 	
 
 	/**
-	 * The verified
-	 * @return
+	 * @return True means the author has been verified by twitter, false if not provided.
 	 */	
 	public boolean getVerified() {
 		boolean verified;
 		try {
-			verified = hauthortweet.getBoolean("verified");
+			verified = this.getBoolean("verified");
 		} catch (Exception e) {
 			verified = false;		
 		}
 		return verified;
 	}
 
+	/**
+	 * True means the author has been verified by twitter, not provided if false
+	 * @param verified
+	 */
 	public void setVerified(boolean verified) {
 		try {
 			if(verified == false) {
-				hauthortweet.remove("verified");
+				this.remove("verified");
 			} else {
-				hauthortweet.put("verified", verified);
+				this.put("verified", verified);
 			}
 		} catch (JSONException e) {
 			log.error("Can't update the verified attribut",e);
@@ -439,25 +453,28 @@ public class HAuthorTweet extends JSONObject {
 	
 	
 	/**
-	 * The Listed counter
-	 * @return
+	 * @return The number of times the author is listed by other member of twitter. 0 if not provided.
 	 */
 	public int getListeds() {
 		int listeds;
 		try {
-			listeds = hauthortweet.getInt("listeds");
+			listeds = this.getInt("listeds");
 		} catch (Exception e) {
 			listeds = 0;			
 		}
 		return listeds;
 	}
 	
+	/**
+	 * Set the number of times the author is listed by other members of twitter.
+	 * @param listeds
+	 */
 	public void setListeds(int listeds) {
 		try {
 			if(listeds == 0) {
-				hauthortweet.remove("listed");
+				this.remove("listed");
 			} else {
-				hauthortweet.put("listed", listeds);
+				this.put("listed", listeds);
 			}
 		} catch (JSONException e) {
 			log.error("Can't update the Listed  attribut",e);

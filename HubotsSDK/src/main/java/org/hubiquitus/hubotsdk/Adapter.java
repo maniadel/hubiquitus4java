@@ -80,7 +80,6 @@ public abstract class Adapter implements HMessageDelegate{
 		start();
 	}
 	
-	@Override
 	public void onMessage(HMessage message) {
 		if(message.getPayloadAsHResult().getStatus() != ResultStatus.NO_ERROR) 
 			logger.error(("Erreur lors de la commande : " + message.getPayloadAsHResult()));

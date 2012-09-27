@@ -38,11 +38,13 @@ import org.hubiquitus.hapi.client.HMessageDelegate;
 import org.hubiquitus.hapi.client.HStatusDelegate;
 import org.hubiquitus.hapi.exceptions.MissingAttrException;
 import org.hubiquitus.hapi.hStructures.ConnectionError;
+import org.hubiquitus.hapi.hStructures.HArrayOfValue;
+import org.hubiquitus.hapi.hStructures.HCondition;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hapi.hStructures.HMessageOptions;
 import org.hubiquitus.hapi.hStructures.HOptions;
 import org.hubiquitus.hapi.hStructures.HStatus;
-import org.hubiquitus.hapi.util.HJsonDictionnary;
+import org.hubiquitus.hapi.hStructures.OperandNames;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -291,7 +293,7 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 	// Listener of button hcommand
 	class SendButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
-			HJsonDictionnary jsonObj = new HJsonDictionnary();
+			JSONObject jsonObj = new JSONObject();
 
 			HMessageOptions msgOptions = new HMessageOptions();
 
@@ -332,6 +334,7 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 				channelToCreate.put("owner", usernameField.getText());
 				JSONArray jsonArray = new JSONArray();
 				jsonArray.put(usernameField.getText());
+				jsonArray.put("u2@localhost");
 				channelToCreate.put("subscribers", jsonArray);
 				channelToCreate.put("active", true);
 				HMessage message = client.buildCommand("hnode@localhost",
@@ -375,26 +378,7 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 		}
 	}
 
-	// // Listener of button publish
-	// class PublishButtonListener extends MouseAdapter {
-	// public void mouseClicked(MouseEvent event) {
-	// HMessage message = new HMessage();
-	// message.setPublisher(usernameField.getText());
-	// message.setActor(actorField.getText());
-	// message.setPublished(new GregorianCalendar());
-	// message.setType("obj");
-	//
-	// if (persistentRadioButton.isSelected())
-	// message.setPersistent(true);
-	// else
-	// message.setPersistent(false);
-	//
-	// HJsonDictionnary payload = new HJsonDictionnary();
-	// payload.put("text", messageField.getText());
-	// message.setPayload(payload);
-	// client.send(message, outerClass);
-	// }
-	// }
+
 
 	// Listener of button publish
 	class GetLastMessagesButtonListener extends MouseAdapter {
@@ -482,7 +466,21 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 
 	// Listener of button setFilter
 	class SetFilterListener extends MouseAdapter {
-		// public void mouseClicked(MouseEvent event) {
+		 public void mouseClicked(MouseEvent event) {
+			 HCondition filter = new HCondition();
+			 HArrayOfValue values = new HArrayOfValue();
+			 values.setName("publisher");
+			 JSONArray jsonArray = new JSONArray();
+			 jsonArray.put("u1@localhost");
+//			 jsonArray.put("u2@localhost");
+			 values.setValues(jsonArray);
+			 filter.setValueArray(OperandNames.IN, values);
+			 try {
+				client.setFilter(filter, outerClass);
+			} catch (MissingAttrException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		// String actor = actorField.getText();
 		// String filterName = filterNameField.getText();
 		// String filterAttr = filterAttrField.getText();
@@ -502,7 +500,7 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 		// filter.setName(filterName);
 		// filter.setTemplate(template);
 		// client.setFilter(filter, outerClass);
-		// }
+		 }
 	}
 
 	// Listener of button listerFilter

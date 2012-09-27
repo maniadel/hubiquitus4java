@@ -458,7 +458,13 @@ public class HClient {
 			throw new MissingAttrException("messageDelegate");
 		}
         //TODO to ask if the actor = "session"
-		HMessage cmdMessage = buildCommand("session", "hsetfilter", filter, null);
+		JSONObject params = new JSONObject();
+		try {
+			params.put("filter", filter);
+		} catch (JSONException e) {
+			logger.warn("messag: ", e);
+		}
+		HMessage cmdMessage = buildCommand("session", "hSetFilter", params, null);
 		cmdMessage.setTimeout(options.getTimeout());
 		this.send(cmdMessage, messageDelegate);
 	}
@@ -679,6 +685,9 @@ public class HClient {
 		HResult hresult = new HResult();
 		hresult.setResult(result);
 		hresult.setStatus(status);
+		if(options == null){
+			options = new HMessageOptions();
+		}
 		options.setRef(ref);
 		return buildMessage(actor, "hResult", hresult, options);
 	}
@@ -826,15 +835,14 @@ public class HClient {
 		} catch (JSONException e) {
 			logger.error("message: ", e);
 		}
-		HResult hresult = new HResult();
-		hresult.setResult(obj);
-		hresult.setStatus(resultstatus);
-		HMessage message = new HMessage();
-		message.setRef(ref);
-		message.setType("hResult");
-		message.setPayload(hresult);
+		HMessage resultMsg = null;
+		try {
+			resultMsg = buildResult("Error msg from hAPI", ref, resultstatus, obj, null);
+		} catch (MissingAttrException e) {
+			logger.warn("message: ",e);
+		}
 
-		this.notifyMessage(message);
+		this.notifyMessage(resultMsg);
 	}
 
 	/**

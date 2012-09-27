@@ -21,11 +21,10 @@ package org.hubiquitus.hubotsdk.adapters;
 
 import java.util.Map;
 
-import org.hubiquitus.hapi.client.HMessageDelegate;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterInbox;
 
-public class HubotAdapterInbox extends AdapterInbox implements HMessageDelegate {
+public class HubotAdapterInbox extends AdapterInbox{
 	
 	private String jid;
 	private String endpoint;
