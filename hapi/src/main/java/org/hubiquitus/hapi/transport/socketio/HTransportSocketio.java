@@ -58,7 +58,12 @@ public class HTransportSocketio implements HTransport, IOCallback {
 
 		@Override
 		public void run() {
-			connect(callback, options);
+			try {
+				connect(callback, options);
+			} catch (Exception e) {
+				updateStatus(ConnectionStatus.DISCONNECTED, ConnectionError.TECH_ERROR, e.getMessage());
+			}
+			
 		}
 		
 	}
@@ -210,7 +215,7 @@ public class HTransportSocketio implements HTransport, IOCallback {
 				socketio.disconnect();
 				updateStatus(ConnectionStatus.DISCONNECTED, ConnectionError.TECH_ERROR, e.getMessage());
 			}
-		} else {
+		} else if (type.equalsIgnoreCase("hMessage") && arg2 != null && arg2[0].getClass() == JSONObject.class){
 			JSONObject data = (JSONObject)arg2[0];
 			try {
 				if (timeoutTimer != null) {
@@ -231,17 +236,12 @@ public class HTransportSocketio implements HTransport, IOCallback {
 		//try to log in once connected
 		String publisher = options.getJid().getFullJID();
 		String password = options.getPassword();
-		String serverHost = options.getServerHost();
-		int serverPort = options.getServerPort();
 		
 		//prepare data to be sent
 		JSONObject data = new JSONObject();
 		try {
 			data.put("publisher", publisher);
 			data.put("password", password);
-			data.put("serverHost", serverHost);
-			data.put("serverPort", serverPort);
-
 			//send the event
 			socketio.emit("hConnect", data);
 		} catch (Exception e) {

@@ -181,7 +181,7 @@ public class HResult extends JSONObject {
 		}
 	}
 	
-	public void setResultAsJSONObject(JSONObject result) {
+	public void setResult(JSONObject result) {
 		try {
 			if (result == null) {
 				this.remove("result");
@@ -193,7 +193,7 @@ public class HResult extends JSONObject {
 		}
 	}
 	
-	public void setResultASJSONArray(JSONArray result) {
+	public void setResult(JSONArray result) {
 		try {
 			if (result == null) {
 				this.remove("result");
@@ -205,7 +205,7 @@ public class HResult extends JSONObject {
 		}
 	}
 	
-	public void setResultAsString(String result) {
+	public void setResult(String result) {
 		try {
 			if (result == null) {
 				this.remove("result");
@@ -217,7 +217,7 @@ public class HResult extends JSONObject {
 		}
 	}
 	
-	public void setResultAsBoolean(Boolean result) {
+	public void setResult(Boolean result) {
 		try {
 			if (result == null) {
 				this.remove("result");
@@ -229,7 +229,7 @@ public class HResult extends JSONObject {
 		}
 	}
 	
-	public void setResultAsInt(Integer result) {
+	public void setResult(Integer result) {
 		try {
 			if (result == null) {
 				this.remove("result");
@@ -241,7 +241,7 @@ public class HResult extends JSONObject {
 		}
 	}
 	
-	public void setResultAsDouble(Double result) {
+	public void setResult(Double result) {
 		try {
 			if (result == null) {
 				this.remove("result");
