@@ -19,8 +19,11 @@
 
 package org.hubiquitus.hubotsdk.adapters;
 
+import org.hubiquitus.hapi.client.HMessageDelegate;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterOutbox;
+import org.hubiquitus.hubotsdk.HubotStructure;
+import org.hubiquitus.hubotsdk.ProducerTemplateSingleton;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,11 +54,14 @@ public class HubotAdapterOutbox extends AdapterOutbox {
 	}
 
 	@Override
-	public void sendMessage(HMessage message) {
-		System.out.println("--> HubotAdapterOutbox send message : " + message);
-		hclient.send(message, null);
+	public void sendMessage(HMessage message, final HMessageDelegate callback) {
+		hclient.send(message, new HMessageDelegate() {
+			
+			@Override
+			public void onMessage(HMessage message) {
+				ProducerTemplateSingleton.getProducerTemplate().sendBody("seda:inbox",new HubotStructure(message, callback));
+			}
+		});
 	}
-
-
 
 }

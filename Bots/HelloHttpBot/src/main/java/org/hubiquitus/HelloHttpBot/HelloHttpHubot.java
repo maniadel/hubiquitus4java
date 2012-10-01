@@ -46,7 +46,7 @@ public class HelloHttpHubot extends Actor{
 				logger.debug(e.toString());
 			}
 			incomingMessage.setActor("httpOutbox@domain");// send to http outbox.
-			send(incomingMessage);
+			send(incomingMessage, null);
 			System.out.println(httpData);
 		}
 	}

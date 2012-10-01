@@ -1,5 +1,6 @@
 package org.hubiquitus.hubotsdk.adapters;
 
+import org.hubiquitus.hapi.client.HMessageDelegate;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterOutbox;
 import org.json.JSONObject;
@@ -7,7 +8,7 @@ import org.json.JSONObject;
 public class HTwitterAdapterOutbox extends AdapterOutbox {
 
 	@Override
-	public void sendMessage(HMessage message) {
+	public void sendMessage(HMessage message, HMessageDelegate callback) {
 		// TODO Auto-generated method stub
 
 	}

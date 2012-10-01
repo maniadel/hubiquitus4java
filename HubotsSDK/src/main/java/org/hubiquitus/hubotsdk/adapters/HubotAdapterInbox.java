@@ -57,6 +57,7 @@ public class HubotAdapterInbox extends AdapterInbox{
 	}
 	
 	public void onMessage(HMessage message) {
+		System.out.println("--> HubotAdapterInbox : onMessage : " + message);
 		if(!message.getPublisher().equals(actor))
 			put(message);		
 	}

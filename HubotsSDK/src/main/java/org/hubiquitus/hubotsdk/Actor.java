@@ -30,6 +30,7 @@ import java.util.Map;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.JndiRegistry;
 import org.hubiquitus.hapi.client.HClient;
+import org.hubiquitus.hapi.client.HMessageDelegate;
 import org.hubiquitus.hapi.client.HStatusDelegate;
 import org.hubiquitus.hapi.exceptions.MissingAttrException;
 import org.hubiquitus.hapi.hStructures.ConnectionStatus;
@@ -280,10 +281,16 @@ public abstract class Actor{
 		/* Method use for incoming message/command */
 		public final void inProcess(Object obj) {
 			if (obj != null) {
-				if (obj instanceof HMessage) {
-					inProcessMessage((HMessage)obj);
+				if (obj instanceof HubotStructure) {
+				 	HubotStructure hubotStruct = (HubotStructure)obj; 
+				 	HMessage message = hubotStruct.getMessage();
+				 	HMessageDelegate callback = hubotStruct.getCallback();
+				 	if(callback != null){
+				 		callback.onMessage(message);
+				 	}
+					inProcessMessage(message);
 				}
-			}		
+			}
 		}
 	}
 	
@@ -295,8 +302,8 @@ public abstract class Actor{
 	 * Send an HMessage to a specified adapter outbox.
 	 * @param hmessage
 	 */
-	protected final void send(HMessage hmessage){
-		hubotDispatcher.dispatcher(hmessage);
+	protected final void send(HMessage hmessage, HMessageDelegate callback){
+		hubotDispatcher.dispatcher(hmessage, callback);
 	}
 	
 
