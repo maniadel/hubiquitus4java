@@ -18,6 +18,9 @@ public class HCondition extends JSONObject {
 		super(jsonObj, JSONObject.getNames(jsonObj));
 	}
 	
+	public HCondition(String jsonString) throws JSONException{
+		super(jsonString);
+	}
 	
 	public HValue getValue(OperandNames operand){
 		if(operand != OperandNames.EQ && operand != OperandNames.NE && operand != OperandNames.GT

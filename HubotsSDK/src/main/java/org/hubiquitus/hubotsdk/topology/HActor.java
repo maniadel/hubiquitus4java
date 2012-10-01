@@ -18,6 +18,10 @@ public class HActor extends JSONObject {
 	}
 
 
+	public HActor(String jsonString) throws JSONException {
+		super(jsonString);
+	}
+
 	/* Getters & Setters */
 	/**
 	 * Return the type of the hActor. 
@@ -96,7 +100,7 @@ public class HActor extends JSONObject {
 	 * Set the password used by the actor to establish a connection with the hserver.
 	 * @param pwd
 	 */
-	public void setPws(String pwd){
+	public void setPwd(String pwd){
 		try {
 			if(pwd == null){
 				this.remove("pwd");

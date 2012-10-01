@@ -44,29 +44,33 @@ import org.slf4j.LoggerFactory;
 public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 
 	final Logger logger = LoggerFactory.getLogger(HHttpAdapterInbox.class);
+	
 	private String host = "0.0.0.0";
 	private int port = 80;
 	private String path = "";
 	private String jettyCamelUri = "";
 	
 	@Override
-	public void setProperties(Map<String, String> params) {
-		if(params != null && params.containsKey("host")) {
-			this.host = params.get("host");
-		}
-		
-		if(params != null && params.containsKey("port")) {
-			this.port = Integer.parseInt(params.get("port"));
-		}
-		
-		if(params != null && params.containsKey("path")) {
-			this.path = params.get("path");
-			if (this.path.contains("?")) {
-				int interrogationIndex = this.path.indexOf("?");
-				this.path = this.path.substring(interrogationIndex, this.path.length());
+	public void setProperties(JSONObject properties) {
+		if(properties != null){
+			try {
+				if (properties.has("host")){
+					this.host = properties.getString("host");
+				}
+				if (properties.has("port")){
+					this.port = properties.getInt("port");
+				}
+				if (properties.has("path")){
+					this.path = properties.getString("path");
+					if (this.path.contains("?")) {
+						int interrogationIndex = this.path.indexOf("?");
+						this.path = this.path.substring(interrogationIndex, this.path.length());
+					}
+				}
+			} catch (Exception e) {
+				logger.warn("message: ", e);
 			}
 		}
-		
 	}
 
 	@Override
@@ -82,7 +86,7 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 		try {
 			camelContext.addRoutes(routes);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.warn("message: ", e);
 		}
 	}
 
@@ -110,7 +114,7 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 		
 		//create message to send
 		HMessage message = new HMessage();
-		message.setAuthor(this.name);
+		message.setAuthor(this.actor);
 		if (headers != null) {
 			JSONObject jsonHeaders = new JSONObject(); 
 			for (String key : headers.keySet()) {

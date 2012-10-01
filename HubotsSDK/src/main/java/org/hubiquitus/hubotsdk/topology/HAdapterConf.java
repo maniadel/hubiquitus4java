@@ -76,17 +76,17 @@ public class HAdapterConf extends JSONObject {
 	//TODO properties. to define the type
 	//depends on the type of adapter used
 	
-	public Object getProperties(){
-		Object properties;
+	public JSONObject getProperties(){
+		JSONObject properties;
 		try {
-			properties = this.get("properties");
+			properties = this.getJSONObject("properties");
 		} catch (Exception e) {
 			properties = null;
 		}
 		return properties;
 	}
 	
-    public void setProperties(Object properties){
+    public void setProperties(JSONObject properties){
     	try {
 			if(properties == null){
 				this.remove("properties");

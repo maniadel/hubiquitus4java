@@ -1,5 +1,7 @@
 package org.hubiquitus.hubotsdk.topology;
 
+import java.util.ArrayList;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,6 +18,11 @@ public class HTopology extends HActor {
 		super(jsonObj);
 	}
 	
+	public HTopology(String jsonString) throws JSONException{
+		super(jsonString);
+	}
+	
+	
 	public JSONArray getAdapters(){
 		JSONArray adapters;
 		try {
@@ -26,15 +33,20 @@ public class HTopology extends HActor {
 		return adapters;
 	}
 	
-	public void setAdapters(JSONArray adapters){
+	public void setAdapters(ArrayList<HAdapterConf> adapters){
 		try {
 			if(adapters == null){
 				this.remove("adapters");
 			}else{
+//				JSONArray jsonArray = new JSONArray();
+//				for(HAdapterConf ad : adapters){
+//					jsonArray.put(ad);
+//				}
 				this.put("adapters",adapters);
 			}
 		} catch (JSONException e) {
 			logger.debug("Can not set the adapters attribute.", e);
 		}
 	}
+	
 }

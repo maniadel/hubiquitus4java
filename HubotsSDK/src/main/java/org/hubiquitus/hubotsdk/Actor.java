@@ -18,7 +18,10 @@
  */
 
 package org.hubiquitus.hubotsdk;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,22 +31,24 @@ import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.JndiRegistry;
 import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hapi.client.HStatusDelegate;
+import org.hubiquitus.hapi.exceptions.MissingAttrException;
 import org.hubiquitus.hapi.hStructures.ConnectionStatus;
+import org.hubiquitus.hapi.hStructures.HAckValue;
 import org.hubiquitus.hapi.hStructures.HMessage;
+import org.hubiquitus.hapi.hStructures.HMessageOptions;
 import org.hubiquitus.hapi.hStructures.HOptions;
 import org.hubiquitus.hapi.hStructures.HStatus;
+import org.hubiquitus.hapi.hStructures.ResultStatus;
+import org.hubiquitus.hubotsdk.adapters.HChannelAdapterInbox;
 import org.hubiquitus.hubotsdk.adapters.HubotAdapterInbox;
 import org.hubiquitus.hubotsdk.adapters.HubotAdapterOutbox;
+import org.hubiquitus.hubotsdk.topology.HAdapterConf;
+import org.hubiquitus.hubotsdk.topology.HTopology;
 import org.hubiquitus.util.ActorStatus;
-import org.hubiquitus.util.ConfigActor;
-import org.hubiquitus.util.ConfigActor.AdapterConfig;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class Actor{
 
@@ -52,52 +57,66 @@ public abstract class Actor{
 	private static final String HUBOT_ADAPTER_OUTBOX = "hubotAdapterOutbox";
 	private static final String HUBOT_ADAPTER_INBOX = "hubotAdapterInbox";
 	
+	
 	private Actor outerclass = this;
 	private ActorStatus status;
 	
 	private HClient hClient = new HClient();
 	private DefaultCamelContext camelContext = null;
-	private Map<String, Class<Object>> adapterOutClasses = new HashMap<String, Class<Object>>();
+	private ArrayList<String> adapterOutboxActors = new ArrayList<String>();
 	private Map<String, Adapter> adapterInstances = new HashMap<String, Adapter>();
-	private ConfigActor configActor;
+	private HubotDispatcher hubotDispatcher;
+
 	
-	private String name; 
-	private String jid;
-	private String pwd;
-	private String endpoint;
-	private Map<String,String> properties;
+	private HTopology topology;
+	
+	private JSONObject properties;
 	
 	private MessagesDelegate messageDelegate = new MessagesDelegate();
 	private StatusDelegate statusDelegate = new StatusDelegate();
+	
+	
+	 public static String fileToString(String file) {
+	        String result = null;
+	        DataInputStream in = null;
+
+	        try {
+	            File f = new File(file);
+	            byte[] buffer = new byte[(int) f.length()];
+	            in = new DataInputStream(new FileInputStream(f));
+	            in.readFully(buffer);
+	            result = new String(buffer);
+	        } catch (IOException e) {
+	            throw new RuntimeException("IO problem in fileToString", e);
+	        } finally {
+	            try {
+	                in.close();
+	            } catch (IOException e) { /* ignore it */
+	            }
+	        }
+	        return result;
+	    }
 	
 	/**
 	 * Connect the Actor to the hAPI with params set in the file "config.txt" 
 	 */
 	protected final void start() {
-		setStatus(ActorStatus.CREATED);
 		try {
 			// Create a default context for Camel
 			camelContext = new DefaultCamelContext();
 			ProducerTemplateSingleton.setContext(camelContext);
-	
-			// Parsing configuration file with Jackson 
-			ObjectMapper mapper = new ObjectMapper();
 			URL configFilePath = ClassLoader.getSystemResource("config.txt");
-			configActor = mapper.readValue(new File(configFilePath.getFile()), ConfigActor.class);
-			this.name = configActor.getName();
-			this.jid = configActor.getJid();
-			this.pwd = configActor.getPwdhash();
-			this.endpoint = configActor.getEndpoint();
-			this.properties = configActor.getProperties();
-	
+			String jsonString = fileToString(configFilePath.getFile());
+			topology = new HTopology(jsonString);
+			setStatus(ActorStatus.CREATED);
 			//Connecting to HNode
 			HOptions options = new HOptions();
 			options.setTransport("socketio");
 			JSONArray endpoints = new JSONArray();
-			endpoints.put(endpoint);
+			endpoints.put(topology.getHserver());
 			options.setEndpoints(endpoints);
 			hClient.onStatus(statusDelegate);
-			hClient.connect(jid, pwd , options);
+			hClient.connect(topology.getActor(), topology.getPwd() , options);
 			// see onStatus to know how this actor go the started status
 		} catch (Exception e) {
 			logger.error(e.toString());
@@ -129,12 +148,13 @@ public abstract class Actor{
 		createAdapters();
 		createRoutes();
 		startAdapters();
+		createDispatcher();
 		setStatus(ActorStatus.READY);
 	}
 	
 	private void createRoutes() {
 		
-		RouteGenerator routes = new RouteGenerator(adapterOutClasses);
+		RouteGenerator routes = new RouteGenerator(adapterOutboxActors);
 		try {
 			camelContext.setRegistry(createRegistry());
 			camelContext.addRoutes(routes);
@@ -145,23 +165,18 @@ public abstract class Actor{
 	}
 
 	private void createHubotAdapter() {
-		HubotAdapterInbox hubotAdapterInbox = new HubotAdapterInbox(HUBOT_ADAPTER_INBOX);
-		HubotAdapterOutbox hubotAdapterOutbox = new HubotAdapterOutbox(HUBOT_ADAPTER_OUTBOX);
+		HubotAdapterInbox hubotAdapterInbox = new HubotAdapterInbox();
+		HubotAdapterOutbox hubotAdapterOutbox = new HubotAdapterOutbox();
 		hubotAdapterInbox.setHClient(hClient);
 		hubotAdapterInbox.setCamelContext(camelContext);
 		hubotAdapterOutbox.setHClient(hClient);
 		hubotAdapterOutbox.setCamelContext(camelContext);
-	
 		
-		Map<String,String> propertiesMap = new HashMap<String,String>();
-		propertiesMap.put("jid", configActor.getJid());
-		propertiesMap.put("pwdhash", configActor.getPwdhash());
-		propertiesMap.put("endpoint", configActor.getEndpoint());
 		
-		hubotAdapterInbox.setName(HUBOT_ADAPTER_INBOX);
-		hubotAdapterOutbox.setName(HUBOT_ADAPTER_OUTBOX);
-		hubotAdapterInbox.setProperties(propertiesMap);
-		hubotAdapterOutbox.setProperties(propertiesMap);
+		hubotAdapterInbox.setActor(HUBOT_ADAPTER_INBOX);
+		hubotAdapterOutbox.setActor(HUBOT_ADAPTER_OUTBOX);
+		hubotAdapterInbox.setProperties(topology);
+		hubotAdapterOutbox.setProperties(topology);
 		
 		//Launch the HubotAdapter and put him in adapterInstances 
 		hubotAdapterInbox.start();
@@ -175,35 +190,35 @@ public abstract class Actor{
 	//Created other Adapters
 	@SuppressWarnings("unchecked")
 	private void createAdapters() {
-		ArrayList<AdapterConfig> adapters = configActor.getAdapters();
-		ArrayList<String> outAdaptersName = configActor.getOutboxes();
-		ArrayList<String> inAdaptersName = configActor.getInbox();
+		JSONArray adapters = topology.getAdapters();
 		// Create instance of all Adapter
 		if(adapters != null) {
 			try {
-				for(int i=0; i< adapters.size(); i++) {
-					if(inAdaptersName != null && inAdaptersName.contains(adapters.get(i).getName())) {
-						String nameAdapter = adapters.get(i).getName() + "Inbox";
-						Class<Object> fc;
-						fc = (Class<Object>) Class.forName("org.hubiquitus.hubotsdk.adapters." + adapters.get(i).getType() + "Inbox");
-						Adapter newAdapterInbox = (AdapterInbox) fc.newInstance();
-						newAdapterInbox.setName(nameAdapter);
-						newAdapterInbox.setProperties(adapters.get(i).getProperties());
-						newAdapterInbox.setHClient(hClient);
-						newAdapterInbox.setCamelContext(camelContext);
-						adapterInstances.put(nameAdapter, newAdapterInbox);
-					}
-					if(outAdaptersName != null && outAdaptersName.contains(adapters.get(i).getName())) {
-						String nameAdapter = adapters.get(i).getName() + "Outbox";
-						Class<Object> fc;
-						fc = (Class<Object>) Class.forName("org.hubiquitus.hubotsdk.adapters." + adapters.get(i).getType() + "Outbox");
-						Adapter newAdapterOutbox = (AdapterOutbox) fc.newInstance();
-						newAdapterOutbox.setName(nameAdapter);
-						newAdapterOutbox.setProperties(adapters.get(i).getProperties());
-						newAdapterOutbox.setHClient(hClient);
-						newAdapterOutbox.setCamelContext(camelContext);
-						adapterInstances.put(nameAdapter, newAdapterOutbox);
-						adapterOutClasses.put(nameAdapter, fc);			
+				for(int i=0; i< adapters.length(); i++) {
+					HAdapterConf adapterConf = new HAdapterConf(adapters.getJSONObject(i));
+					if(adapterConf != null){
+						if (adapterConf.getType() == null) { //ChannelAdapterInbox
+							HChannelAdapterInbox channelAdapterInbox = new HChannelAdapterInbox();
+							channelAdapterInbox.setActor(adapterConf.getActor());
+							channelAdapterInbox.setProperties(adapterConf.getProperties());
+							channelAdapterInbox.setHClient(hClient);
+							channelAdapterInbox.setCamelContext(camelContext);
+							adapterInstances.put(channelAdapterInbox.getActor(), channelAdapterInbox);
+						} else {
+							String nameAdapter = adapterConf.getType();
+							Class<Object> fc;
+							fc = (Class<Object>) Class.forName(nameAdapter);
+							Adapter newAdapter = (Adapter) fc.newInstance();
+							newAdapter.setActor(adapterConf.getActor());
+							newAdapter.setProperties(adapterConf.getProperties());
+							newAdapter.setHClient(hClient);
+							newAdapter.setCamelContext(camelContext);
+							adapterInstances.put(newAdapter.getActor(), newAdapter);
+							if(adapterConf.getType().matches("(?i).*Outbox.*")){
+								System.out.println(adapterConf.getType());
+								adapterOutboxActors.add(newAdapter.getActor());
+							}
+						}
 					}
 				} 
 			}catch (Exception e) {
@@ -225,6 +240,11 @@ public abstract class Actor{
 		}
 	}
 	
+	private void createDispatcher(){
+		hubotDispatcher = new HubotDispatcher();
+		hubotDispatcher.setAdapterOutboxActors(adapterOutboxActors);
+	}
+	
 	/**
 	 * Method used by camel. See Camel documentation for more information
 	 * @return
@@ -237,8 +257,8 @@ public abstract class Actor{
 		jndi.bind(HUBOT_ADAPTER_OUTBOX, adapterInstances.get(HUBOT_ADAPTER_OUTBOX));
 
 		
-		if(adapterOutClasses != null) {
-			for(String key : adapterOutClasses.keySet()) {
+		if(adapterOutboxActors != null) {
+			for(String key : adapterOutboxActors) {
 				jndi.bind(key, adapterInstances.get(key));
 			}   
 		}
@@ -269,31 +289,15 @@ public abstract class Actor{
 	
 	protected abstract void inProcessMessage(HMessage incomingMessage);
 
-	/**
-	 *  Send an object to a specified adapter outbox. Only HMessage supported 
-	 */
-	protected final void put(String adapterName, JSONObject jsonObj) {
-		if (jsonObj instanceof HMessage){
-			try {
-				put(adapterName, new HMessage(jsonObj));
-			} catch (JSONException e) {
-				logger.warn("message: ", e);
-			}
-		} else {
-			logger.error("Not supported");
-		}
-	}
-	
+
+
 	/**
 	 * Send an HMessage to a specified adapter outbox.
-	 * @param adapterName
-	 * @param msg
+	 * @param hmessage
 	 */
-	protected final void put(String adapterName, HMessage msg) {
-		String route = "seda:" + adapterName + "Outbox";
-		ProducerTemplateSingleton.getProducerTemplate().sendBody(route,msg);		
+	protected final void send(HMessage hmessage){
+		hubotDispatcher.dispatcher(hmessage);
 	}
-
 	
 
 	/**
@@ -312,7 +316,7 @@ public abstract class Actor{
 
 	private void setStatus(ActorStatus status) {
 		this.status = status;
-		logger.info((name+"("+jid+") : "+status));
+		logger.info((topology.getType()+"("+topology.getActor()+") : "+status));
 	}
 	
 	/**
@@ -320,9 +324,9 @@ public abstract class Actor{
 	 * @param adapterName : adapterName
 	 * @param params<String,String> : params - params for update properties
 	 */
-	protected void updateInboxAdapterProperties(String adapterName, Map<String, String> params) {
+	protected void updateInboxAdapterProperties(String adapterName, JSONObject properties) {
 		Adapter updatedAdapter = adapterInstances.get(adapterName + "Inbox");
-		updatedAdapter.updateProperties(params);
+		updatedAdapter.updateProperties(properties);
 	}
 	
 	/**
@@ -330,9 +334,9 @@ public abstract class Actor{
 	 * @param adapterName : adapterName
 	 * @param params<String,String> : params - params for update properties
 	 */
-	protected void updateOutboxAdapterProperties(String adapterName, Map<String, String> params) {
+	protected void updateOutboxAdapterProperties(String adapterName, JSONObject properties) {
 		Adapter updatedAdapter = adapterInstances.get(adapterName + "Outbox");
-		updatedAdapter.updateProperties(params);
+		updatedAdapter.updateProperties(properties);
 	}
 	
 	
@@ -365,15 +369,143 @@ public abstract class Actor{
 	 * @return
 	 */
 	protected final void addAdapterInbox(AdapterInbox adapterInbox) {
-		adapterInstances.put(adapterInbox.getName(), adapterInbox);
+		adapterInstances.put(adapterInbox.getActor(), adapterInbox);
 	}
 	
 	/**
 	 * Retrived the properties of this Bot
 	 * @return
 	 */
-	protected final Map<String,String> getProperties() {
+	protected final JSONObject getProperties() {
 		return properties;
 	}
+	
+	/**
+	 * Helper to create a hMessage. Payload type could be instance of JSONObject(HAlert, HAck, HCommand ...), JSONObject, JSONArray, String, Boolean, Number
+	 * @param actor : The Actor for the hMessage. Mandatory.
+	 * @param type : The type of the hMessage. Not mandatory.
+	 * @param payload : The payload for the hMessage. Not mandatory.
+	 * @param options : The options if any to use for the creation of the hMessage. Not mandatory.
+     * @return a hMessage which can be used with the send method
+	 */
+	public HMessage buildMessage(String actor, String type, Object payload, HMessageOptions options){
+		HMessage message = null;
+		try {
+			message = hClient.buildMessage(actor, type, payload, options);
+		} catch (MissingAttrException e) {
+			logger.debug(e.toString());
+		}
+		return message;
+	}
+	
+	/**
+	 * Helper to create a hMessage with a hConvState payload.
+	 * @param actor : The channel id for the hMessage. Mandatory
+	 * @param convid : The convid where the status have to be updated. Mandatory
+	 * @param status : Status of the conversation. Mandatory.
+	 * @param options : The options to use if any for the creation of the hMessage. Not mandatory.
+	 * @return A hMessage with a hConvState payload.
+	 */
+	public HMessage buildConvState(String actor, String convid, String status, HMessageOptions options){
+		HMessage message = null;
+		try {
+			message = hClient.buildConvState(actor, convid, status, options);
+		} catch (MissingAttrException e) {
+			logger.debug(e.toString());
+		}
+		return message;
+	}
+	
+	/**
+	 * Helper to create a hMessage wiht a hAck payload.
+	 * @param actor : The actor for the hMessage.  Mandatory.
+	 * @param ref : The msgid to acknowledged. Mandatory.
+	 * @param ack : The following values are authorized : 
+	 * (1). “recv” : means that the message has been received by the participant (on at least one of its devices). 
+	 * (2). “read” : means that the message has been read by the participant.
+	 * Mandatory.
+	 * @param options : The options to use if any for the creation of the hMessage. Not mandatory.
+	 * @return A hMessage with a hAck payload.
+	 */
+	public HMessage buildAck(String actor, String ref, HAckValue ack, HMessageOptions options){
+		HMessage message = null;
+		try {
+			message = hClient.buildAck(actor, ref, ack, options);
+		} catch (MissingAttrException e) {
+			logger.debug(e.toString());
+		}
+		return message;
+	}
+	
+	/**
+	 * Helper to create a hMessage with a hAlert payload.
+	 * @param actor : The channel id for the hMessage. Mandatory.
+	 * @param alert : The alert message. Mandatory.
+	 * @param options : The options to use if any for the creation of the hMessage. Not mandatory.
+	 * @return A hMessage with a hAlert payload.
+	 */
+	public HMessage buildAlert(String actor, String alert, HMessageOptions options){
+		HMessage message = null;
+		try {
+			message = hClient.buildAlert(actor, alert, options);
+		} catch (MissingAttrException e) {
+			logger.debug(e.toString());
+		}
+		return message;
+	}
 
+	/**
+	 * Helper to create a hMessage with a hMeasure payload.
+	 * @param actor : The actor for the hMessage. Mandatory
+	 * @param value : The value of the measure. Mandatory
+	 * @param unit : The unit of the measure. Mandatory
+	 * @param options : The options to use if any for the creation of the hMessage. Not Mandatory.
+	 * @return A hMessage with a hMeasure payload. 
+	 */
+	public HMessage buildMeasure(String actor, String value, String unit, HMessageOptions options){
+		HMessage message = null;
+		try {
+			message = hClient.buildMeasure(actor, value, unit, options);
+		} catch (MissingAttrException e) {
+			logger.debug(e.toString());
+		}
+		return message;
+	}
+	
+	/**
+	 * Helper to create a hMessage with a hCommand payload.
+	 * @param actor : The actor for the hMessage. Mandatory.
+	 * @param cmd : The name of the command. Mandatory.
+	 * @param params : Parameters of the command. Not mandatory.
+	 * @param options : The options to use if any for the creation of the hMessage. Not mandatory.
+	 * @return A hMessage with a hCommand payload.
+	 */
+	public HMessage buildCommand(String actor, String cmd, JSONObject params, HMessageOptions options){
+		HMessage message = null;
+		try {
+			message = hClient.buildCommand(actor, cmd, params, options);
+		} catch (MissingAttrException e) {
+			logger.debug(e.toString());
+		}
+		return message;
+	}
+	
+	/**
+	 * Helper to create a hMessage with a hResult payload.
+	 * @param actor : The actor for the hMessage. Mandatory.
+	 * @param ref : The id of the message received, for correlation purpose. Mandatory.
+	 * @param status : Result status code. Mandatory.
+	 * @param result : The result of a command. Possible types: JSONObject, JSONArray, String, Boolean, Number. Not mandatory.
+	 * @param options : The options to use if any for the creation of the hMessage. Not mandatory.
+	 * @return A hMessage with a hResult payload.
+	 */
+	public HMessage buildResult(String actor, String ref, ResultStatus status, Object result, HMessageOptions options){
+		HMessage message = null;
+		try {
+			message = hClient.buildResult(actor, ref, status, result, options);
+		} catch (MissingAttrException e) {
+			logger.debug(e.toString());
+		}
+		return message;
+	}
 }

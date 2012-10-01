@@ -21,20 +21,19 @@
 package org.hubiquitus.HelloBot;
 
 
-import org.apache.log4j.Logger;
 import org.hubiquitus.hapi.client.HClient;
-import org.hubiquitus.hapi.hStructures.HCommand;
 import org.hubiquitus.hapi.hStructures.HMessage;
-import org.hubiquitus.hapi.util.HJsonDictionnary;
 import org.hubiquitus.hubotsdk.Actor;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
 public class HelloHubot extends Actor{
 
-	private static Logger logger = Logger.getLogger(HelloHubot.class);
+	final Logger logger = LoggerFactory.getLogger(HelloHubot.class);
 	
 	public static void main(String[] args) throws Exception{
 		HelloHubot hubot = new HelloHubot();
@@ -50,23 +49,23 @@ public class HelloHubot extends Actor{
 	protected void inProcessMessage(HMessage messageIncoming) {
 		HMessage message = new HMessage();
 		message.setType("hello");
-		JSONObject jsonObj = messageIncoming.getPayload().toJSON();
+		JSONObject jsonObj = messageIncoming.getPayloadAsJSONObject();
 		String name = "Hello ";
 		try {
 			 name += jsonObj.getString("text");
 		} catch (JSONException e) {
 			logger.error(e.toString());
 		}
-		HJsonDictionnary payload = new HJsonDictionnary();
-		payload.put("text", name);
+		JSONObject payload = new JSONObject();
+		try {
+			payload.put("text", name);
+		} catch (JSONException e) {
+			logger.debug(e.toString());
+		}
 		message.setPayload(payload);
-		message.setChid(messageIncoming.getPublisher());
-		put("hubotAdapter",message);
+//		message.setActor("httpOutbox@domain");
+		message.setActor(messageIncoming.getPublisher());
+		send(message);
+//		put("hubotAdapter",message);
 	}
-	
-	protected void inProcessCommand(HCommand commandIncoming) {
-		logger.debug("not supported");
-	}
-	
-
 }

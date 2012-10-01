@@ -19,48 +19,43 @@
 
 package org.hubiquitus.hubotsdk.adapters;
 
-import java.util.Map;
-
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterOutbox;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HubotAdapterOutbox extends AdapterOutbox {
 
-	private String name;
-	private String jid;
-	
-	public HubotAdapterOutbox(String name) {
-		this.name = name;
+	final Logger logger = LoggerFactory.getLogger(HubotAdapterOutbox.class);
+
+	public HubotAdapterOutbox() {
+		super();
 	}
 
 	@Override
-	public void sendMessage(HMessage message) {
-		hclient.send(message, null);
-	}
-
-
-	@Override
-	public void setProperties(Map<String,String> params) {	
-		if(params.get("jid") != null) 
-			this.jid = params.get("jid");
+	public void setProperties(JSONObject properties) {
+		// nop
+		
 	}
 
 	@Override
 	public void start() {
+		// nop
 	}
 
 	@Override
 	public void stop() {
+		// nop
+		
 	}
-
-	/* Getters and Setters */
-	public String getJid() {
-		return jid;
-	}
-
 
 	@Override
-	public String toString() {
-		return "HubotAdapter [name=" + name + ", jid=" + jid + "]";
+	public void sendMessage(HMessage message) {
+		System.out.println("--> HubotAdapterOutbox send message : " + message);
+		hclient.send(message, null);
 	}
+
+
+
 }
