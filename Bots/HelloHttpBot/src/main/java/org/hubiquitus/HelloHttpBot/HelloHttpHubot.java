@@ -20,12 +20,12 @@
 package org.hubiquitus.HelloHttpBot;
 
 import org.hubiquitus.hapi.hStructures.HMessage;
-import org.hubiquitus.hubotsdk.Actor;
+import org.hubiquitus.hubotsdk.Hubot;
 import org.hubiquitus.hubotsdk.adapters.HHttpAdapter.HHttpData;
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-public class HelloHttpHubot extends Actor{
+public class HelloHttpHubot extends Hubot{
 
 	final Logger logger = LoggerFactory.getLogger(HelloHttpHubot.class);
 	public static void main(String[] args) throws Exception{

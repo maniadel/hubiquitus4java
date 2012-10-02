@@ -277,14 +277,23 @@ public abstract class Hubot {
 		/* Method use for incoming message/command */
 		public final void inProcess(Object obj) {
 			if (obj != null) {
-				if (obj instanceof HubotStructure) {
-				 	HubotStructure hubotStruct = (HubotStructure)obj; 
-				 	HMessage message = hubotStruct.getMessage();
-				 	HMessageDelegate callback = hubotStruct.getCallback();
-				 	if(callback != null){
-				 		callback.onMessage(message);
-				 	} else
-					    inProcessMessage(message);
+				if (obj instanceof HubotMessageStructure) {
+					try {
+						HubotMessageStructure hubotStruct = (HubotMessageStructure)obj; 
+					 	HMessage message = hubotStruct.getMessage();
+						try {
+						 	HMessageDelegate callback = hubotStruct.getCallback();
+						 	if(callback != null){
+						 		callback.onMessage(message);
+						 	}else{
+						 		inProcessMessage(message);
+						 	}
+						} catch (Exception e) {
+							logger.debug("message: ", e);
+						}
+					} catch (Exception e) {
+						logger.debug("message: ", e);
+					}
 				}
 			}
 		}
@@ -344,23 +353,14 @@ public abstract class Hubot {
 		logger.info((topology.getType()+"("+topology.getActor()+") : "+status));
 	}
 	
-	/**
-	 * Update a specified inboxAdapter's properties
-	 * @param adapterName : adapterName
-	 * @param properties : params - params for update properties
-	 */
-	protected void updateInboxAdapterProperties(String adapterName, JSONObject properties) {
-		Adapter updatedAdapter = adapterInstances.get(adapterName + "Inbox");
-		updatedAdapter.updateProperties(properties);
-	}
 	
 	/**
-	 * Update a specified outboxAdapter's properties
-	 * @param adapterName : adapterName
+	 * Update a specified oAdapter's properties
+	 * @param actor : adapter actor
 	 * @param properties : params - params for update properties
 	 */
-	protected void updateOutboxAdapterProperties(String adapterName, JSONObject properties) {
-		Adapter updatedAdapter = adapterInstances.get(adapterName + "Outbox");
+	protected void updateAdapterProperties(String actor, JSONObject properties) {
+		Adapter updatedAdapter = adapterInstances.get(actor);
 		updatedAdapter.updateProperties(properties);
 	}
 	
@@ -387,17 +387,6 @@ public abstract class Hubot {
 	
 	
 	/**
-	 * Add a adapterInbox
-	 * Can be used before starting the bot
-	 * You can use this method to modified some properties of this adapter
-	 * @param adapterInbox
-	 * @return
-	 */
-	private final void addAdapterInbox(AdapterInbox adapterInbox) {
-		adapterInstances.put(adapterInbox.getActor(), adapterInbox);
-	}
-	
-	/**
 	 * Retrived the properties of this Bot
 	 * @return a JSONObject for the properties set in the topology of the hubot (could be null)
 	 */
@@ -412,15 +401,10 @@ public abstract class Hubot {
 	 * @param payload : The payload for the hMessage. Not mandatory.
 	 * @param options : The options if any to use for the creation of the hMessage. Not mandatory.
      * @return a hMessage which can be used with the send method
+	 * @throws MissingAttrException 
 	 */
-	public HMessage buildMessage(String actor, String type, Object payload, HMessageOptions options){
-		HMessage message = null;
-		try {
-			message = hClient.buildMessage(actor, type, payload, options);
-		} catch (MissingAttrException e) {
-			logger.debug(e.toString());
-		}
-		return message;
+	public HMessage buildMessage(String actor, String type, Object payload, HMessageOptions options) throws MissingAttrException{
+		return hClient.buildMessage(actor, type, payload, options);
 	}
 	
 	/**
@@ -430,15 +414,10 @@ public abstract class Hubot {
 	 * @param status : Status of the conversation. Mandatory.
 	 * @param options : The options to use if any for the creation of the hMessage. Not mandatory.
 	 * @return A hMessage with a hConvState payload.
+	 * @throws MissingAttrException 
 	 */
-	public HMessage buildConvState(String actor, String convid, String status, HMessageOptions options){
-		HMessage message = null;
-		try {
-			message = hClient.buildConvState(actor, convid, status, options);
-		} catch (MissingAttrException e) {
-			logger.debug(e.toString());
-		}
-		return message;
+	public HMessage buildConvState(String actor, String convid, String status, HMessageOptions options) throws MissingAttrException{
+		return hClient.buildConvState(actor, convid, status, options);
 	}
 	
 	/**
@@ -451,15 +430,10 @@ public abstract class Hubot {
 	 * Mandatory.
 	 * @param options : The options to use if any for the creation of the hMessage. Not mandatory.
 	 * @return A hMessage with a hAck payload.
+	 * @throws MissingAttrException 
 	 */
-	public HMessage buildAck(String actor, String ref, HAckValue ack, HMessageOptions options){
-		HMessage message = null;
-		try {
-			message = hClient.buildAck(actor, ref, ack, options);
-		} catch (MissingAttrException e) {
-			logger.debug(e.toString());
-		}
-		return message;
+	public HMessage buildAck(String actor, String ref, HAckValue ack, HMessageOptions options) throws MissingAttrException{
+		return hClient.buildAck(actor, ref, ack, options);
 	}
 	
 	/**
@@ -468,15 +442,10 @@ public abstract class Hubot {
 	 * @param alert : The alert message. Mandatory.
 	 * @param options : The options to use if any for the creation of the hMessage. Not mandatory.
 	 * @return A hMessage with a hAlert payload.
+	 * @throws MissingAttrException 
 	 */
-	public HMessage buildAlert(String actor, String alert, HMessageOptions options){
-		HMessage message = null;
-		try {
-			message = hClient.buildAlert(actor, alert, options);
-		} catch (MissingAttrException e) {
-			logger.debug(e.toString());
-		}
-		return message;
+	public HMessage buildAlert(String actor, String alert, HMessageOptions options) throws MissingAttrException{
+		return hClient.buildAlert(actor, alert, options);
 	}
 
 	/**
@@ -486,15 +455,10 @@ public abstract class Hubot {
 	 * @param unit : The unit of the measure. Mandatory
 	 * @param options : The options to use if any for the creation of the hMessage. Not Mandatory.
 	 * @return A hMessage with a hMeasure payload. 
+	 * @throws MissingAttrException 
 	 */
-	public HMessage buildMeasure(String actor, String value, String unit, HMessageOptions options){
-		HMessage message = null;
-		try {
-			message = hClient.buildMeasure(actor, value, unit, options);
-		} catch (MissingAttrException e) {
-			logger.debug(e.toString());
-		}
-		return message;
+	public HMessage buildMeasure(String actor, String value, String unit, HMessageOptions options) throws MissingAttrException{
+		return hClient.buildMeasure(actor, value, unit, options);
 	}
 	
 	/**
@@ -504,15 +468,10 @@ public abstract class Hubot {
 	 * @param params : Parameters of the command. Not mandatory.
 	 * @param options : The options to use if any for the creation of the hMessage. Not mandatory.
 	 * @return A hMessage with a hCommand payload.
+	 * @throws MissingAttrException 
 	 */
-	public HMessage buildCommand(String actor, String cmd, JSONObject params, HMessageOptions options){
-		HMessage message = null;
-		try {
-			message = hClient.buildCommand(actor, cmd, params, options);
-		} catch (MissingAttrException e) {
-			logger.debug(e.toString());
-		}
-		return message;
+	public HMessage buildCommand(String actor, String cmd, JSONObject params, HMessageOptions options) throws MissingAttrException{
+		return hClient.buildCommand(actor, cmd, params, options);
 	}
 	
 	/**
@@ -523,15 +482,10 @@ public abstract class Hubot {
 	 * @param result : The result String of a command.
 	 * @param options : The options to use if any for the creation of the hMessage. Not mandatory.
 	 * @return A hMessage with a hResult payload.
+	 * @throws MissingAttrException 
 	 */
-	public HMessage buildResult(String actor, String ref, ResultStatus status, String result, HMessageOptions options){
-		HMessage message = null;
-		try {
-			message = hClient.buildResult(actor, ref, status, result, options);
-		} catch (MissingAttrException e) {
-			logger.debug(e.toString());
-		}
-		return message;
+	public HMessage buildResult(String actor, String ref, ResultStatus status, String result, HMessageOptions options) throws MissingAttrException{
+		return hClient.buildResult(actor, ref, status, result, options);
 	}
     /**
      * Helper to create a hMessage with a hResult payload.
@@ -541,15 +495,10 @@ public abstract class Hubot {
      * @param result : The result boolean of a command.
      * @param options : The options to use if any for the creation of the hMessage. Not mandatory.
      * @return A hMessage with a hResult payload.
+     * @throws MissingAttrException 
      */
-    public HMessage buildResult(String actor, String ref, ResultStatus status, boolean result, HMessageOptions options){
-        HMessage message = null;
-        try {
-            message = hClient.buildResult(actor, ref, status, result, options);
-        } catch (MissingAttrException e) {
-            logger.debug(e.toString());
-        }
-        return message;
+    public HMessage buildResult(String actor, String ref, ResultStatus status, boolean result, HMessageOptions options) throws MissingAttrException{
+        return hClient.buildResult(actor, ref, status, result, options);
     }
     /**
      * Helper to create a hMessage with a hResult payload.
@@ -559,15 +508,10 @@ public abstract class Hubot {
      * @param result : The result double of a command.
      * @param options : The options to use if any for the creation of the hMessage. Not mandatory.
      * @return A hMessage with a hResult payload.
+     * @throws MissingAttrException 
      */
-    public HMessage buildResult(String actor, String ref, ResultStatus status, double result, HMessageOptions options){
-        HMessage message = null;
-        try {
-            message = hClient.buildResult(actor, ref, status, result, options);
-        } catch (MissingAttrException e) {
-            logger.debug(e.toString());
-        }
-        return message;
+    public HMessage buildResult(String actor, String ref, ResultStatus status, double result, HMessageOptions options) throws MissingAttrException{
+        return hClient.buildResult(actor, ref, status, result, options);
     }
     /**
      * Helper to create a hMessage with a hResult payload.
@@ -577,15 +521,10 @@ public abstract class Hubot {
      * @param result : The result JSONArray of a command.
      * @param options : The options to use if any for the creation of the hMessage. Not mandatory.
      * @return A hMessage with a hResult payload.
+     * @throws MissingAttrException 
      */
-    public HMessage buildResult(String actor, String ref, ResultStatus status, JSONArray result, HMessageOptions options){
-        HMessage message = null;
-        try {
-            message = hClient.buildResult(actor, ref, status, result, options);
-        } catch (MissingAttrException e) {
-            logger.debug(e.toString());
-        }
-        return message;
+    public HMessage buildResult(String actor, String ref, ResultStatus status, JSONArray result, HMessageOptions options) throws MissingAttrException{
+        return hClient.buildResult(actor, ref, status, result, options);
     }
     /**
      * Helper to create a hMessage with a hResult payload.
@@ -595,14 +534,9 @@ public abstract class Hubot {
      * @param result : The result JSONObject of a command.
      * @param options : The options to use if any for the creation of the hMessage. Not mandatory.
      * @return A hMessage with a hResult payload.
+     * @throws MissingAttrException 
      */
-    public HMessage buildResult(String actor, String ref, ResultStatus status, JSONObject result, HMessageOptions options){
-        HMessage message = null;
-        try {
-            message = hClient.buildResult(actor, ref, status, result, options);
-        } catch (MissingAttrException e) {
-            logger.debug(e.toString());
-        }
-        return message;
+    public HMessage buildResult(String actor, String ref, ResultStatus status, JSONObject result, HMessageOptions options) throws MissingAttrException{
+        return hClient.buildResult(actor, ref, status, result, options);
     }
 }
