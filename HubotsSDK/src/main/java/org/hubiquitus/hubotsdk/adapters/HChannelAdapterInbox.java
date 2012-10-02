@@ -22,6 +22,7 @@ package org.hubiquitus.hubotsdk.adapters;
 import org.hubiquitus.hapi.client.HMessageDelegate;
 import org.hubiquitus.hapi.exceptions.MissingAttrException;
 import org.hubiquitus.hapi.hStructures.HMessage;
+import org.hubiquitus.hapi.hStructures.ResultStatus;
 import org.hubiquitus.hubotsdk.AdapterInbox;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -36,8 +37,8 @@ public class HChannelAdapterInbox extends AdapterInbox {
 
         @Override
         public void onMessage(HMessage hMessage) {
-        	//TODO
-            //To change body of implemented methods use File | Settings | File Templates.
+            if (hMessage.getPayloadAsHResult().getStatus() != ResultStatus.NO_ERROR)
+                log.error("Error : " + hMessage.getPayloadAsHResult());
         }
     }
     
@@ -46,9 +47,9 @@ public class HChannelAdapterInbox extends AdapterInbox {
     
 	public HChannelAdapterInbox() {}
 	
-	public HChannelAdapterInbox(String actor) {
+	/*public HChannelAdapterInbox(String actor) {
 		this.actor = actor;
-	}
+	}*/
 
 	@Override
 	public void start() {

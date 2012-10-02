@@ -12,10 +12,11 @@ public class HubotDispatcher {
 	final  Logger logger = LoggerFactory.getLogger(HubotDispatcher.class);
 	
 	private static final String HUBOT_ADAPTER_OUTBOX = "hubotAdapterOutbox";
+    // TODO vérifier la pertinence d'un ArrayList vs. une Map
 	private ArrayList<String> adapterOutboxActors;
 	
-	public HubotDispatcher(){
-		
+	public HubotDispatcher(ArrayList<String> adapterOutboxActors){
+        this.adapterOutboxActors = adapterOutboxActors;
 	}
 	
 	public  void dispatcher(HMessage msg, HMessageDelegate callback){
@@ -28,13 +29,6 @@ public class HubotDispatcher {
 				put(msgActor, hubotStruct);
 			}
 		}
-	}
-	
-	public ArrayList<String> getAdapterOutboxActor() {
-		return adapterOutboxActors;
-	}
-	public void setAdapterOutboxActors(ArrayList<String> adapterOutboxActors) {
-		this.adapterOutboxActors = adapterOutboxActors;
 	}
 	
 	private void put(String adapterActor, HubotStructure hubotStruct) {

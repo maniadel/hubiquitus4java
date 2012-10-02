@@ -19,13 +19,14 @@
 
 package org.hubiquitus.hubotsdk.adapters;
 
+import org.hubiquitus.hapi.client.HMessageDelegate;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterInbox;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HubotAdapterInbox extends AdapterInbox{
+public class HubotAdapterInbox extends AdapterInbox implements HMessageDelegate {
 	
 	final Logger logger = LoggerFactory.getLogger(HubotAdapterInbox.class);
 	private String actor;
@@ -57,7 +58,6 @@ public class HubotAdapterInbox extends AdapterInbox{
 	}
 	
 	public void onMessage(HMessage message) {
-		System.out.println("--> HubotAdapterInbox : onMessage : " + message);
 		if(!message.getPublisher().equals(actor))
 			put(message);		
 	}

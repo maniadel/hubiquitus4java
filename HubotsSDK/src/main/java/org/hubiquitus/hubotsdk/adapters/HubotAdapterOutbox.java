@@ -55,7 +55,7 @@ public class HubotAdapterOutbox extends AdapterOutbox {
 
 	@Override
 	public void sendMessage(HMessage message, final HMessageDelegate callback) {
-		hclient.send(message, new HMessageDelegate() {
+		    hclient.send(message, new HMessageDelegate() {
 			
 			@Override
 			public void onMessage(HMessage message) {

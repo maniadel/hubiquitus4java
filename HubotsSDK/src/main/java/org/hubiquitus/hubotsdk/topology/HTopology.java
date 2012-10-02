@@ -33,20 +33,37 @@ public class HTopology extends HActor {
 		return adapters;
 	}
 	
-	public void setAdapters(ArrayList<HAdapterConf> adapters){
+	public void setAdapters(JSONArray adapters){
 		try {
 			if(adapters == null){
 				this.remove("adapters");
 			}else{
-//				JSONArray jsonArray = new JSONArray();
-//				for(HAdapterConf ad : adapters){
-//					jsonArray.put(ad);
-//				}
 				this.put("adapters",adapters);
 			}
 		} catch (JSONException e) {
 			logger.debug("Can not set the adapters attribute.", e);
 		}
 	}
+
+    public JSONObject getProperties(){
+        try {
+            return getJSONObject("properties");
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void setProperties(JSONObject properties){
+        try {
+            if(properties == null){
+                this.remove("properties");
+            }else{
+                this.put("properties",properties);
+            }
+        } catch (JSONException e) {
+            logger.error("Can not set the properties attribute.", e);
+            // TODO throw e
+        }
+    }
 	
 }
