@@ -250,7 +250,7 @@ public class HClient {
 				timeoutHashtable.put(message.getMsgid(), timeoutTimer);
 			}else{
 				//when there is no callback, timeout has no sense. delete timeout.
-				message.setTimeout(null);
+				message.setTimeout(0);
 			}
 		}
 		try {

@@ -32,7 +32,8 @@ import org.hubiquitus.hapi.hStructures.ConnectionStatus;
 import org.hubiquitus.hapi.hStructures.HStatus;
 import org.hubiquitus.hapi.transport.HTransport;
 import org.hubiquitus.hapi.transport.HTransportDelegate;
-import org.hubiquitus.hapi.transport.HTransportOptions; 
+import org.hubiquitus.hapi.transport.HTransportOptions;
+import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,8 +145,6 @@ public class HTransportSocketio implements HTransport, IOCallback {
 
 	/**
 	 * Disconnect from server 
-	 * @param callback
-	 * @param options
 	 */
 	public void disconnect() {
 		this.connectionStatus = ConnectionStatus.DISCONNECTING;
@@ -242,6 +241,7 @@ public class HTransportSocketio implements HTransport, IOCallback {
 		try {
 			data.put("publisher", publisher);
 			data.put("password", password);
+            data.put("sent", DateTime.now());
 			//send the event
 			socketio.emit("hConnect", data);
 		} catch (Exception e) {
