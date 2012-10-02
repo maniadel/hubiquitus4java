@@ -322,7 +322,14 @@ public abstract class Hubot {
         hmessage.setTimeout(timeout);
         hubotDispatcher.dispatcher(hmessage, callback);
     }
-	
+
+    private class FilterDelegate implements HMessageDelegate {
+
+        @Override
+        public void onMessage(HMessage hMessage) {
+            logger.info("Filter : ", hMessage.getPayload());
+        }
+    }
 
 	/**
 	 * Check if the hClient is connect and if connected, set the status to STARTED 
@@ -333,6 +340,13 @@ public abstract class Hubot {
 		public final void onStatus(HStatus status) {
 			if(status.getStatus() == ConnectionStatus.CONNECTED && outerclass.status == HubotStatus.CREATED) {
 				setStatus(HubotStatus.STARTED);
+                try {
+                    if ((topology.getFilter() != null) && (topology.getFilter().length()>0)) {
+                        hClient.setFilter(topology.getFilter(), new FilterDelegate());
+                    }
+                } catch (MissingAttrException e) {
+                    logger.info("Filter error : ", e);
+                }
 				init(hClient);			
 			}
             logger.info("Hubiquitus connection : "+status);
@@ -346,21 +360,21 @@ public abstract class Hubot {
 	
 	/**
 	 * Update a specified inboxAdapter's properties
-	 * @param adapterName : adapterName
+	 * @param actor : adapterName
 	 * @param properties : params - params for update properties
 	 */
-	protected void updateInboxAdapterProperties(String adapterName, JSONObject properties) {
-		Adapter updatedAdapter = adapterInstances.get(adapterName + "Inbox");
+	protected void updateInboxAdapterProperties(String actor, JSONObject properties) {
+		Adapter updatedAdapter = adapterInstances.get(actor);
 		updatedAdapter.updateProperties(properties);
 	}
 	
 	/**
 	 * Update a specified outboxAdapter's properties
-	 * @param adapterName : adapterName
+	 * @param actor : adapterName
 	 * @param properties : params - params for update properties
 	 */
-	protected void updateOutboxAdapterProperties(String adapterName, JSONObject properties) {
-		Adapter updatedAdapter = adapterInstances.get(adapterName + "Outbox");
+	protected void updateOutboxAdapterProperties(String actor, JSONObject properties) {
+		Adapter updatedAdapter = adapterInstances.get(actor);
 		updatedAdapter.updateProperties(properties);
 	}
 	
