@@ -753,7 +753,7 @@ public class HMessage extends JSONObject {
 	/**
 	 * @return timeout. 0 if undefined.
 	 */
-	public Integer getTimeout() {
+	public long getTimeout() {
 		Integer timeout;
 		try {
 			timeout = this.getInt("timeout");
@@ -763,9 +763,9 @@ public class HMessage extends JSONObject {
 		return timeout;
 	}
 
-	public void setTimeout(Integer timeout) {
+	public void setTimeout(long timeout) {
 		try {
-			if (timeout == null) {
+			if (timeout == 0) {
 				this.remove("timeout");
 			} else {
 				this.put("timeout", timeout);
