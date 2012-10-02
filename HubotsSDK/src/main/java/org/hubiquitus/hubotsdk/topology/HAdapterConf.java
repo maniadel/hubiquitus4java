@@ -72,8 +72,7 @@ public class HAdapterConf extends JSONObject {
 			logger.error("Can not set type attribute : ", e); 
 		}
 	}
-	
-	//TODO properties. to define the type
+
 	//depends on the type of adapter used
 	
 	public JSONObject getProperties(){

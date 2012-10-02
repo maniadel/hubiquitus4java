@@ -27,7 +27,7 @@ import org.hubiquitus.hapi.hStructures.ResultStatus;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-public abstract class Adapter implements HMessageDelegate{
+public abstract class Adapter {
 	final Logger logger = LoggerFactory.getLogger(Adapter.class);
 	
 	protected HClient hclient;
@@ -78,9 +78,5 @@ public abstract class Adapter implements HMessageDelegate{
 		setProperties(properties);
 		start();
 	}
-	
-	public void onMessage(HMessage message) {
-		if(message.getPayloadAsHResult().getStatus() != ResultStatus.NO_ERROR) 
-			logger.error(("Erreur lors de la commande : " + message.getPayloadAsHResult()));
-	}
+
 }
