@@ -113,7 +113,7 @@ public class HCondition extends JSONObject {
 		return condition;
 	}
 	
-	public void setCondtion(OperandNames operand, HCondition condition){
+	public void setCondition(OperandNames operand, HCondition condition){
 		if(operand != OperandNames.NOT){
 			logger.error("message: \"" + operand.toString() + "\" can not apply on HCondition.");
 			return;
@@ -129,7 +129,7 @@ public class HCondition extends JSONObject {
 		}
 	}
 	
-	public JSONArray getCondtionArray(OperandNames operand){
+	public JSONArray getConditionArray(OperandNames operand){
 		if(operand != OperandNames.AND && operand != OperandNames.OR && operand != OperandNames.NOR){
 			logger.error("message: \"" + operand.toString() + "\" can not apply on HCondition Array.");
 			return null;
