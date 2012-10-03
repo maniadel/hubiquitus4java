@@ -215,7 +215,7 @@ public class HClient {
 	 */
 	public void send(final HMessage message, final HMessageDelegate messageDelegate) {
 		if (this.connectionStatus != ConnectionStatus.CONNECTED) {
-			notifyResultError(message.getMsgid(), ResultStatus.NOT_CONNECTED, "Not conncected.");
+			notifyResultError(message.getMsgid(), ResultStatus.NOT_CONNECTED, "Not conncected.", messageDelegate);
 			return;
 		}
 		if (message == null) {
@@ -223,7 +223,7 @@ public class HClient {
 			return;
 		}
 		if (message.getActor() == null) {
-			notifyResultError(message.getMsgid(), ResultStatus.MISSING_ATTR, "Actor not found in message");
+			notifyResultError(message.getMsgid(), ResultStatus.MISSING_ATTR, "Actor not found in message", messageDelegate);
 			return;
 		}
 
@@ -243,7 +243,7 @@ public class HClient {
 
 					@Override
 					public void run() {
-						notifyResultError(message.getMsgid(), ResultStatus.EXEC_TIMEOUT, "The response of message is time out!");
+						notifyResultError(message.getMsgid(), ResultStatus.EXEC_TIMEOUT, "The response of message is time out!", null);
 						messagesDelegates.remove(message.getMsgid());
 					}
 				}, message.getTimeout());
@@ -825,46 +825,61 @@ public class HClient {
 		}
 	}
 
-	/**
-	 * Notify message delegate of an incoming hmessage. If the callback is not set, it will call onMessage.
-	 * If the callback is set in the service functions, it will call the callback function instead of onMessage
-	 * @param message the received message
-	 */
-	private void notifyMessage(final HMessage message) {
-		if (!this.messagesDelegates.isEmpty() && message.getRef() != null && this.messagesDelegates.containsKey(HUtil.getApiRef(message.getRef()))) {
-			if (this.timeoutHashtable.containsKey(HUtil.getApiRef(message.getRef()))) {
-				Timer timeout = timeoutHashtable.get(HUtil.getApiRef(message.getRef()));
-				if (timeout != null) {
-					timeout.cancel();
-				}
-			}
-			notifyMessage(message, this.messagesDelegates.get(HUtil.getApiRef(message.getRef())));
-		} else if (!("hresult").equalsIgnoreCase(message.getType())) {
-			try {
-				if (this.messageDelegate != null) {
-					// return message asynchronously
-					(new Thread(new Runnable() {
-						public void run() {
-							try {
-								messageDelegate.onMessage(message);
-							} catch (Exception e) {
-								logger.error("message: ", e);
-							}
-						}
-					})).start();
-				}
-			} catch (Exception e) {
-				logger.error("message: ", e);
-			}
-		}
-	}
+    private class MyRunnable implements Runnable {
+        public HMessageDelegate delegate2Use;
+        public HMessage message;
+        public void run() {
+            try {
+                delegate2Use.onMessage(message);
+            } catch (Exception e) {
+                logger.error("message: ", e);
+            }
+        }
+    }
+
+        /**
+         * Notify message delegate of an incoming hmessage. If the callback is not set, it will call onMessage.
+         * If the callback is set in the service functions, it will call the callback function instead of onMessage
+         * @param message the received message
+         */
+        private void notifyMessage(final HMessage message, HMessageDelegate messageDelegate) {
+            MyRunnable arun = new MyRunnable();
+
+            // 1 we search the delegate with the ref if any
+            if (!this.messagesDelegates.isEmpty() && message.getRef() != null && this.messagesDelegates.containsKey(HUtil.getApiRef(message.getRef()))) {
+                if (this.timeoutHashtable.containsKey(HUtil.getApiRef(message.getRef()))) {
+                    Timer timeout = timeoutHashtable.get(HUtil.getApiRef(message.getRef()));
+                    if (timeout != null) {
+                        timeout.cancel();
+                    }
+                }
+                arun.delegate2Use = this.messagesDelegates.get(HUtil.getApiRef(message.getRef()));
+            }
+            // 2 - if the ref can not provide a delegate, we try the parameter sent
+            if (messageDelegate != null) {
+                arun.delegate2Use = messageDelegate;
+            } else {
+                // in other cases we try the default delegate message
+                arun.delegate2Use = this.messageDelegate;
+            }
+            try {
+                if (arun.delegate2Use != null) {
+                    // return message asynchronously
+                    arun.message = message;
+                    new Thread(arun).start();
+                }
+            } catch (Exception e) {
+                logger.error("message: ", e);
+            }
+
+        }
 
 	/**
 	 * Notify message delegate of an incoming hmessage. Run the message delegate.
 	 * @param message the message received
 	 * @param messageDelegate the delegate to call
 	 */
-	private void notifyMessage(final HMessage message, final HMessageDelegate messageDelegate) {
+	/*private void notifyMessage(final HMessage message, final HMessageDelegate messageDelegate) {
 		try {
 			if (messageDelegate != null) {
 				// return result asynchronously
@@ -883,7 +898,7 @@ public class HClient {
 		} catch (Exception e) {
 			logger.error("message: ", e);
 		}
-	}
+	}*/
 
 	/**
 	 * Helper function to return a hmessage with hresult error
@@ -891,10 +906,8 @@ public class HClient {
 	 * @param resultstatus the status of the error
 	 * @param errorMsg the error messsage
 	 */
-	private void notifyResultError(String ref, ResultStatus resultstatus, String errorMsg) {
-		// TODO must call build result
-
-        JSONObject obj = new JSONObject();
+	/*private void notifyResultError(String ref, ResultStatus resultstatus, String errorMsg) {
+		JSONObject obj = new JSONObject();
 		try {
 			obj.put("errorMsg", errorMsg);
 		} catch (JSONException e) {
@@ -902,13 +915,18 @@ public class HClient {
 		}
 		HMessage resultMsg = null;
 		try {
-			resultMsg = buildResult(transportOptions.getJid().getBareJID(), ref, resultstatus, obj, null);
+            String ref2 = ref;
+            if (ref2 == null) {
+                // EBR : this may happend if the message is have some issue during its construction
+                ref2 = "ERROR";
+            }
+			resultMsg = buildResult(transportOptions.getJid().getBareJID(), ref2, resultstatus, obj, null);
 		} catch (MissingAttrException e) {
 			logger.warn("message: ",e);
 		}
 
 		this.notifyMessage(resultMsg);
-	}
+	}*/
 
 	/**
 	 * Helper function to return a hmessage with hresult error
@@ -954,7 +972,7 @@ public class HClient {
 			try {
 				if (type.equalsIgnoreCase("hmessage")) {
 					HMessage message = new HMessage(jsonData);
-					notifyMessage(message);
+					notifyMessage(message, null);
 				}
 
 			} catch (Exception e) {
