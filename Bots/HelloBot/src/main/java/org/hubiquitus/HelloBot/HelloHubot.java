@@ -106,7 +106,11 @@ public class HelloHubot extends Hubot{
 				logger.debug(e.toString());
 			}
 			message.setPayload(payload);
-			message.setActor(messageIncoming.getPublisher());
+			try {
+				message.setActor(messageIncoming.getPublisher());
+			} catch (MissingAttrException e) {
+				logger.error("message: ", e);
+			}
 			send(message, null);
 		}
 	}

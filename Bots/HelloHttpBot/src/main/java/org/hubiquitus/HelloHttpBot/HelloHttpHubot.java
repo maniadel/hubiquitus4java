@@ -19,6 +19,7 @@
 
 package org.hubiquitus.HelloHttpBot;
 
+import org.hubiquitus.hapi.exceptions.MissingAttrException;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.Hubot;
 import org.hubiquitus.hubotsdk.adapters.HHttpAdapter.HHttpData;
@@ -45,7 +46,11 @@ public class HelloHttpHubot extends Hubot{
 			} catch (JSONException e) {
 				logger.debug(e.toString());
 			}
-			incomingMessage.setActor("httpOutbox@domain");// send to http outbox.
+			try {
+				incomingMessage.setActor("httpOutbox@domain");
+			} catch (MissingAttrException e) {
+				logger.error("message: ", e);
+			}// send to http outbox.
 			send(incomingMessage, null);
 			System.out.println(httpData);
 		}

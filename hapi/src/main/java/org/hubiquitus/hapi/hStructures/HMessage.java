@@ -19,6 +19,7 @@
 
 package org.hubiquitus.hapi.hStructures;
 
+import org.hubiquitus.hapi.exceptions.MissingAttrException;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,10 +60,10 @@ public class HMessage extends JSONObject {
 		return msgid;
 	}
 
-	public void setMsgid(String msgid) {
+	public void setMsgid(String msgid) throws MissingAttrException {
 		try {
-			if (msgid == null) {
-				this.remove("msgid");
+			if (msgid == null || msgid.length()<=0) {
+				throw new MissingAttrException("msgid");
 			} else {
 				this.put("msgid", msgid);
 			}
@@ -87,10 +88,10 @@ public class HMessage extends JSONObject {
 		return actor;
 	}
 
-	public void setActor(String actor) {
+	public void setActor(String actor) throws MissingAttrException {
 		try {
-			if (actor == null) {
-				this.remove("actor");
+			if (actor == null || actor.length()<=0) {
+				throw new MissingAttrException("actor");
 			} else {
 				this.put("actor", actor);
 			}
@@ -113,10 +114,10 @@ public class HMessage extends JSONObject {
 		return convid;
 	}
 
-	public void setConvid(String convid) {
+	public void setConvid(String convid) throws MissingAttrException {
 		try {
-			if (convid == null) {
-				this.remove("convid");
+			if (convid == null || convid.length()<=0) {
+				throw new MissingAttrException("convid");
 			} else {
 				this.put("convid", convid);
 			}
@@ -194,10 +195,10 @@ public class HMessage extends JSONObject {
 		return priority;
 	}
 
-	public void setPriority(HMessagePriority priority) {
+	public void setPriority(HMessagePriority priority) throws MissingAttrException {
 		try {
 			if (priority == null) {
-				this.remove("priority");
+				throw new MissingAttrException("priority");
 			} else {
 				this.put("priority", priority.value());
 			}
@@ -325,9 +326,9 @@ public class HMessage extends JSONObject {
 		return publisher;
 	}
 
-	public void setPublisher(String publisher) {
+	public void setPublisher(String publisher){
 		try {
-			if (publisher == null) {
+			if (publisher == null || publisher.length()<=0) {
 				this.remove("publisher");
 			} else {
 				this.put("publisher", publisher);
@@ -350,10 +351,10 @@ public class HMessage extends JSONObject {
 		return published;
 	}
 
-	public void setPublished(DateTime published) {
+	public void setPublished(DateTime published) throws MissingAttrException {
 		try {
 			if (published == null) {
-				this.remove("published");
+				throw new MissingAttrException("published");
 			} else {
 				this.put("published", published);
 			}
@@ -788,10 +789,10 @@ public class HMessage extends JSONObject {
 		return sent;
 	}
 
-	public void setSent(DateTime sent) {
+	public void setSent(DateTime sent) throws MissingAttrException {
 		try {
 			if (sent == null) {
-				this.remove("sent");
+				throw new MissingAttrException("sent");
 			} else {
 				this.put("sent", sent);
 			}

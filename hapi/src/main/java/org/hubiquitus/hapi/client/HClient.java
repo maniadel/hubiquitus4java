@@ -227,15 +227,23 @@ public class HClient {
 			return;
 		}
 
-		message.setSent(new DateTime());
-		message.setPublisher(transportOptions.getJid().getBareJID());
+		try {
+			message.setSent(new DateTime());
+			message.setPublisher(transportOptions.getJid().getBareJID());
+		} catch (MissingAttrException e1) {
+			logger.error("message: ", e1);
+		}
 	
 		
 		if (message.getTimeout() > 0) {
 			// hAPI will do correlation. If no answer within the
 			// timeout, a timeout error will be sent.
 			if (messageDelegate != null) {
-				message.setMsgid(UUID.randomUUID().toString());
+				try {
+					message.setMsgid(UUID.randomUUID().toString());
+				} catch (MissingAttrException e) {
+					logger.error("message: ", e);
+				}
 				messagesDelegates.put(message.getMsgid(), messageDelegate);
 
                 Timer timeoutTimer = new Timer();
@@ -488,8 +496,10 @@ public class HClient {
 		hmessage.setType(type);
 		if (options != null) {
 			hmessage.setRef(options.getRef());
-			hmessage.setConvid(options.getConvid());
-			hmessage.setPriority(options.getPriority());
+			if(options.getConvid() != null && options.getConvid().length()>0)
+				hmessage.setConvid(options.getConvid());
+			if(options.getPriority() != null)
+				hmessage.setPriority(options.getPriority());
 			//override relevance if relevanceOffset is set.
 			if (options.getRelevanceOffset() > 0) {
 				hmessage.setRelevance((new DateTime()).plusMillis(options.getRelevanceOffset()));
@@ -500,7 +510,8 @@ public class HClient {
 			hmessage.setLocation(options.getLocation());
 			hmessage.setAuthor(options.getAuthor());
 			hmessage.setHeaders(options.getHeaders());
-			hmessage.setPublished(options.getPublished());
+			if(options.getPublished() != null)
+				hmessage.setPublished(options.getPublished());
 			hmessage.setTimeout(options.getTimeout());
 		}
 		if (transportOptions != null && transportOptions.getJid() != null) {
@@ -932,7 +943,11 @@ public class HClient {
 		}
 		HResult hresult = new HResult();
 		hresult.setResult(obj);
-		hresult.setStatus(resultstatus);
+		try {
+			hresult.setStatus(resultstatus);
+		} catch (MissingAttrException e) {
+			logger.error("message: ", e);
+		}
 		HMessage message = new HMessage();
 		message.setRef(ref);
 		message.setType("hResult");
