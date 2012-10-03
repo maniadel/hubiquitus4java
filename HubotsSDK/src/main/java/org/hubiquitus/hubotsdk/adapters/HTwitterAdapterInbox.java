@@ -142,9 +142,10 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		//Construct the location 
 		HLocation location = new HLocation();
 		if(tweet.getGeoLocation() != null ) {
-            HGeo geo = new HGeo();
-            geo.setLat(tweet.getGeoLocation().getLatitude());
-            geo.setLng(tweet.getGeoLocation().getLongitude());
+//            HGeo geo = new HGeo();
+//            geo.setLat(tweet.getGeoLocation().getLatitude());
+//            geo.setLng(tweet.getGeoLocation().getLongitude());
+			HGeo geo = new HGeo(tweet.getGeoLocation().getLatitude(), tweet.getGeoLocation().getLongitude());
 			location.setPos(geo);
 			message.setLocation(location);
 		}

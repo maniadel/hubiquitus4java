@@ -44,7 +44,7 @@ public class HelloHubot extends Hubot{
 
 		@Override
 		public void onMessage(HMessage message) {
-			logger.debug("callback1 called by message: \n" + message);
+			logger.info("callback1 called by message: \n" + message);
 		}
 		
 	}
@@ -53,7 +53,7 @@ public class HelloHubot extends Hubot{
 
 		@Override
 		public void onMessage(HMessage message) {
-			logger.debug("callback2 called by message: \n" + message);
+			logger.info("callback2 called by message: \n" + message);
 		}
 		
 	}
@@ -71,7 +71,8 @@ public class HelloHubot extends Hubot{
 	
 	@Override
 	protected void inProcessMessage(HMessage messageIncoming) {
-		if (!("hresult").equalsIgnoreCase(messageIncoming.getType())) {
+		logger.info("--->" + messageIncoming);
+		if (!("hresult").equalsIgnoreCase(messageIncoming.getType()) && !("text").equalsIgnoreCase(messageIncoming.getType())) {
 			HMessage cmdMessage1 = null;
 			try {
 				cmdMessage1 = buildCommand("hnode@localhost", "hgetsubscriptions", null, null);

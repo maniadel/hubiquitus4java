@@ -336,7 +336,7 @@ public abstract class Hubot {
 
         @Override
         public void onMessage(HMessage hMessage) {
-            logger.info("Filter : ", hMessage.getPayload());
+            logger.info("Filter : " + hMessage.getPayload());
         }
     }
 
