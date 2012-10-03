@@ -500,6 +500,7 @@ public class HClient {
 			hmessage.setLocation(options.getLocation());
 			hmessage.setAuthor(options.getAuthor());
 			hmessage.setHeaders(options.getHeaders());
+			hmessage.setPublished(options.getPublished());
 			hmessage.setTimeout(options.getTimeout());
 		}
 		if (transportOptions != null && transportOptions.getJid() != null) {
