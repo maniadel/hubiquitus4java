@@ -490,7 +490,12 @@ public class HClient {
 			hmessage.setRef(options.getRef());
 			hmessage.setConvid(options.getConvid());
 			hmessage.setPriority(options.getPriority());
-			hmessage.setRelevance(options.getRelevance());
+			//override relevance if relevanceOffset is set.
+			if (options.getRelevanceOffset() > 0) {
+				hmessage.setRelevance((new DateTime()).plusMillis(options.getRelevanceOffset()));
+			}else{
+				hmessage.setRelevance(options.getRelevance());
+			}
 			hmessage.setPersistent(options.getPersistent());
 			hmessage.setLocation(options.getLocation());
 			hmessage.setAuthor(options.getAuthor());

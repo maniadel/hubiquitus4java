@@ -331,7 +331,14 @@ public abstract class Hubot {
         hmessage.setTimeout(timeout);
         hubotDispatcher.dispatcher(hmessage, callback);
     }
-	
+
+    private class FilterDelegate implements HMessageDelegate {
+
+        @Override
+        public void onMessage(HMessage hMessage) {
+            logger.info("Filter : ", hMessage.getPayload());
+        }
+    }
 
 	/**
 	 * Check if the hClient is connect and if connected, set the status to STARTED 
@@ -342,6 +349,13 @@ public abstract class Hubot {
 		public final void onStatus(HStatus status) {
 			if(status.getStatus() == ConnectionStatus.CONNECTED && outerclass.status == HubotStatus.CREATED) {
 				setStatus(HubotStatus.STARTED);
+                try {
+                    if ((topology.getFilter() != null) && (topology.getFilter().length()>0)) {
+                        hClient.setFilter(topology.getFilter(), new FilterDelegate());
+                    }
+                } catch (MissingAttrException e) {
+                    logger.info("Filter error : ", e);
+                }
 				init(hClient);			
 			}
             logger.info("Hubiquitus connection : "+status);
@@ -355,7 +369,7 @@ public abstract class Hubot {
 	
 	
 	/**
-	 * Update a specified oAdapter's properties
+	 * Update a specified Adapter's properties
 	 * @param actor : adapter actor
 	 * @param properties : params - params for update properties
 	 */
