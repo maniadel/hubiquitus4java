@@ -55,13 +55,16 @@ public class HubotAdapterOutbox extends AdapterOutbox {
 
 	@Override
 	public void sendMessage(HMessage message, final HMessageDelegate callback) {
-		    hclient.send(message, new HMessageDelegate() {
-			
-			@Override
-			public void onMessage(HMessage message) {
-				ProducerTemplateSingleton.getProducerTemplate().sendBody("seda:inbox",new HubotStructure(message, callback));
-			}
-		});
+            if (callback != null) {
+                    hclient.send(message, new HMessageDelegate() {
+                    @Override
+                    public void onMessage(HMessage message) {
+                        ProducerTemplateSingleton.getProducerTemplate().sendBody("seda:inbox",new HubotStructure(message, callback));
+                    }
+                });
+            } else {
+                hclient.send(message, null);
+            }
 	}
 
 }
