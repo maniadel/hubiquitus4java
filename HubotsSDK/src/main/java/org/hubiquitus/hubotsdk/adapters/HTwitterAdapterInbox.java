@@ -143,9 +143,6 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		//Construct the location 
 		HLocation location = new HLocation();
 		if(tweet.getGeoLocation() != null ) {
-//            HGeo geo = new HGeo();
-//            geo.setLat(tweet.getGeoLocation().getLatitude());
-//            geo.setLng(tweet.getGeoLocation().getLongitude());
 			HGeo geo = new HGeo(tweet.getGeoLocation().getLatitude(), tweet.getGeoLocation().getLongitude());
 			location.setPos(geo);
 			message.setLocation(location);
@@ -168,11 +165,7 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		tweet.getCreatedAt().getTime();
 		DateTime createdAt = new DateTime(tweet.getCreatedAt());
 		DateTime createdAtAuthor = new DateTime(tweet.getUser().getCreatedAt());
-		try {
-			message.setPublished(new DateTime(createdAt));
-		} catch (MissingAttrException e) {
-			log.error("message: ", e);
-		}
+		message.setPublished(new DateTime(createdAt));
 
 		//Construct the Authortweet JSONObject
 

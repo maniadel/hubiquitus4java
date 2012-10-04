@@ -13,6 +13,10 @@ public class HGeo extends JSONObject {
 
 	final Logger logger = LoggerFactory.getLogger(HGeo.class);
 
+	public HGeo(JSONObject jsonObj) throws JSONException{
+		super(jsonObj, JSONObject.getNames(jsonObj));
+	}
+	
 	//ac lat and lng is mandatory
 	public HGeo(double lng, double lat) {
 		super();
@@ -25,11 +29,11 @@ public class HGeo extends JSONObject {
  * @return Longitude of the location. Null if undefined.
  */
 	public double getLng() {
-		Double lng;
+		double lng;
 		try {
 			lng = this.getDouble("lng");
 		} catch (Exception e) {
-			lng = null;
+			lng = 0;
 		}
 		return lng;
 	}
@@ -50,11 +54,11 @@ public class HGeo extends JSONObject {
 	 * @return Latitude of the location. Null if undefined.
 	 */
 	public double getLat() {
-		Double lat;
+		double lat;
 		try {
 			lat = this.getDouble("lat");
 		} catch (Exception e) {
-			lat = null;
+			lat = 0;
 		}
 		return lat;
 	}
