@@ -226,15 +226,8 @@ public class HClient {
 			notifyResultError(message.getMsgid(), ResultStatus.MISSING_ATTR, "Actor not found in message", messageDelegate);
 			return;
 		}
-
-		try {
-			message.setSent(new DateTime());
-			message.setPublisher(transportOptions.getJid().getBareJID());
-		} catch (MissingAttrException e1) {
-			logger.error("message: ", e1);
-		}
-	
-		
+		message.setSent(new DateTime());
+		message.setPublisher(transportOptions.getJid().getBareJID());
 		if (message.getTimeout() > 0) {
 			// hAPI will do correlation. If no answer within the
 			// timeout, a timeout error will be sent.
