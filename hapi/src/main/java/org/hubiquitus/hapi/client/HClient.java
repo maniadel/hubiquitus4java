@@ -239,11 +239,7 @@ public class HClient {
 			// hAPI will do correlation. If no answer within the
 			// timeout, a timeout error will be sent.
 			if (messageDelegate != null) {
-				try {
-					message.setMsgid(UUID.randomUUID().toString());
-				} catch (MissingAttrException e) {
-					logger.error("message: ", e);
-				}
+				message.setMsgid(UUID.randomUUID().toString());
 				messagesDelegates.put(message.getMsgid(), messageDelegate);
 
                 Timer timeoutTimer = new Timer();
@@ -496,10 +492,8 @@ public class HClient {
 		hmessage.setType(type);
 		if (options != null) {
 			hmessage.setRef(options.getRef());
-			if(options.getConvid() != null && options.getConvid().length()>0)
-				hmessage.setConvid(options.getConvid());
-			if(options.getPriority() != null)
-				hmessage.setPriority(options.getPriority());
+			hmessage.setConvid(options.getConvid());
+			hmessage.setPriority(options.getPriority());
 			//override relevance if relevanceOffset is set.
 			if (options.getRelevanceOffset() > 0) {
 				hmessage.setRelevance((new DateTime()).plusMillis(options.getRelevanceOffset()));
@@ -510,8 +504,7 @@ public class HClient {
 			hmessage.setLocation(options.getLocation());
 			hmessage.setAuthor(options.getAuthor());
 			hmessage.setHeaders(options.getHeaders());
-			if(options.getPublished() != null)
-				hmessage.setPublished(options.getPublished());
+			hmessage.setPublished(options.getPublished());
 			hmessage.setTimeout(options.getTimeout());
 		}
 		if (transportOptions != null && transportOptions.getJid() != null) {

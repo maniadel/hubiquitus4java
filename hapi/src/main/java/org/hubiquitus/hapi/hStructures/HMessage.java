@@ -60,10 +60,10 @@ public class HMessage extends JSONObject {
 		return msgid;
 	}
 
-	public void setMsgid(String msgid) throws MissingAttrException {
+	public void setMsgid(String msgid){
 		try {
 			if (msgid == null || msgid.length()<=0) {
-				throw new MissingAttrException("msgid");
+				this.remove("msgid");
 			} else {
 				this.put("msgid", msgid);
 			}
@@ -114,10 +114,10 @@ public class HMessage extends JSONObject {
 		return convid;
 	}
 
-	public void setConvid(String convid) throws MissingAttrException {
+	public void setConvid(String convid) {
 		try {
 			if (convid == null || convid.length()<=0) {
-				throw new MissingAttrException("convid");
+				this.remove("convid");
 			} else {
 				this.put("convid", convid);
 			}
@@ -195,10 +195,10 @@ public class HMessage extends JSONObject {
 		return priority;
 	}
 
-	public void setPriority(HMessagePriority priority) throws MissingAttrException {
+	public void setPriority(HMessagePriority priority) {
 		try {
 			if (priority == null) {
-				throw new MissingAttrException("priority");
+				this.remove("priority");
 			} else {
 				this.put("priority", priority.value());
 			}
@@ -351,10 +351,10 @@ public class HMessage extends JSONObject {
 		return published;
 	}
 
-	public void setPublished(DateTime published) throws MissingAttrException {
+	public void setPublished(DateTime published) {
 		try {
 			if (published == null) {
-				throw new MissingAttrException("published");
+				this.remove("published");
 			} else {
 				this.put("published", published);
 			}
@@ -789,10 +789,10 @@ public class HMessage extends JSONObject {
 		return sent;
 	}
 
-	public void setSent(DateTime sent) throws MissingAttrException {
+	public void setSent(DateTime sent){
 		try {
 			if (sent == null) {
-				throw new MissingAttrException("sent");
+				this.remove("sent");
 			} else {
 				this.put("sent", sent);
 			}
