@@ -488,7 +488,7 @@ public class HClient {
 			hmessage.setConvid(options.getConvid());
 			hmessage.setPriority(options.getPriority());
 			//override relevance if relevanceOffset is set.
-			if (options.getRelevanceOffset() > 0) {
+			if (options.getRelevanceOffset() != null) {
 				hmessage.setRelevance((new DateTime()).plusMillis(options.getRelevanceOffset()));
 			}else{
 				hmessage.setRelevance(options.getRelevance());
