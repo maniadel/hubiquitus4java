@@ -13,16 +13,9 @@ public class HGeo extends JSONObject {
 
 	final Logger logger = LoggerFactory.getLogger(HGeo.class);
 
-	public HGeo() {
-		super();
-	}
-
-	public HGeo(JSONObject jsonObj) throws JSONException {
-		super(jsonObj, JSONObject.getNames(jsonObj));
-	}
-
+	//ac lat and lng is mandatory
 	public HGeo(double lng, double lat) {
-		this();
+		super();
 		setLng(lng);
 		setLat(lat);
 	}

@@ -48,7 +48,7 @@ public class HLocation extends JSONObject {
 	public HGeo getPos() {
 		HGeo pos;
 		try {
-			pos = new HGeo(this.getJSONObject("pos"));
+			pos = new HGeo(this.getJSONObject("pos").getDouble("lat"),this.getJSONObject("pos").getDouble("lng"));
 		} catch (Exception e) {
 			pos = null;
 		}

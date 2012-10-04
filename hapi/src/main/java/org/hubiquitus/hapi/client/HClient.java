@@ -226,11 +226,8 @@ public class HClient {
 			notifyResultError(message.getMsgid(), ResultStatus.MISSING_ATTR, "Actor not found in message", messageDelegate);
 			return;
 		}
-
 		message.setSent(new DateTime());
 		message.setPublisher(transportOptions.getJid().getBareJID());
-	
-		
 		if (message.getTimeout() > 0) {
 			// hAPI will do correlation. If no answer within the
 			// timeout, a timeout error will be sent.
@@ -490,11 +487,17 @@ public class HClient {
 			hmessage.setRef(options.getRef());
 			hmessage.setConvid(options.getConvid());
 			hmessage.setPriority(options.getPriority());
-			hmessage.setRelevance(options.getRelevance());
+			//override relevance if relevanceOffset is set.
+			if (options.getRelevanceOffset() > 0) {
+				hmessage.setRelevance((new DateTime()).plusMillis(options.getRelevanceOffset()));
+			}else{
+				hmessage.setRelevance(options.getRelevance());
+			}
 			hmessage.setPersistent(options.getPersistent());
 			hmessage.setLocation(options.getLocation());
 			hmessage.setAuthor(options.getAuthor());
 			hmessage.setHeaders(options.getHeaders());
+			hmessage.setPublished(options.getPublished());
 			hmessage.setTimeout(options.getTimeout());
 		}
 		if (transportOptions != null && transportOptions.getJid() != null) {
@@ -944,7 +947,11 @@ public class HClient {
 		}
 		HResult hresult = new HResult();
 		hresult.setResult(obj);
-		hresult.setStatus(resultstatus);
+		try {
+			hresult.setStatus(resultstatus);
+		} catch (MissingAttrException e) {
+			logger.error("message: ", e);
+		}
 		HMessage message = new HMessage();
 		message.setRef(ref);
 		message.setType("hResult");
