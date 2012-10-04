@@ -33,7 +33,7 @@ public class HMessageOptions {
 	private String convid = null;
 	private HMessagePriority priority = null;
 	private DateTime relevance = null;
-	private int relevanceOffset = 0;
+	private Integer relevanceOffset = null;
 	private Boolean persistent = null;
 	private HLocation location = null;
 	private String author = null;
@@ -85,7 +85,7 @@ public class HMessageOptions {
 	}
 	
 	
-	public int getRelevanceOffset() {
+	public Integer getRelevanceOffset() {
 		return relevanceOffset;
 	}
 	/**
@@ -93,7 +93,7 @@ public class HMessageOptions {
 	 * If you use this parameter, it will override the relevance one by updating the date-time for the relevance of the hMessage.
 	 * @param relevanceOffset
 	 */
-	public void setRelevanceOffset(int relevanceOffset) {
+	public void setRelevanceOffset(Integer relevanceOffset) {
 		this.relevanceOffset = relevanceOffset;
 	}
 	

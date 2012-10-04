@@ -488,7 +488,7 @@ public class HClient {
 			hmessage.setConvid(options.getConvid());
 			hmessage.setPriority(options.getPriority());
 			//override relevance if relevanceOffset is set.
-			if (options.getRelevanceOffset() > 0) {
+			if (options.getRelevanceOffset() != null) {
 				hmessage.setRelevance((new DateTime()).plusMillis(options.getRelevanceOffset()));
 			}else{
 				hmessage.setRelevance(options.getRelevance());
@@ -876,60 +876,6 @@ public class HClient {
             }
 
         }
-
-	/**
-	 * Notify message delegate of an incoming hmessage. Run the message delegate.
-	 * @param message the message received
-	 * @param messageDelegate the delegate to call
-	 */
-	/*private void notifyMessage(final HMessage message, final HMessageDelegate messageDelegate) {
-		try {
-			if (messageDelegate != null) {
-				// return result asynchronously
-				(new Thread(new Runnable() {
-					public void run() {
-						try {
-							messageDelegate.onMessage(message);
-						} catch (Exception e) {
-							logger.error("message: ", e);
-						}
-					}
-				})).start();
-			} else {
-				// results are dropped
-			}
-		} catch (Exception e) {
-			logger.error("message: ", e);
-		}
-	}*/
-
-	/**
-	 * Helper function to return a hmessage with hresult error
-	 * @param ref used to update the hMessage sent as a result to the client
-	 * @param resultstatus the status of the error
-	 * @param errorMsg the error messsage
-	 */
-	/*private void notifyResultError(String ref, ResultStatus resultstatus, String errorMsg) {
-		JSONObject obj = new JSONObject();
-		try {
-			obj.put("errorMsg", errorMsg);
-		} catch (JSONException e) {
-			logger.error("message: ", e);
-		}
-		HMessage resultMsg = null;
-		try {
-            String ref2 = ref;
-            if (ref2 == null) {
-                // EBR : this may happend if the message is have some issue during its construction
-                ref2 = "ERROR";
-            }
-			resultMsg = buildResult(transportOptions.getJid().getBareJID(), ref2, resultstatus, obj, null);
-		} catch (MissingAttrException e) {
-			logger.warn("message: ",e);
-		}
-
-		this.notifyMessage(resultMsg);
-	}*/
 
 	/**
 	 * Helper function to return a hmessage with hresult error
