@@ -551,7 +551,7 @@ public class HStructureTest {
 			Assert.assertEquals(jsonObj.get("status"), status.value());
 			Assert.assertEquals(jsonObj.get("errorCode"), errorCode.value());
 			Assert.assertEquals(jsonObj.get("errorMsg"), errorMsg);
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			fail("fail");
 		}
