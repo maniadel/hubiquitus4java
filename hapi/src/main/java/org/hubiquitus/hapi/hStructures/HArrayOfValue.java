@@ -25,7 +25,7 @@ public class HArrayOfValue extends JSONObject {
 	}
 	
 	public HArrayOfValue(JSONObject jsonObj) throws JSONException{
-		super(jsonObj, JSONObject.getNames(jsonObj));
+		super(jsonObj.toString());
 	}
 	/**
 	 * @return The name of the attribute to compare with.

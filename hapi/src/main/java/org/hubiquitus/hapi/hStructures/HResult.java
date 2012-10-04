@@ -39,7 +39,7 @@ public class HResult extends JSONObject {
 	}
 
 	public HResult(JSONObject jsonObj) throws JSONException {
-		super(jsonObj, JSONObject.getNames(jsonObj));
+		super(jsonObj.toString());
 	}
 
 

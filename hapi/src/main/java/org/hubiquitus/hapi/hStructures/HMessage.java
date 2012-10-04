@@ -41,7 +41,7 @@ public class HMessage extends JSONObject {
 	}
 
 	public HMessage(JSONObject jsonObj) throws JSONException {
-		super(jsonObj, JSONObject.getNames(jsonObj));
+		super(jsonObj.toString());
 	}
 
 	/* Getters & Setters */

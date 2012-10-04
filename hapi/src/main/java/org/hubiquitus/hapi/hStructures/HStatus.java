@@ -39,7 +39,7 @@ public class HStatus extends JSONObject {
 	};
 
 	public HStatus(JSONObject jsonObj) throws JSONException {
-		super(jsonObj, JSONObject.getNames(jsonObj));
+		super(jsonObj.toString());
 	}
 
 	public HStatus(ConnectionStatus status, ConnectionError errorCode,

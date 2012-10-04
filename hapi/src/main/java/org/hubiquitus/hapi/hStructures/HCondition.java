@@ -15,7 +15,7 @@ public class HCondition extends JSONObject {
 	}
 	
 	public HCondition(JSONObject jsonObj) throws JSONException{
-		super(jsonObj, JSONObject.getNames(jsonObj));
+		super(jsonObj.toString());
 	}
 	
 	public HCondition(String jsonString) throws JSONException{

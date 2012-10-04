@@ -13,7 +13,7 @@ public class HPos extends JSONObject {
 	};
 
 	public HPos(JSONObject jsonObj) throws JSONException {
-		super(jsonObj, JSONObject.getNames(jsonObj));
+		super(jsonObj.toString());
 	}
 	
 	/* Getters & Setters */

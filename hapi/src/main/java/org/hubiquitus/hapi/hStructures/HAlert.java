@@ -39,7 +39,7 @@ public class HAlert extends JSONObject {
 	};
 
 	public HAlert(JSONObject jsonObj) throws JSONException {
-		super(jsonObj, JSONObject.getNames(jsonObj));
+		super(jsonObj.toString());
 	}
 
 

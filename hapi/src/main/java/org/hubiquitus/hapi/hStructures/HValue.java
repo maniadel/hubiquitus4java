@@ -28,7 +28,7 @@ public class HValue extends JSONObject {
 	}
 	
 	public HValue(JSONObject jsonObj) throws JSONException{
-		super(jsonObj, JSONObject.getNames(jsonObj));
+		super(jsonObj.toString());
 	}
 	
 	public HValue(String jsonString) throws JSONException{
