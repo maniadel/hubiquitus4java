@@ -572,7 +572,7 @@ public class HStructureTest {
 			HResult hresult = new HResult(jsonObj);
 
 			Assert.assertEquals(hresult.getStatus(), status);
-			Assert.assertEquals(hresult.getResultAsJSONObject(), result);
+			Assert.assertEquals(hresult.getResultAsJSONObject().toString(), result.toString());
 		} catch (JSONException e) {
 			e.printStackTrace();
 			fail("fail");
