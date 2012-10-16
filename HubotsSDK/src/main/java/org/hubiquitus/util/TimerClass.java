@@ -15,7 +15,7 @@ public class TimerClass implements Job {
 		try {
 			//create a copy of timer adapter 
 			HTimerAdapterInbox temp = new HTimerAdapterInbox();
-			//set the data the function sendMessage needs.
+			//set the data the function sendMessage needs.	
 			temp.setActor(context.getJobDetail().getJobDataMap().getString("actor"));
 			temp.sendMessage();
 		} catch (Exception e) {
