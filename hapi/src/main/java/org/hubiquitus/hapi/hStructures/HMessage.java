@@ -41,7 +41,7 @@ public class HMessage extends JSONObject {
 	}
 
 	public HMessage(JSONObject jsonObj) throws JSONException {
-		super(jsonObj, JSONObject.getNames(jsonObj));
+		super(jsonObj.toString());
 	}
 
 	/* Getters & Setters */
@@ -214,7 +214,7 @@ public class HMessage extends JSONObject {
 	public DateTime getRelevance() {
 		DateTime relevance;
 		try {
-			relevance = (DateTime)this.get("relevance");
+			relevance = new DateTime(this.get("relevance"));
 		} catch (Exception e) {
 			relevance = null;
 		}
@@ -344,7 +344,7 @@ public class HMessage extends JSONObject {
 	public DateTime getPublished() {
 		DateTime published;
 		try {
-			published = (DateTime) this.get("published");
+			published = new DateTime(this.get("published"));
 		} catch (JSONException e) {
 			published = null;
 		}
@@ -782,7 +782,7 @@ public class HMessage extends JSONObject {
 	public DateTime getSent() {
 		DateTime sent;
 		try {
-			sent = (DateTime) this.get("sent");
+			sent = new DateTime(this.get("sent"));
 		} catch (Exception e) {
 			sent = null;
 		}

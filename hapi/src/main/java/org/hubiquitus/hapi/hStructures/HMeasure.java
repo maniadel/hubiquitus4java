@@ -39,7 +39,7 @@ public class HMeasure extends JSONObject {
 	};
 
 	public HMeasure(JSONObject jsonObj) throws JSONException {
-		super(jsonObj, JSONObject.getNames(jsonObj));
+		super(jsonObj.toString());
 	}
 
 

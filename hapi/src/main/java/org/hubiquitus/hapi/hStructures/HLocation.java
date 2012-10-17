@@ -38,7 +38,7 @@ public class HLocation extends JSONObject {
 	};
 
 	public HLocation(JSONObject jsonObj) throws JSONException {
-		super(jsonObj, JSONObject.getNames(jsonObj));
+		super(jsonObj.toString());
 	}
 
 	/* Getters & Setters */

@@ -40,7 +40,7 @@ public class HConvState extends JSONObject {
 	};
 
 	public HConvState(JSONObject jsonObj) throws JSONException {
-		super(jsonObj, JSONObject.getNames(jsonObj));
+		super(jsonObj.toString());
 	}
 
 	/* Getters & Setters */

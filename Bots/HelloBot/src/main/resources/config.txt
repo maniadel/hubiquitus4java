@@ -2,5 +2,11 @@
 "type" : "com.mycompany.WordCount",
 "actor" : "u1@localhost",
 "pwd" : "u1",
-"hserver" : "http://localhost:8080"
+"hserver" : "http://localhost:8080",
+"adapters" : [{
+				"actor" : "timerAdapter",
+				"type" : "org.hubiquitus.hubotsdk.adapters.HTimerAdapterInbox",
+				"properties" : {"mode" : "crontab", "crontab" : "0 37 14 ? * *"  }
+			}]
+
 }

@@ -304,8 +304,8 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 			if (!relevantField.getText().isEmpty()) {
 				String temp = relevantField.getText();
 				int millisecond = Integer.parseInt(temp);
-			    DateTime nowDate = new DateTime();
-				msgOptions.setRelevance(nowDate.plusMillis(millisecond));
+//			    DateTime nowDate = new DateTime();
+				msgOptions.setRelevanceOffset(millisecond);
 			}
 			if (!timeoutField.getText().isEmpty()) {
 				String temp = timeoutField.getText();
@@ -540,6 +540,7 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 
 	@Override
 	public void onMessage(HMessage message) {
+		System.out.println("---------> sent : " + message.getPublished());
 		String txtComplete = this.logArea.getText() + "\n" +  "CallBack !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! \n";
 		txtComplete +=message.toString();
 		if (message.getPayload() != null)

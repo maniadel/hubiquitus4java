@@ -38,7 +38,7 @@ public class HOptions extends JSONObject {
 	}
 
 	public HOptions(JSONObject jsonObj) throws JSONException {
-		super(jsonObj, JSONObject.getNames(jsonObj));
+		super(jsonObj.toString());
 	}
 
 	public HOptions(HOptions options) {

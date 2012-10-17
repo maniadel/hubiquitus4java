@@ -30,11 +30,10 @@ import org.hubiquitus.hapi.exceptions.MissingAttrException;
 import org.hubiquitus.hapi.hStructures.HAlert;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterInbox;
+import org.hubiquitus.util.TimerClass;
 import org.json.JSONObject;
-import org.quartz.Job;
+import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
@@ -45,7 +44,7 @@ import org.slf4j.LoggerFactory;
 
 public class HTimerAdapterInbox extends AdapterInbox{
 
-	final static Logger logger = LoggerFactory.getLogger(HTimerAdapterInbox.class);
+	final Logger logger = LoggerFactory.getLogger(HTimerAdapterInbox.class);
 	
 	private String mode;
 	private String crontab;
@@ -79,13 +78,15 @@ public class HTimerAdapterInbox extends AdapterInbox{
 		//Timer using crontab
 		if(mode.equalsIgnoreCase("crontab")) {
 			try {
+				JobDataMap jdm = new JobDataMap(); // pass the sendMessage data to the job class.
+				jdm.put("actor", actor);
 				SchedulerFactory sf = new StdSchedulerFactory();
 				scheduler = sf.getScheduler();
 				// define the job and tie it to the TimerClass
 				JobDetail job = newJob(TimerClass.class)
-				    .withIdentity("timerJob", "group1")
+				    .withIdentity("timerjob", "group1")
+				    .usingJobData(jdm)
 				    .build();
-	
 				// Trigger the job to run now and use the crontab
 				Trigger trigger = newTrigger()
 				    .withIdentity("trigger1", "group1")
@@ -94,13 +95,14 @@ public class HTimerAdapterInbox extends AdapterInbox{
 				    .build();
 				// Tell quartz to schedule the job using our trigger
 				scheduler.scheduleJob(job, trigger);
+				scheduler.start();
 			} catch (Exception e) {
 				logger.error(e.toString());
 			}
 		}
 	}
 	
-	private void sendMessage() {
+	public void sendMessage() {
 		HMessage timerMessage = new HMessage();
 		timerMessage.setAuthor(actor);
 		timerMessage.setType("hAlert");
@@ -147,13 +149,4 @@ public class HTimerAdapterInbox extends AdapterInbox{
 			}
 		}
 	}
-	
-	private static class TimerClass implements Job {
-		@Override
-		public void execute(JobExecutionContext context)
-				throws JobExecutionException {
-			logger.info("here");
-		}
-	}
-	
 }

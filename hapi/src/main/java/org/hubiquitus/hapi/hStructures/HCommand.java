@@ -48,7 +48,7 @@ public class HCommand extends JSONObject {
 	}
 
 	public HCommand(JSONObject jsonObj) throws JSONException {
-		super(jsonObj, JSONObject.getNames(jsonObj));
+		super(jsonObj.toString());
 	}
 
 	/* Getters & Setters */
