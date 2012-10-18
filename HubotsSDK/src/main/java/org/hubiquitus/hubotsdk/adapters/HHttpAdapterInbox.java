@@ -115,8 +115,10 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 		//create message to send
 		HMessage message = new HMessage();
 		message.setAuthor(this.actor);
-		if (headers != null) {
-			JSONObject jsonHeaders = new JSONObject(); 
+
+        // headers management
+        JSONObject jsonHeaders = new JSONObject();
+        if (headers != null) {
 			for (String key : headers.keySet()) {
 				Object header = headers.get(key);
 				String value = null;
@@ -126,6 +128,7 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 				jsonHeaders.put(key, value);
 			}
 		}
+        message.setHeaders(jsonHeaders);
 		
 		message.setPublished(new DateTime());
 		
