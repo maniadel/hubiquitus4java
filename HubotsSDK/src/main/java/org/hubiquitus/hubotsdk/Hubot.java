@@ -417,7 +417,7 @@ public abstract class Hubot {
      * @return a hMessage which can be used with the send method
 	 * @throws MissingAttrException 
 	 */
-	public HMessage buildMessage(String actor, String type, Object payload, HMessageOptions options) throws MissingAttrException{
+	protected HMessage buildMessage(String actor, String type, Object payload, HMessageOptions options) throws MissingAttrException{
 		return hClient.buildMessage(actor, type, payload, options);
 	}
 	
@@ -430,7 +430,7 @@ public abstract class Hubot {
 	 * @return A hMessage with a hConvState payload.
 	 * @throws MissingAttrException 
 	 */
-	public HMessage buildConvState(String actor, String convid, String status, HMessageOptions options) throws MissingAttrException{
+    protected HMessage buildConvState(String actor, String convid, String status, HMessageOptions options) throws MissingAttrException{
 		return hClient.buildConvState(actor, convid, status, options);
 	}
 	
@@ -446,7 +446,7 @@ public abstract class Hubot {
 	 * @return A hMessage with a hAck payload.
 	 * @throws MissingAttrException 
 	 */
-	public HMessage buildAck(String actor, String ref, HAckValue ack, HMessageOptions options) throws MissingAttrException{
+    protected HMessage buildAck(String actor, String ref, HAckValue ack, HMessageOptions options) throws MissingAttrException{
 		return hClient.buildAck(actor, ref, ack, options);
 	}
 	
@@ -458,7 +458,7 @@ public abstract class Hubot {
 	 * @return A hMessage with a hAlert payload.
 	 * @throws MissingAttrException 
 	 */
-	public HMessage buildAlert(String actor, String alert, HMessageOptions options) throws MissingAttrException{
+    protected HMessage buildAlert(String actor, String alert, HMessageOptions options) throws MissingAttrException{
 		return hClient.buildAlert(actor, alert, options);
 	}
 
@@ -471,7 +471,7 @@ public abstract class Hubot {
 	 * @return A hMessage with a hMeasure payload. 
 	 * @throws MissingAttrException 
 	 */
-	public HMessage buildMeasure(String actor, String value, String unit, HMessageOptions options) throws MissingAttrException{
+    protected HMessage buildMeasure(String actor, String value, String unit, HMessageOptions options) throws MissingAttrException{
 		return hClient.buildMeasure(actor, value, unit, options);
 	}
 	
@@ -484,7 +484,7 @@ public abstract class Hubot {
 	 * @return A hMessage with a hCommand payload.
 	 * @throws MissingAttrException 
 	 */
-	public HMessage buildCommand(String actor, String cmd, JSONObject params, HMessageOptions options) throws MissingAttrException{
+    protected HMessage buildCommand(String actor, String cmd, JSONObject params, HMessageOptions options) throws MissingAttrException{
 		return hClient.buildCommand(actor, cmd, params, options);
 	}
 	
@@ -498,7 +498,7 @@ public abstract class Hubot {
 	 * @return A hMessage with a hResult payload.
 	 * @throws MissingAttrException 
 	 */
-	public HMessage buildResult(String actor, String ref, ResultStatus status, String result, HMessageOptions options) throws MissingAttrException{
+    protected HMessage buildResult(String actor, String ref, ResultStatus status, String result, HMessageOptions options) throws MissingAttrException{
 		return hClient.buildResult(actor, ref, status, result, options);
 	}
     /**
@@ -511,7 +511,7 @@ public abstract class Hubot {
      * @return A hMessage with a hResult payload.
      * @throws MissingAttrException 
      */
-    public HMessage buildResult(String actor, String ref, ResultStatus status, boolean result, HMessageOptions options) throws MissingAttrException{
+    protected HMessage buildResult(String actor, String ref, ResultStatus status, boolean result, HMessageOptions options) throws MissingAttrException{
         return hClient.buildResult(actor, ref, status, result, options);
     }
     /**
@@ -524,7 +524,7 @@ public abstract class Hubot {
      * @return A hMessage with a hResult payload.
      * @throws MissingAttrException 
      */
-    public HMessage buildResult(String actor, String ref, ResultStatus status, double result, HMessageOptions options) throws MissingAttrException{
+    protected HMessage buildResult(String actor, String ref, ResultStatus status, double result, HMessageOptions options) throws MissingAttrException{
         return hClient.buildResult(actor, ref, status, result, options);
     }
     /**
@@ -537,7 +537,7 @@ public abstract class Hubot {
      * @return A hMessage with a hResult payload.
      * @throws MissingAttrException 
      */
-    public HMessage buildResult(String actor, String ref, ResultStatus status, JSONArray result, HMessageOptions options) throws MissingAttrException{
+    protected HMessage buildResult(String actor, String ref, ResultStatus status, JSONArray result, HMessageOptions options) throws MissingAttrException{
         return hClient.buildResult(actor, ref, status, result, options);
     }
     /**
@@ -550,7 +550,7 @@ public abstract class Hubot {
      * @return A hMessage with a hResult payload.
      * @throws MissingAttrException 
      */
-    public HMessage buildResult(String actor, String ref, ResultStatus status, JSONObject result, HMessageOptions options) throws MissingAttrException{
+    protected HMessage buildResult(String actor, String ref, ResultStatus status, JSONObject result, HMessageOptions options) throws MissingAttrException{
         return hClient.buildResult(actor, ref, status, result, options);
     }
 }

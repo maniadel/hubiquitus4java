@@ -208,7 +208,7 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 			htweet.setText(tweet.getText());
 			htweet.setAuthor(hauthortweet);
 		} catch (MissingAttrException e) {
-			log.error("mssage: ", e);
+			log.error("message: ", e);
 		}
 		message.setPayload(htweet);
 		message.setType("hTweet");
