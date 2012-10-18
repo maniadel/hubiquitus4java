@@ -1,21 +1,21 @@
 {
-	"name" : "com.mycompany.WordCount",
-	"jid" : "u1@localhost",
-	"pwdhash" : "u1",
-	"endpoint" : "http://localhost:8080",
+	"type" : "com.mycompany.WordCount",
+	"actor" : "u1@localhost",
+	"pwd" : "u1",
+	"hserver" : "http://localhost:8080",
 	"adapters" : [ 
 		{
-			"name" : "twitterAdapter",
-			"type" : "HTwitterAdapter",
+			"actor" : "twitterAdapterInbox",
+			"type" : "org.hubiquitus.hubotsdk.adapters.HTwitterAdapterInbox",
 			"properties" : {
-				"consumerKey" : "qbPxxstSFicC70rvuIKIw",
-				"consumerSecret" : "BgEzMqPcjZM3Gywh38YQGc8A5Cl8YV76UoXhcQaVo",
-				"twitterAccessToken" : "707158087-CmcA03GnOHHHyFBGmF2xPqWEJujrhDqQ42lsy8k6",
-				"twitterAccessTokenSecret" : "DtP0vZri1taqKkjl26PD7fzDX3rZWYtXgiKR9UXXU",
-				"tags" : "#obama,#romney",
-				"lang" : "fr"
+				"content" : "complete",
+				"consumerKey" : "0WRnH2XnFz0iEqSo5juFQ",
+				"consumerSecret" : "l3XHU06vFZ0FVJkT5i0oOKYi8A5wUP7lR6O2dhn3W4",
+				"twitterAccessToken" : "888799417-e5TIV2wFL8FeK2TBM2Wo4wciUXSpUtf2hg0XBjOW",
+				"twitterAccessTokenSecret" : "dUsTOQfthA4ZTY6ED2sUduC4YUDAElNgCmHYfoXMDA",
+				"tags" : "#red",
+				"langFilter" : "fr"
 			}
 		}
-	],
-	"inbox" : ["twitterAdapter" ]
+	]
 }

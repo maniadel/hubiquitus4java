@@ -449,6 +449,36 @@ public class HTweetAuthor extends JSONObject {
 			log.error("Can't update the Listed  attribut",e);
 		}
 	}
+	
+	/**
+	 * Get the twitter name of the author.
+	 * @return
+	 */
+	public String getScrName(){
+		String scrName;
+		try {
+			scrName = this.getString("scrName");
+		} catch (Exception e) {
+			scrName = null;
+		}
+		return scrName;
+	}
+	
+	/**
+	 * Set the twitter name of the author
+	 * @param scrName
+	 */
+	public void setScrName(String scrName){
+		try {
+			if(scrName == null || scrName.length()<=0){
+				this.remove("scrName");
+			}else{
+				this.put("scrName", scrName);
+			}
+		} catch (Exception e) {
+			log.error("Can not update the scrName attribute", e);
+		}
+	}
 
 }
 

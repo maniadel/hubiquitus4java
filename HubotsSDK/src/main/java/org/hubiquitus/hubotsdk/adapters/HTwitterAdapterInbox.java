@@ -52,7 +52,7 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 	private String twitterAccessTokenSecret;
 	private String langFilter;
 	private String tags;
-	private String content;
+	private String content = "complete";
 
 	protected TwitterStream twitterStream;
 
@@ -115,11 +115,11 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		 * Configuration for access to twitter account
 		 */
 		ConfigurationBuilder cb = new ConfigurationBuilder();
-		cb.setDebugEnabled(true).setUseSSL(true); 
-		cb.setOAuthConsumerKey(consumerKey);
-		cb.setOAuthConsumerSecret(consumerSecret);
-		cb.setOAuthAccessToken(twitterAccessToken);
-		cb.setOAuthAccessTokenSecret(twitterAccessTokenSecret);
+		cb.setDebugEnabled(true)//.setUseSSL(true)
+		  .setOAuthConsumerKey(consumerKey)
+		  .setOAuthConsumerSecret(consumerSecret)
+		  .setOAuthAccessToken(twitterAccessToken)
+		  .setOAuthAccessTokenSecret(twitterAccessTokenSecret);
 
 		//Instantiation of tweet stream
 		twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
@@ -146,7 +146,6 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 
 		FilterQuery fq = new FilterQuery();
 		fq.track(tags.split(","));
-
 		twitterStream.addListener(listener);
 		twitterStream.filter(fq);  
 	}
@@ -160,57 +159,65 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		HMessage message = new HMessage();
 
 		HTweet htweet = new HTweet();
-		HTweetAuthor hauthortweet = new HTweetAuthor();
-
-		//Construct the location 
-		HLocation location = new HLocation();
-		if(tweet.getGeoLocation() != null ) {
-			HGeo geo = new HGeo(tweet.getGeoLocation().getLatitude(), tweet.getGeoLocation().getLongitude());
-			location.setPos(geo);
-			message.setLocation(location);
-		}
-
-		//Construct the Place
-		if(tweet.getPlace()!= null){
-			if(tweet.getPlace().getStreetAddress()!= null){
-				location.setAddr(tweet.getPlace().getStreetAddress());
+		if(("complete").equalsIgnoreCase(content)){
+			HTweetAuthor hauthortweet = new HTweetAuthor();
+	
+			//Construct the location 
+			HLocation location = new HLocation();
+			if(tweet.getGeoLocation() != null ) {
+				HGeo geo = new HGeo(tweet.getGeoLocation().getLatitude(), tweet.getGeoLocation().getLongitude());
+				location.setPos(geo);
+				message.setLocation(location);
 			}
-			if(tweet.getPlace().getCountryCode()!= null){
-				location.setCountryCode(tweet.getPlace().getCountryCode());
+	
+			//Construct the Place
+			if(tweet.getPlace()!= null){
+				if(tweet.getPlace().getStreetAddress()!= null){
+					location.setAddr(tweet.getPlace().getStreetAddress());
+				}
+				if(tweet.getPlace().getCountryCode()!= null){
+					location.setCountryCode(tweet.getPlace().getCountryCode());
+				}
+				if((tweet.getPlace().getPlaceType()!= null) && ("city".equalsIgnoreCase(tweet.getPlace().getPlaceType()))){
+					location.setCity(tweet.getPlace().getName());
+				}
 			}
-			if((tweet.getPlace().getPlaceType()!= null) && ("city".equalsIgnoreCase(tweet.getPlace().getPlaceType()))){
-				location.setCity(tweet.getPlace().getName());
+	
+			// Init The date
+			tweet.getCreatedAt().getTime();
+			DateTime createdAt = new DateTime(tweet.getCreatedAt());
+			DateTime createdAtAuthor = new DateTime(tweet.getUser().getCreatedAt());
+			message.setPublished(new DateTime(createdAt));
+	
+			//Construct the Authortweet JSONObject
+	
+			hauthortweet.setStatus(tweet.getUser().getStatusesCount());
+			hauthortweet.setFollowers(tweet.getUser().getFollowersCount());
+			hauthortweet.setFriends(tweet.getUser().getFriendsCount());
+			hauthortweet.setLocation(tweet.getUser().getLocation());
+			hauthortweet.setDescription(tweet.getUser().getDescription());		
+			hauthortweet.setProfileImg(tweet.getUser().getProfileImageURL().toString());
+			hauthortweet.setUrl(tweet.getUser().getURL());
+			hauthortweet.setCreatedAt(createdAtAuthor);
+			hauthortweet.setLang(tweet.getUser().getLang());
+			hauthortweet.setListeds(tweet.getUser().getListedCount());
+			hauthortweet.setGeo(tweet.getUser().isGeoEnabled());
+			hauthortweet.setVerified(tweet.getUser().isVerified());
+			hauthortweet.setName(tweet.getUser().getName());
+			hauthortweet.setScrName(tweet.getUser().getScreenName());
+			
+			//Construct the tweet JSONObject		
+			htweet.setId(tweet.getId());
+			try {
+				htweet.setSource(tweet.getSource());
+				htweet.setAuthor(hauthortweet);
+			} catch (MissingAttrException e) {
+				log.error("message: ", e);
 			}
-		}
-
-		// Init The date
-		tweet.getCreatedAt().getTime();
-		DateTime createdAt = new DateTime(tweet.getCreatedAt());
-		DateTime createdAtAuthor = new DateTime(tweet.getUser().getCreatedAt());
-		message.setPublished(new DateTime(createdAt));
-
-		//Construct the Authortweet JSONObject
-
-		hauthortweet.setStatus(tweet.getUser().getStatusesCount());
-		hauthortweet.setFollowers(tweet.getUser().getFollowersCount());
-		hauthortweet.setFriends(tweet.getUser().getFriendsCount());
-		hauthortweet.setLocation(tweet.getUser().getLocation());
-		hauthortweet.setDescription(tweet.getUser().getDescription());		
-		hauthortweet.setProfileImg(tweet.getUser().getProfileImageURL().toString());
-		hauthortweet.setUrl(tweet.getUser().getURL());
-		hauthortweet.setCreatedAt(createdAtAuthor);
-		hauthortweet.setLang(tweet.getUser().getLang());
-		hauthortweet.setListeds(tweet.getUser().getListedCount());
-		hauthortweet.setGeo(tweet.getUser().isGeoEnabled());
-		hauthortweet.setVerified(tweet.getUser().isVerified());
-		hauthortweet.setName(tweet.getUser().getName());
 		
-		//Construct the tweet JSONObject		
-		htweet.setId(tweet.getId());
+		}
 		try {
-			htweet.setSource(tweet.getSource());
 			htweet.setText(tweet.getText());
-			htweet.setAuthor(hauthortweet);
 		} catch (MissingAttrException e) {
 			log.error("message: ", e);
 		}
