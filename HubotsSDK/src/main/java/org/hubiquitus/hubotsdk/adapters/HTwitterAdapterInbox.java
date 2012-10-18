@@ -52,6 +52,7 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 	private String twitterAccessTokenSecret;
 	private String langFilter;
 	private String tags;
+	private String content;
 
 	protected TwitterStream twitterStream;
 
@@ -76,6 +77,9 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 			}
 			if (properties.has("tags")) {
 				this.tags = properties.getString("tags");
+			}
+			if	(properties.has("content")){
+				this.content = properties.getString("content");
 			}
 			}catch(Exception e){
 				log.debug("message: ",e);
@@ -136,7 +140,7 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 			public void onScrubGeo(long userId, long upToStatusId) {}
 
 			public void onException(Exception ex) {
-				ex.printStackTrace();
+				log.info("message: ", ex);
 			}
 		};
 
@@ -278,6 +282,10 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 	public void setLangFilter(String langFilter) {
 		this.langFilter = langFilter;
 	}
+	
+	public void setContent(String content){
+		this.content = content;
+	}
 
 	@Override
 	public String toString() {
@@ -285,7 +293,8 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 				+ ", consumerSecret=" + consumerSecret
 				+ ", twitterAccessToken=" + twitterAccessToken
 				+ ", twitterAccessTokenSecret=" + twitterAccessTokenSecret
-				+ ", langFilter=" + langFilter + ", tags=" + tags + "]";
+				+ ", langFilter=" + langFilter + ", tags=" + tags 
+				+ ", content=" + content + "]";
 	}
 
 
