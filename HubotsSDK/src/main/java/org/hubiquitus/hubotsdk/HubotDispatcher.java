@@ -41,7 +41,21 @@ public class HubotDispatcher {
 		if (msg != null) {
 			HubotMessageStructure hubotStruct = new HubotMessageStructure(msg, callback);
 			String msgActor = msg.getActor();
+					
 			if (!adapterOutboxActors.contains(msgActor)) {
+				// if the actor's domain is twitter.com 
+				// we have to use a twitter outbox adapter
+				// search the first outbox adapter where the domain is "twitter.com"
+				// and send the hMessage to this adapter
+				if (msgActor.endsWith("@twitter.com")) {
+					msgActor = getFirstTwitterOutboxAdapter();
+					if (msgActor != null) {
+						put(msgActor, hubotStruct);
+						return;
+					} 
+				}
+				// in other cases we try to send the hMessage through the hubiquitus
+				// legacy adapter
 				put(HUBOT_ADAPTER_OUTBOX, hubotStruct);
 			} else {
 				put(msgActor, hubotStruct);
@@ -49,6 +63,16 @@ public class HubotDispatcher {
 		}
 	}
 	
+	private String getFirstTwitterOutboxAdapter() {
+		// TODO Auto-generated method stub
+		for(String actor : adapterOutboxActors){
+			if(actor.endsWith("@twitter.com")){
+				return actor;
+			}
+		}
+		return null;
+	}
+
 	private void put(String adapterActor, HubotMessageStructure hubotStruct) {
 		String route = "seda:" + adapterActor;
 		try {
@@ -56,6 +80,5 @@ public class HubotDispatcher {
 		} catch (Exception e) {
 			logger.debug("message: ", e);
 		}
-				
 	}
 }

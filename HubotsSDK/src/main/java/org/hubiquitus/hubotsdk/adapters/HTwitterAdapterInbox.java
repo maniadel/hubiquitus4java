@@ -115,7 +115,7 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		 * Configuration for access to twitter account
 		 */
 		ConfigurationBuilder cb = new ConfigurationBuilder();
-		cb.setDebugEnabled(true)//.setUseSSL(true)
+		cb.setDebugEnabled(true).setUseSSL(true)
 		  .setOAuthConsumerKey(consumerKey)
 		  .setOAuthConsumerSecret(consumerSecret)
 		  .setOAuthAccessToken(twitterAccessToken)

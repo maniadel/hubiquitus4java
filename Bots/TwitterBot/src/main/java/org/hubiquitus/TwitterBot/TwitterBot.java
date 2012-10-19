@@ -21,8 +21,12 @@ package org.hubiquitus.TwitterBot;
 
 
 import org.apache.log4j.Logger;
+import org.hubiquitus.hapi.exceptions.MissingAttrException;
+import org.hubiquitus.hapi.hStructures.HGeo;
+import org.hubiquitus.hapi.hStructures.HLocation;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.Hubot;
+import org.hubiquitus.hubotsdk.adapters.HtwitterAdapter.HTweet;
 
 public class TwitterBot extends Hubot  {
 
@@ -32,14 +36,36 @@ public class TwitterBot extends Hubot  {
 	public static void main( String[] args )throws Exception{
 		TwitterBot bot  = new TwitterBot();
 		bot.start();
+		Thread.sleep(15000);
+		HMessage hmessage = bot.createTweetMessage("sunchenliang@twitter.com");
+		bot.send(hmessage);
 	}
 
 	@Override
 	protected void inProcessMessage(HMessage messageIncoming) {
 		log.info(messageIncoming.toString());
+		
 	}
 
-
+	private HMessage createTweetMessage(String destination){
+		HTweet tweet = new HTweet();
+		try {
+			tweet.setText("Helle, I'm testing my twitter bot. 7777 à Paris!");
+		} catch (MissingAttrException e) {
+			log.info("message: ", e);
+		}
+		try {
+			HMessage m = this.buildMessage(destination, "hTweet", tweet, null);
+			HGeo pos = new HGeo(2.240426,48.841178);
+			HLocation loc = new HLocation();
+			loc.setPos(pos);
+			m.setLocation(loc);
+			return m;
+		} catch (MissingAttrException e) {
+			log.info("message: ", e);
+		}
+		return null;
+	}
 
 
 }

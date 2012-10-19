@@ -5,16 +5,26 @@
 	"hserver" : "http://localhost:8080",
 	"adapters" : [ 
 		{
-			"actor" : "twitterAdapterInbox",
+			"actor" : "TwitterInbox",
 			"type" : "org.hubiquitus.hubotsdk.adapters.HTwitterAdapterInbox",
 			"properties" : {
 				"content" : "complete",
-				"consumerKey" : "0WRnH2XnFz0iEqSo5juFQ",
-				"consumerSecret" : "l3XHU06vFZ0FVJkT5i0oOKYi8A5wUP7lR6O2dhn3W4",
-				"twitterAccessToken" : "888799417-e5TIV2wFL8FeK2TBM2Wo4wciUXSpUtf2hg0XBjOW",
-				"twitterAccessTokenSecret" : "dUsTOQfthA4ZTY6ED2sUduC4YUDAElNgCmHYfoXMDA",
+				"consumerKey" : "8e2lV7ZhIwTtbqQWdG8FaQ",
+				"consumerSecret" : "jmhvirzSouKbm9iV2UCb9Ri2iJhdExJxJ1ljJLtSo",
+				"twitterAccessToken" : "888799417-LyInBnRQ2FN3PGF6AOFqlLq0QNwLDvgChbIhtvkq",
+				"twitterAccessTokenSecret" : "ZZdVdYd8wM8k7420C1G4hsuwWs44beVQHybDpH6ao",
 				"tags" : "#red",
 				"langFilter" : "fr"
+			}
+		},
+		{
+			"actor" : "sunchenliang@twitter.com",
+			"type" : "org.hubiquitus.hubotsdk.adapters.HTwitterAdapterOutbox",
+			"properties" : {
+				"consumerKey" : "8e2lV7ZhIwTtbqQWdG8FaQ",
+				"consumerSecret" : "jmhvirzSouKbm9iV2UCb9Ri2iJhdExJxJ1ljJLtSo",
+				"twitterAccessToken" : "888799417-LyInBnRQ2FN3PGF6AOFqlLq0QNwLDvgChbIhtvkq",
+				"twitterAccessTokenSecret" : "ZZdVdYd8wM8k7420C1G4hsuwWs44beVQHybDpH6ao",
 			}
 		}
 	]
