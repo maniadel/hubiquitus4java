@@ -347,8 +347,10 @@ public abstract class Hubot {
 	private class StatusDelegate implements HStatusDelegate {
 		/* Method use for incoming message/command */
 		public final void onStatus(HStatus status) {
-			if(status.getStatus() == ConnectionStatus.CONNECTED && outerclass.status == HubotStatus.CREATED) {
-				setStatus(HubotStatus.STARTED);
+			if(status.getStatus() == ConnectionStatus.CONNECTED) {
+                if (outerclass.status == HubotStatus.CREATED)
+				    setStatus(HubotStatus.STARTED);
+                // on the first connection and if a reconnection occurs then we have to set the filter
                 try {
                     if ((topology.getFilter() != null) && (topology.getFilter().length()>0)) {
                         hClient.setFilter(topology.getFilter(), new FilterDelegate());
@@ -356,7 +358,7 @@ public abstract class Hubot {
                 } catch (MissingAttrException e) {
                     logger.info("Filter error : ", e);
                 }
-				init(hClient);			
+				init(hClient);
 			}
             logger.info("Hubiquitus connection : "+status);
 		}		
@@ -537,7 +539,7 @@ public abstract class Hubot {
      * @return A hMessage with a hResult payload.
      * @throws MissingAttrException 
      */
-    protected HMessage buildResult(String actor, String ref, ResultStatus status, JSONArray result, HMessageOptions options) throws MissingAttrException{
+    public HMessage buildResult(String actor, String ref, ResultStatus status, JSONArray result, HMessageOptions options) throws MissingAttrException{
         return hClient.buildResult(actor, ref, status, result, options);
     }
     /**
@@ -550,7 +552,7 @@ public abstract class Hubot {
      * @return A hMessage with a hResult payload.
      * @throws MissingAttrException 
      */
-    protected HMessage buildResult(String actor, String ref, ResultStatus status, JSONObject result, HMessageOptions options) throws MissingAttrException{
+    public HMessage buildResult(String actor, String ref, ResultStatus status, JSONObject result, HMessageOptions options) throws MissingAttrException{
         return hClient.buildResult(actor, ref, status, result, options);
     }
 }
