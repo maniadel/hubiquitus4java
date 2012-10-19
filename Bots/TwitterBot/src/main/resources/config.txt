@@ -1,21 +1,31 @@
 {
-	"name" : "com.mycompany.WordCount",
-	"jid" : "u1@localhost",
-	"pwdhash" : "u1",
-	"endpoint" : "http://localhost:8080",
+	"type" : "com.mycompany.WordCount",
+	"actor" : "u1@localhost",
+	"pwd" : "u1",
+	"hserver" : "http://localhost:8080",
 	"adapters" : [ 
 		{
-			"name" : "twitterAdapter",
-			"type" : "HTwitterAdapter",
+			"actor" : "TwitterInbox",
+			"type" : "org.hubiquitus.hubotsdk.adapters.HTwitterAdapterInbox",
 			"properties" : {
-				"consumerKey" : "qbPxxstSFicC70rvuIKIw",
-				"consumerSecret" : "BgEzMqPcjZM3Gywh38YQGc8A5Cl8YV76UoXhcQaVo",
-				"twitterAccessToken" : "707158087-CmcA03GnOHHHyFBGmF2xPqWEJujrhDqQ42lsy8k6",
-				"twitterAccessTokenSecret" : "DtP0vZri1taqKkjl26PD7fzDX3rZWYtXgiKR9UXXU",
-				"tags" : "#obama,#romney",
-				"lang" : "fr"
+				"content" : "complete",
+				"consumerKey" : "8e2lV7ZhIwTtbqQWdG8FaQ",
+				"consumerSecret" : "jmhvirzSouKbm9iV2UCb9Ri2iJhdExJxJ1ljJLtSo",
+				"twitterAccessToken" : "888799417-LyInBnRQ2FN3PGF6AOFqlLq0QNwLDvgChbIhtvkq",
+				"twitterAccessTokenSecret" : "ZZdVdYd8wM8k7420C1G4hsuwWs44beVQHybDpH6ao",
+				"tags" : "#red",
+				"langFilter" : "fr"
+			}
+		},
+		{
+			"actor" : "sunchenliang@twitter.com",
+			"type" : "org.hubiquitus.hubotsdk.adapters.HTwitterAdapterOutbox",
+			"properties" : {
+				"consumerKey" : "8e2lV7ZhIwTtbqQWdG8FaQ",
+				"consumerSecret" : "jmhvirzSouKbm9iV2UCb9Ri2iJhdExJxJ1ljJLtSo",
+				"twitterAccessToken" : "888799417-LyInBnRQ2FN3PGF6AOFqlLq0QNwLDvgChbIhtvkq",
+				"twitterAccessTokenSecret" : "ZZdVdYd8wM8k7420C1G4hsuwWs44beVQHybDpH6ao",
 			}
 		}
-	],
-	"inbox" : ["twitterAdapter" ]
+	]
 }
