@@ -26,8 +26,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import twitter4j.GeoLocation;
 import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
@@ -70,69 +68,71 @@ public class HTwitterAdapterOutbox extends AdapterOutbox {
 	
 	@Override
 	public void sendMessage(HMessage message, HMessageDelegate callback) {
-		StatusUpdate tweet;
-		tweet = transformTweet(message);
-		sendToTwitter(tweet);
+        try {
+            StatusUpdate status = transformTweet(message);
+            if (status != null) {
+                twitter.updateStatus(status);
+            }
+        } catch (Exception e) {
+            log.error("message: ", e);
+        }
 	}
 	
 	private StatusUpdate transformTweet(HMessage message) {
+        StatusUpdate result = null;
 		if("htweet".equalsIgnoreCase(message.getType())){
-			HTweet hTweet;
 			try {
-				hTweet = new HTweet(message.getPayloadAsJSONObject());
+                HTweet hTweet = new HTweet(message.getPayloadAsJSONObject());
 				String status = hTweet.getText();
-				if(!actor.equals(message.getActor())){
+                String screenNameDest = "@" + message.getActor().split("@")[0];
+				if ((!actor.equals(message.getActor())) && (!status.startsWith(screenNameDest))){
+                    // in this case, the tweet must be send in public mode to the current actor
 					//If the hMessage doesn’t begin with the “@screenName”,
 					//	the outbox adapter will add it automatically.
-					if(!status.startsWith("@")){
-						status = "@" + message.getActor().split("@")[0] + " " + status;
-					}
+					status = screenNameDest + " " + status;
 				}
-				StatusUpdate tweet = new StatusUpdate(status);
-				// add the other infos for the tweet.
-				if(message.getLocation() != null){
-					//add the location info in the tweet.
-					GeoLocation location = new GeoLocation(message.getLocation().getPos().getLat(), message.getLocation().getPos().getLng());
-					tweet.setLocation(location);
-				}
-				//TODO if there are others infos to add.
-				return tweet;
+                // check the limit;
+                if (status.length() > 140) {
+                    status = status.substring(0, 136) + "...";
+                }
+				result = new StatusUpdate(status);
 			} catch (JSONException e) {
-				log.error("message: ",e);
+				log.error("Can not transform a hTweet in a status format: ",e);
 			}
-			
 		}
-		return null;
-	}
 
-	private void sendToTwitter(StatusUpdate tweet){
-		 ConfigurationBuilder cb = new ConfigurationBuilder();
-	        cb.setDebugEnabled(true).setUseSSL(true)
-	          .setOAuthConsumerKey(consumerKey)
-	          .setOAuthConsumerSecret(consumerSecret)
-	          .setOAuthAccessToken(twitterAccessToken)
-	          .setOAuthAccessTokenSecret(twitterAccessTokenSecret);
-	        
-	        TwitterFactory tf = new TwitterFactory(cb.build());
-	        twitter = tf.getInstance();
-			
-	        try {
-				twitter.updateStatus(tweet);
-			} catch (Exception e) {
-				log.error("message: ", e);
-			}
-	        
+        if (result == null) {
+            log.warn("Strange, I receive an hMessage of type='"+message.getType()+"' instead of an 'hTweet'");
+        }
+		return result;
 	}
 
 	@Override
 	public void start() {
-		// TODO Auto-generated method stub
 
+        log.info("Twitter adapter outbox '"+actor+"' starting...");
+
+        ConfigurationBuilder cb = new ConfigurationBuilder();
+        cb.setDebugEnabled(true).setUseSSL(true)
+                .setOAuthConsumerKey(consumerKey)
+                .setOAuthConsumerSecret(consumerSecret)
+                .setOAuthAccessToken(twitterAccessToken)
+                .setOAuthAccessTokenSecret(twitterAccessTokenSecret);
+
+        TwitterFactory tf = new TwitterFactory(cb.build());
+        twitter = tf.getInstance();
+
+        log.info("Twitter adapter outbox '"+actor+"' started.");
 	}
 
 	@Override
 	public void stop() {
-		// TODO Auto-generated method stub
+        log.info("Twitter adapter outbox '"+actor+"' stopping...");
+
+        twitter.shutdown();
+        twitter = null;
+
+        log.info("Twitter adapter outbox '"+actor+"' stopped.");
 
 	}
 

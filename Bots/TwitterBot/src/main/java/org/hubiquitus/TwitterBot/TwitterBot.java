@@ -36,33 +36,28 @@ public class TwitterBot extends Hubot  {
 	public static void main( String[] args )throws Exception{
 		TwitterBot bot  = new TwitterBot();
 		bot.start();
-		Thread.sleep(15000);
-		HMessage hmessage = bot.createTweetMessage("sunchenliang@twitter.com");
-		bot.send(hmessage);
 	}
 
 	@Override
 	protected void inProcessMessage(HMessage messageIncoming) {
 		log.info(messageIncoming.toString());
-		
+		if ("sunchenliang".startsWith(messageIncoming.getAuthor())) {
+            send(createHelloTweet("sunchenliang@twitter.com", "Hello! v1"));
+            send(createHelloTweet("sunchenliang@twitter.com", "@sunchenliang Hello! v2"));
+            send(createHelloTweet("twitterOutbox@twitter.com", "Hello world ! v3"));
+            send(createHelloTweet("twitterOutbox@twitter.com", "Hello world ! v4 this message should be trunked fjdkqlfjdlsqflsq fdjfsdjfklqs cdjsqklfdjsqlfsq fjdsqfjsdlfjsqkl jdlsqfdsjklf sdqolqjvdskqlf jsdqklfj dsljfsdklqf jsqlfjsqdljfdslqjf dsqlfsq jlfjsqlfjsqlkfjsql"));
+            send(createHelloTweet("u2@localhost", "Hello ! v5, you must open a hClient with u2@localhost to get this message"));
+            send(createHelloTweet("u1@localhost", "Hello ! v6 should not be received... see Adapter Inbox behavior"));
+        }
 	}
 
-	private HMessage createTweetMessage(String destination){
-		HTweet tweet = new HTweet();
+	private HMessage createHelloTweet(String actor, String status){
 		try {
-			tweet.setText("Helle, I'm testing my twitter bot. 7777 à Paris!");
+            HTweet tweet = new HTweet();
+			tweet.setText(status);
+            return this.buildMessage(actor, "hTweet", tweet, null);
 		} catch (MissingAttrException e) {
-			log.info("message: ", e);
-		}
-		try {
-			HMessage m = this.buildMessage(destination, "hTweet", tweet, null);
-			HGeo pos = new HGeo(2.240426,48.841178);
-			HLocation loc = new HLocation();
-			loc.setPos(pos);
-			m.setLocation(loc);
-			return m;
-		} catch (MissingAttrException e) {
-			log.info("message: ", e);
+			log.error("message: ", e);
 		}
 		return null;
 	}

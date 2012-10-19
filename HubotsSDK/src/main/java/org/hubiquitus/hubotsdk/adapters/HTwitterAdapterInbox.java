@@ -183,14 +183,7 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 				}
 			}
 	
-			// Init The date
-			tweet.getCreatedAt().getTime();
-			DateTime createdAt = new DateTime(tweet.getCreatedAt());
-			DateTime createdAtAuthor = new DateTime(tweet.getUser().getCreatedAt());
-			message.setPublished(new DateTime(createdAt));
-	
 			//Construct the Authortweet JSONObject
-	
 			hauthortweet.setStatus(tweet.getUser().getStatusesCount());
 			hauthortweet.setFollowers(tweet.getUser().getFollowersCount());
 			hauthortweet.setFriends(tweet.getUser().getFriendsCount());
@@ -198,14 +191,13 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 			hauthortweet.setDescription(tweet.getUser().getDescription());		
 			hauthortweet.setProfileImg(tweet.getUser().getProfileImageURL().toString());
 			hauthortweet.setUrl(tweet.getUser().getURL());
-			hauthortweet.setCreatedAt(createdAtAuthor);
+            hauthortweet.setCreatedAt(new DateTime(tweet.getUser().getCreatedAt()));
 			hauthortweet.setLang(tweet.getUser().getLang());
 			hauthortweet.setListeds(tweet.getUser().getListedCount());
 			hauthortweet.setGeo(tweet.getUser().isGeoEnabled());
 			hauthortweet.setVerified(tweet.getUser().isVerified());
 			hauthortweet.setName(tweet.getUser().getName());
-			hauthortweet.setScrName(tweet.getUser().getScreenName());
-			
+
 			//Construct the tweet JSONObject		
 			htweet.setId(tweet.getId());
 			try {
@@ -216,6 +208,7 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 			}
 		
 		}
+        // now manage the minimal list of attributes to get from twitter
 		try {
 			htweet.setText(tweet.getText());
 		} catch (MissingAttrException e) {
@@ -224,9 +217,10 @@ public class HTwitterAdapterInbox extends AdapterInbox{
 		message.setPayload(htweet);
 		message.setType("hTweet");
 		message.setAuthor(tweet.getUser().getScreenName() + "@twitter.com");
+        DateTime createdAt = new DateTime(tweet.getCreatedAt());
+        message.setPublished(new DateTime(createdAt));
 
-
-		if (log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
 			log.debug("tweet("+tweet+") -> hMessage :"+message);
 		}
 

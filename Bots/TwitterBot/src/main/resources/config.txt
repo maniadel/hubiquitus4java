@@ -18,7 +18,7 @@
 			}
 		},
 		{
-			"actor" : "sunchenliang@twitter.com",
+			"actor" : "twitterOutbox@twitter.com",
 			"type" : "org.hubiquitus.hubotsdk.adapters.HTwitterAdapterOutbox",
 			"properties" : {
 				"consumerKey" : "8e2lV7ZhIwTtbqQWdG8FaQ",
