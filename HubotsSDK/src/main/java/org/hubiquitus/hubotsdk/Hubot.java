@@ -40,6 +40,7 @@ import org.hubiquitus.hapi.hStructures.HMessageOptions;
 import org.hubiquitus.hapi.hStructures.HOptions;
 import org.hubiquitus.hapi.hStructures.HStatus;
 import org.hubiquitus.hapi.hStructures.ResultStatus;
+import org.hubiquitus.hapi.structures.JabberID;
 import org.hubiquitus.hubotsdk.adapters.HChannelAdapterInbox;
 import org.hubiquitus.hubotsdk.adapters.HubotAdapterInbox;
 import org.hubiquitus.hubotsdk.adapters.HubotAdapterOutbox;
@@ -47,6 +48,7 @@ import org.hubiquitus.hubotsdk.topology.HAdapterConf;
 import org.hubiquitus.hubotsdk.topology.HTopology;
 import org.hubiquitus.util.HubotStatus;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,15 +109,17 @@ public abstract class Hubot {
 			URL configFilePath = ClassLoader.getSystemResource("config.txt");
 			String jsonString = fileToString(configFilePath.getFile());
 			topology = new HTopology(jsonString);
-			setStatus(HubotStatus.CREATED);
-			//Connecting to HNode
-			HOptions options = new HOptions();
-			options.setTransport("socketio");
-			JSONArray endpoints = new JSONArray();
-			endpoints.put(topology.getHserver());
-			options.setEndpoints(endpoints);
-			hClient.onStatus(statusDelegate);
-			hClient.connect(topology.getActor(), topology.getPwd() , options);
+			if(isValidActors()){
+				setStatus(HubotStatus.CREATED);
+				//Connecting to HNode
+				HOptions options = new HOptions();
+				options.setTransport("socketio");
+				JSONArray endpoints = new JSONArray();
+				endpoints.put(topology.getHserver());
+				options.setEndpoints(endpoints);
+				hClient.onStatus(statusDelegate);
+				hClient.connect(topology.getActor(), topology.getPwd() , options);
+			}
 			// see onStatus to know how this actor go the started status
 		} catch (Exception e) {
 			logger.error("Oooops a big error on starting this bot : ", e);
@@ -149,6 +153,39 @@ public abstract class Hubot {
 		startAdapters();
 		createDispatcher();
 		setStatus(HubotStatus.READY);
+	}
+	
+	private boolean isValidActors(){
+		
+		JSONArray adapters = topology.getAdapters();
+		// Create instance of all Adapter
+		
+		if(adapters != null) {
+			ArrayList<JabberID> listJid = new ArrayList<JabberID>();
+				for(int i=0; i< adapters.length(); i++) {
+					HAdapterConf adapterConf;
+					try {
+						adapterConf = new HAdapterConf(adapters.getJSONObject(i));
+						JabberID jid = null;
+						try {
+							jid = new JabberID(adapterConf.getActor());
+						} catch (Exception e) {
+							logger.error("Adapter's actor attribute is invalide: " + adapterConf.getActor());
+							return false;
+						}
+						
+						if(listJid.contains(jid)){
+							logger.error("Adapter's actor attribute is already used: " + adapterConf.getActor());
+							return false;
+						}
+						listJid.add(jid);
+					} catch (Exception e) {
+						logger.info("message: ", e);
+						return false;
+					}
+				}
+		}
+		return true;
 	}
 	
 	private void createRoutes() {
