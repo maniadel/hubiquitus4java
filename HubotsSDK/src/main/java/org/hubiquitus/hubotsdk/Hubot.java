@@ -75,7 +75,7 @@ public abstract class Hubot {
 	private StatusDelegate statusDelegate = new StatusDelegate();
 	
 	
-	 public static String fileToString(String file) {
+	 private static String fileToString(String file) {
 	        String result = null;
 	        DataInputStream in = null;
 
@@ -539,7 +539,7 @@ public abstract class Hubot {
      * @return A hMessage with a hResult payload.
      * @throws MissingAttrException 
      */
-    public HMessage buildResult(String actor, String ref, ResultStatus status, JSONArray result, HMessageOptions options) throws MissingAttrException{
+    protected HMessage buildResult(String actor, String ref, ResultStatus status, JSONArray result, HMessageOptions options) throws MissingAttrException{
         return hClient.buildResult(actor, ref, status, result, options);
     }
     /**
@@ -552,7 +552,7 @@ public abstract class Hubot {
      * @return A hMessage with a hResult payload.
      * @throws MissingAttrException 
      */
-    public HMessage buildResult(String actor, String ref, ResultStatus status, JSONObject result, HMessageOptions options) throws MissingAttrException{
+    protected HMessage buildResult(String actor, String ref, ResultStatus status, JSONObject result, HMessageOptions options) throws MissingAttrException{
         return hClient.buildResult(actor, ref, status, result, options);
     }
 }
