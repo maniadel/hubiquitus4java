@@ -84,12 +84,12 @@ public class HTimerAdapterInbox extends AdapterInbox{
 				scheduler = sf.getScheduler();
 				// define the job and tie it to the TimerClass
 				JobDetail job = newJob(TimerClass.class)
-				    .withIdentity("timerjob", "group1")
+				    .withIdentity(actor + "timerJob", "group1")
 				    .usingJobData(jdm)
 				    .build();
 				// Trigger the job to run now and use the crontab
 				Trigger trigger = newTrigger()
-				    .withIdentity("trigger1", "group1")
+				    .withIdentity(actor + "Trigger", "group1")
 				    .startNow()
 				    .withSchedule(cronSchedule(crontab))
 				    .build();
