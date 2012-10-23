@@ -79,7 +79,7 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 		jettyCamelUri = "jetty:http://" + this.host + ":" + this.port + this.path;
 		jettyCamelUri += "?" + jettyOptions;
 		
-		System.out.println("Starting HttpAdapter with jettyCamelUri : " + jettyCamelUri);
+		logger.info("Starting HttpAdapter with jettyCamelUri : " + jettyCamelUri);
 		
 		//add route 
 		HHttpAdapterRouteBuilder routes = new HHttpAdapterRouteBuilder(jettyCamelUri, this);
@@ -99,7 +99,7 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 	public void process(Exchange exchange) throws Exception {
 		Message in = exchange.getIn();
 		
-		HttpServletRequest request = exchange.getIn().getBody(HttpServletRequest.class);
+		HttpServletRequest request = in.getBody(HttpServletRequest.class);
 		
 		//Gather data to send through an hmessage
 		byte[] rawBody = (byte[]) in.getBody(byte[].class);
@@ -173,7 +173,7 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 		
 		httpData.setAttachments(hattachements);
 		message.setPayload(httpData);
-		
+
 		//finally send message to actor
 		this.put(message);
 	}

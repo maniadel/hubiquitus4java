@@ -46,6 +46,18 @@
         <artifactId>hAPI</artifactId>
         <version>0.5.0</version>
     </dependency>
+     <!-- for http outbox -->
+     <dependency>
+		<groupId>org.apache.httpcomponents</groupId>
+		<artifactId>httpclient</artifactId>
+		<version>4.2.1</version>
+	</dependency>
+	<dependency>
+	  <groupId>org.apache.httpcomponents</groupId>
+	  <artifactId>httpmime</artifactId>
+	  <version>4.2.1</version>
+	  <scope>compile</scope>
+	</dependency>
   	<dependency>
 	    <groupId>org.quartz-scheduler</groupId>
 	    <artifactId>quartz</artifactId>
@@ -133,11 +145,13 @@
                 <scope>system</scope>
                 <systemPath>${basedir}/../external-libs/socketio.jar</systemPath>
         </dependency>
-      <dependency>
-          <groupId>joda-time</groupId>
-          <artifactId>joda-time</artifactId>
-          <version>2.1</version>
-      </dependency>
+     <dependency>
+         <groupId>joda-time</groupId>
+         <artifactId>joda-time</artifactId>
+         <version>2.1</version>
+     </dependency>
+     
+            
 	
   </dependencies> 
 </project>

@@ -52,7 +52,7 @@ public class HHttpData extends JSONObject {
 		try {
 			attachments = this.getJSONObject("attachments");
 		} catch (JSONException e) {
-			logger.debug(e.toString());
+			logger.info("message: ", e);
 		}
 		return attachments;
 	}
@@ -62,14 +62,14 @@ public class HHttpData extends JSONObject {
 			try {
 				this.remove("attachments");
 			} catch (Exception e) {
-				logger.debug(e.toString());
+				logger.info("message: ", e);
 			}
 			return;
 		}
 		try {
 			this.put("attachments", attachments);
 		} catch (JSONException e) {
-			logger.debug(e.toString());
+			logger.info("message: ", e);
 		}
 	}
 
@@ -85,7 +85,7 @@ public class HHttpData extends JSONObject {
 				rawBody = Base64.decodeBase64(encodedRawBody);
 			}
 		} catch (JSONException e) {
-			logger.debug(e.toString());
+			logger.info("message: ", e);
 		}
 		return rawBody;
 	}
@@ -102,7 +102,7 @@ public class HHttpData extends JSONObject {
 				this.put("rawBody", Base64.encodeBase64String(rawBody));
 			}
 		} catch (JSONException e) {
-			logger.debug(e.toString());
+			logger.info("message: ", e);
 		}
 		
 	}
@@ -115,7 +115,7 @@ public class HHttpData extends JSONObject {
 		try {
 			method = this.getString("method");
 		} catch (Exception e) {
-			logger.debug(e.toString());
+			logger.info("message: ", e);
 		}
 		return method;
 	}
@@ -133,7 +133,7 @@ public class HHttpData extends JSONObject {
 				this.put("method", method);
 			}
 		} catch (JSONException e) {
-			logger.debug(e.toString());
+			logger.info("message: ", e);
 		}
 	}
 
@@ -145,7 +145,7 @@ public class HHttpData extends JSONObject {
 		try {
 			queryArgs = this.getString("queryArgs");
 		} catch (Exception e) {
-			logger.debug(e.toString());
+			logger.info("message: ", e);
 		}
 		return queryArgs;
 	}
@@ -162,7 +162,7 @@ public class HHttpData extends JSONObject {
 				this.put("queryArgs", queryArgs);
 			}
 		} catch (JSONException e) {
-			logger.debug(e.toString());
+			logger.info("message: ", e);
 		}
 	}
 
@@ -174,7 +174,7 @@ public class HHttpData extends JSONObject {
 		try {
 			queryPath = this.getString("queryPath");
 		} catch (Exception e) {
-			logger.debug(e.toString());
+			logger.info("message: ", e);
 		}
 		return queryPath;
 	}
@@ -191,7 +191,7 @@ public class HHttpData extends JSONObject {
 				this.put("queryPath", queryPath);
 			}
 		} catch (JSONException e) {
-			logger.debug(e.toString());
+			logger.info("message: ", e);
 		}
 	}
 
@@ -203,7 +203,7 @@ public class HHttpData extends JSONObject {
 		try {
 			serverName = this.getString("serverName");
 		} catch (Exception e) {
-			logger.debug(e.toString());
+			logger.info("message: ", e);
 		}
 		return serverName;
 	}
@@ -221,7 +221,7 @@ public class HHttpData extends JSONObject {
 				this.put("serverName", serverName);
 			}
 		} catch (JSONException e) {
-			logger.debug(e.toString());
+			logger.info("message: ", e);
 		}
 	}
 
@@ -233,7 +233,7 @@ public class HHttpData extends JSONObject {
 		try {
 			serverPort = this.getInt("serverPort");
 		} catch (Exception e) {
-			logger.debug(e.toString());
+			logger.info("message: ", e);
 		}
 		return serverPort;
 	}
@@ -246,7 +246,7 @@ public class HHttpData extends JSONObject {
 		try {
 				this.put("serverPort", serverPort);
 		} catch (JSONException e) {
-			logger.debug(e.toString());
+			logger.info("message: ", e);
 		}
 	}
 }
