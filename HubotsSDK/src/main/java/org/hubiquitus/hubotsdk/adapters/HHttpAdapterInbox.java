@@ -19,8 +19,6 @@
 
 package org.hubiquitus.hubotsdk.adapters;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.util.Map;
 
 import javax.activation.DataHandler;
@@ -98,7 +96,6 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 	@Override
 	public void process(Exchange exchange) throws Exception {
 		Message in = exchange.getIn();
-		
 		HttpServletRequest request = in.getBody(HttpServletRequest.class);
 		
 		//Gather data to send through an hmessage
@@ -111,6 +108,7 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 		String queryPath = request.getRequestURI();
 		String serverName = request.getServerName();
 		Integer serverPort = request.getServerPort();
+		
 		
 		//create message to send
 		HMessage message = new HMessage();
@@ -152,15 +150,10 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 				hattachement.setName(attachement.getName());
 				
 				//read attachement
-				byte[] buffer = new byte[8 * 1024];
-				InputStream input = attachement.getInputStream();
-				
-				ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
-				int bytesRead;
-				while ((bytesRead = input.read(buffer)) != -1) {
-					byteOutputStream.write(buffer, 0, bytesRead);
-				}
-				hattachement.setData(byteOutputStream.toByteArray());
+				int size = attachement.getInputStream().available();
+				byte[] buffer = new byte[size];
+				attachement.getInputStream().read(buffer);
+				hattachement.setData(buffer);
 				try {
 					hattachements.put(key, hattachement);
 				} catch (JSONException e) {

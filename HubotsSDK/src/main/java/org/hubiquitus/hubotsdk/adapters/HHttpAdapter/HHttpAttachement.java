@@ -98,7 +98,7 @@ public class HHttpAttachement extends JSONObject {
 			if(data == null || data.length<=0){
 				throw new MissingAttrException("data");
 			}else{
-				this.put("data", Base64.encodeBase64(data));
+				this.put("data", Base64.encodeBase64String(data));
 			}
 		} catch (JSONException e) {
 			logger.info("message: ", e);

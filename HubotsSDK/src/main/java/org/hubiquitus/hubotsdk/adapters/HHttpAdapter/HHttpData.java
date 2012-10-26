@@ -52,7 +52,6 @@ public class HHttpData extends JSONObject {
 		try {
 			attachments = this.getJSONObject("attachments");
 		} catch (JSONException e) {
-			logger.info("message: ", e);
 		}
 		return attachments;
 	}
@@ -85,7 +84,6 @@ public class HHttpData extends JSONObject {
 				rawBody = Base64.decodeBase64(encodedRawBody);
 			}
 		} catch (JSONException e) {
-			logger.info("message: ", e);
 		}
 		return rawBody;
 	}
@@ -145,7 +143,6 @@ public class HHttpData extends JSONObject {
 		try {
 			queryArgs = this.getString("queryArgs");
 		} catch (Exception e) {
-			logger.info("message: ", e);
 		}
 		return queryArgs;
 	}
@@ -233,7 +230,6 @@ public class HHttpData extends JSONObject {
 		try {
 			serverPort = this.getInt("serverPort");
 		} catch (Exception e) {
-			logger.info("message: ", e);
 		}
 		return serverPort;
 	}
