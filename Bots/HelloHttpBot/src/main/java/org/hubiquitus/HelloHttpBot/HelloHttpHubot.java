@@ -23,7 +23,6 @@ import org.hubiquitus.hapi.exceptions.MissingAttrException;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.Hubot;
 import org.hubiquitus.hubotsdk.adapters.HHttpAdapter.HHttpData;
-import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 public class HelloHttpHubot extends Hubot{
@@ -36,23 +35,38 @@ public class HelloHttpHubot extends Hubot{
 	
 	@Override
 	public void inProcessMessage(HMessage incomingMessage) {
-		System.out.println(incomingMessage);
-		incomingMessage.setType("hHttpData");
+		logger.info("received message from " + incomingMessage.getAuthor() + " : ");
+		logger.info("---------------------------------------------------------");
+		logger.info(incomingMessage.toString());
+		logger.info("---------------------------------------------------------\n");
+		
 		if (incomingMessage != null && incomingMessage.getType().equals("hHttpData")) {
-			System.out.println("httpdata : " + incomingMessage.getPayloadAsJSONObject());
 			HHttpData httpData = null;
 			try {
 				httpData = new HHttpData(incomingMessage.getPayloadAsJSONObject());
-			} catch (JSONException e) {
-				logger.debug(e.toString());
+			} catch (Exception e) {
+				logger.info("message: ",e);
 			}
+			logger.info("the httpdata : ");
+			logger.info("---------------------------------------------------------");
+			logger.info(httpData.toString());
+			logger.info("---------------------------------------------------------");
+		
+			/*****test out box*****/
+			// try to use out box to send the message to http://localhost:8082
 			try {
-				incomingMessage.setActor("httpOutbox@domain");
+				incomingMessage.setActor("httpOutbox@domain.com");
+				if (httpData.getServerPort() != 8082){
+					httpData.setServerPort(8082);
+
+					incomingMessage.setPayload(httpData);
+					logger.info("send message to http://" + httpData.getServerName() + ":" + httpData.getServerPort() + httpData.getQueryPath());
+					send(incomingMessage);
+				}
 			} catch (MissingAttrException e) {
-				logger.error("message: ", e);
-			}// send to http outbox.
-			send(incomingMessage, null);
-			System.out.println(httpData);
+				logger.info("",e);
+			}
+			/**************************/
 		}
 	}
 
