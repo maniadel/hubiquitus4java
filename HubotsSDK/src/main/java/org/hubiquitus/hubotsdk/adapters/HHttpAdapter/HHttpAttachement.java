@@ -52,7 +52,7 @@ public class HHttpAttachement extends JSONObject {
 			name = this.getString("name");
 		} catch (Exception e) {
 			name = null;
-			logger.warn("message: ", e);
+			logger.info("message: ", e);
 		}
 		return name;
 	}
@@ -70,7 +70,7 @@ public class HHttpAttachement extends JSONObject {
 				this.put("name",name);
 			}
 		} catch (JSONException e) {
-			logger.warn("message: ", e);
+			logger.info("message: ", e);
 		}
 	}
 
@@ -83,7 +83,7 @@ public class HHttpAttachement extends JSONObject {
 			data = Base64.decodeBase64(this.getString("data"));
 		} catch (Exception e) {
 			data = null;
-			logger.warn("message: ", e);
+			logger.info("message: ", e);
 		}
 		return data;
 	}
@@ -98,10 +98,10 @@ public class HHttpAttachement extends JSONObject {
 			if(data == null || data.length<=0){
 				throw new MissingAttrException("data");
 			}else{
-				this.put("data", Base64.encodeBase64(data));
+				this.put("data", Base64.encodeBase64String(data));
 			}
 		} catch (JSONException e) {
-			logger.warn("message: ", e);
+			logger.info("message: ", e);
 		}
 	}
 
@@ -114,7 +114,7 @@ public class HHttpAttachement extends JSONObject {
 			contentType = this.getString("contentType");
 		} catch (Exception e) {
 			contentType = null;
-			logger.warn("message: ", e);
+			logger.info("message: ", e);
 		}
 		return contentType;
 	}
@@ -132,7 +132,7 @@ public class HHttpAttachement extends JSONObject {
 				this.put("contentType", contentType);
 			}
 		} catch (JSONException e) {
-			logger.warn("message: ", e);
+			logger.info("message: ", e);
 		}
 	}
 	

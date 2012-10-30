@@ -184,8 +184,7 @@ public class HStructureTest {
 			
 			jsonObj = hmessage;
 			
-			System.out.println("-->get :  " + jsonObj.get("published"));
-			System.out.println("-->date : " + date.toString());
+			
 			
 			Assert.assertEquals(jsonObj.get("author"), author);
 			Assert.assertEquals(jsonObj.get("actor"), actor);
@@ -605,7 +604,6 @@ public class HStructureTest {
 	@Test
 	public void HConditionTest(){
 		HCondition condition = new HCondition();
-		System.out.println("--> condition vide : " + condition);
 		HValue value = new HValue();
 		value.setName("auther");
 		value.setValue("u1@localhost");
@@ -626,7 +624,6 @@ public class HStructureTest {
 		conditionArray.put(cond);
 		conditionArray.put(cond);
 		condition.setConditionArray(OperandNames.AND, conditionArray);
-		System.out.println("--> :\n" + condition.toString());
 		Assert.assertEquals(condition.getValue(OperandNames.EQ).toString(), value.toString());
 		Assert.assertEquals(condition.getArrayOfValue(OperandNames.IN).toString(), values.toString());
 		Assert.assertEquals(condition.getCondition(OperandNames.NOT).toString(), cond.toString());
