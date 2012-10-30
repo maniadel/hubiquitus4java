@@ -37,35 +37,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+@SuppressWarnings("unused")
 public class HHttpAdapterOutbox extends AdapterOutbox {
 	final Logger logger = LoggerFactory.getLogger(HHttpAdapterOutbox.class);
-	
-	private String host = "0.0.0.0";
-	private int port = 80;
-	private String path = "";
-	
-	public HHttpAdapterOutbox(){
+
+    public HHttpAdapterOutbox(){
 		super();
 	}
 	@Override
 	public void sendMessage(HMessage message, HMessageDelegate callback) {
 		if ("hhttpdata".equalsIgnoreCase(message.getType())) {
-			HHttpData httpData = null;
-			try {
-				httpData = new HHttpData(message.getPayloadAsJSONObject());
-			} catch (JSONException e) {
-				logger.error("message: ", e);
-				return;
+			 try {
+                HHttpData httpData = new HHttpData(message.getPayloadAsJSONObject());
+                // Only http post is supported for now.
+                // Only handle with the attachments.
+                httpPost(httpData);
+            } catch (JSONException e) {
+				logger.error("can not read the HttpData: ", e);
 			}
-			// Only http post is supported for now.
-			// Only handle with the attachments.
-			httpPost(httpData);
-
 		} else {
 			logger.warn("Only type hHttpData is supported to be sent by http adapter outbox.");
 		}
 	}
-	
 	
 	private void httpPost(HHttpData httpData){
 		String uriString = "http://";
@@ -95,47 +88,28 @@ public class HHttpAdapterOutbox extends AdapterOutbox {
 				    }
 				    post.setEntity(reqEntity);	
 				    HttpResponse response = client.execute(post);
-				    logger.info("Http response status : " + response.getStatusLine());
+				    logger.debug("Http response status : " + response.getStatusLine());
 				}
 			
 		} catch (Exception e) {
-			logger.error("message: ", e);
+			logger.error("can not send an HttpData : ", e);
 		}
 	}
 	
 	
 	@Override
 	public void setProperties(JSONObject properties) {
-		if(properties != null){
-			try {
-				if (properties.has("host")){
-					this.host = properties.getString("host");
-				}
-				if (properties.has("port")){
-					this.port = properties.getInt("port");
-				}
-				if (properties.has("path")){
-					this.path = properties.getString("path");
-					if (this.path.contains("?")) {
-						int interrogationIndex = this.path.indexOf("?");
-						this.path = this.path.substring(interrogationIndex, this.path.length());
-					}
-				}
-			} catch (Exception e) {
-				logger.info("message: ", e);
-			}
-		}
-
+		// NOP
 	}
 
 	@Override
 	public void start() {
-	
+        // NOP
 	}
 
 	@Override
 	public void stop() {
-		
+        // NOP
 	}
 
 }

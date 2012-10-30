@@ -13,6 +13,7 @@ local.properties
 .settings/
 .loadpath
 *.iml
+*.log
 
 target/**
 target/**/*

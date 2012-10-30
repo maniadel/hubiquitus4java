@@ -37,7 +37,7 @@ public class HHttpData extends JSONObject {
 	
 	public HHttpData() {
 		super();
-	};
+	}
 	
 	public HHttpData(JSONObject jsonObj) throws JSONException{
 		super(jsonObj, JSONObject.getNames(jsonObj));
@@ -52,29 +52,26 @@ public class HHttpData extends JSONObject {
 		try {
 			attachments = this.getJSONObject("attachments");
 		} catch (JSONException e) {
+            // NOP
 		}
 		return attachments;
 	}
 
 	public void setAttachments(JSONObject attachments) {
-		if(attachments == null || attachments.length()<=0){
 			try {
-				this.remove("attachments");
-			} catch (Exception e) {
-				logger.info("message: ", e);
+                if(attachments == null || attachments.length()<=0)
+				    this.remove("attachments");
+                else
+                    this.put("attachments", attachments);
+			} catch (JSONException e) {
+                logger.error("can not update attachments attribute: ", e);
 			}
-			return;
-		}
-		try {
-			this.put("attachments", attachments);
-		} catch (JSONException e) {
-			logger.info("message: ", e);
-		}
 	}
 
 	/**
 	 * @return Body content as raw bytes encoded in Base64 for json.
 	 */
+    @SuppressWarnings("unused")
 	public byte[] getRawBody() {
 		String encodedRawBody;
 		byte[] rawBody = null;
@@ -84,13 +81,14 @@ public class HHttpData extends JSONObject {
 				rawBody = Base64.decodeBase64(encodedRawBody);
 			}
 		} catch (JSONException e) {
+            // NOP
 		}
 		return rawBody;
 	}
 
 	/**
 	 * Set body content.
-	 * @param rawBody
+	 * @param rawBody the body content
 	 */
 	public void setRawBody(byte[] rawBody) {
 		try {
@@ -100,7 +98,7 @@ public class HHttpData extends JSONObject {
 				this.put("rawBody", Base64.encodeBase64String(rawBody));
 			}
 		} catch (JSONException e) {
-			logger.info("message: ", e);
+            logger.error("can not update rawBody attribute: ", e);
 		}
 		
 	}
@@ -108,19 +106,20 @@ public class HHttpData extends JSONObject {
 	/**
 	 * @return The method of the data. Possible values : get, post, put, delete
 	 */
+    @SuppressWarnings("unused")
 	public String getMethod() {
 		String method = null;
 		try {
 			method = this.getString("method");
-		} catch (Exception e) {
-			logger.info("message: ", e);
-		}
+		} catch (JSONException e) {
+            logger.error("can not fetch method attribute: ", e);
+        }
 		return method;
 	}
 
 	/**
-	 * Define the method of the data. Possible values : get, post, put, delete
-	 * @param method
+	 * Define the method of the data.
+	 * @param method Possible values : get, post, put, delete
 	 * @throws MissingAttrException 
 	 */
 	public void setMethod(String method) throws MissingAttrException {
@@ -131,7 +130,7 @@ public class HHttpData extends JSONObject {
 				this.put("method", method);
 			}
 		} catch (JSONException e) {
-			logger.info("message: ", e);
+            logger.error("can not update method attribute: ", e);
 		}
 	}
 
@@ -142,14 +141,15 @@ public class HHttpData extends JSONObject {
 		String queryArgs = null;
 		try {
 			queryArgs = this.getString("queryArgs");
-		} catch (Exception e) {
+		} catch (JSONException e) {
+            // NOP
 		}
 		return queryArgs;
 	}
 
 	/**
-	 * Set the parameters applied to the URI. eg : “?a=2”
-	 * @param queryArgs
+	 * Set the parameters applied to the URI.
+	 * @param queryArgs eg : “?a=2”
 	 */
 	public void setQueryArgs(String queryArgs) {
 		try {
@@ -159,7 +159,7 @@ public class HHttpData extends JSONObject {
 				this.put("queryArgs", queryArgs);
 			}
 		} catch (JSONException e) {
-			logger.info("message: ", e);
+            logger.error("can not update queryArgs attribute: ", e);
 		}
 	}
 
@@ -170,15 +170,15 @@ public class HHttpData extends JSONObject {
 		String queryPath = null;
 		try {
 			queryPath = this.getString("queryPath");
-		} catch (Exception e) {
-			logger.info("message: ", e);
+		} catch (JSONException e) {
+            logger.error("can not fetch queryPath attribute: ", e);
 		}
 		return queryPath;
 	}
 
 	/**
-	 * Set path to the resource. eg : "/path"
-	 * @param queryPath
+	 * Set path to the resource.
+	 * @param queryPath eg : "/path"
 	 */
 	public void setQueryPath(String queryPath) {
 		try {
@@ -188,7 +188,7 @@ public class HHttpData extends JSONObject {
 				this.put("queryPath", queryPath);
 			}
 		} catch (JSONException e) {
-			logger.info("message: ", e);
+            logger.error("can not update queryPath attribute: ", e);
 		}
 	}
 
@@ -199,15 +199,15 @@ public class HHttpData extends JSONObject {
 		String serverName = null;
 		try {
 			serverName = this.getString("serverName");
-		} catch (Exception e) {
-			logger.info("message: ", e);
+		} catch (JSONException e) {
+            logger.error("can not fetch serverName attribute: ", e);
 		}
 		return serverName;
 	}
 
 	/**
-	 * Set the host name used to do the query. eg : "localhost"
-	 * @param serverName
+	 * Set the host name used to do the query.
+	 * @param serverName  eg : "localhost"
 	 * @throws MissingAttrException 
 	 */
 	public void setServerName(String serverName) throws MissingAttrException {
@@ -218,7 +218,7 @@ public class HHttpData extends JSONObject {
 				this.put("serverName", serverName);
 			}
 		} catch (JSONException e) {
-			logger.info("message: ", e);
+            logger.error("can not update serverName attribute: ", e);
 		}
 	}
 
@@ -229,20 +229,21 @@ public class HHttpData extends JSONObject {
 		int serverPort = 0;
 		try {
 			serverPort = this.getInt("serverPort");
-		} catch (Exception e) {
+		} catch (JSONException e) {
+            // NOP
 		}
 		return serverPort;
 	}
 
 	/**
-	 * Set port used to do the query. eg : 8080
-	 * @param serverPort
+	 * Set port used to do the query.
+	 * @param serverPort eg : 8080
 	 */
 	public void setServerPort(int serverPort) {
 		try {
-				this.put("serverPort", serverPort);
+			this.put("serverPort", serverPort);
 		} catch (JSONException e) {
-			logger.info("message: ", e);
+            logger.error("can not update serverPort attribute: ", e);
 		}
 	}
 }
