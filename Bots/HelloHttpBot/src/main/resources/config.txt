@@ -5,18 +5,20 @@
 	"hserver" : "http://localhost:8080",
 	"adapters" : [
 		{
-		"actor" : "httpInbox@domain",
+		"actor" : "httpInbox@domain.com",
 		"type" : "org.hubiquitus.hubotsdk.adapters.HHttpAdapterInbox",
 		"properties" : {
+				"host" : "localhost",
 				"port" : "8086"
-		}	
-	},
-	{
-		"actor" : "httpOutbox@domain",
+			}	
+		},
+		{
+		"actor" : "httpOutbox@domain.com",
 		"type" : "org.hubiquitus.hubotsdk.adapters.HHttpAdapterOutbox",
 		"properties" : {
 				"port" : "8086"
+			}	
 		}
-	}
-	],
+	
+	]
 }
