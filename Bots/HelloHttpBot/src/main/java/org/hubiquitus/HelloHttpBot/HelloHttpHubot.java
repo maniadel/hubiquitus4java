@@ -69,5 +69,4 @@ public class HelloHttpHubot extends Hubot{
 			/**************************/
 		}
 	}
-
 }
