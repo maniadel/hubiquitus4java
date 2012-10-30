@@ -14,10 +14,7 @@
 		},
 		{
 		"actor" : "httpOutbox@domain.com",
-		"type" : "org.hubiquitus.hubotsdk.adapters.HHttpAdapterOutbox",
-		"properties" : {
-				"port" : "8086"
-			}	
+		"type" : "org.hubiquitus.hubotsdk.adapters.HHttpAdapterOutbox"
 		}
 	
 	]
