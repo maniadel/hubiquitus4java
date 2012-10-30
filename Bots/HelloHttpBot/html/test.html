@@ -1,0 +1,21 @@
+<html>
+<head>
+
+</head>
+<body>
+
+<script type="text/javascript">
+    function onSubmit(){
+        document.myForm.action = document.getElementById("serverUrl").value;
+    }
+</script>
+
+<form name="myForm" enctype="multipart/form-data">
+    server : <input type="text" id="serverUrl"><br>
+    text : <input type="text" name="textline" size="30"><br>
+    file : <input type="file" name="datafile" size="40"><br>
+    <input type="submit" value="send" formmethod="post" onclick=onSubmit()>
+
+</form>
+</body>
+</html>

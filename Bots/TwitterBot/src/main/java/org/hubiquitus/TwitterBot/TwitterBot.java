@@ -22,8 +22,6 @@ package org.hubiquitus.TwitterBot;
 
 import org.apache.log4j.Logger;
 import org.hubiquitus.hapi.exceptions.MissingAttrException;
-import org.hubiquitus.hapi.hStructures.HGeo;
-import org.hubiquitus.hapi.hStructures.HLocation;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.Hubot;
 import org.hubiquitus.hubotsdk.adapters.HtwitterAdapter.HTweet;
@@ -41,7 +39,7 @@ public class TwitterBot extends Hubot  {
 	@Override
 	protected void inProcessMessage(HMessage messageIncoming) {
 		log.info(messageIncoming.toString());
-		if ("sunchenliang".startsWith(messageIncoming.getAuthor())) {
+		if (messageIncoming.getAuthor().startsWith("sunchenliang")) {
             send(createHelloTweet("sunchenliang@twitter.com", "Hello! v1"));
             send(createHelloTweet("sunchenliang@twitter.com", "@sunchenliang Hello! v2"));
             send(createHelloTweet("twitterOutbox@twitter.com", "Hello world ! v3"));
