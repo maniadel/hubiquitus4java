@@ -47,19 +47,18 @@ public class HHttpAttachement extends JSONObject {
 	 * @return Name of the attachment.
 	 */
 	public String getName() {
-		String name;
+		String name = null;
 		try {
 			name = this.getString("name");
-		} catch (Exception e) {
-			name = null;
-			logger.info("message: ", e);
+		} catch (JSONException e) {
+            logger.error("can not fetch name attribute: ", e);
 		}
 		return name;
 	}
 	
 	/**
-	 * Set the name of the attachment.
-	 * @param name
+	 *
+	 * @param name the name of the attachment.
 	 * @throws MissingAttrException 
 	 */
 	public void setName(String name) throws MissingAttrException {
@@ -70,7 +69,7 @@ public class HHttpAttachement extends JSONObject {
 				this.put("name",name);
 			}
 		} catch (JSONException e) {
-			logger.info("message: ", e);
+            logger.error("can not update name attribute: ", e);
 		}
 	}
 
@@ -78,19 +77,18 @@ public class HHttpAttachement extends JSONObject {
 	 * @return Data raw bytes encoded in Base64 for JSONObject.
 	 */
 	public byte[] getData() {
-		byte[] data;
+		byte[] data = null;
 		try {
 			data = Base64.decodeBase64(this.getString("data"));
-		} catch (Exception e) {
-			data = null;
-			logger.info("message: ", e);
+		} catch (JSONException e) {
+			logger.error("can not fetch data attribute: ", e);
 		}
 		return data;
 	}
 
 	/**
-	 * Set the data raw bytes.
-	 * @param data
+	 *
+	 * @param data the data raw bytes.
 	 * @throws MissingAttrException 
 	 */
 	public void setData(byte[] data) throws MissingAttrException {
@@ -101,7 +99,7 @@ public class HHttpAttachement extends JSONObject {
 				this.put("data", Base64.encodeBase64String(data));
 			}
 		} catch (JSONException e) {
-			logger.info("message: ", e);
+            logger.error("can not update data attribute: ", e);
 		}
 	}
 
@@ -109,19 +107,17 @@ public class HHttpAttachement extends JSONObject {
 	 * @return Type of content. eg : application/Octet-stream
 	 */
 	public String getContentType() {
-		String contentType;
+		String contentType = null;
 		try {
 			contentType = this.getString("contentType");
-		} catch (Exception e) {
-			contentType = null;
-			logger.info("message: ", e);
+		} catch (JSONException e) {
+            logger.error("can not fetch contentType attribute: ", e);
 		}
 		return contentType;
 	}
 
 	/**
-	 * Set the type of content.
-	 * @param contentType
+	 * @param contentType the type of content
 	 * @throws MissingAttrException 
 	 */
 	public void setContentType(String contentType) throws MissingAttrException {
@@ -132,7 +128,7 @@ public class HHttpAttachement extends JSONObject {
 				this.put("contentType", contentType);
 			}
 		} catch (JSONException e) {
-			logger.info("message: ", e);
+            logger.error("can not update contentType attribute: ", e);
 		}
 	}
 	

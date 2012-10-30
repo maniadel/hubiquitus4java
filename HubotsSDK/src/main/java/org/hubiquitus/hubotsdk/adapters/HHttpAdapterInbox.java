@@ -19,6 +19,8 @@
 
 package org.hubiquitus.hubotsdk.adapters;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.Map;
 
 import javax.activation.DataHandler;
@@ -39,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+@SuppressWarnings("unused")
 public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 
 	final Logger logger = LoggerFactory.getLogger(HHttpAdapterInbox.class);
@@ -46,7 +49,6 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 	private String host = "0.0.0.0";
 	private int port = 80;
 	private String path = "";
-	private String jettyCamelUri = "";
 	
 	@Override
 	public void setProperties(JSONObject properties) {
@@ -65,7 +67,7 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 						this.path = this.path.substring(interrogationIndex, this.path.length());
 					}
 				}
-			} catch (Exception e) {
+			} catch (JSONException e) {
 				logger.warn("message: ", e);
 			}
 		}
@@ -74,7 +76,7 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 	@Override
 	public void start() {
 		String jettyOptions = "matchOnUriPrefix=true";
-		jettyCamelUri = "jetty:http://" + this.host + ":" + this.port + this.path;
+		String jettyCamelUri = "jetty:http://" + this.host + ":" + this.port + this.path;
 		jettyCamelUri += "?" + jettyOptions;
 		
 		logger.info("Starting HttpAdapter with jettyCamelUri : " + jettyCamelUri);
@@ -99,7 +101,7 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 		HttpServletRequest request = in.getBody(HttpServletRequest.class);
 		
 		//Gather data to send through an hmessage
-		byte[] rawBody = (byte[]) in.getBody(byte[].class);
+		byte[] rawBody = in.getBody(byte[].class);
 		Map<String, Object> headers = in.getHeaders();
 		Map<String, DataHandler> attachments = in.getAttachments();
 		
@@ -150,10 +152,14 @@ public class HHttpAdapterInbox extends AdapterInbox implements Processor{
 				hattachement.setName(attachement.getName());
 				
 				//read attachement
-				int size = attachement.getInputStream().available();
-				byte[] buffer = new byte[size];
-				attachement.getInputStream().read(buffer);
-				hattachement.setData(buffer);
+                byte[] buffer = new byte[8 * 1024];
+                InputStream input = attachement.getInputStream();
+                ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+                int bytesRead;
+                while ((bytesRead = input.read(buffer)) != -1) {
+                    byteOutputStream.write(buffer, 0, bytesRead);
+                }
+                hattachement.setData(byteOutputStream.toByteArray());
 				try {
 					hattachements.put(key, hattachement);
 				} catch (JSONException e) {
