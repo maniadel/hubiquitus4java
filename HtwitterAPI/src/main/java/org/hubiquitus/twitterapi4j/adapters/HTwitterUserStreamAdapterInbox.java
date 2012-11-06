@@ -52,6 +52,7 @@ public class HTwitterUserStreamAdapterInbox extends AdapterInbox implements HUse
 	private String proxyHost;
 	private int proxyPort;
 	
+	// Stream parameters
 	private String langFilter;
 	private String tags;	
 	private String delimited;
@@ -59,7 +60,7 @@ public class HTwitterUserStreamAdapterInbox extends AdapterInbox implements HUse
 	private String with;
 	private String replies;
 	private String locations;
-	
+	private String count;
 
 	private HUserStream userStream;
 
@@ -112,6 +113,9 @@ public class HTwitterUserStreamAdapterInbox extends AdapterInbox implements HUse
 				if (properties.has("locations")) {
 					this.locations = properties.getString("locations");
 				}
+				if (properties.has("count")) {
+					this.count = properties.getString("count");
+				}
 				
 				
 			}catch(JSONException e){
@@ -137,6 +141,7 @@ public class HTwitterUserStreamAdapterInbox extends AdapterInbox implements HUse
 		         with, 
 		         replies, 
 		         locations,
+		         count ,
 		         consumerKey, 
 		         consumerSecret, 
 		         twitterAccessToken, 

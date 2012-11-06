@@ -61,7 +61,7 @@ public class HUserStream {
 	private String with;
 	private String replies;
 	private String locations;
-
+	private String count;
 	/**
 	 * The map where the JSONObject's properties are kept.
 	 */
@@ -161,7 +161,7 @@ public class HUserStream {
 
 	private ArrayList<HUserStreamListner> listeners = new ArrayList<HUserStreamListner>();
 
-	public HUserStream(String proxyHost, int proxyPort, String tags,String delimited,String stallWarnings, String with, String replies, String locations,String consumerKey, String consumerSecret, String token, String tokenSecret) {
+	public HUserStream(String proxyHost, int proxyPort, String tags,String delimited,String stallWarnings, String with, String replies, String locations,String count,String consumerKey, String consumerSecret, String token, String tokenSecret) {
 		super();
 		this.proxyHost = proxyHost;
 		this.proxyPort = proxyPort;
@@ -172,6 +172,7 @@ public class HUserStream {
 		this.with = with;
 		this.replies = replies;
 		this.locations = locations;
+		this.count = count;
 
 		this.consumerKey = consumerKey;
 		this.consumerSecret = consumerSecret;
@@ -251,6 +252,9 @@ public class HUserStream {
 		}
 		if( locations!=null){
 			nValuePairs.add(new BasicNameValuePair("locations", locations));
+		}
+		if( count!=null){
+			nValuePairs.add(new BasicNameValuePair("count", count));
 		}
 		
 		
