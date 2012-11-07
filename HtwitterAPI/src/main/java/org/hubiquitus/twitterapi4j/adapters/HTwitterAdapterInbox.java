@@ -40,11 +40,24 @@ public class HTwitterAdapterInbox extends AdapterInbox implements HStreamListner
 	private String consumerSecret;
 	private String twitterAccessToken;
 	private String twitterAccessTokenSecret;
-	private String langFilter;
-	private String tags;
+
+
+
 	private String proxyHost;
 	private int    proxyPort;
 
+    // Stream parameters
+	private String langFilter;
+	private String tags;	
+	private String delimited;
+	private String stallWarnings; 
+	private String with;
+	private String replies;
+	private String locations;
+	private String count;
+
+
+	
 	private HStream stream;
 	private TweetToHMessage tweetToHMessage = new TweetToHMessage();
 	/**
@@ -99,6 +112,12 @@ public class HTwitterAdapterInbox extends AdapterInbox implements HStreamListner
 				proxyHost, 
 				proxyPort, 
 				tags, 
+				delimited,
+				stallWarnings, 
+				with,
+				replies,
+				locations,
+				count,
 				consumerKey, 
 				consumerSecret, 
 				twitterAccessToken, 
@@ -180,8 +199,8 @@ public class HTwitterAdapterInbox extends AdapterInbox implements HStreamListner
 
 	@Override
 	public void onDisconnectMessages(JSONObject disconnect) {
-		log.info("received other discounnect message: " + disconnect);
-
+		log.info("received  discounnect message: " + disconnect);	
+		
 	}
 	public void onOtherMessage(JSONObject message) {
 		log.info("received other message: " + message);

@@ -65,6 +65,7 @@ public class HUserStream {
 	/**
 	 * The map where the JSONObject's properties are kept.
 	 */
+	@SuppressWarnings("rawtypes")
 	private Map map;
 	
 	/**
@@ -210,8 +211,44 @@ public class HUserStream {
 				listener.onStatusWithheld(item);
 			else if (item.has("user_withheld"))
 				listener.onUserWithheld(item);
-			else if (item.has("disconnect"))
+			else if (item.has("disconnect")){			
 				listener.onDisconnectMessages(item);
+				//-----  RECONNECTING ----
+				log.info("RECONNECTING ...");
+				
+				HUserStream stream = new HUserStream (
+						proxyHost, 
+						proxyPort, 
+						tags, 
+						delimited,
+						stallWarnings, 
+						with,
+						replies,
+						locations,
+						count,
+						consumerKey, 
+						consumerSecret, 
+						token, 
+						tokenSecret);
+				stream.addListener(listener);
+
+				try {
+					log.info("ITEM  :"+item + "Code :"+item.getJSONObject("disconnect").getInt("code"));
+					if (item.getJSONObject("disconnect").getInt("code") == 7){
+						try {
+							Thread.sleep(9000);
+							stream.start();
+						} catch (InterruptedException e) {
+							log.error("Error Thread donst sleep correctelly "+e);					
+						}
+					}
+
+				} catch (JSONException e1) {
+					log.error("Error in get code :"+e1);
+					e1.printStackTrace();
+				}
+				//------
+			}
 			else 
 				listener.onOtherMessage(item);
 		}
@@ -235,9 +272,11 @@ public class HUserStream {
 		 * */
 		ArrayList<BasicNameValuePair> nValuePairs = new ArrayList <BasicNameValuePair>();		
 		
-		nValuePairs.add(new BasicNameValuePair("stall_warnings", "true"));
 		
 		
+		if( stallWarnings!=null){
+			nValuePairs.add(new BasicNameValuePair("stall_warnings", stallWarnings));	
+		}
 		if( tags!=null){
 			nValuePairs.add(new BasicNameValuePair("track", tags));	
 		}

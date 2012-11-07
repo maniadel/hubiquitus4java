@@ -126,7 +126,7 @@ public class HTwitterUserStreamAdapterInbox extends AdapterInbox implements HUse
 		log.info("Starting...");
 		 
 		userStream = new HUserStream (
-				proxyHost,  
+			   	 proxyHost,  
 				 proxyPort, 
 		         tags,
 		         delimited,

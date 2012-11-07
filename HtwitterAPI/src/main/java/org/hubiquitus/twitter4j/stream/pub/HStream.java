@@ -52,50 +52,58 @@ public class HStream {
 
 	private String proxyHost;
 	private int proxyPort;
+
 	private String tags;
 	private String consumerKey;
-    private String consumerSecret;	    
-    private String token;
-    private String tokenSecret;
-    
-    private class GZipStream extends GZIPInputStream {
-    	private final InputStream wrapped;
-        public GZipStream(InputStream is) throws IOException {
-          super(is);
-          wrapped = is;
-        }
-     
-        /**
-         * Overrides behavior of GZIPInputStream which assumes we have all the data available
-         * which is not true for streaming. We instead rely on the underlying stream to tell us
-         * how much data is available.
-         * 
-         * Programs should not count on this method to return the actual number
-         * of bytes that could be read without blocking.
-         *
-         * @return - whatever the wrapped InputStream returns
-         * @exception  IOException  if an I/O error occurs.
-         */
-        public int available() throws IOException {
-          return wrapped.available();
-        }
-    }
-    
-    private class Loop extends Thread {
+	private String consumerSecret;	    
+	private String token;
+	private String tokenSecret;
 
-    	private Logger log = Logger.getLogger(HStream.class);
-    	private HStream owner;
+	private String delimited;
+	private String stallWarnings; 
+	private String with;
+	private String replies;
+	private String locations;
+	private String count;
 
-    	Loop(HStream owner) {
-          super("Thread used to read the Twitter Streaming API v1.1");
-          this.owner = owner;
-        }
-        
-        BufferedReader buffer;
+	private class GZipStream extends GZIPInputStream {
+		private final InputStream wrapped;
+		public GZipStream(InputStream is) throws IOException {
+			super(is);
+			wrapped = is;
+		}
 
-        public void run() {
-        	  while (true) {
-	        	try {
+		/**
+		 * Overrides behavior of GZIPInputStream which assumes we have all the data available
+		 * which is not true for streaming. We instead rely on the underlying stream to tell us
+		 * how much data is available.
+		 * 
+		 * Programs should not count on this method to return the actual number
+		 * of bytes that could be read without blocking.
+		 *
+		 * @return - whatever the wrapped InputStream returns
+		 * @exception  IOException  if an I/O error occurs.
+		 */
+		public int available() throws IOException {
+			return wrapped.available();
+		}
+	}
+
+	private class Loop extends Thread {
+
+		private Logger log = Logger.getLogger(HStream.class);
+		private HStream owner;
+
+		Loop(HStream owner) {
+			super("Thread used to read the Twitter Streaming API v1.1");
+			this.owner = owner;
+		}
+
+		BufferedReader buffer;
+
+		public void run() {
+			while (true) {
+				try {
 					String line = buffer.readLine();
 					try {
 						if ((line != null) && (line.startsWith("{"))) { 
@@ -117,102 +125,180 @@ public class HStream {
 						break;
 					}
 				}
-	          }
-        }
-    }
-    
-    private Loop loop = new Loop(this);
-	    														  
+			}
+		}
+	}
+
+	private Loop loop = new Loop(this);
+
 	private static final String STREAMING_API_1_1_ENDPOINT = "https://stream.twitter.com/1.1/statuses/filter.json";
-	
+
 	private static Logger log = Logger.getLogger(HStream.class);
-	
+
 	private ArrayList<HStreamListner> listeners = new ArrayList<HStreamListner>();
 
-	public HStream(String proxyHost, int proxyPort, String tags, String consumerKey, String consumerSecret, String token, String tokenSecret) {
+	public HStream(String proxyHost, 
+			int proxyPort, 
+			String tags, 
+			String delimited,  
+			String stallWarnings, 
+			String with, 
+			String replies, 
+			String locations, 
+			String count, 
+			String consumerKey, 
+			String consumerSecret, 
+			String token, 
+			String tokenSecret) {
 		super();
 		this.proxyHost = proxyHost;
 		this.proxyPort = proxyPort;
-		this.tags = tags;
+
 		this.consumerKey = consumerKey;
 		this.consumerSecret = consumerSecret;
 		this.token = token;
 		this.tokenSecret = tokenSecret;
+
+		this.tags = tags;
+		this.delimited =delimited;
+		this.stallWarnings = stallWarnings; 
+		this.with = with;
+		this.replies = replies;
+		this.locations = locations;
+		this.count = count;
 	}
-	
+
 	/**
 	 * Used to add a listener
 	 * @param listener which must implement the HStreamlistener to get the status
 	 */
 	public void addListener(HStreamListner listener) {
-        listeners.add(listener);
-        log.debug("listener added: "+listener);
+		listeners.add(listener);
+		log.debug("listener added: "+listener);
 	}
-	
-    public void removeListener(HStreamListner listener) {
-    	listeners.remove(listener);
-        log.debug("listener removed: "+listener);
-    }
-    
-    public void fireEvent(JSONObject item) {  	    
-    	for (HStreamListner listener : listeners) {
-    		if (item.has("text"))
-    			listener.onStatus(item);
-    		else if (item.has("warning"))
-    			listener.onStallWarning(item);
-    		else if (item.has("delete"))
-    			listener.onLocationDeletionNotices(item);
-    		else if (item.has("scrub_geo"))
-    			listener.onLimitNotices(item);
-    		else if (item.has("limit"))
-    			listener.onStatusDeletionNotices(item);    		
-    		else if (item.has("status_withheld"))
-    			listener.onStatusWithheld(item);
-    		else if (item.has("user_withheld"))
-    			listener.onUserWithheld(item);
-    		else if (item.has("disconnect"))
-    			listener.onDisconnectMessages(item);
-    		else 
-    			listener.onOtherMessage(item);
-    	}
-    }
-        
-    public void start(){
-    	stop();
-    	String url = STREAMING_API_1_1_ENDPOINT;
-    	
+
+	public void removeListener(HStreamListner listener) {
+		listeners.remove(listener);
+		log.debug("listener removed: "+listener);
+	}
+
+	public void fireEvent(JSONObject item) {  	    
+		for (HStreamListner listener : listeners) {
+			if (item.has("text"))
+				listener.onStatus(item);
+			else if (item.has("warning"))
+				listener.onStallWarning(item);
+			else if (item.has("delete"))
+				listener.onLocationDeletionNotices(item);
+			else if (item.has("scrub_geo"))
+				listener.onLimitNotices(item);
+			else if (item.has("limit"))
+				listener.onStatusDeletionNotices(item);    		
+			else if (item.has("status_withheld"))
+				listener.onStatusWithheld(item);
+			else if (item.has("user_withheld"))
+				listener.onUserWithheld(item);
+			else if (item.has("disconnect")) {    			
+				listener.onDisconnectMessages(item);
+				//-----  RECONNECTING ----
+				log.info("RECONNECTING ...");
+				
+				HStream stream = new HStream (
+						proxyHost, 
+						proxyPort, 
+						tags, 
+						delimited,
+						stallWarnings, 
+						with,
+						replies,
+						locations,
+						count,
+						consumerKey, 
+						consumerSecret, 
+						token, 
+						tokenSecret);
+				stream.addListener(listener);
+
+				try {
+					log.info("ITEM  :"+item + "Code :"+item.getJSONObject("disconnect").getInt("code"));
+					if (item.getJSONObject("disconnect").getInt("code") == 7){
+						try {
+							Thread.sleep(9000);
+							stream.start();
+						} catch (InterruptedException e) {
+							log.error("Error Thread donst sleep correctelly "+e);					
+						}
+					}
+
+				} catch (JSONException e1) {
+					log.error("Error in get code :"+e1);
+					e1.printStackTrace();
+				}
+				//------
+			}   
+			else 
+				listener.onOtherMessage(item);
+		}
+	}
+
+	public void start(){
+		stop();
+		String url = STREAMING_API_1_1_ENDPOINT;
+
 		DefaultHttpClient client = new DefaultHttpClient();	
 
 		if ((proxyHost != null) && (proxyPort > 0)) {
 			HttpHost proxy = new HttpHost(proxyHost, proxyPort, "http");
 			client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
 			log.debug("using a proxy : " + proxyHost+":"+proxyPort);
-    	}
+		}
 
 		HttpPost post = new HttpPost(url);
-		
-		ArrayList<BasicNameValuePair> nValuePairs = new ArrayList <BasicNameValuePair>();		
-		nValuePairs.add(new BasicNameValuePair("track", tags));
-		nValuePairs.add(new BasicNameValuePair("stall_warnings", "true"));
 
-        try {
+		ArrayList<BasicNameValuePair> nValuePairs = new ArrayList <BasicNameValuePair>();		
+
+		if( stallWarnings!=null){
+			nValuePairs.add(new BasicNameValuePair("stallWarnings", stallWarnings));	
+		}
+		if( tags!=null){
+			nValuePairs.add(new BasicNameValuePair("track", tags));	
+		}
+		if( delimited != null){
+			nValuePairs.add(new BasicNameValuePair("delimited", delimited));
+		}
+		if( with != null){
+			nValuePairs.add(new BasicNameValuePair("with", with));
+		}
+		if( replies!=null){
+			nValuePairs.add(new BasicNameValuePair("replies", replies));
+		}
+		if( locations!=null){
+			nValuePairs.add(new BasicNameValuePair("locations", locations));
+		}
+		if( count!=null){
+			nValuePairs.add(new BasicNameValuePair("count", count));
+		}
+
+
+
+		try {
 			post.setEntity(new UrlEncodedFormEntity(nValuePairs));
 		} catch (UnsupportedEncodingException e1) {
 			log.debug(" Error on setEntity :",e1);		
 		}		
 
-		log.debug("post : "+post + "params = "+post.getParams().getParameter("track"));		
-		
+		log.debug("post : "+post + "Entity = "+post.getEntity());		
+
 		//--------  Ask the twitter stream  API the gzip stream ------	
 		post.setHeader("Accept-Encoding", "deflate, gzip"); 
 		log.trace("using deflate, gzip");
-	    
-	    //--------  Sign a Post with oauth using oauth.signpost ------	  
-	    CommonsHttpOAuthConsumer consumer = new CommonsHttpOAuthConsumer(consumerKey, consumerSecret);
-	    consumer.setTokenWithSecret(token, tokenSecret);
-	    log.trace("consumer OAuth created");
-	    
-	    try {
+
+		//--------  Sign a Post with oauth using oauth.signpost ------	  
+		CommonsHttpOAuthConsumer consumer = new CommonsHttpOAuthConsumer(consumerKey, consumerSecret);
+		consumer.setTokenWithSecret(token, tokenSecret);
+		log.trace("consumer OAuth created");
+
+		try {
 			consumer.sign(post);
 			log.debug("consumer OAuth signed");
 		} catch (OAuthMessageSignerException e) {
@@ -222,31 +308,31 @@ public class HStream {
 		} catch (OAuthCommunicationException e) {
 			log.error("ERROR AT OAUTH, ",e);			
 		}	    
-	    //--------------------------------------------------------------
-	    
-	    HttpResponse response;
+		//--------------------------------------------------------------
+
+		HttpResponse response;
 		try {
 			response = client.execute(post);
 			log.trace("post executed");
-		    HttpEntity entity = response.getEntity();
+			HttpEntity entity = response.getEntity();
 			log.trace("HttpEntity fetched");			
-		    if (entity == null) throw new IOException("No entity");
-		    log.trace("HttpEntity not null :)");
-		    loop.buffer = new BufferedReader(new InputStreamReader(new GZipStream( entity.getContent() ), "UTF-8"));
-		    log.trace("Buffer created");
-		    loop.start();
-		    log.debug("Stream started");
+			if (entity == null) throw new IOException("No entity");
+			log.trace("HttpEntity not null :)");
+			loop.buffer = new BufferedReader(new InputStreamReader(new GZipStream( entity.getContent() ), "UTF-8"));
+			log.trace("Buffer created");
+			loop.start();
+			log.debug("Stream started");
 		} catch (ClientProtocolException e) {
 			log.error("Error during execution, ",e);			
 		} catch (IOException e) {
 			log.error("Error during execution, ",e);			
 		}	    
-    }
-    
-    public void stop(){  
-    	if (!loop.isAlive() || !loop.isInterrupted())
-    		loop.interrupt();    	
-	    log.debug("Stream stopped");
-    } 
+	}
+
+	public void stop(){  
+		if (!loop.isAlive() || !loop.isInterrupted())
+			loop.interrupt();    	
+		log.debug("Stream stopped");
+	} 
 
 }
