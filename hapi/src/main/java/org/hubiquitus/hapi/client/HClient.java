@@ -859,7 +859,7 @@ public class HClient {
                 arun.delegate2Use = this.messagesDelegates.get(HUtil.getApiRef(message.getRef()));
             }
             // 2 - if the ref can not provide a delegate, we try the parameter sent
-            if (messageDelegate != null) {
+            else if (messageDelegate != null) {
                 arun.delegate2Use = messageDelegate;
             } else {
                 // in other cases we try the default delegate message
