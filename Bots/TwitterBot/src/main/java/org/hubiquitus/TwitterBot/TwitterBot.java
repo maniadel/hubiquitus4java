@@ -51,27 +51,36 @@ public class TwitterBot extends Hubot  {
 
 	@Override
 	protected void inProcessMessage(HMessage messageIncoming) {
-		log.info(messageIncoming.toString());
-		if (messageIncoming.getAuthor().startsWith(screenName)) {
-            send(createHelloTweet(screenName + "@twitter.com", "Hello! v1"));
-            send(createHelloTweet(screenName + "@twitter.com", "@" + screenName + " Hello! v2"));
-            send(createHelloTweet("twitterOutbox@twitter.com", "Hello world ! v3"));
-            send(createHelloTweet("twitterOutbox@twitter.com", "Hello world ! v4 this message should be trunked fjdkqlfjdlsqflsq fdjfsdjfklqs cdjsqklfdjsqlfsq fjdsqfjsdlfjsqkl jdlsqfdsjklf sdqolqjvdskqlf jsdqklfj dsljfsdklqf jsqlfjsqdljfdslqjf dsqlfsq jlfjsqlfjsqlkfjsql"));
-            send(createHelloTweet("u2@localhost", "Hello ! v5, you must open a hClient with u2@localhost to get this message"));
-            send(createHelloTweet("u1@localhost", "Hello ! v6 should not be received... see Adapter Inbox behavior"));
-        }
+		log.info("------- "+messageIncoming.toString());
+		try {
+			HMessage msg = new HMessage();
+			msg.setType("hTweet");	
+			msg.setActor("testMANI1@twitter.com");
+			HTweet tweet = new HTweet();
+			tweet.setText("coucou");
+			msg.setPayload(tweet);
+			
+			send(msg);
+		} catch (MissingAttrException e) {
+			log.error("Can not send the tweet :(, ", e);
+		}
+		
 	}
+    HMessage myMsg = new HMessage();
     
 	
 	private HMessage createHelloTweet(String actor, String status){
+		HMessage msg = new HMessage();
 		try {
             HTweet tweet = new HTweet();
 			tweet.setText(status);
-            return this.buildMessage(actor, "hTweet", tweet, null);
+			msg = this.buildMessage(actor, "hTweet", tweet, null);
+			
+			return  msg;
 		} catch (MissingAttrException e) {
 			log.error("message: ", e);
 		}
-		return null;
+		return msg;
 	}
 
 

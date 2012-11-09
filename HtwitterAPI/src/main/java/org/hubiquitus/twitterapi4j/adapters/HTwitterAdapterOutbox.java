@@ -22,6 +22,9 @@ package org.hubiquitus.twitterapi4j.adapters;
 import org.hubiquitus.hapi.client.HMessageDelegate;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterOutbox;
+import org.hubiquitus.hubotsdk.adapters.HtwitterAdapter.HTweet;
+import org.hubiquitus.twitter4j.stream.pub.HStatusUpdate;
+import org.hubiquitus.twitter4j.stream.pub.HStream;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -29,17 +32,22 @@ import org.slf4j.LoggerFactory;
 
 
 
+
+
 public class HTwitterAdapterOutbox extends AdapterOutbox{
-	
+
 	final Logger log = LoggerFactory.getLogger(HTwitterAdapterOutbox.class);
-	
+
 	private String consumerKey ;
 	private String consumerSecret;
 	private String twitterAccessToken;
 	private String twitterAccessTokenSecret;
 	private String proxyHost;
 	private int proxyPort;
+	private String status;
 	
+	HStatusUpdate statusUpdate;
+
 	@Override
 	public void setProperties(JSONObject properties) {
 		if(properties != null){
@@ -56,7 +64,7 @@ public class HTwitterAdapterOutbox extends AdapterOutbox{
 				if (properties.has("twitterAccessTokenSecret")) {
 					this.twitterAccessTokenSecret = properties.getString("twitterAccessTokenSecret");
 				}
-				
+
 				if (properties.has("proxyHost")) {
 					this.proxyHost = properties.getString("proxyHost");
 				}				
@@ -69,27 +77,79 @@ public class HTwitterAdapterOutbox extends AdapterOutbox{
 		}
 		log.info("Properties Initialized : " + this);		
 	}
-	
-	
-	
+
+
+
 	@Override
 	public void sendMessage(HMessage message, HMessageDelegate callback) {
-		
-		
+		try {
+			String status = transformTweet(message);
+			if (status != null) {				
+				statusUpdate.postTweet();
+			}
+		} catch (Exception e) {
+			log.error("message: ", e);
+		}
 	}
 
-	
+	public String transformTweet(HMessage message) {
+		String result = null;
+		if("htweet".equalsIgnoreCase(message.getType())){
+			
+			try {
+				HTweet hTweet = new HTweet(message.getPayloadAsJSONObject());
+				String status = hTweet.getText();
+				String screenNameDest = "@" + message.getActor().split("@")[0];
+				if ((!actor.equals(message.getActor())) && (!status.startsWith(screenNameDest))){
+					//  in this case, the tweet must be send in public mode to the current actor
+					//  If the hMessage doesn’t begin with the “@screenName”,
+					//	the outbox adapter will add it automatically.
+					status = screenNameDest + " " + status;
+				}
+				// check the limit;
+				if (status.length() > 140) {
+					status = status.substring(0, 136) + "...";
+				}
+				result = status;
+			
+			} catch (JSONException e) {
+				log.error("Can not transform a hTweet in a status format: ",e);
+			}
+		}
+
+		if (result == null) {
+			log.warn("Strange, I receive an hMessage of type='"+message.getType()+"' instead of an 'hTweet'");
+		}
+		return result;
+	}
+
 
 	@Override
 	public void start() {
-		// TODO Auto-generated method stub
 		
+		log.info("Twitter adapter outbox '"+actor+"' starting...");
+		
+		 statusUpdate  = new HStatusUpdate(
+				proxyHost, 
+				proxyPort, 
+				consumerKey, 
+				consumerSecret, 
+				twitterAccessToken, 
+				twitterAccessTokenSecret,
+				status
+				);
+		//statusUpdate.addListener(this);		
+		//int code = statusUpdate.postTweet();
+		//log.info("  RECIVED CODE FROM :"+code);
+		log.info("  Twitter adapter outbox '"+actor+"' started.");
+		
+
 	}
 
 	@Override
 	public void stop() {
-		// TODO Auto-generated method stub
-		
+		//Not Supported 
+
 	}	
 
 }
