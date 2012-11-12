@@ -54,6 +54,9 @@ public class HTransportSocketio implements HTransport, IOCallback {
 	private Timer timeoutTimer = null;
 	private Timer autoReconnectTimer = new Timer();
 	private ReconnectTask autoReconnectTask = null;
+	private HAuthCallback authCB = null;
+	private ConnectedCallbackClass connectedCB = new ConnectedCallbackClass();
+	private boolean shouldConnect = false;
 	
 	private class ReconnectTask extends TimerTask{
 
@@ -77,11 +80,13 @@ public class HTransportSocketio implements HTransport, IOCallback {
 	 * @param callback - see HTransportCallback for more informations
 	 * @param options - transport options
 	 */
-	public void connect(HTransportDelegate callback, HTransportOptions options){	
+	public void connect(HTransportDelegate callback, HTransportOptions options){
+		shouldConnect = true;
 		this.connectionStatus = ConnectionStatus.CONNECTING;
 		
 		this.callback = callback;
 		this.options = options;
+		this.authCB = options.getAuthCB();
 		
 		String endpointHost = options.getEndpointHost();
 		int endpointPort = options.getEndpointPort();
@@ -147,6 +152,7 @@ public class HTransportSocketio implements HTransport, IOCallback {
 	 * Disconnect from server 
 	 */
 	public void disconnect() {
+		shouldConnect = false;
 		this.connectionStatus = ConnectionStatus.DISCONNECTING;
 		if(autoReconnectTask != null){
 			autoReconnectTask.cancel();
@@ -231,30 +237,44 @@ public class HTransportSocketio implements HTransport, IOCallback {
 		}
 	}
 	
+
+	private class ConnectedCallbackClass implements ConnectedCallback {
+		@Override
+		public void connect(String username, String password) {
+			// prepare data to be sent
+			JSONObject data = new JSONObject();
+			try {
+				data.put("publisher", username);
+				data.put("password", password);
+				data.put("sent", DateTime.now());
+				// send the event
+				socketio.emit("hConnect", data);
+			} catch (Exception e) {
+				if (socketio != null) {
+					socketio.disconnect();
+				}
+				if (timeoutTimer != null) {
+					timeoutTimer.cancel();
+					timeoutTimer = null;
+				}
+				updateStatus(ConnectionStatus.DISCONNECTED, ConnectionError.TECH_ERROR, e.getMessage());
+			}
+		}
+
+	}
+
 	public void onConnect() {
-		//try to log in once connected
-		String publisher = options.getJid().getFullJID();
-		String password = options.getPassword();
-		
-		//prepare data to be sent
-		JSONObject data = new JSONObject();
-		try {
-			data.put("publisher", publisher);
-			data.put("password", password);
-            data.put("sent", DateTime.now());
-			//send the event
-			socketio.emit("hConnect", data);
-		} catch (Exception e) {
-			if(socketio != null) {
-				socketio.disconnect();
+		logger.info("---onConnect-- : "  + shouldConnect);
+		if(shouldConnect){
+			if(authCB != null){
+				authCB.authCb(options.getJid().getFullJID(), connectedCB);
 			}
-			if (timeoutTimer != null) {
-				timeoutTimer.cancel();
-				timeoutTimer = null;
+			else{
+				connectedCB.connect(options.getJid().getFullJID(), options.getPassword());
 			}
-			updateStatus(ConnectionStatus.DISCONNECTED, ConnectionError.TECH_ERROR, e.getMessage());
 		}
 	}
+
 
 	public void onDisconnect() {
 		if (timeoutTimer != null) {
@@ -262,9 +282,6 @@ public class HTransportSocketio implements HTransport, IOCallback {
 			timeoutTimer = null;
 		}
 		if (this.connectionStatus != ConnectionStatus.DISCONNECTED) {
-//			while(socketio.isConnected()) {
-//				socketio.disconnect();
-//			}
 			updateStatus(ConnectionStatus.DISCONNECTED, ConnectionError.NO_ERROR, null);
 		}
 	}

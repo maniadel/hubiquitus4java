@@ -45,8 +45,11 @@ import org.hubiquitus.hapi.hStructures.HMessageOptions;
 import org.hubiquitus.hapi.hStructures.HOptions;
 import org.hubiquitus.hapi.hStructures.HStatus;
 import org.hubiquitus.hapi.hStructures.OperandNames;
+import org.hubiquitus.hapi.transport.socketio.ConnectedCallback;
+import org.hubiquitus.hapi.transport.socketio.HAuthCallback;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -261,11 +264,33 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 		this.statusArea.setText(text);
 	}
 
+	
+	
+	class ACB implements HAuthCallback{
+			
+			private String login;
+			private String password;
+			
+			public ACB(String l, String p){
+				this.login = l;
+				this.password = p;
+			}
+			@Override
+			public void authCb(String username, ConnectedCallback connectedCB) {
+				connectedCB.connect(login, password);
+			}
+			
+		}
+		
+		
+	
 	// Listener of button connection
 	class ConnectionButtonListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent event) {
 
 			String endpoint = endPointField.getText();
+			String username = usernameField.getText();
+			String password = passwordField.getText();
 			if (endpoint == null || endpoint.equalsIgnoreCase("")) {
 				option.setEndpoints(null);
 			} else {
@@ -278,8 +303,9 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 				option.setTransport("socketio");
 			else
 				option.setTransport("xmpp");
-			client.connect(usernameField.getText(), passwordField.getText(),
-					option);
+
+//			option.setAuthCB(new ACB(username, password));
+			client.connect(username	, password, option);
 		}
 	}
 
@@ -334,10 +360,10 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 				channelToCreate.put("owner", usernameField.getText());
 				JSONArray jsonArray = new JSONArray();
 				jsonArray.put(usernameField.getText());
-				jsonArray.put("u2@localhost");
+				jsonArray.put("u2@hub.novediagroup.com");
 				channelToCreate.put("subscribers", jsonArray);
 				channelToCreate.put("active", true);
-				HMessage message = client.buildCommand("hnode@localhost",
+				HMessage message = client.buildCommand("hnode@hub.novediagroup.com",
 						"hcreateupdatechannel", channelToCreate, null);
 				client.send(message, outerClass);
 			} catch (Exception e) {

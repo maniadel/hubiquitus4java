@@ -774,6 +774,7 @@ public class HClient {
 
 		this.transportOptions.setJid(jid);
 		this.transportOptions.setPassword(password);
+		this.transportOptions.setAuthCB(options.getAuthCB());
 
 		// by default we user server host rather than publish host if defined
 

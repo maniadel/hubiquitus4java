@@ -4,7 +4,7 @@
 	"pwd" : "u1",
 	"hserver" : "http://localhost:8080",
 	"properties" : {
-		"screenName" : "yourScreenName"
+		"screenName" : "ManiAdel"
 	},
 	"adapters" : [ 
 		{
@@ -12,11 +12,11 @@
 			"type" : "org.hubiquitus.hubotsdk.adapters.HTwitterAdapterInbox",
 			"properties" : {
 				"content" : "complete",
-				"consumerKey" : "yourConsumerkey",
-				"consumerSecret" : "yourConsumerSecret",
-				"twitterAccessToken" : "yourTwitterAccessToken",
-				"twitterAccessTokenSecret" : "yourTwitterAccessTokenSecret",
-				"tags" : "#red",
+				"consumerKey" : "rauHc8qj9em3BlIAaNaEg",
+				"consumerSecret" : "VKdX0lVcjXcrQkMtooN4telfgl2CUi97URPWqZvGPE",
+				"twitterAccessToken" : "345294967-ryEO8s3rt6EGQromIUWepak40Ayzq4DU7pbJXcCP",
+				"twitterAccessTokenSecret" : "8nJoIvWsxpK5Pv6DlrJfrsZju8v8Ct1yy7o54e0gnaA",
+				"tags" : "#novedia",
 				"langFilter" : "fr"
 			}
 		},
@@ -24,10 +24,10 @@
 			"actor" : "twitterOutbox@twitter.com",
 			"type" : "org.hubiquitus.hubotsdk.adapters.HTwitterAdapterOutbox",
 			"properties" : {
-				"consumerKey" : "yourConsumerkey",
-				"consumerSecret" : "yourConsumerSecret",
-				"twitterAccessToken" : "yourTwitterAccessToken",
-				"twitterAccessTokenSecret" : "yourTwitterAccessTokenSecret"
+				"consumerKey" : "rauHc8qj9em3BlIAaNaEg",
+				"consumerSecret" : "VKdX0lVcjXcrQkMtooN4telfgl2CUi97URPWqZvGPE",
+				"twitterAccessToken" : "345294967-ryEO8s3rt6EGQromIUWepak40Ayzq4DU7pbJXcCP",
+				"twitterAccessTokenSecret" : "8nJoIvWsxpK5Pv6DlrJfrsZju8v8Ct1yy7o54e0gnaA"
 			}
 		}
 	]

@@ -9,7 +9,7 @@
 		"type" : "org.hubiquitus.hubotsdk.adapters.HHttpAdapterInbox",
 		"properties" : {
 				"host" : "localhost",
-				"port" : "8086"
+				"port" : "8082"
 			}	
 		},
 		{
