@@ -264,7 +264,6 @@ public class HTransportSocketio implements HTransport, IOCallback {
 	}
 
 	public void onConnect() {
-		logger.info("---onConnect-- : "  + shouldConnect);
 		if(shouldConnect){
 			if(authCB != null){
 				authCB.authCb(options.getJid().getFullJID(), connectedCB);
