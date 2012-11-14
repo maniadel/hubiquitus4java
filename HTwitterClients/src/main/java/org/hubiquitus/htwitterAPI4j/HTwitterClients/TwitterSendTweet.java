@@ -8,20 +8,27 @@ public class TwitterSendTweet {
 
 	final static Logger log = LoggerFactory.getLogger(TwitterSendTweet.class);
 
-	private static String consumerKey             = "rauHc8qj9em3BlIAaNaEg";
-	private static String consumerSecret          = "VKdX0lVcjXcrQkMtooN4telfgl2CUi97URPWqZvGPE";
-	private static String twitterAccessToken      = "345294967-ryEO8s3rt6EGQromIUWepak40Ayzq4DU7pbJXcCP";
-	private static String twitterAccessTokenSecret= "8nJoIvWsxpK5Pv6DlrJfrsZju8v8Ct1yy7o54e0gnaA";	
+	
+
+	private static String consumerKey             = "yourConsumerKey";
+	private static String consumerSecret          = "yourConsumerSecret";
+	private static String twitterAccessToken      = "yourAccessToken";
+	private static String twitterAccessTokenSecret= "yourAccessTokenSecret";	
+	
+	private static String tags="tag1,tag2,..";
+	
+	private static String proxyHost="0.0.0.0"; //Optional
+	private static int    proxyPort= 0000;     //Optional
+	
+	private static String delimited="all";                         //Optional
+	private static String stallWarnings="true";                    //Optional
+	private static String with="followings";                       //Optional 
+	private static String replies="all";                           //Optional
+	private static String locations="-122.75,36.8,-121.75,37.8";   //Optional
+	private static String count="130000";                          //Optional
 
 	private static String status="Hello Hubiquitus 2 !!!";
 	private static String screenName ="@testMANI1";
-
-	private static String proxyHost="192.168.102.84";
-	private static int    proxyPort= 3128;
-
-
-
-
 
 	public static void main(String[] args) {
 
