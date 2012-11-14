@@ -274,10 +274,13 @@ public class HStream {
 
 
 
-
+	/***
+	 * it's used to reconnect stream after recive an HTTP error 
+	 * @param code integer 
+	 */
 	public void reconnectingProcess(int code){
-		
-		
+
+
 		HStream stream = new HStream (
 				proxyHost, 
 				proxyPort, 
@@ -305,7 +308,7 @@ public class HStream {
 		case 100:
 			// TCP/IP level network errors Increase the delay in reconnects by 250ms each attempt, up to 16 seconds.
 			timeToWaitTcpLevel = timeToWaitTcpLevel +250;
-			
+
 			try {
 				log.info("RECONNECTING ...");
 				Thread.sleep(timeToWaitTcpLevel);
