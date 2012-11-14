@@ -62,12 +62,19 @@ public class HUserStream {
 	private String replies;
 	private String locations;
 	private String count;
+
+	private int  timeToWaitTcpLevel   = 1;
+	private int  timeToWaitHttpError  = 250;
+	private int  timeToWaitHttp420    = 30000;
+
+	protected HCommonsFunctions hcommonsFunctions = new HCommonsFunctions();
+
 	/**
 	 * The map where the JSONObject's properties are kept.
 	 */
 	@SuppressWarnings("rawtypes")
 	private Map map;
-	
+
 	/**
 	 * Get an optional value associated with a key.
 	 *
@@ -90,7 +97,7 @@ public class HUserStream {
 		return JSONObject.NULL.equals(opt(key));
 	}
 
-	
+
 	private class GZipStream extends GZIPInputStream {
 		private final InputStream wrapped;
 		public GZipStream(InputStream is) throws IOException {
@@ -166,7 +173,7 @@ public class HUserStream {
 		super();
 		this.proxyHost = proxyHost;
 		this.proxyPort = proxyPort;
-		
+
 		this.tags = tags;
 		this.delimited =delimited;
 		this.stallWarnings = stallWarnings; 
@@ -215,7 +222,7 @@ public class HUserStream {
 				listener.onDisconnectMessages(item);
 				//-----  RECONNECTING ----
 				log.info("RECONNECTING ...");
-				
+
 				HUserStream stream = new HUserStream (
 						proxyHost, 
 						proxyPort, 
@@ -230,29 +237,132 @@ public class HUserStream {
 						consumerSecret, 
 						token, 
 						tokenSecret);
+
 				stream.addListener(listener);
 
 				try {
 					log.info("ITEM  :"+item + "Code :"+item.getJSONObject("disconnect").getInt("code"));
-					if (item.getJSONObject("disconnect").getInt("code") == 7){
-						try {
-							Thread.sleep(9000);
-							stream.start();
-						} catch (InterruptedException e) {
-							log.error("Error Thread donst sleep correctelly "+e);					
-						}
+					if (item.getJSONObject("disconnect").getInt("code") == 1){				
+						log.debug("Shudown | The feed was shutdown (possibly a machine restart)");						
+					}else if(item.getJSONObject("disconnect").getInt("code") == 2){						
+						log.debug("Duplicate stream | The same endpoint was connected too many times.");												
+					}else if(item.getJSONObject("disconnect").getInt("code") == 3){
+						log.debug("Control request | Control streams was used to close a stream (applies to sitestreams).");											
+					}else if(item.getJSONObject("disconnect").getInt("code") == 4){						
+						log.debug("Stall | The client was reading too slowly and was disconnected by the server. ");												
+					}else if(item.getJSONObject("disconnect").getInt("code") == 5){						
+						log.debug("Normal | The client appeared to have initiated a disconnect.");												
+					}else if(item.getJSONObject("disconnect").getInt("code") == 7){						
+						log.debug("Admin logout | The same credentials were used to connect a new stream and the oldest was disconnected.");												
+					}else if(item.getJSONObject("disconnect").getInt("code") == 8){						
+						log.debug("... | Reserved for internal use. Will not be delivered to external clients.");
+					}else if(item.getJSONObject("disconnect").getInt("code") == 9){						
+						log.debug("Max message limit | The stream connected with a negative count parameter and was disconnected after all backfill was delivered.");												
+					}else if(item.getJSONObject("disconnect").getInt("code") == 10){						
+						log.debug("Max message limit | The stream connected with a negative count parameter and was disconnected after all backfill was delivered.");											
+					}else if(item.getJSONObject("disconnect").getInt("code") == 11){						
+						log.debug("Broker stall | An internal issue disconnected the stream.");												
+					}else if(item.getJSONObject("disconnect").getInt("code") == 12){						
+						log.debug("Shed load | The host the stream was connected to became overloaded and streams were disconnected to balance load. Reconnect as usual.");												
+					}
+
+					try {
+						Thread.sleep(3000);
+						stream.start();
+					} catch (InterruptedException e) {
+						log.error("Error Thread donst sleep correctelly "+e);					
 					}
 
 				} catch (JSONException e1) {
 					log.error("Error in get code :"+e1);
 					e1.printStackTrace();
 				}
-				//------
+				//------				
 			}
 			else 
 				listener.onOtherMessage(item);
 		}
 	}
+
+	/***
+	 * it's used to reconnect stream after recive an HTTP error 
+	 * @param code integer 
+	 */
+	public void reconnectingProcess(int code){
+
+
+		HUserStream stream = new HUserStream (
+				proxyHost, 
+				proxyPort, 
+				tags, 
+				delimited,
+				stallWarnings, 
+				with,
+				replies,
+				locations,
+				count,
+				consumerKey, 
+				consumerSecret, 
+				token, 
+				tokenSecret);
+
+
+		switch (code){
+		case 200 :
+			// reinitalize all variable Time
+
+			timeToWaitTcpLevel   = 1;
+			timeToWaitHttpError  = 250;
+			timeToWaitHttp420    = 30000;			
+			break;
+		case 100:
+			// TCP/IP level network errors Increase the delay in reconnects by 250ms each attempt, up to 16 seconds.
+			timeToWaitTcpLevel = timeToWaitTcpLevel +250;
+
+			try {
+				log.info("RECONNECTING ...");
+				Thread.sleep(timeToWaitTcpLevel);
+				stream.start();
+			} catch (InterruptedException e) {
+				log.error("Error Thread donst sleep correctelly "+e);					
+			}			
+
+			if(timeToWaitTcpLevel > 16000){
+				log.info("RECONNECTING ...");
+				log.error("Stream stoped, you are attempted up 16 seconds.");
+				stream.stop();	
+			}
+			break;
+
+		case 101:
+			// Start with a 5 second wait, doubling each attempt, up to 320 seconds.
+			timeToWaitHttpError = timeToWaitHttpError * 2;
+
+			try {
+				Thread.sleep(timeToWaitHttpError);
+				stream.start();
+			} catch (InterruptedException e) {
+				log.error("Error Thread donst sleep correctelly "+e);					
+			}			
+
+			if(timeToWaitHttpError > 320000){
+				log.error("Stream stoped, you are attempted up 320 seconds with an http Error.");
+				stream.stop();	
+			}
+
+		case 420:
+			// 1 minute wait and double
+			timeToWaitHttp420 = timeToWaitHttp420 * 2;
+
+			try {
+				Thread.sleep(timeToWaitHttp420);
+				stream.start();
+			} catch (InterruptedException e) {
+				log.error("Error Thread donst sleep correctelly "+e);					
+			}
+			break;		
+		}
+	}	
 
 	public void start(){
 		stop();
@@ -271,9 +381,9 @@ public class HUserStream {
 		 * Post Parameters 
 		 * */
 		ArrayList<BasicNameValuePair> nValuePairs = new ArrayList <BasicNameValuePair>();		
-		
-		
-		
+
+
+
 		if( stallWarnings!=null){
 			nValuePairs.add(new BasicNameValuePair("stall_warnings", stallWarnings));	
 		}
@@ -295,8 +405,8 @@ public class HUserStream {
 		if( count!=null){
 			nValuePairs.add(new BasicNameValuePair("count", count));
 		}
-		
-		
+
+
 		try {
 			post.setEntity(new UrlEncodedFormEntity(nValuePairs));
 		} catch (UnsupportedEncodingException e1) {
@@ -330,6 +440,10 @@ public class HUserStream {
 		try {
 			response = client.execute(post);
 			log.trace("post executed");
+
+			// get http response and reconnect the stream depending a response recived 
+			reconnectingProcess(hcommonsFunctions.getHTTPResponse (response));
+
 			HttpEntity entity = response.getEntity();
 			log.trace("HttpEntity fetched");			
 			if (entity == null) throw new IOException("No entity");
