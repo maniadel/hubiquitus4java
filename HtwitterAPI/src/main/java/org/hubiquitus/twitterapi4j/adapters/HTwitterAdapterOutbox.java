@@ -24,7 +24,6 @@ import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterOutbox;
 import org.hubiquitus.hubotsdk.adapters.HtwitterAdapter.HTweet;
 import org.hubiquitus.twitter4j.stream.pub.HStatusUpdate;
-import org.hubiquitus.twitter4j.stream.pub.HStream;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -44,7 +43,7 @@ public class HTwitterAdapterOutbox extends AdapterOutbox{
 	private String twitterAccessTokenSecret;
 	private String proxyHost;
 	private int proxyPort;
-	private String status;
+	
 	
 	HStatusUpdate statusUpdate;
 
@@ -84,8 +83,8 @@ public class HTwitterAdapterOutbox extends AdapterOutbox{
 	public void sendMessage(HMessage message, HMessageDelegate callback) {
 		try {
 			String status = transformTweet(message);
-			if (status != null) {				
-				statusUpdate.postTweet();
+			if (status != null) {
+				statusUpdate.postTweet(status);
 			}
 		} catch (Exception e) {
 			log.error("message: ", e);
@@ -128,15 +127,16 @@ public class HTwitterAdapterOutbox extends AdapterOutbox{
 	public void start() {
 		
 		log.info("Twitter adapter outbox '"+actor+"' starting...");
+		//status = "@testMANI1 hellooooo";
 		
-		 statusUpdate  = new HStatusUpdate(
+		statusUpdate  = new HStatusUpdate(
 				proxyHost, 
 				proxyPort, 
 				consumerKey, 
 				consumerSecret, 
 				twitterAccessToken, 
-				twitterAccessTokenSecret,
-				status
+				twitterAccessTokenSecret
+				
 				);
 		//statusUpdate.addListener(this);		
 		//int code = statusUpdate.postTweet();
