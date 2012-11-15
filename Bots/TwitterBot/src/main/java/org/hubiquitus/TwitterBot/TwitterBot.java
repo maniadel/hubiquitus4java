@@ -26,6 +26,7 @@ import org.hubiquitus.hapi.exceptions.MissingAttrException;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.Hubot;
 import org.hubiquitus.hubotsdk.adapters.HtwitterAdapter.HTweet;
+import org.joda.time.DateTime;
 import org.json.JSONException;
 
 public class TwitterBot extends Hubot  {
@@ -36,7 +37,7 @@ public class TwitterBot extends Hubot  {
 	
 	public static void main( String[] args )throws Exception{
 		TwitterBot bot  = new TwitterBot();
-		bot.start();
+		bot.start();	
 	}
 	
 	@Override
@@ -51,23 +52,29 @@ public class TwitterBot extends Hubot  {
 
 	@Override
 	protected void inProcessMessage(HMessage messageIncoming) {
-		log.info("------- "+messageIncoming.toString());
-		try {
-			HMessage msg = new HMessage();
-			msg.setType("hTweet");	
-			msg.setActor("testMANI1@twitter.com");
-			HTweet tweet = new HTweet();
-			tweet.setText("coucou");
-			msg.setPayload(tweet);
-			
-			send(msg);
-		} catch (MissingAttrException e) {
-			log.error("Can not send the tweet :(, ", e);
-		}
+		log.info("-------[twitterBot] Recived message :"+messageIncoming.toString());
 		
+		if (messageIncoming.getAuthor().startsWith(screenName)) {
+			log.info(" THE AUTHOR IS :   "+messageIncoming.getAuthor().toString());
+			
+			send(createHelloTweet(screenName + "@twitter.com", "["+new DateTime()+"]  :"+"1.  Best wishes from Hubiquitus Team"));
+			send(createHelloTweet(screenName + "@twitter.com", "@" + screenName + "["+new DateTime()+"]  :"+" 2.  Best wishes from Hubiquitus Team "));
+			send(createHelloTweet("twitterOutbox@twitter.com", "["+new DateTime()+"]  :"+"3.  Best wishes from Hubiquitus Team") );
+			send(createHelloTweet("twitterOutbox@twitter.com", "["+new DateTime()+"]  :"+"4.  Hello world ! v4 this message should be trunked 0123456789abcdefghijklmnopqrstuvwxyz 0123456789abcdefghijklmnopqrstuvwxyz 0123456789abcdefghijklmnopqrstuvwxyz 0123456789abcdefghijklmnopqrstuvwxyz"));
+			
+			send(createHelloTweet("u2@localhost", "5.  Hello ! v5, you must open a hClient with u2@localhost to get this message"));
+            send(createHelloTweet("u1@localhost", "6.  Hello ! v6 should not be received... see Adapter Inbox behavior"));
+		}else{
+			try {
+				String authorName = messageIncoming.getPayloadAsJSONObject().getJSONObject("author").getString("name");
+				send(createHelloTweet(messageIncoming.getAuthor().toString() + "@twitter.com", "["+new DateTime()+"]    :"+"1.  Thank you "+ authorName +"!    Best wishes from Hubiquitus Team !! \n \n \n Sended from  "+"@"+screenName));
+				
+			} catch (JSONException e) {
+				log.error(" Error ! can't get Author name ( "+e);
+			}
+			
+		}		
 	}
-    HMessage myMsg = new HMessage();
-    
 	
 	private HMessage createHelloTweet(String actor, String status){
 		HMessage msg = new HMessage();
@@ -82,6 +89,5 @@ public class TwitterBot extends Hubot  {
 		}
 		return msg;
 	}
-
-
+	
 }
