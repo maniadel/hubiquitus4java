@@ -127,7 +127,7 @@ public class HTwitterAdapterOutbox extends AdapterOutbox{
 	public void start() {
 		
 		log.info("Twitter adapter outbox '"+actor+"' starting...");
-		//status = "@testMANI1 hellooooo";
+		
 		
 		statusUpdate  = new HStatusUpdate(
 				proxyHost, 
