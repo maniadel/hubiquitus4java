@@ -37,16 +37,12 @@ public class FaceBookSimpleClient extends GetLikeFacebook implements HFacebookLi
 	
 	public static void main( String[] args )
     {
-//		String proxyHost = "0.0.0.0"; //your proxyHost 
-//		int proxyPort = 3128; // your proxyPort
-//		String pageName ="cocacola"; // facebook page desired
-//		long roundRequest = 6000; // On milliseconds 
+		String proxyHost = "0.0.0.0"; //your proxyHost 
+		int proxyPort = 0000; // your proxyPort
+		String pageName ="cocacola"; // facebook page desired
+		long roundRequest = 6000; // On milliseconds 
 		
-		
-		String proxyHost = "192.168.102.84";
-		int proxyPort = 3128;
-		String pageName ="cocacola";
-		long roundRequest = 6000; // On milliseconds
+	
 		
 		FaceBookSimpleClient like = new FaceBookSimpleClient(proxyHost, proxyPort, pageName, roundRequest);
 		like.addListener(like);
