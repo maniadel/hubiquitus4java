@@ -1,0 +1,24 @@
+
+{
+	"type" : "com.mycompany.WordCount",
+	"actor" : "user1@localhost",
+	"pwd" : "user1Password",
+	"hserver" : "http://localhost:8080",
+	
+	"adapters" : [ 
+		{
+			"actor" : "user@facebook.com", 
+			"type" :  "org.hubiquitus.hfacebook.adapters.HFacebookAdapterInbox", 
+			
+			"properties" : {
+							
+				"proxyHost":"yourProxyHost",
+				"proxyPort":yourProxyPort,
+				"pageName":"cocacola",
+				"roundTime":6000
+				
+			}
+		}	
+		
+	]
+}
