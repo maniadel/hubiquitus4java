@@ -367,10 +367,10 @@ public class MainPanel extends JPanel implements HStatusDelegate,
 				channelToCreate.put("owner", usernameField.getText());
 				JSONArray jsonArray = new JSONArray();
 				jsonArray.put(usernameField.getText());
-				jsonArray.put("u2@hub.novediagroup.com");
+				jsonArray.put("u2@localhost");
 				channelToCreate.put("subscribers", jsonArray);
 				channelToCreate.put("active", true);
-				HMessage message = client.buildCommand("hnode@hub.novediagroup.com",
+				HMessage message = client.buildCommand("hnode@localhost.com",
 						"hcreateupdatechannel", channelToCreate, null);
 				client.send(message, outerClass);
 			} catch (Exception e) {
