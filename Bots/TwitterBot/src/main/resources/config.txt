@@ -12,11 +12,11 @@
 			"type" : "org.hubiquitus.hubotsdk.adapters.HTwitterAdapterInbox",
 			"properties" : {
 				"content" : "complete",
-				"consumerKey" : "yourConsumerkey",
+				"consumerKey" : "yourConsumerKey",
 				"consumerSecret" : "yourConsumerSecret",
 				"twitterAccessToken" : "yourTwitterAccessToken",
 				"twitterAccessTokenSecret" : "yourTwitterAccessTokenSecret",
-				"tags" : "#red",
+				"tags" : "#novedia",
 				"langFilter" : "fr"
 			}
 		},
@@ -24,7 +24,7 @@
 			"actor" : "twitterOutbox@twitter.com",
 			"type" : "org.hubiquitus.hubotsdk.adapters.HTwitterAdapterOutbox",
 			"properties" : {
-				"consumerKey" : "yourConsumerkey",
+				"consumerKey" : "yourConsumerKey",
 				"consumerSecret" : "yourConsumerSecret",
 				"twitterAccessToken" : "yourTwitterAccessToken",
 				"twitterAccessTokenSecret" : "yourTwitterAccessTokenSecret"
