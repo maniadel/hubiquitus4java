@@ -21,8 +21,6 @@ package org.hubiquitus.hubotsdk;
 
 import org.hubiquitus.hapi.client.HMessageDelegate;
 import org.hubiquitus.hapi.hStructures.HMessage;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,8 +29,7 @@ public abstract class AdapterOutbox extends Adapter {
 	final Logger logger = LoggerFactory.getLogger(AdapterOutbox.class);
 	
 	// Method for output message and command
-    @SuppressWarnings("unused")
-	public final void onOutGoing(HubotMessageStructure hubotStruct) {
+    public final void onOutGoing(HubotMessageStructure hubotStruct) {
 		sendMessage(hubotStruct.getMessage(), hubotStruct.getCallback());
 	}
 
