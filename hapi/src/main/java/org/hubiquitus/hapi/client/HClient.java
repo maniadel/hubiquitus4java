@@ -93,19 +93,11 @@ public class HClient {
 	}
 
 
-	public void setFullJid(String fullJid) {
-		this.fullJid = fullJid;
-	}
-
 
 	public String getResource() {
 		return resource;
 	}
 
-
-	public void setResource(String resource) {
-		this.resource = resource;
-	}
 
 
 	public HClient() {
@@ -149,8 +141,8 @@ public class HClient {
 			// fill HTransportOptions
 			try {
 				this.fillHTransportOptions(publisher, password, options);
-				setFullJid(this.transportOptions.getJid().getFullJID());
-				setResource(this.transportOptions.getResource());
+				this.fullJid = this.transportOptions.getJid().getFullJID();
+				this.resource = this.transportOptions.getResource();
 			} catch (Exception e) {
 				// stop connecting if filling error
 				this.notifyStatus(ConnectionStatus.DISCONNECTED, ConnectionError.JID_MALFORMAT, e.getMessage());
