@@ -1,7 +1,30 @@
+/**
+ Copyright (c) Novedia Group 2012.
+ This file is part of Hubiquitus
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ of the Software, and to permit persons to whom the Software is furnished to do so,
+ subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all copies
+ or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+ You should have received a copy of the MIT License along with Hubiquitus.
+ If not, see <http://opensource.org/licenses/mit-license.php>. 
+ 
+*/
 package org.hubiquitus.hfacebook.adapters;
 
-import org.hubiquitus.hapi.exceptions.MissingAttrException;
 import org.hubiquitus.hapi.hStructures.HMessage;
+import org.hubiquitus.hfacebook.publics.FBStatus;
 import org.hubiquitus.hfacebook.publics.GetLikeFacebook;
 import org.hubiquitus.hfacebook.publics.HFacebookListners;
 import org.hubiquitus.hubotsdk.AdapterInbox;
@@ -28,8 +51,6 @@ public class HFacebookAdapterInbox extends AdapterInbox implements HFacebookList
 
 		if(properties != null){
 			try{
-
-
 				if (properties.has("proxyHost")) {
 					this.proxyHost = properties.getString("proxyHost");
 				}				
@@ -53,10 +74,9 @@ public class HFacebookAdapterInbox extends AdapterInbox implements HFacebookList
 	public void start() {
 		log.info("Starting request...");
 		like = new GetLikeFacebook(proxyHost, proxyPort, pageName, roundTime);
-
 		like.addListener(this);
 		like.start();
-		log.info("Started requet.");
+		log.info("Started request.");
 
 	}
 
@@ -65,12 +85,10 @@ public class HFacebookAdapterInbox extends AdapterInbox implements HFacebookList
 		log.info("Stopping request...");
 		if (like != null)
 			like.stop();
-		    log.info("Stopped request.");
+		log.info("Stopped request.");
 	}
 	
 	
-	/*************************************************************** */
-
 	@Override
 	public String toString() {
 		return "HFacebookInBox [proxyHost =" + proxyHost 
@@ -79,56 +97,14 @@ public class HFacebookAdapterInbox extends AdapterInbox implements HFacebookList
 				+ ", roundTime =" + roundTime  + "]";
 	}
 
-	/*************************************************************** */
-	/***
-	 *   "name": "Paulo Coelho",
-   "is_published": true,
-   "website": "http://paulocoelhoblog.com",
-   "username": "paulocoelho",
-   "about": "BLOG: http://paulocoelhoblog.com            TWITTER: http://twitter.com/paulocoelho",
-   "personal_interests": "Writing, Archery, Alchemy, Books, ",
-   "talking_about_count": 399177,
-   "category": "Author",
-   "id": "11777366210",
-   "link": "https://www.facebook.com/paulocoelho",
-   "likes": 9669546
-	 * 
-	 */
 	
-	public HMessage transformFacebookMsg(JSONObject facebookMsg) throws JSONException{
-		HMessage message = new HMessage();
-		try {
-			message.setActor(facebookMsg.getString("name"));
-			JSONObject json = new JSONObject();
-			json.put("likes", facebookMsg.getInt("likes"));
-			
-			message.setPayload(json);
-			
-		} catch (MissingAttrException e) {
-			log.error("Transformation to Hmessage Error, Type  :("+e);
-		}
-		
-		return message;
-	}
-	
-	/*************************************************************** */
-	public void onStatusLike(JSONObject statusLike) {
-		log.info("-----> Recived like  :"+statusLike);
-	 
-		try {
-			put(transformFacebookMsg(statusLike));
-		} catch (JSONException e) {
-			log.error(" Error at transformation facebook Message ("+e);
-		}
-		
+	@Override
+	public void onStatus(FBStatus item) {
+		HMessage msg = new HMessage();
+		msg.setType("FBStatus");
+		msg.setPayload(item);
+		put(msg);
 	}
 
 	
-	public void onOthersLikeStatus(JSONObject item) {
-		log.info("-----> Others messages  :"+item);
-
-	}
-
-
-
 }
