@@ -130,10 +130,5 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/../external-libs/socketio.jar</systemPath>
 		</dependency>
-
-
-
-
-
 	</dependencies>
 </project>

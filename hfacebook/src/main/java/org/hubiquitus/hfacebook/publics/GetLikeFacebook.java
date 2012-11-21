@@ -1,3 +1,27 @@
+/**
+ Copyright (c) Novedia Group 2012.
+ This file is part of Hubiquitus
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ of the Software, and to permit persons to whom the Software is furnished to do so,
+ subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all copies
+ or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+ You should have received a copy of the MIT License along with Hubiquitus.
+ If not, see <http://opensource.org/licenses/mit-license.php>. 
+ 
+*/
+
 package org.hubiquitus.hfacebook.publics;
 
 import java.util.ArrayList;
@@ -9,39 +33,49 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This class is used to fetch a facebook page's likes, talking_about_count and checkins.
+ * These information are usefull to know the activity on a page
+ * @author AMANI
+ */
 public class GetLikeFacebook {
 
 	final static Logger log = LoggerFactory.getLogger(GetLikeFacebook.class);
 	private ArrayList<HFacebookListners> listeners = new ArrayList<HFacebookListners>();
 
-	//	private static String proxyHOST = "192.168.102.84";
-	//	private static int proxyPORT = 3128;
-	private static  String proxyHost;
-	private static int    proxyPort;	
-
-	private String pageName;
+	private String url;
 	private long roundTime;
 
-	
+	HttpClient client = new HttpClient();
 
 	private static String END_POINT_LIKE_FACEBOOK_PAGE = "https://graph.facebook.com/";
 
+	/**
+	 * Constructor
+	 * @param proxyHost your proxy host or null
+	 * @param proxyPort your proxy port or null
+	 * @param pageName the name of the page e.g. "cocacola" so we will fetch data on https://graph.facebook.com/cocacola
+	 * @param roundTime the refresh rate in ms
+	 */
 	public GetLikeFacebook( String proxyHost,
 			int  proxyPort,
 			String pageName,
 			long roundTime) {
 		super();
-		this.proxyHost = proxyHost;
-		this.proxyPort = proxyPort;
 
-		this.pageName = pageName;
 		this.roundTime = roundTime;
+		url = END_POINT_LIKE_FACEBOOK_PAGE + pageName;
+		
+		if(proxyHost != null && proxyPort > 0){
+			HostConfiguration config = client.getHostConfiguration();
+			config.setProxy(proxyHost, proxyPort);
+			log.info("proxy used : " + proxyHost + ":" + proxyPort);
+		}
+		
+		log.info("url scanned : " + url + " (every "+roundTime+" ms)");
+
 	}
 
-	/**
-	 * Used to add a listener
-	 * @param listener which must implement the HStreamlistener to get the status
-	 */
 	public void addListener(HFacebookListners listener) {
 		listeners.add(listener);
 		log.debug("listener added: "+listener);
@@ -53,59 +87,34 @@ public class GetLikeFacebook {
 	}
 
 
-	public void fireEvent(JSONObject item) {  	    
-		for (HFacebookListners listener : listeners) {
-			if (item.has("likes"))
-				listener.onStatusLike(item);
-			else  
-				listener.onOthersLikeStatus(item);
-		}
+	private void fireEvent(FBStatus item) {  
+		for (HFacebookListners listener : listeners)
+			listener.onStatus(item);
 	}
 
 
-	/*** 
-	 * @param url: String 'is the end poind ti get like facebook page'
-	 * @param pageName : String 'the name of page to get here like' )
-	 * @return JSONObject 'result getting '  
-	 */
-	protected static JSONObject  getLikeFacebookPage(String pageName){
-		JSONObject  response =null;    	
-		String url = null;
-		
-		url =  END_POINT_LIKE_FACEBOOK_PAGE + pageName;    	
-		//Instantiate an HttpClient
-		HttpClient client = new HttpClient();
-		//Instantiate a GET HTTP method
+	private FBStatus getLikeFacebookPage(){
 		GetMethod method = new GetMethod(url);	
-
-		int statusCode;    	
 		try {
-			if(proxyHost != null && proxyPort > 0){
-				HostConfiguration config = client.getHostConfiguration();
-				config.setProxy(proxyHost, proxyPort);
-			}
-			statusCode = client.executeMethod(method);
+			int statusCode = client.executeMethod(method);
 			if (statusCode == 200) {
-
-				String myBody = method.getResponseBodyAsString();
-				response= new JSONObject(myBody);
-
+				return new FBStatus(new JSONObject(method.getResponseBodyAsString()));
 			} else {
 				log.debug("Error trying to read request to : " + url +  " status : " + statusCode);
 			}
-			method.releaseConnection();
 		} catch (Exception e) {
 			log.debug("Error while trying to launch request " + client + " : " + e.toString());
+		} finally {
+			method.releaseConnection();
 		}
-		return response;
+		return null;
 	}
 
 
 
-
-
-	/****************************************************************************/
-
+	/**
+	 * Internal thread to fetch the data periodically
+	 */
 	private class Loop extends Thread {
 
 		private GetLikeFacebook owner;
@@ -118,73 +127,38 @@ public class GetLikeFacebook {
 		public void run() {
 			while (true) {
 				try {
-					
-				 JSONObject jsonObj =	getLikeFacebookPage(pageName);
-				
-				if(jsonObj!=null){
-					owner.fireEvent(jsonObj);
-					
-					 if(jsonObj.has("error")){
-							log.error("Error, The facebook page is not valid ! the page is not found ");
-							
-							loop.interrupt();
-							log.info("Round request is stopped with success. ");
-							break;
-							
-						 }else if(!jsonObj.has("likes")){
-							log.error("Error, Your page does not contain the attribute like !!");
-							
-							loop.interrupt();
-							log.info("Round request is stopped with success. ");
-							break;
-						 }	
-					 Thread.sleep(roundTime);					
-				}else{
-					
-					log.error("Error, Your name page is not found !!");
-					loop.interrupt();
-					log.info("Round request is stopped with success. ");
-					break;
-				}
-				 
-					
-				 
-					
-					
+					FBStatus fbs =	getLikeFacebookPage();
+
+					if ((fbs == null) || (!fbs.isValid())){
+						log.error("Error, The facebook page is not valid ! the page is not found or doesn't contain any likes");
+						loop.interrupt();
+						log.info("Round request is stopped with success. ");
+						break;
+					} else if(fbs!=null)
+						owner.fireEvent(fbs);
+
+					Thread.sleep(roundTime);					
+
 				} catch (Exception e) {
 					if (!isInterrupted())
 						log.error("can not stop a Thread correctelly  :(", e);
 						break;
 				}
-				
 			}
-			
 		}
 	}
+
 	private Loop loop = new Loop(this);
 
-	/*****************************************************************************/
 	public void start(){
 		loop.start();
 	}
 
 	public void stop(){
-		
-		if (!loop.isAlive() || !loop.isInterrupted())
+		if (!loop.isAlive() || !loop.isInterrupted()) {
 			loop.interrupt(); 
-		    log.debug(" Round request is stopped ");
-		    
-	} 
-
-
-	//***************************************	
-	public static void main(String[] args) {
-
-		GetLikeFacebook like = new GetLikeFacebook("192.168.102.84", 3128, "cocacola", 1000);
-		like.start();
-		
+			log.debug(" Round request is stopped ");
+		}
 	}
-
-
 
 }
