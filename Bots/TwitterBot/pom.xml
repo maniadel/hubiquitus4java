@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+ <!-- 
 ~    Copyright (c) Novedia Group 2012.
 ~
 ~    This file is part of Hubiquitus
@@ -23,7 +23,6 @@
 ~    You should have received a copy of the MIT License along with Hubiquitus.
 ~    If not, see <http://opensource.org/licenses/mit-license.php>.
 -->
-
 
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
