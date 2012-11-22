@@ -19,9 +19,9 @@ The "Bots" folder content five sample bots :
 
 The "Examples" folder content a sample exemples as :
 
-* TestClient 
-* HFacebook simple client allows to retrive data from facebook using HFacebook componement. 
-* HTwitter Simples Clients allows to retrive data from twitter and post a tweets using HTwitterAPI-1.1.
+* TestClient allows to test a hubiquitus plateform
+* HFacebook simple client allows to retrive data from facebook using HFacebook componement
+* HTwitter Simples Clients allows to retrive data from twitter and post a tweets using HTwitterAPI-1.1
 
 
 To **run** your first bot, please read the following file : INSTALLATION.md
