@@ -6,6 +6,8 @@ Hubiquitus4j is a set of three Java components :
 * Hubot SDK : a kit for Java developers allowing rapid development of hubiquitus agents called hubots
 * Hubiquitus Server : the application server
 
+Recently, Hubiquitus added three components : HTwitterAPI-1.1, HFacebook and HInstagram. That can be used independently, with a simple client.
+
 The "HubotPack" folder content three bots sample:
 
 * feedhubot allows to retrive data from RSS feed
