@@ -1,24 +1,25 @@
-
 {
 	"type" : "com.mycompany.WordCount",
-	"actor" : "user1@localhost",
-	"pwd" : "user1Password",
-	"hserver" : "http://localhost:8080",
+	"actor" : "user@domain",
+	"pwd" : "userPassword",
+	"hserver" : "YourEndPoint",
 	
 	"adapters" : [ 
 		{
-			"actor" : "user@facebook.com", 
-			"type" :  "org.hubiquitus.hfacebook.adapters.HFacebookAdapterInbox", 
+			"actor" : "yourUserName@facebook.com", 
+			"type" :  "org.hubiquitus.hubotsdk.adapters.HFacebookAdapterInbox", 
 			
 			"properties" : {
 							
 				"proxyHost":"yourProxyHost",
 				"proxyPort":yourProxyPort,
-				"pageName":"cocacola",
-				"roundTime":6000
+				"pageName":"yourPage",
+				"roundTime":320
 				
-			}
-		}	
+			}			
+			
+		}
+		
 		
 	]
 }
