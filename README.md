@@ -8,11 +8,13 @@ Hubiquitus4j is a set of three Java components :
 
 Recently, Hubiquitus added three components : HTwitterAPI-1.1, HFacebook and HInstagram. That can be used independently, with a simple client.
 
-The "HubotPack" folder content three bots sample:
+The "Bots" folder content five sample bots :
 
-* feedhubot allows to retrive data from RSS feed
-* twithubot allows to retrive data from twitter
-* myfirstbot allows to retrive a string and publish it on a node
-* countTweetsBot allows to count messages from the hserver 
+* TwitterBot allows to retrive data from twitter and post a tweets
+* HFacebookBot allows to retrive data from facebook
+* HInstagramBot allows to retrive data from instagram 
+* HelloBot allows to retrive a string and publish it on a node
+* HttpBot allows to retrive data from RSS feed
+
 
 To **run** your first bot, please read the following file : INSTALLATION.md
