@@ -22,24 +22,37 @@
  
 */
 
-package org.hubiquitus.hubiquitus4j.HTwitterSimplesClients;
 
-import org.hubiquitus.twitter4j_1_1.stream.HUserStream;
-import org.hubiquitus.twitter4j_1_1.stream.HUserStreamListner;
+
+package org.hubiquitus.hubiquitus4j_1_1.HTwitterSimplesClients;
+
+import org.hubiquitus.twitter4j_1_1.stream.HStream;
+import org.hubiquitus.twitter4j_1_1.stream.HStreamListner;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TwitterUserStream extends HUserStream implements HUserStreamListner{
+
+public class TwitterStream extends HStream implements HStreamListner {
+
+	public TwitterStream(String proxyHost, int proxyPort, String tags,
+			String delimited, String stallWarnings, String with,
+			String replies, String locations, String count, String consumerKey,
+			String consumerSecret, String token, String tokenSecret) {
+		super(proxyHost, proxyPort, tags, delimited, stallWarnings, with, replies,
+				locations, count, consumerKey, consumerSecret, token, tokenSecret);		
+	}
+
+
 
 	final static Logger log = LoggerFactory.getLogger(TwitterStream.class);
-
+	
 	private static String consumerKey             = "yourConsumerKey";
 	private static String consumerSecret          = "yourConsumerSecret";
 	private static String twitterAccessToken      = "yourAccessToken";
 	private static String twitterAccessTokenSecret= "yourAccessTokenSecret";	
 
-	private static String tags="tag1,tag2";
+	private static String tags="tag1,tag2,..";
 
 	private static String proxyHost="0.0.0.0"; //Optional
 	private static int    proxyPort= 0000;     //Optional
@@ -50,80 +63,76 @@ public class TwitterUserStream extends HUserStream implements HUserStreamListner
 	private static String replies="all";                           //Optional
 	private static String locations="-122.75,36.8,-121.75,37.8";   //Optional
 	private static String count="130000";                          //Optional
+	
 
 
 	
-	public TwitterUserStream(String proxyHost, int proxyPort, String tags,
-			String delimited, String stallWarnings, String with,
-			String replies, String locations, String count, String consumerKey,
-			String consumerSecret, String token, String tokenSecret) {
-		super(proxyHost, proxyPort, tags, delimited, stallWarnings, with, replies,
-				locations, count, consumerKey, consumerSecret, token, tokenSecret);		
-	}
-
-
-
-
+	
 	public static void main(String[] args) {
-
 		log.info("Start stream ...");
-		TwitterUserStream stream = new TwitterUserStream(
-				proxyHost, 
-				proxyPort, 
-				tags,						
-				delimited,
-				stallWarnings, 
-				with,
-				replies, 
-				locations, 
-				count, 
-				consumerKey,						
-				consumerSecret, 
-				twitterAccessToken, 
-				twitterAccessTokenSecret);
+		TwitterStream stream = new TwitterStream(
+						 proxyHost,
+						 proxyPort,						 
+						 tags, 
+						 delimited,  
+						 stallWarnings, 
+						 with, 
+						 replies, 
+						 locations, 
+						 count,						 
+						 consumerKey,  
+						 consumerSecret, 
+						 twitterAccessToken,
+						 twitterAccessTokenSecret);
 		stream.addListener(stream);		
 		stream.start();
 		log.info("Started.");
 	}
 
-	@Override
-	public void onStatus(JSONObject status) {		
-		log.info("------------------->  Recived Tweet :"+status.toString());
-	}
+
+
+
 
 	@Override
-	public void onOtherMessage(JSONObject message) {
-		log.info("------------------->  Recived message :"+message.toString());		
-	}
+	public void onStatus(JSONObject status) {
+		log.info("------------------->  Recived Tweet :"+status.toString());
+		
+	}	
 
 	@Override
 	public void onStallWarning(JSONObject stallWarning) {
-		log.info("------------------->  Recived stallWarning :"+stallWarning.toString());		
+		log.info("------------------->  Recived stallWarning :"+stallWarning.toString());
+		
 	}
 
 	@Override
 	public void onStatusDeletionNotices(JSONObject delete) {
 		log.info("------------------->  Recived delete :"+delete.toString());
+		
 	}
 
 	@Override
 	public void onLocationDeletionNotices(JSONObject scrubGeo) {
-		log.info("------------------->  Recived scrubGeo :"+scrubGeo.toString());		
+		log.info("------------------->  Recived delete :"+scrubGeo.toString());
+		
 	}
 
 	@Override
 	public void onLimitNotices(JSONObject limit) {
-		log.info("------------------->  Recived limit :"+limit.toString());		
+		log.info("------------------->  Recived limit :"+limit.toString());
+		
 	}
 
 	@Override
 	public void onStatusWithheld(JSONObject statusWithheld) {
-		log.info("------------------->  Recived statusWithheld :"+statusWithheld.toString());
+		log.info("------------------->  Recived limit :"+statusWithheld.toString());
+		
 	}
 
 	@Override
 	public void onUserWithheld(JSONObject userWithheld) {
 		log.info("------------------->  Recived userWithheld :"+userWithheld.toString());
+		
 	}
 
 	@Override
@@ -131,5 +140,10 @@ public class TwitterUserStream extends HUserStream implements HUserStreamListner
 		log.info("------------------->  Recived disconnect :"+disconnect.toString());
 		
 	}
-
+	@Override
+	public void onOtherMessage(JSONObject message) {
+		log.info("------------------->  Recived message :"+message.toString());
+		
+	}
 }
+

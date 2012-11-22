@@ -23,7 +23,7 @@
 */
 
 
-package org.hubiquitus.hubiquitus4j.HTwitterSimplesClients;
+package org.hubiquitus.hubiquitus4j_1_1.HTwitterSimplesClients;
 
 import org.hubiquitus.twitter4j_1_1.stream.HStatusUpdate;
 import org.slf4j.Logger;
