@@ -4,25 +4,7 @@
 "pwd" : "u1",
 "hserver" : "http://localhost:8080",
 "adapters" : [{
-				"actor" : "timerAdapter1@domain",
-				"type" : "org.hubiquitus.hubotsdk.adapters.HTimerAdapterInbox",
-				"properties" : {"mode" : "crontab", "crontab" : "0 24 19 ? * *"  }
-			},
-			{
-				"actor" : "timerAdapter2@domain",
-				"type" : "org.hubiquitus.hubotsdk.adapters.HTimerAdapterInbox",
-				"properties" : {"mode" : "crontab", "crontab" : "10 24 19 ? * *"  }
-			},
-			{
-				"actor" : "timerAdapter3@domain",
-				"type" : "org.hubiquitus.hubotsdk.adapters.HTimerAdapterInbox",
-				"properties" : {"mode" : "crontab", "crontab" : "20 24 19 ? * *"  }
-			},
-			{
-				"actor" : "timerAdapter4@domain",
-				"type" : "org.hubiquitus.hubotsdk.adapters.HTimerAdapterInbox",
-				"properties" : {"mode" : "crontab", "crontab" : "30 24 19 ? * *"  }
+				"actor" : "#test@localhost"
 			}
 			]
-
 }

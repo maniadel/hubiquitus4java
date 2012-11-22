@@ -52,7 +52,7 @@ public class TwitterStream extends HStream implements HStreamListner {
 	private static String twitterAccessToken      = "yourAccessToken";
 	private static String twitterAccessTokenSecret= "yourAccessTokenSecret";	
 
-	private static String tags="tag1,tag2,..";
+	private static String tags="tag1,tag2";
 
 	private static String proxyHost="0.0.0.0"; //Optional
 	private static int    proxyPort= 0000;     //Optional

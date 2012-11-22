@@ -25,8 +25,6 @@
 
 package org.hubiquitus.hfacebookSimpleClient;
 
-
-
 import org.hubiquitus.hfacebook.publics.FBStatus;
 import org.hubiquitus.hfacebook.publics.GetLikeFacebook;
 import org.hubiquitus.hfacebook.publics.HFacebookListners;
