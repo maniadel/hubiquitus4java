@@ -29,7 +29,7 @@
 
   <groupId>org.hubiquitus.hubiquitus4j</groupId>
   <artifactId>HubotsSDK</artifactId>
-  <version>0.5.0</version>
+  <version>0.5.4</version>
   <build>
         <plugins>
             <plugin>
