@@ -8,7 +8,7 @@ Hubiquitus4j is a set of three Java components :
 
 Recently, Hubiquitus added three components : HTwitterAPI-1.1, HFacebook and HInstagram. That can be used independently, with a simple client.
 
-The "Bots" folder content five sample bots :
+The "Bots" folder content five samples bots :
 
 * TwitterBot allows to retrive data from twitter and post a tweets
 * HFacebookBot allows to retrive data from facebook
