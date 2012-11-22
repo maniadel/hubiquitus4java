@@ -9,31 +9,30 @@
 	"adapters" : [ 
 		{
 			"actor" : "UserTwitter@twitter.com", 
-			"type" :  "org.hubiquitus.twitterapi4j.adapters.HTwitterAdapterInbox", 
-			
+			"type" :  "org.hubiquitus.hubotsdk.adapters.HTwitterAdapterInbox_1_1", 
+
 			"properties" : {
-							
+
 				"proxyHost":"0.0.0.0",
 				"proxyPort":0000,
 				"consumerKey" : "yourConsumerKey",
 				"consumerSecret" : "yourConsumerSecret",
 				"twitterAccessToken" : "yourAccesToken",
 				"twitterAccessTokenSecret" : "yourAccessTokenSecret",
-				
+
 				"tags" : "novedia,Hubiquitus",
 				"stallWarnings" :"true",
 				"delimited" ="all",
 				"replies"="all",
 				"langFilter" : "en"
 
-
 			}			
-			
+
 		},
 		{
-			
+
 			"actor" : "twitterOutbox@twitter.com",
-			"type" :  "org.hubiquitus.twitterapi4j.adapters.HTwitterAdapterOutbox",
+			"type" :  "type" :  "org.hubiquitus.hubotsdk.adapters.HTwitterAdapterOutbox_1_1",
 			"properties" : {
 				"proxyHost":"0.0.0.0",
 				"proxyPort":0000,
@@ -43,7 +42,6 @@
 				"twitterAccessTokenSecret" : "yourAccessTokenSecret"
 			}
 		}
-		
-		
 	]
 }
+
