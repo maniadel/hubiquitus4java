@@ -85,17 +85,14 @@ public class HClient {
 
 	private TransportDelegate transportDelegate = new TransportDelegate();
 	
-	private String fullJid;
-	private String resource;
-
     public String getFullJid() {
-		return fullJid;
+		return this.transportOptions.getJid().getFullJID();
 	}
 
 
 
 	public String getResource() {
-		return resource;
+		return this.transportOptions.getResource();
 	}
 
 
@@ -141,8 +138,6 @@ public class HClient {
 			// fill HTransportOptions
 			try {
 				this.fillHTransportOptions(publisher, password, options);
-				this.fullJid = this.transportOptions.getJid().getFullJID();
-				this.resource = this.transportOptions.getResource();
 			} catch (Exception e) {
 				// stop connecting if filling error
 				this.notifyStatus(ConnectionStatus.DISCONNECTED, ConnectionError.JID_MALFORMAT, e.getMessage());
