@@ -20,7 +20,7 @@
 				"twitterAccessToken" : "yourAccesToken",
 				"twitterAccessTokenSecret" : "yourAccessTokenSecret",
 
-				"tags" : "novedia,Hubiquitus",
+				"tags" : "novedia,maniadel",
 				"stallWarnings" :"true",
 				"delimited" ="all",
 				"replies"="all",
