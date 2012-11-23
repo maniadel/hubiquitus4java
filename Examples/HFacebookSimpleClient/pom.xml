@@ -30,7 +30,7 @@
 
 	<groupId>org.hubiquitus.hfacebook</groupId>
 	<artifactId>hfacebookSimpleClient</artifactId>
-	<version>0.0.1</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>hfacebookSimpleClient</name>
@@ -40,53 +40,13 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.hubiquitus.hfacebook</groupId>
-			<artifactId>hfacebook</artifactId>
-			<version>0.0.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz</artifactId>
-			<version>2.1.5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz-oracle</artifactId>
-			<version>2.1.5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz-weblogic</artifactId>
-			<version>2.1.5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz-jboss</artifactId>
-			<version>2.1.5</version>
-		</dependency>
-
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-			<version>2.1</version>
-		</dependency>
-
+	<dependencies>	
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
 		</dependency>
-		<dependency>
+			<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-core</artifactId>
 			<version>2.10.0</version>
@@ -96,12 +56,6 @@
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-jetty</artifactId>
 			<version>2.10.0</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.0.4</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -115,7 +69,11 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.6.6</version>
 		</dependency>
-
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
 		<dependency>
 			<groupId>org.json.jar</groupId>
 			<artifactId>json-lib</artifactId>
@@ -123,20 +81,11 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/../../external-libs/json-org.jar</systemPath>
 		</dependency>
-		<dependency>
-			<groupId>org.socket.io</groupId>
-			<artifactId>socket.io</artifactId>
-			<version>0.0.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/../../external-libs/socketio.jar</systemPath>
-		</dependency>
 		
 		<dependency>
-			<groupId>org.hubiquitus.hfacebook.jar</groupId>
+			<groupId>org.hubiquitus.hfacebook</groupId>
 			<artifactId>hfacebook</artifactId>
-			<version>0.0.1</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/../../external-libs/hfacebook.jar</systemPath>
+			<version>1.0.0</version>
 		</dependency>
 		
 	</dependencies>

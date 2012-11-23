@@ -31,30 +31,23 @@ import org.hubiquitus.hfacebook.publics.HFacebookListners;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FaceBookSimpleClient extends GetLikeFacebook implements HFacebookListners
+public class FaceBookSimpleClient implements HFacebookListners
 {
 	final static Logger log = LoggerFactory.getLogger(FaceBookSimpleClient.class);
 	
-    public FaceBookSimpleClient(String proxyHost, int proxyPort,
-			String pageName, long roundTime) {
-		super(proxyHost, proxyPort, pageName, roundTime);
-		
-	}
     public void onStatus(FBStatus fbs) {
-    	log.info("-----> [Facebook] Recived status  :"+fbs);
+    	log.info("[Facebook] Recieved status  :"+fbs.getLikes());
 	}
     
 	public static void main( String[] args )
     {		
-		String proxyHost = "0.0.0.0";   // yourProxyHost
-		int proxyPort = 3128;           // yourProxyPort
-		String pageName ="cocacola";    // facebook page name
-		long roundTime = 6000;          // On milliseconds
-		
-		FaceBookSimpleClient like = new FaceBookSimpleClient(proxyHost, proxyPort, pageName, roundTime);
-		like.addListener(like);
-		like.start();		
+		GetLikeFacebook glfb = new GetLikeFacebook(
+					null, 		// yourProxyHost if any
+					0,			// yourProxyPort if any
+					"cocacola",	// facebook page name
+					2000);		// On milliseconds refresh rate
+		glfb.addListener(new FaceBookSimpleClient());
+		glfb.start();
     }
 	
-		
 }
