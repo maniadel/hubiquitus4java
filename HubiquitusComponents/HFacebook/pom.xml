@@ -31,7 +31,7 @@
 
 	<groupId>org.hubiquitus.hfacebook</groupId>
 	<artifactId>hfacebook</artifactId>
-	<version>0.0.1</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>hfacebook</name>
@@ -51,58 +51,12 @@
             </plugin>
         </plugins>
     </build>
-	
-	
-	
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.hubiquitus.hubiquitus4j</groupId>
-			<artifactId>hAPI</artifactId>
-			<version>0.5.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hubiquitus.hubiquitus4j</groupId>
-			<artifactId>HubotsSDK</artifactId>
-			<version>0.5.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz</artifactId>
-			<version>2.1.5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz-oracle</artifactId>
-			<version>2.1.5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz-weblogic</artifactId>
-			<version>2.1.5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz-jboss</artifactId>
-			<version>2.1.5</version>
-		</dependency>
-
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-			<version>2.1</version>
-		</dependency>
-
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -143,16 +97,9 @@
 			<artifactId>json-lib</artifactId>
 			<version>0.0.0</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/../external-libs/json-org.jar</systemPath>
+			<systemPath>${basedir}/../../external-libs/json-org.jar</systemPath>
 		</dependency>
-		<dependency>
-			<groupId>org.socket.io</groupId>
-			<artifactId>socket.io</artifactId>
-			<version>0.0.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/../external-libs/socketio.jar</systemPath>
-		</dependency>
-
+		
 
 	</dependencies>
 </project>
