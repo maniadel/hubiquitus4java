@@ -115,7 +115,7 @@ public class HTransportSocketio implements HTransport, IOCallback {
 				
 				socketio = null;
 			}
-		}, 10000);
+		}, options.getTimeout());
 		
 		//init socketio component
 		try {

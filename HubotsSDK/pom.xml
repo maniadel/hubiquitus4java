@@ -49,7 +49,7 @@
 	<dependency>
         <groupId>org.hubiquitus.hubiquitus4j</groupId>
         <artifactId>hAPI</artifactId>
-        <version>0.5.4</version>
+        <version>0.5.5</version>
     </dependency>
      <!-- for http outbox -->
      <dependency>
