@@ -17,7 +17,7 @@ The "Bots" folder content five samples bots :
 * HttpBot allows to retrive data from RSS feed
 
 
-The "HubiquitusComponents" folder content three components (used with a simple client) :
+The "HubiquitusComponents" folder content three components :
 
 * HTwitterAPI-1.1 allows to retrive data from twitter and post a tweets 
 * HFacebook allows to retrive data from facebook 
