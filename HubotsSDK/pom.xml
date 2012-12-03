@@ -171,7 +171,22 @@
 			<version>1.2.1.2</version>
 		</dependency>
      
-     
+     	<dependency>
+			<groupId>org.hubiquitus.hfacebook</groupId>
+			<artifactId>hfacebook</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.hubiquitus.htwitterAPI4j_1.1</groupId>
+			<artifactId>HtwitterAPI</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hubiquitus.hubiquitus4j.hgoogleplus</groupId>
+			<artifactId>HGooglePlus</artifactId>
+			<version>1.0.0</version>
+		</dependency>
             
 	
   </dependencies> 

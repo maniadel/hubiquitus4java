@@ -28,7 +28,9 @@ import org.hubiquitus.hapi.client.HMessageDelegate;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterOutbox;
 import org.hubiquitus.hubotsdk.adapters.HtwitterAdapter.HTweet;
-import org.hubiquitus.hubotsdk.adapters.HTwitter_1_1.HStatusUpdate;
+import org.hubiquitus.twitter4j_1_1.stream.HStatusUpdate;
+
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;

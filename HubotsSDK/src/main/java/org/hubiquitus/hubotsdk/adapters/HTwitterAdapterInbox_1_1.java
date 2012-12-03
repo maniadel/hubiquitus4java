@@ -29,9 +29,10 @@ import java.util.Map;
 
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterInbox;
-import org.hubiquitus.hubotsdk.adapters.HTwitter_1_1.HStream;
-import org.hubiquitus.hubotsdk.adapters.HTwitter_1_1.HStreamListner;
-import org.hubiquitus.hubotsdk.adapters.HTwitter_1_1.TweetToHMessage;
+import org.hubiquitus.twitter4j_1_1.stream.HStream;
+import org.hubiquitus.twitter4j_1_1.stream.HStreamListner;
+import org.hubiquitus.twitter4j_1_1.stream.TweetToHMessage;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
