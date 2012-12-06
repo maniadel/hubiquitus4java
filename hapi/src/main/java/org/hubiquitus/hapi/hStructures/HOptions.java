@@ -42,17 +42,11 @@ public class HOptions extends JSONObject {
 
 	private HAuthCallback authCB = null;
 
-	public HAuthCallback getAuthCB() {
-		return authCB;
-	}
 
-	public void setAuthCB(HAuthCallback authCB) {
-		this.authCB = authCB;
-	}
 	public HOptions() {
 		super();
 	}
-
+	
 	public HOptions(JSONObject jsonObj) throws JSONException {
 		super(jsonObj.toString());
 	}
@@ -116,13 +110,16 @@ public class HOptions extends JSONObject {
 			logger.warn("message: ", e);
 		}
 	}
-	
+	/*
+	 * timeout value used by the hAPI before rise a connection timeout error during connection attempt. 
+	 * Default value is : 15000 ms
+	 */
 	public int getTimeout(){
 		int timeout;
 		try {
 			timeout = this.getInt("timeout");
 		} catch (Exception e) {
-			timeout = 30000;
+			timeout = 15000;
 		}
 		return timeout;
 	}
@@ -132,11 +129,46 @@ public class HOptions extends JSONObject {
 			if(timeout >= 0){
 				this.put("timeout", timeout);
 			}else{
-				this.put("timeout", 30000);
+				this.put("timeout", 15000);
 			}
 		} catch (Exception e) {
 			logger.warn("message: ", e);
 		}
+	}
+	
+	/*
+	 * default timeout value used by the hAPI for all the services except the send() one
+	 * default value is : 30000 ms 
+	 */
+	public int getMsgTimeout(){
+		int timeout;
+		try {
+			timeout = this.getInt("msgTimeout");
+		} catch (Exception e) {
+			timeout = 30000;
+		}
+		return timeout;
+	}
+	
+	public void setMsgTimeout(int msgTimeout){
+		try {
+			if(msgTimeout >= 0){
+				this.put("msgTimeout", msgTimeout);
+			}else{
+				this.put("msgTimeout", 30000);
+			}
+		} catch (Exception e) {
+			logger.warn("message: ", e);
+		}
+	}
+	
+	
+	public HAuthCallback getAuthCB() {
+		return authCB;
+	}
+
+	public void setAuthCB(HAuthCallback authCB) {
+		this.authCB = authCB;
 	}
 
 
