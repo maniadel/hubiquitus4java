@@ -80,47 +80,47 @@ public class TwitterUserStream  implements HUserStreamListner{
 
 	@Override
 	public void onStatus(JSONObject status) {		
-		log.info("-  Recived Tweet :"+status.toString());
+		log.info("-  received Tweet :"+status.toString());
 	}
 
 	@Override
 	public void onOtherMessage(JSONObject message) {
-		log.info("-  Recived message :"+message.toString());		
+		log.info("-  received other message :"+message.toString());		
 	}
 
 	@Override
 	public void onStallWarning(JSONObject stallWarning) {
-		log.info("-  Recived stallWarning :"+stallWarning.toString());		
+		log.info("-  received stallWarning :"+stallWarning.toString());		
 	}
 
 	@Override
 	public void onStatusDeletionNotices(JSONObject delete) {
-		log.info("-  Recived delete :"+delete.toString());
+		log.info("-  received delete :"+delete.toString());
 	}
 
 	@Override
 	public void onLocationDeletionNotices(JSONObject scrubGeo) {
-		log.info("-  Recived scrubGeo :"+scrubGeo.toString());		
+		log.info("-  received scrubGeo :"+scrubGeo.toString());		
 	}
 
 	@Override
 	public void onLimitNotices(JSONObject limit) {
-		log.info("-  Recived limit :"+limit.toString());		
+		log.info("-  received limit :"+limit.toString());		
 	}
 
 	@Override
 	public void onStatusWithheld(JSONObject statusWithheld) {
-		log.info("-  Recived statusWithheld :"+statusWithheld.toString());
+		log.info("-  received statusWithheld :"+statusWithheld.toString());
 	}
 
 	@Override
 	public void onUserWithheld(JSONObject userWithheld) {
-		log.info("-  Recived userWithheld :"+userWithheld.toString());
+		log.info("-  received userWithheld :"+userWithheld.toString());
 	}
 
 	@Override
 	public void onDisconnectMessages(JSONObject disconnect) {
-		log.info("-  Recived disconnect :"+disconnect.toString());
+		log.info("-  received disconnect :"+disconnect.toString());
 		
 	}
 

@@ -75,8 +75,8 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>org.hubiquitus.htwitterAPI4j_1.1</groupId>
-			<artifactId>HtwitterAPI</artifactId>
+			<groupId>org.hubiquitus.hubiquitus4j.htwitterAPI_1_1</groupId>
+			<artifactId>HTwitterAPI_1_1</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 
