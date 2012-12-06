@@ -22,6 +22,7 @@ The "HubiquitusComponents" folder content three components :
 * HTwitterAPI-1.1 allows to retrive data from twitter and post a tweets 
 * HFacebook allows to retrive data from facebook 
 * HInstagram allows to retrive data from instagram 
+* HGooglePlus allows to retrive data from GooglePlus
 
 
 The "Examples" folder content a sample exemples as :
@@ -29,6 +30,8 @@ The "Examples" folder content a sample exemples as :
 * TestClient allows to test a hubiquitus plateform
 * HFacebook simple client allows to retrive data from facebook using HFacebook componement
 * HTwitter Simples Clients allows to retrive data from twitter and post a tweets using HTwitterAPI-1.1
+* HInstagram Simple Client allows to retrive data from Instagram using HInstagramAPI
+* HGooglePlus Simple client allows to retrive data from Instagram using HGooglePlus
 
 
 To **run** your first bot, please read the following file : INSTALLATION.md
