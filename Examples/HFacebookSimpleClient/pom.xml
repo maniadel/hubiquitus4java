@@ -97,8 +97,8 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>org.hubiquitus.hfacebook</groupId>
-			<artifactId>hfacebook</artifactId>
+			<groupId>org.hubiquitus.hubiquitus4j.hfacebook</groupId>
+			<artifactId>HFacebook</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 		
