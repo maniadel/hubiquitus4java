@@ -1,0 +1,20 @@
+{
+    "type": "com.mycompany.InstagramCount",
+    "actor": "yourUserName",
+    "pwd": "yourUserPassword",
+    "hserver": "yourEndPoint",
+    "adapters": [
+        {
+            "actor": "yourInstagram@yourDomain",
+            "type": "org.hubiquitus.hubotsdk.adapters.HInstagramTagsInbox",
+            "properties": {
+                "proxyHost": "yourProxyHost",
+                "proxyPort": yourProxyPort,
+                "tags": "yourTag",
+				"options": "full",
+				"roundTime": 320,
+				"clientId": "yourInstagramClientId"                
+            }
+        }
+    ]
+}

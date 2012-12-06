@@ -23,23 +23,30 @@
  *    If not, see <http://opensource.org/licenses/mit-license.php>.
  */
 
+package org.hubiquitus.hubiquitus4j.GooglePlusBot;
 
-package org.hubiquitus.hubotsdk;
-
-import org.hubiquitus.hapi.client.HMessageDelegate;
+import org.apache.log4j.Logger;
 import org.hubiquitus.hapi.hStructures.HMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.hubiquitus.hubiquitus4j.hgoogleplus.GPStatus;
+import org.hubiquitus.hubotsdk.Hubot;
+import org.json.JSONException;
 
-public abstract class AdapterOutbox extends Adapter {
-	
-	final Logger logger = LoggerFactory.getLogger(AdapterOutbox.class);
-	
-	// Method for output message and command
-    public final void onOutGoing(HubotMessageStructure hubotStruct) {
-		sendMessage(hubotStruct.getMessage(), hubotStruct.getCallback());
+
+
+public class GooglePlusBot extends Hubot
+{
+	private static Logger log = Logger.getLogger(GooglePlusBot.class);
+
+	public static void main( String[] args )throws Exception{
+		GooglePlusBot bot  = new GooglePlusBot();
+		bot.start();	
 	}
 
-	public abstract void sendMessage(HMessage message, HMessageDelegate callback);
+	@Override
+	protected void inProcessMessage(HMessage gpStatus) {
+		log.info("- [GooglePlus]  Received message:  "+gpStatus.toString() );
+		
+		
+	}
 
 }

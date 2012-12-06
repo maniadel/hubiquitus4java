@@ -1,0 +1,19 @@
+{
+    "type" : "com.mycompany.PlusCount",
+    "actor" : "user@domain",
+    "pwd" : "userPassword",
+    "hserver" : "EndPoint",
+    "adapters": [
+        {
+            "actor": "HGooglePlusOneCercedInBox@googlePlus",
+            "type": "org.hubiquitus.hubotsdk.adapters.HGooglePlusOneCercedInBox",
+            "properties": {
+                "proxyHost": "yourProxyHost",
+                "proxyPort": yourProxyPort,
+                "googlePusNameOrId": "+Coca-cola",
+                "roundTime": 5000,
+                "APIKey": "yourAPIKey"
+            }
+        }
+    ]
+}

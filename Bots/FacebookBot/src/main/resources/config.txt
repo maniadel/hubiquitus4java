@@ -1,0 +1,25 @@
+{
+	"type" : "com.mycompany.WordCount",
+	"actor" : "user@domain",
+	"pwd" : "userPassword",
+	"hserver" : "YourEndPoint",
+	
+	"adapters" : [ 
+		{
+			"actor" : "yourUserName@facebook.com", 
+			"type" :  "org.hubiquitus.hubotsdk.adapters.HFacebookAdapterInbox", 
+			
+			"properties" : {
+							
+				"proxyHost":"yourProxyHost",
+				"proxyPort":yourProxyPort,
+				"pageName":"yourPage",
+				"roundTime":320
+				
+			}			
+			
+		}
+		
+		
+	]
+}
