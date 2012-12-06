@@ -19,8 +19,8 @@
 
  You should have received a copy of the MIT License along with Hubiquitus.
  If not, see <http://opensource.org/licenses/mit-license.php>. 
- 
-*/
+
+ */
 
 package org.hubiquitus.hfacebook.publics;
 
@@ -65,13 +65,13 @@ public class GetLikeFacebook {
 
 		this.roundTime = roundTime;
 		url = END_POINT_LIKE_FACEBOOK_PAGE + pageName;
-		
+
 		if(proxyHost != null && proxyPort > 0){
 			HostConfiguration config = client.getHostConfiguration();
 			config.setProxy(proxyHost, proxyPort);
 			log.info("proxy used : " + proxyHost + ":" + proxyPort);
 		}
-		
+
 		log.info("url scanned : " + url + " (every "+roundTime+" ms)");
 
 	}
@@ -118,12 +118,12 @@ public class GetLikeFacebook {
 	private class Loop extends Thread {
 
 		private GetLikeFacebook owner;
-		
+
 		Loop(GetLikeFacebook owner) {
 			super("Thread used to ask a like to Facebook API .");
 			this.owner = owner;
 		}
-		
+
 		public void run() {
 			while (true) {
 				try {
@@ -142,7 +142,7 @@ public class GetLikeFacebook {
 				} catch (Exception e) {
 					if (!isInterrupted())
 						log.error("can not stop a Thread correctelly  :(", e);
-						break;
+					break;
 				}
 			}
 		}
@@ -160,5 +160,5 @@ public class GetLikeFacebook {
 			log.debug(" Round request is stopped ");
 		}
 	}
-
+	
 }
