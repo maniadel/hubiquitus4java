@@ -27,9 +27,7 @@ package org.hubiquitus.hubiquitus4j.GooglePlusBot;
 
 import org.apache.log4j.Logger;
 import org.hubiquitus.hapi.hStructures.HMessage;
-import org.hubiquitus.hubiquitus4j.hgoogleplus.GPStatus;
 import org.hubiquitus.hubotsdk.Hubot;
-import org.json.JSONException;
 
 
 
@@ -41,12 +39,13 @@ public class GooglePlusBot extends Hubot
 		GooglePlusBot bot  = new GooglePlusBot();
 		bot.start();	
 	}
-
+	
+	int count =0;
 	@Override
-	protected void inProcessMessage(HMessage gpStatus) {
-		log.info("- [GooglePlus]  Received message:  "+gpStatus.toString() );
-		
-		
+	protected void inProcessMessage(HMessage gpMessage) {
+		log.info((count++)+"- [GooglePlus]  Received message:  "+gpMessage.toString() );
+
+
 	}
 
 }
