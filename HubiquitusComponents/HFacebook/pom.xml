@@ -34,7 +34,7 @@
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
-	<name>hfacebook</name>
+	<name>HFacebook</name>
 	<url>http://maven.apache.org</url>
 	
 	

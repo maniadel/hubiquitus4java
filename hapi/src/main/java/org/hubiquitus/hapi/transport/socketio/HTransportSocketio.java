@@ -36,6 +36,7 @@ import io.socket.SocketIOException;
 import org.hubiquitus.hapi.hStructures.ConnectionError;
 import org.hubiquitus.hapi.hStructures.ConnectionStatus;
 import org.hubiquitus.hapi.hStructures.HStatus;
+import org.hubiquitus.hapi.structures.JabberID;
 import org.hubiquitus.hapi.transport.HTransport;
 import org.hubiquitus.hapi.transport.HTransportDelegate;
 import org.hubiquitus.hapi.transport.HTransportOptions;
@@ -63,6 +64,7 @@ public class HTransportSocketio implements HTransport, IOCallback {
 	private HAuthCallback authCB = null;
 	private ConnectedCallbackClass connectedCB = new ConnectedCallbackClass();
 	private boolean shouldConnect = false;
+	private boolean isFullJidSet = false;
 	
 	private class ReconnectTask extends TimerTask{
 
@@ -93,7 +95,7 @@ public class HTransportSocketio implements HTransport, IOCallback {
 		this.callback = callback;
 		this.options = options;
 		this.authCB = options.getAuthCB();
-		
+				
 		String endpointHost = options.getEndpointHost();
 		int endpointPort = options.getEndpointPort();
 		String endpointPath = options.getEndpointPath();
@@ -113,7 +115,7 @@ public class HTransportSocketio implements HTransport, IOCallback {
 				
 				socketio = null;
 			}
-		}, 10000);
+		}, options.getTimeout());
 		
 		//init socketio component
 		try {
@@ -159,6 +161,7 @@ public class HTransportSocketio implements HTransport, IOCallback {
 	 */
 	public void disconnect() {
 		shouldConnect = false;
+		isFullJidSet = false;
 		this.connectionStatus = ConnectionStatus.DISCONNECTING;
 		if(autoReconnectTask != null){
 			autoReconnectTask.cancel();
@@ -167,6 +170,7 @@ public class HTransportSocketio implements HTransport, IOCallback {
 		try {
 			socketio.disconnect();
 		} catch (Exception e) {
+			logger.error("message : ", e);
 		}
 		
 	}
@@ -215,7 +219,11 @@ public class HTransportSocketio implements HTransport, IOCallback {
 					timeoutTimer.cancel();
 					timeoutTimer = null;
 				}
-				updateStatus(status.getStatus(), status.getErrorCode(), status.getErrorMsg());
+				if(status.getStatus() == ConnectionStatus.CONNECTED){
+					if(isFullJidSet)
+						updateStatus(status.getStatus(), status.getErrorCode(), status.getErrorMsg());
+				}else
+					updateStatus(status.getStatus(), status.getErrorCode(), status.getErrorMsg());
 			} catch (Exception e) {
 				logger.error("message: ", e);
 				
@@ -239,6 +247,18 @@ public class HTransportSocketio implements HTransport, IOCallback {
 					timeoutTimer.cancel();
 					timeoutTimer = null;
 				}
+			}
+		}else if(type.equalsIgnoreCase("attrs") && arg2 != null && arg2[0].getClass() == JSONObject.class){
+			JSONObject data = (JSONObject)arg2[0];
+			try {
+				JabberID jid = new JabberID(data.getString("publisher"));
+				this.options.setJid(jid);
+				isFullJidSet = true;
+				if(connectionStatus != ConnectionStatus.CONNECTED){
+					updateStatus(ConnectionStatus.CONNECTED, ConnectionError.NO_ERROR, null);
+				}
+			} catch (Exception e) {
+				logger.error("message : ",e);
 			}
 		}
 	}
@@ -286,6 +306,7 @@ public class HTransportSocketio implements HTransport, IOCallback {
 			timeoutTimer.cancel();
 			timeoutTimer = null;
 		}
+		isFullJidSet = false;
 		if (this.connectionStatus != ConnectionStatus.DISCONNECTED) {
 			updateStatus(ConnectionStatus.DISCONNECTED, ConnectionError.NO_ERROR, null);
 		}
@@ -295,6 +316,7 @@ public class HTransportSocketio implements HTransport, IOCallback {
 		if (socketio != null && socketio.isConnected()) {
 			socketio.disconnect();
 		}
+		isFullJidSet = false;
 		socketio = null;
 		String errorMsg = null;
 		if (arg0 != null) {

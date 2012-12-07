@@ -85,17 +85,14 @@ public class HClient {
 
 	private TransportDelegate transportDelegate = new TransportDelegate();
 	
-	private String fullJid;
-	private String resource;
-
     public String getFullJid() {
-		return fullJid;
+		return this.transportOptions.getJid().getFullJID();
 	}
 
 
 
 	public String getResource() {
-		return resource;
+		return this.transportOptions.getResource();
 	}
 
 
@@ -141,8 +138,6 @@ public class HClient {
 			// fill HTransportOptions
 			try {
 				this.fillHTransportOptions(publisher, password, options);
-				this.fullJid = this.transportOptions.getJid().getFullJID();
-				this.resource = this.transportOptions.getResource();
 			} catch (Exception e) {
 				// stop connecting if filling error
 				this.notifyStatus(ConnectionStatus.DISCONNECTED, ConnectionError.JID_MALFORMAT, e.getMessage());
@@ -295,7 +290,7 @@ public class HClient {
 			throw new MissingAttrException("messageDelegate");
 		}
 		HMessage cmdMessage = buildCommand(actor, "hsubscribe", null, null);
-		cmdMessage.setTimeout(options.getTimeout());
+		cmdMessage.setTimeout(options.getMsgTimeout());
 		send(cmdMessage, messageDelegate);
 	}
 
@@ -313,7 +308,7 @@ public class HClient {
 			throw new MissingAttrException("messageDelegate");
 		}
 		HMessage cmdMessage = buildCommand(actor, "hunsubscribe", null, null);
-		cmdMessage.setTimeout(options.getTimeout());
+		cmdMessage.setTimeout(options.getMsgTimeout());
 		send(cmdMessage, messageDelegate);
 	}
 
@@ -340,7 +335,7 @@ public class HClient {
 			logger.error("message: ", e);
 		}
 		HMessage cmdMessage = buildCommand(actor, "hgetlastmessages", params, null);
-		cmdMessage.setTimeout(options.getTimeout());
+		cmdMessage.setTimeout(options.getMsgTimeout());
 		send(cmdMessage, messageDelegate);
 	}
 
@@ -367,7 +362,7 @@ public class HClient {
 			throw new MissingAttrException("messageDelegate");
 		}
 		HMessage cmdMessage = buildCommand(transportOptions.getHserverService(), "hgetsubscriptions", null, null);
-		cmdMessage.setTimeout(options.getTimeout());
+		cmdMessage.setTimeout(options.getMsgTimeout());
 		this.send(cmdMessage, messageDelegate);
 	}
 
@@ -405,7 +400,7 @@ public class HClient {
 		}
 
 		HMessage cmdMessage = this.buildCommand(actor, cmdName, params, null);
-		cmdMessage.setTimeout(options.getTimeout());
+		cmdMessage.setTimeout(options.getMsgTimeout());
 		this.send(cmdMessage, messageDelegate);
 	}
 
@@ -440,7 +435,7 @@ public class HClient {
 			logger.error("message: ", e);
 		}
 		HMessage cmdMessage = buildCommand(actor, "hgetthreads", params, null);
-		cmdMessage.setTimeout(options.getTimeout());
+		cmdMessage.setTimeout(options.getMsgTimeout());
 		this.send(cmdMessage, messageDelegate);
 	}
 
@@ -463,7 +458,7 @@ public class HClient {
 		}
 
 		HMessage cmdMessage = buildCommand(actor, "hRelevantMessages", null, null);
-		cmdMessage.setTimeout(options.getTimeout());
+		cmdMessage.setTimeout(options.getMsgTimeout());
 		this.send(cmdMessage, messageDelegate);
 	}
 	
@@ -479,7 +474,7 @@ public class HClient {
 			throw new MissingAttrException("messageDelegate");
 		}
 		HMessage cmdMessage = buildCommand("session", "hSetFilter", filter, null);
-		cmdMessage.setTimeout(options.getTimeout());
+		cmdMessage.setTimeout(options.getMsgTimeout());
 		this.send(cmdMessage, messageDelegate);
 	}
 
@@ -798,6 +793,7 @@ public class HClient {
 		this.transportOptions.setJid(jid);
 		this.transportOptions.setPassword(password);
 		this.transportOptions.setAuthCB(options.getAuthCB());
+		this.transportOptions.setTimeout(options.getTimeout());
 
 		// by default we user server host rather than publish host if defined
 
