@@ -71,7 +71,7 @@ public class HGooglePlusActivity {
 	 */
 	public HGooglePlusActivity( String proxyHost, int  proxyPort, 
 			String query,
-			String langage,
+			String language,
 			int maxResults,
 			String orderBy,
 			long roundTime,
@@ -80,7 +80,7 @@ public class HGooglePlusActivity {
 		super();
 
 		this.roundTime = roundTime;
-		url = END_POINT_GOOGLE_PLUS_ACTIVITY+query+buildUrlOptionalParams(langage, maxResults, orderBy)+"&key="+APIKey;
+		url = END_POINT_GOOGLE_PLUS_ACTIVITY+query+buildUrlOptionalParams(language, maxResults, orderBy)+"&key="+APIKey;
 
 		if(proxyHost != null && proxyPort > 0){
 			HostConfiguration config = client.getHostConfiguration();
@@ -210,7 +210,7 @@ public class HGooglePlusActivity {
 
 				} catch (Exception e) {
 					if (!isInterrupted())
-						log.error("can not stop a Thread correctelly  :(", e);
+						log.error("can not stop a Thread correctly  :(", e);
 					break;
 				}
 			}

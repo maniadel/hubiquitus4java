@@ -1,9 +1,9 @@
 package org.hubiquitus.hubotsdk.adapters;
 
 import org.hubiquitus.hapi.hStructures.HMessage;
-import org.hubiquitus.hubiquitus4j.HInstagramAPI.HInstagramAPI.GetInstagramTags;
-import org.hubiquitus.hubiquitus4j.HInstagramAPI.HInstagramAPI.InstagStatus;
-import org.hubiquitus.hubiquitus4j.HInstagramAPI.HInstagramAPI.InstagramTagsListners;
+import org.hubiquitus.hubiquitus4j.HInstagramAPI.GetInstagramTags;
+import org.hubiquitus.hubiquitus4j.HInstagramAPI.InstagStatus;
+import org.hubiquitus.hubiquitus4j.HInstagramAPI.InstagramTagsListners;
 import org.hubiquitus.hubotsdk.AdapterInbox;
 import org.json.JSONException;
 import org.json.JSONObject;

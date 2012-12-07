@@ -30,7 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Describe a Gougle plus Status 'GPSatus' payload
+ * Describe a Google plus Status 'GPSatus' payload
  * 
  * @author MANI Adel
  *

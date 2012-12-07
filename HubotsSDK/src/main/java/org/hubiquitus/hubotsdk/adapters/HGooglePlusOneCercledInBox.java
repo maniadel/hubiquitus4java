@@ -33,14 +33,14 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HGooglePlusOneCercedInBox extends AdapterInbox implements HGooglePlusListners{
+public class HGooglePlusOneCercledInBox extends AdapterInbox implements HGooglePlusListners{
 
-	final Logger log = LoggerFactory.getLogger(HGooglePlusOneCercedInBox.class);
+	final Logger log = LoggerFactory.getLogger(HGooglePlusOneCercledInBox.class);
 	
 	private String proxyHost;
 	private int    proxyPort;	
 
-	private String googlePusNameOrId;
+	private String googlePlusNameOrId;
 	private long roundTime;
 	private String APIKey;
 
@@ -58,8 +58,8 @@ public class HGooglePlusOneCercedInBox extends AdapterInbox implements HGooglePl
 				if (properties.has("proxyPort")) {
 					this.proxyPort = properties.getInt("proxyPort");
 				}
-				if (properties.has("googlePusNameOrId")) {
-					this.googlePusNameOrId = properties.getString("googlePusNameOrId");
+				if (properties.has("googlePlusNameOrId")) {
+					this.googlePlusNameOrId = properties.getString("googlePlusNameOrId");
 				}
 				if (properties.has("roundTime")) {
 					this.roundTime = properties.getLong("roundTime");
@@ -78,7 +78,7 @@ public class HGooglePlusOneCercedInBox extends AdapterInbox implements HGooglePl
 	@Override
 	public void start() {
 		log.info("Starting request GooglePlus...");
-		gplusOneCercled = new HGooglePlus(proxyHost, proxyPort, googlePusNameOrId,roundTime, APIKey);	
+		gplusOneCercled = new HGooglePlus(proxyHost, proxyPort, googlePlusNameOrId,roundTime, APIKey);
 		gplusOneCercled.addListener(this);
 		gplusOneCercled.start();
 		log.info("Started request GooglePlus. ");
@@ -96,10 +96,10 @@ public class HGooglePlusOneCercedInBox extends AdapterInbox implements HGooglePl
 	
 	@Override
 	public String toString() {
-		return "HGooglePlusOneCercedInBox [" 
+		return "HGooglePlusOneCercledInBox ["
 				+ "  proxyHost  = " + proxyHost 
 				+ ", proxyPort  = " + proxyPort 
-				+ ", pageName   = " + googlePusNameOrId 
+				+ ", pageName   = " + googlePlusNameOrId
 				+ ", roundTime  = " + roundTime  
 				+ ", APIKey     = " + APIKey  +
 				  "]";
@@ -108,8 +108,8 @@ public class HGooglePlusOneCercedInBox extends AdapterInbox implements HGooglePl
 	/**
 	 * Used to transform the GPstatus into HMessage <br>
 	 * 
-	 * @param gPStatus
-	 * @return HMessage 
+	 * @param gPStatus a google plus status for a page
+	 * @return HMessage an hMessage with a filtered payload of type GPStatus
 	 */
 	public HMessage tranformeGPstatusToHMessage(GPStatus gPStatus){
 		HMessage msg = new HMessage();

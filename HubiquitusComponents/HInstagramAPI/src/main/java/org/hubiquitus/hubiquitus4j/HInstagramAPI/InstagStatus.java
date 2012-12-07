@@ -23,7 +23,7 @@
  */
 
 
-package org.hubiquitus.hubiquitus4j.HInstagramAPI.HInstagramAPI;
+package org.hubiquitus.hubiquitus4j.HInstagramAPI;
 
 
 import org.json.JSONException;
