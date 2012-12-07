@@ -143,7 +143,7 @@ public class HTwitterAdapterOutbox_1_1 extends AdapterOutbox{
 				twitterAccessToken, 
 				twitterAccessTokenSecret
 				);
-		//statusUpdate.addListener(this);	
+		
 		log.info("  Twitter adapter outbox '"+actor+"' started.");	
 
 	}

@@ -22,7 +22,7 @@
  
 */
 
-package org.hubiquitus.twitter4j_1_1.stream;
+package org.hubiquitus.hubotsdk.adapters.HtwitterAdapter;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -34,8 +34,6 @@ import org.hubiquitus.hapi.exceptions.MissingAttrException;
 import org.hubiquitus.hapi.hStructures.HGeo;
 import org.hubiquitus.hapi.hStructures.HLocation;
 import org.hubiquitus.hapi.hStructures.HMessage;
-import org.hubiquitus.hubotsdk.adapters.HtwitterAdapter.HTweet;
-import org.hubiquitus.hubotsdk.adapters.HtwitterAdapter.HTweetAuthor;
 import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;

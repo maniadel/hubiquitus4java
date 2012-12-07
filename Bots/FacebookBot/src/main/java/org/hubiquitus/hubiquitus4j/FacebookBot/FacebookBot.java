@@ -30,7 +30,12 @@ import org.hubiquitus.hapi.client.HClient;
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.Hubot;
 
-
+/**
+ * 
+ * This Bot ask data to Facebook API
+ * @author Adel MANI
+ *
+ */
 public class FacebookBot extends Hubot
 {
 
@@ -47,7 +52,7 @@ public class FacebookBot extends Hubot
 
 	@Override
 	protected void inProcessMessage(HMessage messageIncoming) {
-		log.info("-------[Facebook] Recived message :"+messageIncoming.toString());
+		log.info("-[Facebook] Received message :"+messageIncoming.toString());
 	}
 
 

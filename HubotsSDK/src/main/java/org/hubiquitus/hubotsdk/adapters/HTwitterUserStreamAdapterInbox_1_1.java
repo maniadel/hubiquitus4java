@@ -28,9 +28,11 @@ import java.util.Map;
 
 import org.hubiquitus.hapi.hStructures.HMessage;
 import org.hubiquitus.hubotsdk.AdapterInbox;
+import org.hubiquitus.hubotsdk.adapters.HtwitterAdapter.TweetToHMessage;
 import org.hubiquitus.twitter4j_1_1.stream.HUserStream;
 import org.hubiquitus.twitter4j_1_1.stream.HUserStreamListner;
-import org.hubiquitus.twitter4j_1_1.stream.TweetToHMessage;
+
+
 
 import org.json.JSONException;
 import org.json.JSONObject;

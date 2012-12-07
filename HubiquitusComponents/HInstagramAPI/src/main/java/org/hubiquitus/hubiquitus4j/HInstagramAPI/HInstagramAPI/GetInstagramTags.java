@@ -22,7 +22,8 @@
 
  */
 
-package org.hubiquitus.hfacebook.publics;
+package org.hubiquitus.hubiquitus4j.HInstagramAPI.HInstagramAPI;
+
 
 import java.util.ArrayList;
 
@@ -34,37 +35,40 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class is used to fetch a facebook page's likes, talking_about_count and checkins.
- * These information are usefull to know the activity on a page
- * @author AMANI
+ * This class is used to fetch a data from instagram API.
+ * 
+ * @author A.MANI
  */
-public class GetLikeFacebook {
+public class GetInstagramTags {
 
-	final static Logger log = LoggerFactory.getLogger(GetLikeFacebook.class);
-	private ArrayList<HFacebookListners> listeners = new ArrayList<HFacebookListners>();
+	final static Logger log = LoggerFactory.getLogger(GetInstagramTags.class);
+
+	private ArrayList<InstagramTagsListners> listeners = new ArrayList<InstagramTagsListners>();
 
 	private String url;
 	private long roundTime;
 
 	HttpClient client = new HttpClient();
 
-	private static String END_POINT_LIKE_FACEBOOK_PAGE = "https://graph.facebook.com/";
+	private static String END_POINT_TAGS_INSTAGRAM = "https://api.instagram.com/v1/tags/";
 
 	/**
 	 * Constructor
 	 * @param proxyHost your proxy host or null
 	 * @param proxyPort your proxy port or null
-	 * @param pageName the name of the page e.g. "cocacola" so we will fetch data on https://graph.facebook.com/cocacola
+	 * @param tag,  e.g. "cocacola" so we will fetch data on https://api.instagram.com/v1/tags/
 	 * @param roundTime the refresh rate in ms
 	 */
-	public GetLikeFacebook( String proxyHost,
+	public GetInstagramTags( String proxyHost,
 			int  proxyPort,
-			String pageName,
+			String tags,
+			String options,
+			String clientID,			
 			long roundTime) {
 		super();
-
+		
 		this.roundTime = roundTime;
-		url = END_POINT_LIKE_FACEBOOK_PAGE + pageName;
+		url = END_POINT_TAGS_INSTAGRAM + buildParamsURL(tags,clientID, options);
 
 		if(proxyHost != null && proxyPort > 0){
 			HostConfiguration config = client.getHostConfiguration();
@@ -75,30 +79,48 @@ public class GetLikeFacebook {
 		log.info("url scanned : " + url + " (every "+roundTime+" ms)");
 
 	}
-
-	public void addListener(HFacebookListners listener) {
+	
+	public String buildParamsURL (String tags, String clientId, String options){
+		
+		if(options!=null){
+			if (options.equalsIgnoreCase("full")){
+				return tags+"/media/recent?client_id="+clientId;
+			}else if (options.equalsIgnoreCase("light")){
+				return  tags+"?client_id="+clientId;
+			}
+		}
+		
+		return null;
+	} 
+	
+	public void addListener(InstagramTagsListners listener) {
 		listeners.add(listener);
 		log.debug("listener added: "+listener);
 	}
 
-	public void removeListener(HFacebookListners listener) {
+	public void removeListener(InstagramTagsListners listener) {
 		listeners.remove(listener);
 		log.debug("listener removed: "+listener);
 	}
 
 
-	private void fireEvent(FBStatus item) {  
-		for (HFacebookListners listener : listeners)
+	private void fireEvent(InstagStatus item) {  
+		for (InstagramTagsListners listener : listeners)
 			listener.onStatus(item);
 	}
 
-
-	private FBStatus getLikeFacebookPage(){
+	/**
+	 * This method ask instagram API the tags with option (light, full) 
+	 * 
+	 * @return InstagramStatus
+	 */
+	private InstagStatus getTagsInstagram(){
 		GetMethod method = new GetMethod(url);	
 		try {
 			int statusCode = client.executeMethod(method);
 			if (statusCode == 200) {
-				return new FBStatus(new JSONObject(method.getResponseBodyAsString()));
+
+				return new InstagStatus(new JSONObject(method.getResponseBodyAsString()));
 			} else {
 				log.debug("Error trying to read request to : " + url +  " status : " + statusCode);
 			}
@@ -117,25 +139,25 @@ public class GetLikeFacebook {
 	 */
 	private class Loop extends Thread {
 
-		private GetLikeFacebook owner;
+		private GetInstagramTags owner;
 
-		Loop(GetLikeFacebook owner) {
-			super("Thread used to ask a like to Facebook API .");
+		Loop(GetInstagramTags owner) {
+			super("Thread used to ask data from Instagram API .");
 			this.owner = owner;
 		}
 
 		public void run() {
 			while (true) {
 				try {
-					FBStatus fbs =	getLikeFacebookPage();
+					InstagStatus instagStatus =	getTagsInstagram();
 
-					if ((fbs == null) || (!fbs.isValid())){
-						log.error("Error, The facebook page is not valid ! the page is not found or doesn't contain any likes");
+					if ((instagStatus == null) || (!instagStatus.isValid())){
+						log.error("Error, The instagram tag is not valid !  the page is not found or doesn't contain any tag");
 						loop.interrupt();
 						log.info("Round request is stopped with success. ");
 						break;
-					} else if(fbs!=null)
-						owner.fireEvent(fbs);
+					} else if(instagStatus!=null)
+						owner.fireEvent(instagStatus);
 
 					Thread.sleep(roundTime);					
 
@@ -160,5 +182,10 @@ public class GetLikeFacebook {
 			log.debug(" Round request is stopped ");
 		}
 	}
-	
+
 }
+
+
+
+
+

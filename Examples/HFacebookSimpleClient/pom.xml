@@ -35,6 +35,20 @@
 
 	<name>hfacebookSimpleClient</name>
 	<url>http://maven.apache.org</url>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<optimize>true</optimize>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -83,8 +97,8 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>org.hubiquitus.hfacebook</groupId>
-			<artifactId>hfacebook</artifactId>
+			<groupId>org.hubiquitus.hubiquitus4j.hfacebook</groupId>
+			<artifactId>HFacebook</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 		
