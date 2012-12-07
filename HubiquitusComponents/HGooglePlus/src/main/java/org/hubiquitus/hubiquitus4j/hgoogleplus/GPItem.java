@@ -41,7 +41,7 @@ public class GPItem extends JSONObject {
 	}
 
 	public GPItem() throws JSONException{
-
+        super();
 	}
 
 
@@ -70,7 +70,7 @@ public class GPItem extends JSONObject {
 
 	/**
 	 * Set the Published  of the GPItem.
-	 * @param Published
+	 * @param published
 	 */
 	public void setPublished(String published){
 		try {
@@ -162,7 +162,7 @@ public class GPItem extends JSONObject {
 
 	/**
 	 * Set the displayName  of the GPItem.
-	 * @param Published
+	 * @param displayName
 	 */	
 	public void setDisplayName(String displayName){
 		try {
@@ -188,7 +188,7 @@ public class GPItem extends JSONObject {
 
 	/**
 	 * Set the id  of the GPItem.
-	 * @param Published
+	 * @param id
 	 */	
 	public void setId(String id){
 		try {
@@ -218,7 +218,7 @@ public class GPItem extends JSONObject {
 
 	/**
 	 * Set the url  of the GPItem.
-	 * @param Published
+	 * @param url
 	 */	
 	public void setUrl(String url){
 		try {
@@ -248,7 +248,7 @@ public class GPItem extends JSONObject {
 
 	/**
 	 * Set the image  of the GPItem.
-	 * @param Published
+	 * @param image
 	 */	
 	public void setImage(String image){
 		try {
@@ -306,7 +306,7 @@ public class GPItem extends JSONObject {
 	}
 	/**
 	 * Set the displayName  of the GPItem.
-	 * @param Published
+	 * @param attachments
 	 */	
 	public void setAttachments(JSONArray attachments){
 		try {
@@ -335,7 +335,7 @@ public class GPItem extends JSONObject {
 	}
 	/**
 	 * Set the content  of the GPItem.
-	 * @param content
+	 * @param actorUrl
 	 */	
 	public void setActorUrl(String actorUrl){
 		try {

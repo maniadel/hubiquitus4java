@@ -22,7 +22,7 @@
 
  */
 
-package org.hubiquitus.hubiquitus4j.HInstagramAPI.HInstagramAPI;
+package org.hubiquitus.hubiquitus4j.HInstagramAPI;
 
 
 import java.util.ArrayList;
@@ -57,18 +57,21 @@ public class GetInstagramTags {
 	 * @param proxyHost your proxy host or null
 	 * @param proxyPort your proxy port or null
 	 * @param tag,  e.g. "cocacola" so we will fetch data on https://api.instagram.com/v1/tags/
+     * @param options : full or ligth, full fetch all the data for a tag, and ligth fetches only the number of citation
+     * for the given tag.
+     * @param clientID is the instagram client id
 	 * @param roundTime the refresh rate in ms
 	 */
 	public GetInstagramTags( String proxyHost,
 			int  proxyPort,
-			String tags,
-			String options,
+			String tag,
+			String option,
 			String clientID,			
 			long roundTime) {
 		super();
 		
 		this.roundTime = roundTime;
-		url = END_POINT_TAGS_INSTAGRAM + buildParamsURL(tags,clientID, options);
+		url = END_POINT_TAGS_INSTAGRAM + buildParamsURL(tag,clientID, option);
 
 		if(proxyHost != null && proxyPort > 0){
 			HostConfiguration config = client.getHostConfiguration();
@@ -80,13 +83,13 @@ public class GetInstagramTags {
 
 	}
 	
-	public String buildParamsURL (String tags, String clientId, String options){
+	private String buildParamsURL (String tag, String clientId, String option){
 		
-		if(options!=null){
-			if (options.equalsIgnoreCase("full")){
-				return tags+"/media/recent?client_id="+clientId;
-			}else if (options.equalsIgnoreCase("light")){
-				return  tags+"?client_id="+clientId;
+		if(option!=null){
+			if ("full".equalsIgnoreCase(option)){
+				return tag+"/media/recent?client_id="+clientId;
+			}else if ("light".equalsIgnoreCase(option)){
+				return  tag+"?client_id="+clientId;
 			}
 		}
 		

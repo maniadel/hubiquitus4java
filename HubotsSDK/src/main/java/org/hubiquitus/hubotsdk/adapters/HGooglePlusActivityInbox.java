@@ -150,7 +150,7 @@ public class HGooglePlusActivityInbox extends AdapterInbox implements HGooglePlu
 
 	@Override
 	public String toString() {
-		return "HGooglePlusOneCercedInBox [" 
+		return "HGooglePlusOneCercledInBox ["
 				+ "  proxyHost  = " + proxyHost 
 				+ ", proxyPort  = " + proxyPort 
 				+ ", query      = " + query 
@@ -165,7 +165,7 @@ public class HGooglePlusActivityInbox extends AdapterInbox implements HGooglePlu
 	/**
 	 * Used to transform the GPstatus into HMessage <br>
 	 * 
-	 * @param gPStatus
+	 * @param gpActivity
 	 * @return HMessage 
 	 */
 	public HMessage tranformeGPActivityToHMessage(GPActivity gpActivity){
