@@ -397,6 +397,7 @@ public class HUserStream {
 		}	
 		HttpPost post = new HttpPost(url);
 		try {
+			post.addHeader("SIGNED BY :", "HUBIQUITUS");
 			post.setEntity(new UrlEncodedFormEntity(setPostparms()));
 			log.debug("post : "+post + "Entity = "+post.getEntity());
 			//--------  Ask the twitter stream  API the gzip stream ------	

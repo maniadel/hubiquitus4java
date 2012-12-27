@@ -130,6 +130,7 @@ public class HStatusUpdate {
 		}
 		HttpPost post = new HttpPost(url);		
 		try {
+			post.addHeader("SIGNED BY :", "HUBIQUITUS");
 			post.setEntity(new UrlEncodedFormEntity(setStatus(status)));
 			//--------  Sign a Post with oauth using oauth.signpost --------
 			CommonsHttpOAuthConsumer consumer = new CommonsHttpOAuthConsumer(consumerKey, consumerSecret);		
