@@ -1,4 +1,4 @@
-# Hubiquitus4j - An implementation of Hubiquitus for the Java platform
+# Hubiquitus4java - An implementation of Hubiquitus for the Java platform
 
 Hubiquitus4j is a set of three Java components :
 
@@ -17,11 +17,10 @@ The "Bots" folder content five samples bots :
 * HttpBot allows to retrive data from RSS feed
 
 
-The "HubiquitusComponents" folder content four components :
+The "HubiquitusComponents" folder content three components :
 
 * HTwitterAPI-1.1 allows to retrive data from twitter and post a tweets 
 * HFacebook allows to retrive data from facebook 
-* HInstagram allows to retrive data from instagram 
 * HGooglePlus allows to retrive data from GooglePlus
 
 
@@ -30,7 +29,6 @@ The "Examples" folder content a sample exemples as :
 * TestClient allows to test a hubiquitus plateform
 * HFacebook simple client allows to retrive data from facebook using HFacebook componement
 * HTwitter Simples Clients allows to retrive data from twitter and post a tweets using HTwitterAPI-1.1
-* HInstagram Simple Client allows to retrive data from Instagram using HInstagramAPI
 * HGooglePlus Simple client allows to retrive data from Instagram using HGooglePlus
 
 
