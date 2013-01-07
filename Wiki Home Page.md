@@ -68,10 +68,6 @@ Welcome to the hubiquitus4j wiki! Here you will find all the information you nee
 
 
 
-* [HInstagram API]( https://github.com/maniadel/hubiquitus4java/blob/master/doc/HInstagram-Simple-Client): Informations about using the component HInstagram API with a Simple Client.
-
-
-
 
 
 PS : For provious versions see in [Pages](https://github.com/hubiquitus/hubiquitus4j/wiki/_pages)
