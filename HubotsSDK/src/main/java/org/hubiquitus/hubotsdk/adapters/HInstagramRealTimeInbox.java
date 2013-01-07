@@ -408,22 +408,15 @@ public class HInstagramRealTimeInbox extends AdapterInbox implements Processor{
 	/**
 	 * 
 	 * @param data : JSONArray
-	 * @return JSONArray (jsonarray of the diffrents tags received between the notification and  rceived last tag )
+	 * @return JSONArray (jsonarray of the diffrents tags received between the notification and  received last tag )
 	 */
 	public JSONArray empileTag( JSONArray data){
 		JSONArray pileOfTags = new JSONArray();		
 
 		try {
-			for( int i=0; i<data.length() || (	 data.getJSONObject(i).getJSONObject("caption").getLong("created_time")  <  lastTime    )  ; i++ ){
-
-				//if you see the strange comparaison, that's because when I have the same value for a and b, in the comparaison if a>b is not verified and it goes in the if.
-				if(	 data.getJSONObject(i).getJSONObject("caption").getLong("created_time") >  (lastTime) &&( data.getJSONObject(i).getJSONObject("caption").getLong("created_time") !=  (lastTime))  )
-				{	
-					pileOfTags.put(data.getJSONObject(i));					
-				}else
-				{
-					break;
-				}
+			for( int i=0; i<data.length() && (	 data.getJSONObject(i).getJSONObject("caption").getLong("created_time")  >  lastTime    )  ; i++ ){
+				
+				pileOfTags.put(data.getJSONObject(i));//				
 			}
 			// lastTime: used to save the recent time of the object notified.
 			lastTime = data.getJSONObject(0).getJSONObject("caption").getLong("created_time");
