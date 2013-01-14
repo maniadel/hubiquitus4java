@@ -34,6 +34,6 @@ The "Examples" folder content a sample exemples as :
 * HGooglePlus Simple client allows to retrive data from Instagram using HGooglePlus
 
 
-To **run** your first bot, please read the following file : INSTALLATION.md
+To **run** your first bot, please read the following file : [INSTALLATION.md]()
 
 For more informations, please read the following wiki :  [home.md]()
