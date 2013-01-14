@@ -22,7 +22,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.hubiquitus.hubiquitus4j</groupId>
+	<groupId>org.hubiquitus.hubiquitus4java</groupId>
 	<artifactId>HubotsSDK</artifactId>
 	<version>0.5.5</version>
 	<build>
@@ -63,7 +63,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.hubiquitus.hubiquitus4j</groupId>
+			<groupId>org.hubiquitus.hubiquitus4java</groupId>
 			<artifactId>hAPI</artifactId>
 			<version>0.5.5</version>
 		</dependency>
@@ -213,18 +213,18 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.hubiquitus.hubiquitus4j.hfacebook</groupId>
+			<groupId>org.hubiquitus.hubiquitus4java.hfacebook</groupId>
 			<artifactId>HFacebook</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.hubiquitus.hubiquitus4j.htwitterAPI_1_1</groupId>
+			<groupId>org.hubiquitus.hubiquitus4java.htwitterAPI_1_1</groupId>
 			<artifactId>HTwitterAPI_1_1</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.hubiquitus.hubiquitus4j.hgoogleplus</groupId>
+			<groupId>org.hubiquitus.hubiquitus4java.hgoogleplus</groupId>
 			<artifactId>HGooglePlus</artifactId>
 			<version>1.0.0</version>
 		</dependency>		
