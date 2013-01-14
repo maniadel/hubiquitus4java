@@ -35,6 +35,7 @@ local.properties
 .buildpath
 
 *.iml
+*.log
 *.ipr
 *.iws
 .idea/
