@@ -7,11 +7,11 @@ Welcome to the hubiquitus4java wiki! Here you will find all the informations you
 
 
 
- * [Codes](https://github.com/maniadel/hubiquitus4java/blob/master/doc/CodesV0.5.0.md) : ConnectionStatus, ConnectionError, ResultStatus ... All the enumeration of Hubiquitus.
+ * [Codes](https://github.com/maniadel/hubiquitus4java/blob/master/doc/Codes.md) : ConnectionStatus, ConnectionError, ResultStatus ... All the enumeration of Hubiquitus.
 
 
 
- * [Datamodel](https://github.com/maniadel/hubiquitus4java/blob/master/doc/hAPI_Datamodel_V0.5.0.md) : Information about hAPI Datamodel.
+ * [Datamodel](https://github.com/maniadel/hubiquitus4java/blob/master/doc/hAPI_Datamodel.md) : Information about hAPI Datamodel.
 
 
 
