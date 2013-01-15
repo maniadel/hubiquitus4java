@@ -31,7 +31,7 @@ Welcome to the hubiquitus4java wiki! Here you will find all the informations you
 
 
 
- * [HubotSDK Introduction](https://github.com/hubiquitus/hubiquitus4j/wiki/HubotSDK-Introduction) : Introduction of a hubot.
+ * [HubotSDK Introduction](https://github.com/maniadel/hubiquitus4java/blob/master/doc/HubotSDKIntroduction.md) : Introduction of a hubot.
 
 
 
