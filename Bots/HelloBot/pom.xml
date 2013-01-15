@@ -22,9 +22,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.hubiquitus.hubiquitus4j</groupId>
+	<groupId>org.hubiquitus.hubiquitus4java.samples</groupId>
 	<artifactId>HelloBot</artifactId>
-	<version>0.3.11</version>
+	<version>0.5.5</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
 	<build>
 		<plugins>
@@ -37,25 +41,51 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
-		</plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
 	</build>
 
 	<dependencies>
 
+        <!--dependency>
+                    <groupId>org.json.jar</groupId>
+                    <artifactId>json-lib</artifactId>
+                    <version>0.0.0</version>
+                    <scope>system</scope>
+                    <systemPath>${basedir}/../external-libs/json-org.jar</systemPath>
+        </dependency-->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20090211</version>
+        </dependency>
 		<dependency>
-			<groupId>org.json.jar</groupId>
-			<artifactId>json-lib</artifactId>
-			<version>0.0.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/../../external-libs/json-org.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>org.hubiquitus.hubiquitus4j</groupId>
+			<groupId>org.hubiquitus.hubiquitus4java</groupId>
 			<artifactId>HubotsSDK</artifactId>
 			<version>0.5.5</version>
 		</dependency>
 		<dependency>
-			<groupId>org.hubiquitus.hubiquitus4j</groupId>
+			<groupId>org.hubiquitus.hubiquitus4java</groupId>
 			<artifactId>hAPI</artifactId>
 			<version>0.5.5</version>
 		</dependency>
@@ -74,6 +104,26 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.6.6</version>
 		</dependency>
+
+
+        <!-- temporary fix to manage the issue with the transitive dependencies  -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-jetty</artifactId>
+            <version>2.10.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.socket.io</groupId>
+            <artifactId>socket.io</artifactId>
+            <version>0.0.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/../../external-libs/socketio.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.1</version>
+        </dependency>
 
 	</dependencies>
 </project>

@@ -29,7 +29,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.hubiquitus.hubiquitus4j.HInstagramAPI</groupId>
+  <groupId>org.hubiquitus.hubiquitus4java</groupId>
   <artifactId>InstagramBot</artifactId>
   <version>1.0.0</version>
   <packaging>jar</packaging>
@@ -47,7 +47,28 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
-		</plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
 	</build>
 
   <properties>
@@ -56,23 +77,28 @@
 
   <dependencies>
        <dependency>
-			<groupId>org.hubiquitus.hubiquitus4j</groupId>
+			<groupId>org.hubiquitus.hubiquitus4java</groupId>
 			<artifactId>HubotsSDK</artifactId>
 			<version>0.5.5</version>
 		</dependency>
 		<dependency>
-			<groupId>org.hubiquitus.hubiquitus4j</groupId>
+			<groupId>org.hubiquitus.hubiquitus4java</groupId>
 			<artifactId>hAPI</artifactId>
 			<version>0.5.5</version>
 		</dependency>
-		
-		<dependency>
-			<groupId>org.json.jar</groupId>
-			<artifactId>json-lib</artifactId>
-			<version>0.0.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/../../external-libs/json-org.jar</systemPath>
-		</dependency>
+
+      <!--dependency>
+             <groupId>org.json.jar</groupId>
+             <artifactId>json-lib</artifactId>
+             <version>0.0.0</version>
+             <scope>system</scope>
+             <systemPath>${basedir}/../../external-libs/json-org.jar</systemPath>
+         </dependency-->
+      <dependency>
+          <groupId>org.json</groupId>
+          <artifactId>json</artifactId>
+          <version>20090211</version>
+      </dependency>
 		
 		<dependency>
 			<groupId>log4j</groupId>
