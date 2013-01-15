@@ -3,17 +3,6 @@ Welcome to the hubiquitus4j wiki! Here you will find all the information you nee
 
 
 
-
-
-
-## Pages : 
-
- 
-
-### Version v 0.5.0
-
-
-
 ###hAPI :
 
 
