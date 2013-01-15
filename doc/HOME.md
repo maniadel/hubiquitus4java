@@ -1,4 +1,4 @@
-Welcome to the hubiquitus4java wiki! Here you will find all the information you need for starting using our API, HubotSDK and all other information you need about our projet.
+Welcome to the hubiquitus4java wiki! Here you will find all the informations you need for starting using our API, HubotSDK and all other information you need about our projet.
 
 
 
