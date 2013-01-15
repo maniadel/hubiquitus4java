@@ -7,19 +7,19 @@ Welcome to the hubiquitus4java wiki! Here you will find all the informations you
 
 
 
- * [Codes](https://github.com/maniadel/hubiquitus4java/blob/master/doc/CodesV0.5.0.md) : ConnectionStatus, ConnectionError, ResultStatus ... All the enumeration of Hubiquitus.
+ * [Codes](https://github.com/maniadel/hubiquitus4java/blob/master/doc/Codes.md) : ConnectionStatus, ConnectionError, ResultStatus ... All the enumeration of Hubiquitus.
 
 
 
- * [Datamodel](https://github.com/maniadel/hubiquitus4java/blob/master/doc/hAPI_Datamodel_V0.5.0.md) : Information about hAPI Datamodel.
+ * [Datamodel](https://github.com/maniadel/hubiquitus4java/blob/master/doc/hAPI_Datamodel.md) : Information about hAPI Datamodel.
 
 
 
- * [hClient Functions](https://github.com/maniadel/hubiquitus4java/blob/master/doc/HClient_functions_v0.5.0.md) : Connect, disconnect, builder ... All the function of the client.
+ * [hClient Functions](https://github.com/maniadel/hubiquitus4java/blob/master/doc/HClient_functions.md) : Connect, disconnect, builder ... All the function of the client.
 
 
 
- * [Options](https://github.com/maniadel/hubiquitus4java/blob/master/doc/OptionsV0.5.0.md) : Information about options class.
+ * [Options](https://github.com/maniadel/hubiquitus4java/blob/master/doc/Options.md) : Information about options class.
 
 
 
@@ -27,15 +27,15 @@ Welcome to the hubiquitus4java wiki! Here you will find all the informations you
 
 
 
- * [HubotSDK Adapters](https://github.com/maniadel/hubiquitus4java/blob/master/doc/HubotsdkAdaptersV0.5.0.md) : Information about the adapters of hubot.
+ * [HubotSDK Adapters](https://github.com/maniadel/hubiquitus4java/blob/master/doc/HubotsdkAdapters.md) : Information about the adapters of hubot.
 
 
 
- * [HubotSDK Introduction](https://github.com/hubiquitus/hubiquitus4j/wiki/HubotSDK-Introduction-v-0.5.0) : Introduction of a hubot.
+ * [HubotSDK Introduction](https://github.com/maniadel/hubiquitus4java/blob/master/doc/HubotSDKIntroduction.md) : Introduction of a hubot.
 
 
 
- * [HubotSDK API](https://github.com/maniadel/hubiquitus4java/blob/master/doc/HubotSDK_API_V0.5.0.md) : Information about the API.
+ * [HubotSDK API](https://github.com/maniadel/hubiquitus4java/blob/master/doc/HubotSDK_API.md) : Information about the API.
 
 
 
