@@ -15,11 +15,11 @@ Welcome to the hubiquitus4java wiki! Here you will find all the informations you
 
 
 
- * [hClient Functions](https://github.com/maniadel/hubiquitus4java/blob/master/doc/HClient_functions_v0.5.0.md) : Connect, disconnect, builder ... All the function of the client.
+ * [hClient Functions](https://github.com/maniadel/hubiquitus4java/blob/master/doc/HClient_functions.md) : Connect, disconnect, builder ... All the function of the client.
 
 
 
- * [Options](https://github.com/maniadel/hubiquitus4java/blob/master/doc/OptionsV0.5.0.md) : Information about options class.
+ * [Options](https://github.com/maniadel/hubiquitus4java/blob/master/doc/Options.md) : Information about options class.
 
 
 
