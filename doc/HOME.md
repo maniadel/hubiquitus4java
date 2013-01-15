@@ -27,15 +27,15 @@ Welcome to the hubiquitus4java wiki! Here you will find all the informations you
 
 
 
- * [HubotSDK Adapters](https://github.com/maniadel/hubiquitus4java/blob/master/doc/HubotsdkAdaptersV0.5.0.md) : Information about the adapters of hubot.
+ * [HubotSDK Adapters](https://github.com/maniadel/hubiquitus4java/blob/master/doc/HubotsdkAdapters.md) : Information about the adapters of hubot.
 
 
 
- * [HubotSDK Introduction](https://github.com/hubiquitus/hubiquitus4j/wiki/HubotSDK-Introduction-v-0.5.0) : Introduction of a hubot.
+ * [HubotSDK Introduction](https://github.com/hubiquitus/hubiquitus4j/wiki/HubotSDK-Introduction) : Introduction of a hubot.
 
 
 
- * [HubotSDK API](https://github.com/maniadel/hubiquitus4java/blob/master/doc/HubotSDK_API_V0.5.0.md) : Information about the API.
+ * [HubotSDK API](https://github.com/maniadel/hubiquitus4java/blob/master/doc/HubotSDK_API.md) : Information about the API.
 
 
 
