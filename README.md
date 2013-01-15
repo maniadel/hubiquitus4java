@@ -32,10 +32,6 @@ The "Examples" folder content a sample exemples as :
 * HGooglePlus Simple client allows to retrive data from Instagram using HGooglePlus
 
 
-<<<<<<< HEAD
 To **run** your first bot, please read the following file : [INSTALLATION.md](https://github.com/maniadel/hubiquitus4java/blob/master/doc/INSTALLATION.md)
 
 For more informations, please read the following wiki :  [HOME.md](https://github.com/maniadel/hubiquitus4java/blob/master/doc/HOME.md)
-=======
-To **run** your first bot, please read the following file : INSTALLATION.md
->>>>>>> upstream/master
