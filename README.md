@@ -10,7 +10,7 @@ Recently, Hubiquitus added three components : HTwitterAPI-1.1, HFacebook and HIn
 
 The "Bots" folder content five samples bots :
 
-* TwitterBot allows to retrive data from twitter and post a tweets [README](https://github.com/maniadel/hubiquitus4java/blob/master/Bots/TwitterBot/README.md)
+* TwitterBot allows to retrive data from twitter and post a tweets [[README]](https://github.com/maniadel/hubiquitus4java/blob/master/Bots/TwitterBot/README.md)
 * HFacebookBot allows to retrive data from facebook [README](https://github.com/maniadel/hubiquitus4java/blob/master/Bots/FacebookBot/README.md)
 * HInstagramBot allows to retrive data from instagram [README](https://github.com/maniadel/hubiquitus4java/blob/master/Bots/InstagramBot/README.md)
 * HelloBot allows to retrive a string and publish it on a node [README](https://github.com/maniadel/hubiquitus4java/blob/master/Bots/HelloBot/README.md)
