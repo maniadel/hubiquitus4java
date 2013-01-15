@@ -28,13 +28,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.hubiquitus.hubiquitus4j</groupId>
+  <groupId>org.hubiquitus.hubiquitus4java</groupId>
   <artifactId>hAPI</artifactId>
   <version>0.5.5</version>
-  <build>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <optimize>true</optimize>
@@ -42,9 +48,32 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+
         </plugins>
     </build>
-
 
   <dependencies>
 	<dependency>
@@ -58,13 +87,18 @@
       		<version>4.8.1</version>
       		<scope>test</scope>
     	</dependency>
-	<dependency>
+	<!--dependency>
                 <groupId>org.json.jar</groupId>
                 <artifactId>json-lib</artifactId>
                 <version>0.0.0</version>
                 <scope>system</scope>
                 <systemPath>${basedir}/../external-libs/json-org.jar</systemPath>
-        </dependency>
+    </dependency-->
+      <dependency>
+          <groupId>org.json</groupId>
+          <artifactId>json</artifactId>
+          <version>20090211</version>
+      </dependency>
 
 	<dependency>
                 <groupId>org.socket.io</groupId>
@@ -73,7 +107,8 @@
                 <scope>system</scope>
                 <systemPath>${basedir}/../external-libs/socketio.jar</systemPath>
         </dependency>
-	<dependency>
+
+      <dependency>
 		<groupId>joda-time</groupId>
 		<artifactId>joda-time</artifactId>
 		<version>2.1</version>

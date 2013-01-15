@@ -1,0 +1,6 @@
+16:11:57,735  INFO Hubot:413 - com.mycompany.WordCount(u1@localhost) : CREATED
+16:11:57,779  INFO Hubot:407 - Hubiquitus connection : {"status":1,"errorCode":0}
+16:11:57,841  INFO Hubot:407 - Hubiquitus connection : {"status":6,"errorCode":6,"errorMsg":"Error while handshaking"}
+16:11:57,843  INFO Hubot:407 - Hubiquitus connection : {"status":6,"errorCode":7,"errorMsg":"Lost connection, try to reconnect in 5s."}
+16:12:02,851  INFO Hubot:407 - Hubiquitus connection : {"status":6,"errorCode":6,"errorMsg":"Error while handshaking"}
+16:12:02,861  INFO Hubot:407 - Hubiquitus connection : {"status":6,"errorCode":7,"errorMsg":"Lost connection, try to reconnect in 5s."}
