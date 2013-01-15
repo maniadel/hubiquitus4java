@@ -36,4 +36,4 @@ The "Examples" folder content a sample exemples as :
 
 To **run** your first bot, please read the following file : [INSTALLATION.md]()
 
-For more informations, please read the following wiki :  [HOME.md]()
+For more informations, please read the following wiki :  [HOME.md](https://github.com/maniadel/hubiquitus4java/blob/master/doc/HOME.md)
