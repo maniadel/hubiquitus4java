@@ -1,19 +1,22 @@
 {
-    "type": "com.mycompany.InstagramCount",
-    "actor": "yourUserName",
-    "pwd": "yourUserPassword",
-    "hserver": "yourEndPoint",
+    "type": "com.mycompany.WordCount",
+    "actor": "vodlistquizbot@vodkaster",
+    "pwd": "vod92100",
+    "hserver": "http://178.32.212.47:8080",
     "adapters": [
         {
-            "actor": "yourInstagram@yourDomain",
-            "type": "org.hubiquitus.hubotsdk.adapters.HInstagramTagsInbox",
+            "actor": "HInstagram@Instagram",
+            "type": "org.hubiquitus.hubotsdk.adapters.HInstagramRealTimeInbox",
             "properties": {
-                "proxyHost": "yourProxyHost",
-                "proxyPort": yourProxyPort,
-                "tags": "yourTag",
-				"options": "full",
-				"roundTime": 320,
-				"clientId": "yourInstagramClientId"                
+                "port": 8088,
+		        "clientId":"c17f8f295b76423d9de7c0c557529fc8",
+                "clientSecret":"ee30b969ee084197879c9a619549965b",
+        	    "object":"tag",
+                "aspect":"media",
+                "object_id":"hubiquitus",
+     		    "verifyToken":"19864maniadelsdfdsml",
+     	    	"callbackUrl": "http://178.32.209.229:8088"   	
+                                
             }
         }
     ]
